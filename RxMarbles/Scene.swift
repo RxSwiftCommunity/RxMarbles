@@ -208,7 +208,6 @@ class Scene: SKScene {
     func updateResult() {
         let scheduler = TestScheduler(initialClock: 0)
         let events = sourceEvents.map({ $0.recorded })
-        print(events)
         let t = scheduler.createColdObservable(events)
         let o = op.map(t.asObservable(), scheduler: scheduler)
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
