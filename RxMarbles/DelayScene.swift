@@ -29,30 +29,10 @@ class DelayScene: TemplateScene {
         updateResult()
     }
     
-    override func updateResult() {
-        delay()
+    override func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return o.delaySubscription(30, scheduler: scheduler)
     }
     
-//    MARK: delay
-    
-    func delay() {
-        let scheduler = TestScheduler(initialClock: 0)
-        
-        var events = sourceEvents.map({ $0.recorded })
-        events.append(Recorded(time: Int(completedLine.position.x), event: Event.Completed))
-        
-        print(events)
-        let t = scheduler.createColdObservable(
-            events
-        )
-        
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.delaySubscription(30, scheduler: scheduler)
-        }
-        print(res.events)
-        createResultTimelineElements(res.events)
-    }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

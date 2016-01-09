@@ -28,29 +28,12 @@ class StartWithScene: TemplateScene {
         updateResult()
     }
     
-    override func updateResult() {
-        startWith()
-    }
     
     //    MARK: startWith
-    
-    func startWith() {
-        let scheduler = TestScheduler(initialClock: 0)
-        
-        var events = sourceEvents.map({ $0.recorded })
-        events.append(Recorded(time: Int(completedLine.position.x), event: Event.Completed))
-        
-        let t = scheduler.createColdObservable(
-            events
-        )
-        
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.startWith(ColoredType(value: 2, color: RXMUIKit.randomColor()))
-        }
-        
-        createResultTimelineElements(res.events)
+    override func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return o.startWith(ColoredType(value: 2, color: RXMUIKit.randomColor()))
     }
-
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }

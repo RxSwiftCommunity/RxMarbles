@@ -29,32 +29,15 @@ class FilterScene: TemplateScene {
         updateResult()
     }
     
-    override func updateResult() {
-        rx_filter()
-    }
-    
-    //    MARK: filter
-    
-    func rx_filter() {
-        let scheduler = TestScheduler(initialClock: 0)
-        
-        var events = sourceEvents.map({ $0.recorded })
-        events.append(Recorded(time: Int(completedLine.position.x), event: Event.Completed))
-        
-        let t = scheduler.createColdObservable(
-            events
-        )
-        
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.filter({ f in
-                f.value > 1
-            })
-        }
-        
-        createResultTimelineElements(res.events)
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //    MARK: filter
+    override func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return o.filter({ f in
+            f.value > 1
+        })
+    }
+    
 }

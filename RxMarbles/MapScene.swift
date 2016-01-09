@@ -29,27 +29,11 @@ class MapScene: TemplateScene {
         updateResult()
     }
     
-    override func updateResult() {
-        map()
-    }
     
     //    MARK: map
     
-    func map() {
-        let scheduler = TestScheduler(initialClock: 0)
-        
-        var events = sourceEvents.map({ $0.recorded })
-        events.append(Recorded(time: Int(completedLine.position.x), event: Event.Completed))
-        
-        let t = scheduler.createColdObservable(
-            events
-        )
-        
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.map({ h in ColoredType(value: h.value * 10, color: h.color) })
-        }
-        
-        createResultTimelineElements(res.events)
+    override func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return o.map({ h in ColoredType(value: h.value * 10, color: h.color) })
     }
     
     required init?(coder aDecoder: NSCoder) {

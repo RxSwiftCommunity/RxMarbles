@@ -29,35 +29,18 @@ class ReduceScene: TemplateScene {
         updateResult()
     }
     
-    override func updateResult() {
-        reduce()
-    }
-    
-    //    MARK: reduce
-    
-    func reduce() {
-        let scheduler = TestScheduler(initialClock: 0)
-        
-        var events = sourceEvents.map({ $0.recorded })
-        events.append(Recorded(time: Int(completedLine.position.x), event: Event.Completed))
-        
-        let t = scheduler.createColdObservable(
-            events
-        )
-        
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.reduce(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
-                var res = acc
-                res.value += e.value
-                res.color = e.color
-                return res
-            })
-        }
-
-        createResultTimelineElements(res.events)
-    }
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
+    //    MARK: reduce
+    override func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return o.reduce(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
+            var res = acc
+            res.value += e.value
+            res.color = e.color
+            return res
+        })
+    }
+    
 }

@@ -199,7 +199,21 @@ class TemplateScene: SKScene {
     }
     
     func updateResult() {
-        
+        let scheduler = TestScheduler(initialClock: 0)
+        let events = sourceEvents.map({ $0.recorded })
+        let t = scheduler.createColdObservable(
+            events
+        )
+        let o = map(t.asObservable(), scheduler: scheduler)
+        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
+            return o
+        }
+        createResultTimelineElements(res.events)
+    }
+    
+    
+    func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return Observable.never()
     }
     
     func createResultTimelineElements(events: [RecordedType]?) {

@@ -29,29 +29,10 @@ class DebounceScene: TemplateScene {
         updateResult()
     }
     
-    override func updateResult() {
-        debounce()
+    override func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+        return o.debounce(50, scheduler: scheduler)
     }
     
-    //    MARK: debounce
-    
-    func debounce() {
-        let scheduler = TestScheduler(initialClock: 0)
-        
-        var events = sourceEvents.map({ $0.recorded })
-        events.append(Recorded(time: Int(completedLine.position.x), event: Event.Completed))
-        
-        let t = scheduler.createColdObservable(
-            events
-        )
-        
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.debounce(50, scheduler: scheduler)
-        }
-        
-        createResultTimelineElements(res.events)
-    }
-
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
