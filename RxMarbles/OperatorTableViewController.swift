@@ -8,31 +8,35 @@
 
 import UIKit
 
+struct Section {
+    var name: String
+    var rows: [Operator]
+}
+
 class OperatorTableViewController: UITableViewController {
     
-    var selectedOperator: NSDictionary!
+    var selectedOperator: Operator?
     
-    private let sections = [["id" : "Transforming", "title": NSLocalizedString("TRANSFORMING OPERATORS", comment: ""), "rows" : [
-                                ["id" : "delay",    "title": NSLocalizedString("delay", comment: "")],
-                                ["id" : "map",      "title": NSLocalizedString("map", comment: "")],
-                                ["id" : "scan",     "title": NSLocalizedString("scan", comment: "")],
-                                ["id" : "debounce", "title": NSLocalizedString("debounce", comment: "")]
-                                ]],
-                            ["id" : "Combining", "title": NSLocalizedString("COMBINING OPERATORS", comment: ""), "rows" : [
-                                ["id" : "startWith",    "title": NSLocalizedString("startWith", comment: "")]
-                                ]],
-                            ["id" : "Filtering", "title": NSLocalizedString("FILTERING OPERATORS", comment: ""), "rows" : [
-                                ["id" : "distinctUntilChanged",    "title": NSLocalizedString("distinctUntilChanged", comment: "")],
-                                ["id" : "elementAt",    "title": NSLocalizedString("elementAt", comment: "")],
-                                ["id" : "filter",    "title": NSLocalizedString("filter", comment: "")],
-                                ["id" : "skip",    "title": NSLocalizedString("skip", comment: "")],
-                                ["id" : "take",    "title": NSLocalizedString("take", comment: "")],
-                                ["id" : "takeLast",    "title": NSLocalizedString("takeLast", comment: "")]
-                            ]],
-                            ["id" : "Mathematical", "title": NSLocalizedString("MATHEMATICAL OPERATORS", comment: ""), "rows" : [
-                                ["id" : "reduce",    "title": NSLocalizedString("reduce", comment: "")]
-                                ]]]
-
+   
+    private let _sections = [
+        Section(
+            name: "Transforming",
+            rows: [.Delay, .Map, .Scan, .Debounce]
+        ),
+        Section(
+            name: "Combining",
+            rows: [.StartWith]
+        ),
+        Section(
+            name: "Filtering",
+            rows: [.DistinctUntilChanged, .ElementAt, .Filter, .Skip, .Take, .TakeLast]
+        ),
+        Section(
+            name: "Mathematical",
+            rows: [.Reduce]
+        )
+    ]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -48,27 +52,30 @@ class OperatorTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        return sections.count
+        return _sections.count
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sec = sections[section]
-        return sec["title"] as? String
+        let sec = _sections[section]
+        return sec.name
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return (sections[section]["rows"]?.count)!
+        return  _sections[section].rows.count
+    }
+    
+    private func _rowAtIndexPath(indexPath: NSIndexPath) -> Operator {
+        let section = _sections[indexPath.section]
+        return section.rows[indexPath.row]
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let section = sections[indexPath.section]
-        let row = (section["rows"] as! NSArray)[indexPath.row] as! NSDictionary
-        
+        let op = _rowAtIndexPath(indexPath)
         let cell = tableView.dequeueReusableCellWithIdentifier("OperatorCell", forIndexPath: indexPath)
         
-        cell.textLabel?.text = row["title"] as? String
+        cell.textLabel?.text = op.description
         
-        if row == selectedOperator {
+        if op == selectedOperator {
             cell.accessoryType = UITableViewCellAccessoryType.Checkmark
         } else {
             cell.accessoryType = UITableViewCellAccessoryType.None
@@ -79,11 +86,8 @@ class OperatorTableViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        
-        let section = sections[indexPath.section]
-        let row = (section["rows"] as! NSArray)[indexPath.row] as! NSDictionary
-        
-        selectedOperator = row
+        let op = _rowAtIndexPath(indexPath)
+        selectedOperator = op
         self.dismissViewControllerAnimated(true) { () -> Void in }
     }
 

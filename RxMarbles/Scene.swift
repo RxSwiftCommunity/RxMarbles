@@ -9,15 +9,17 @@
 import SpriteKit
 import RxSwift
 
-class TemplateScene: SKScene {
+class Scene: SKScene {
     
     typealias RecordedType = EventShapeNode.RecordedType
     
     var sourceEvents = [EventShapeNode]()
     var selectedNode: EventShapeNode? = nil
     var needUpdate = false
+    var op: Operator
     
-    override init(size: CGSize) {
+    init(size: CGSize, op: Operator) {
+        self.op = op
         super.init(size: size)
         backgroundColor = SKColor.whiteColor()
         basicSetup()
@@ -208,7 +210,7 @@ class TemplateScene: SKScene {
         let events = sourceEvents.map({ $0.recorded })
         print(events)
         let t = scheduler.createColdObservable(events)
-        let o = map(t.asObservable(), scheduler: scheduler)
+        let o = op.map(t.asObservable(), scheduler: scheduler)
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
             return o
         }
@@ -216,9 +218,6 @@ class TemplateScene: SKScene {
     }
     
     
-    func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
-        return Observable.never()
-    }
     
     func createResultTimelineElements(events: [RecordedType]?) {
         var elements = [EventShapeNode]()
