@@ -18,7 +18,7 @@ class SkipScene: TemplateScene {
         drawTimeLine(100.0, name: "timeline")
         for i in 1..<4 {
             let color = RXMUIKit.randomColor()
-            let t = Element(value: i, color: color)
+            let t = ColoredType(value: i, color: color)
             sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 50 * i, t: t))
         }
         

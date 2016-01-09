@@ -18,7 +18,7 @@ class ReduceScene: TemplateScene {
         drawTimeLine(100.0, name: "timeline")
         for i in 1..<4 {
             let color = RXMUIKit.randomColor()
-            let t = Element(value: i, color: color)
+            let t = ColoredType(value: i, color: color)
             sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 50 * i, t: t))
         }
         
@@ -46,7 +46,7 @@ class ReduceScene: TemplateScene {
         )
         
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.reduce(Element(value: 0, color: .redColor()), accumulator: { acc, e in
+            return t.reduce(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
                 var res = acc
                 res.value += e.value
                 res.color = e.color

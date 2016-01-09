@@ -11,6 +11,8 @@ import RxSwift
 
 class TemplateScene: SKScene {
     
+    typealias RecordedType = EventShapeNode.RecordedType
+    
     var sourceEvents = [EventShapeNode]()
     var selectedNode: EventShapeNode? = nil
     var needUpdate = false
@@ -64,7 +66,7 @@ class TemplateScene: SKScene {
         return endOfTimeline
     }
     
-    func drawCircleElementWithOptions(name: String, color: SKColor, timelineName: String, time: Int, t: Element) -> EventShapeNode {
+    func drawCircleElementWithOptions(name: String, color: SKColor, timelineName: String, time: Int, t: ColoredType) -> EventShapeNode {
         let timeline: SKShapeNode = childNodeWithName(timelineName) as! SKShapeNode
         let event = Event.Next(ColoredType(value: time, color: color))
         let circleElement = EventShapeNode(recorded: Recorded(time: time, event: event), name: name, timelineAxisY: timeline.position.y)
@@ -122,10 +124,7 @@ class TemplateScene: SKScene {
             normal.lineWidth = 0.5
             addChild(normal)
             
-            
-            let element = self.selectedNode!.recorded.value.element! as Element
-            let event = Event.Next(element)
-            selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: event)
+            selectedNode!.recorded = RecordedType(time: Int(selectedNode!.position.x), event: selectedNode!.recorded.value)
             
             synchronizeTimeLines()
         }
@@ -161,9 +160,7 @@ class TemplateScene: SKScene {
                         self.removeChildrenInArray([self.childNodeWithName("normal")!])
                     }
                     self.needUpdate = false
-                    let element = self.selectedNode!.recorded.value.element! as Element
-                    let event = Event.Next(element)
-                    self.selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: event)
+                    self.selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: self.selectedNode!.recorded.value)
                     self.selectedNode = nil
                     self.synchronizeTimeLines()
                 })
@@ -193,9 +190,7 @@ class TemplateScene: SKScene {
                 normal.lineWidth = 0.5
                 addChild(normal)
                 
-                let element = self.selectedNode!.recorded.value.element! as Element
-                let event = Event.Next(element)
-                self.selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: event)
+                self.selectedNode!.recorded = RecordedType(time: Int((self.selectedNode?.position.x)!), event: self.selectedNode!.recorded.value)
                 synchronizeTimeLines()
             }
         }
@@ -205,7 +200,7 @@ class TemplateScene: SKScene {
         
     }
     
-    func createResultTimelineElements(events: [Recorded<Event<Element>>]?) {
+    func createResultTimelineElements(events: [RecordedType]?) {
         var elements = [EventShapeNode]()
         self.children.forEach { (node) -> () in
             if node.isKindOfClass(EventShapeNode) {
@@ -235,7 +230,7 @@ class TemplateScene: SKScene {
     
     func addElement() {
         let color = RXMUIKit.randomColor()
-        let t = Element(value: 1, color: color)
+        let t = ColoredType(value: 1, color: color)
         sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 100, t: t))
         synchronizeTimeLines()
     }

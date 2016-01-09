@@ -18,7 +18,7 @@ class MapScene: TemplateScene {
         drawTimeLine(100.0, name: "timeline")
         for i in 1..<4 {
             let color = RXMUIKit.randomColor()
-            let t = Element(value: i, color: color)
+            let t = ColoredType(value: i, color: color)
             sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 50 * i, t: t))
         }
         
@@ -46,7 +46,7 @@ class MapScene: TemplateScene {
         )
         
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.map({ h in Element(value: h.value * 10, color: h.color) })
+            return t.map({ h in ColoredType(value: h.value * 10, color: h.color) })
         }
         
         createResultTimelineElements(res.events)

@@ -17,7 +17,7 @@ class StartWithScene: TemplateScene {
         drawTimeLine(100.0, name: "timeline")
         for i in 1..<4 {
             let color = RXMUIKit.randomColor()
-            let t = Element(value: i, color: color)
+            let t = ColoredType(value: i, color: color)
             sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 50 * i, t: t))
         }
         
@@ -45,7 +45,7 @@ class StartWithScene: TemplateScene {
         )
         
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return t.startWith(Element(value: 2, color: RXMUIKit.randomColor()))
+            return t.startWith(ColoredType(value: 2, color: RXMUIKit.randomColor()))
         }
         
         createResultTimelineElements(res.events)
