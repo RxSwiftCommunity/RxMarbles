@@ -23,15 +23,16 @@ class TemplateScene: SKScene {
     }
     
     func drawTimeLine(axisY: CGFloat, name: String) {
-        
         let arrow = UIBezierPath()
-        let maxY = CGRectGetMaxY(self.frame)
-        arrow.moveToPoint(CGPointMake(CGRectGetMinX(self.frame), 0.0))
-        arrow.addLineToPoint(CGPointMake(CGRectGetMaxX(self.frame) - 10.0, 0.0))
-        arrow.addLineToPoint(CGPointMake(CGRectGetMaxX(self.frame) - 10.0, -3.5))
-        arrow.addLineToPoint(CGPointMake(CGRectGetMaxX(self.frame), 0.0))
-        arrow.addLineToPoint(CGPointMake(CGRectGetMaxX(self.frame) - 10.0, 3.5))
-        arrow.addLineToPoint(CGPointMake(CGRectGetMaxX(self.frame) - 10.0, 0.0))
+        let maxY = frame.maxY
+        let maxX = frame.maxX
+        arrow.moveToPoint(CGPointMake(frame.minX, 0.0))
+        arrow.addLineToPoint(CGPointMake(maxX - 10.0, 0.0))
+        arrow.addLineToPoint(CGPointMake(maxX - 10.0, -3.5))
+        arrow.addLineToPoint(CGPointMake(maxX, 0.0))
+        arrow.addLineToPoint(CGPointMake(maxX - 10.0, 3.5))
+        arrow.addLineToPoint(CGPointMake(maxX - 10.0, 0.0))
+        
         let timeLine = SKShapeNode(path: arrow.CGPath)
         timeLine.strokeColor = SKColor.blackColor()
         timeLine.fillColor = SKColor.blackColor()
@@ -40,7 +41,7 @@ class TemplateScene: SKScene {
         timeLine.position = CGPointMake(0.0, maxY - axisY)
         timeLine.name = name
         timeLine.zPosition = 0
-        self.addChild(timeLine)
+        addChild(timeLine)
     }
     
     func drawEndOnTimeLineWithName(name: String, axisX: CGFloat, timelineName: String) -> SKShapeNode {
