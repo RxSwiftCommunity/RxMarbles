@@ -128,7 +128,7 @@ class TemplateScene: SKScene {
             
             selectedNode!.recorded = RecordedType(time: Int(selectedNode!.position.x), event: selectedNode!.recorded.value)
             
-            synchronizeTimeLines()
+            updateResult()
         }
     }
     
@@ -152,7 +152,7 @@ class TemplateScene: SKScene {
                 selectedNode?.runAction(fullRemoveAction)
                 selectedNode = nil
                 
-                synchronizeTimeLines()
+                updateResult()
                 
             } else {
                 let moveToTimeline = SKAction.moveToY(selectedNode!.timelineAxisY, duration: 0.1)
@@ -164,7 +164,7 @@ class TemplateScene: SKScene {
                     self.needUpdate = false
                     self.selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: self.selectedNode!.recorded.value)
                     self.selectedNode = nil
-                    self.synchronizeTimeLines()
+                    self.updateResult()
                 })
             }
         }
@@ -193,12 +193,12 @@ class TemplateScene: SKScene {
                 addChild(normal)
                 
                 self.selectedNode!.recorded = RecordedType(time: Int((self.selectedNode?.position.x)!), event: self.selectedNode!.recorded.value)
-                synchronizeTimeLines()
+                updateResult()
             }
         }
     }
     
-    func synchronizeTimeLines() {
+    func updateResult() {
         
     }
     
@@ -234,7 +234,7 @@ class TemplateScene: SKScene {
         let color = RXMUIKit.randomColor()
         let t = ColoredType(value: 1, color: color)
         sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 100, t: t))
-        synchronizeTimeLines()
+        updateResult()
     }
     
     required init?(coder aDecoder: NSCoder) {

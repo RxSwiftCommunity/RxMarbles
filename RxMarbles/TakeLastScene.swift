@@ -26,10 +26,10 @@ class TakeLastScene: TemplateScene {
         
         drawTimeLine(200.0, name: "resultTimeline")
         
-        synchronizeTimeLines()
+        updateResult()
     }
     
-    override func synchronizeTimeLines() {
+    override func updateResult() {
         takeLast()
     }
     
