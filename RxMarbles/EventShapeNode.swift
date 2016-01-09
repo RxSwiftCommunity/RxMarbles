@@ -14,9 +14,7 @@ struct ColoredType: Equatable {
     var color: SKColor
 }
 
-typealias Element = ColoredType
-
-func ==(lhs: Element, rhs: Element) -> Bool {
+func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
     return lhs.value == rhs.value && lhs.color == rhs.color
 }
 
@@ -25,7 +23,6 @@ class EventShapeNode: SKShapeNode {
     
     var recorded = RecordedType(time: 0, event: .Completed)
     var timelineAxisY: CGFloat = 0
-    
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
@@ -63,7 +60,9 @@ class EventShapeNode: SKShapeNode {
             zPosition = 1
             strokeColor = SKColor(red: 151/255, green: 151/255, blue: 151/255, alpha: 1.0)
             lineWidth = 3.0
-        default: break
+        case .Error:
+            // TODO: draw cross
+            break
         }
         
         
