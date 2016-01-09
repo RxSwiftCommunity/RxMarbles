@@ -11,9 +11,9 @@ import RxSwift
 
 class TemplateScene: SKScene {
     
-    var sourceEvents = [CircleElement<Element>]()
-    var selectedNode: CircleElement<Element>?
-    var needUpdate: Bool = false
+    var sourceEvents = [EventShapeNode]()
+    var selectedNode: EventShapeNode? = nil
+    var needUpdate = false
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -64,10 +64,10 @@ class TemplateScene: SKScene {
         return endOfTimeline
     }
     
-    func drawCircleElementWithOptions(name: String, color: SKColor, timelineName: String, time: Int, t: Element) -> CircleElement<Element> {
+    func drawCircleElementWithOptions(name: String, color: SKColor, timelineName: String, time: Int, t: Element) -> EventShapeNode {
         let timeline: SKShapeNode = childNodeWithName(timelineName) as! SKShapeNode
-        let event = Event.Next(t)
-        let circleElement = CircleElement(recorded: Recorded(time: time, event: event), color: color, name: name, timelineAxisY: timeline.position.y)
+        let event = Event.Next(ColoredType(value: time, color: color))
+        let circleElement = EventShapeNode(recorded: Recorded(time: time, event: event), name: name, timelineAxisY: timeline.position.y)
         
         self.addChild(circleElement)
         
@@ -89,7 +89,7 @@ class TemplateScene: SKScene {
             node = node.parent!
         }
         if node.zPosition == 2 && (node.name?.containsString("result") == false) {
-            selectedNode = node as? CircleElement
+            selectedNode = node as? EventShapeNode
         }
     }
     
@@ -125,9 +125,9 @@ class TemplateScene: SKScene {
             
             let element = self.selectedNode!.recorded.value.element! as Element
             let event = Event.Next(element)
-            self.selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: event)
+            selectedNode!.recorded = Recorded(time: Int((self.selectedNode?.position.x)!), event: event)
             
-            self.synchronizeTimeLines()
+            synchronizeTimeLines()
         }
     }
     
@@ -206,11 +206,11 @@ class TemplateScene: SKScene {
     }
     
     func createResultTimelineElements(events: [Recorded<Event<Element>>]?) {
-        var elements = [CircleElement<Element>]()
+        var elements = [EventShapeNode]()
         self.children.forEach { (node) -> () in
-            if node.isKindOfClass(CircleElement<Element>) {
+            if node.isKindOfClass(EventShapeNode) {
                 if (node.name?.containsString("result") == true) {
-                    elements.append(node as! CircleElement<Element>)
+                    elements.append(node as! EventShapeNode)
                 }
             }
         }

@@ -26,8 +26,7 @@
 		0AC266121C3E96C2009E28FD /* Subscription.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266051C3E96C2009E28FD /* Subscription.swift */; };
 		0AC266131C3E96C2009E28FD /* TestableObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266061C3E96C2009E28FD /* TestableObservable.swift */; };
 		0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266071C3E96C2009E28FD /* TestableObserver.swift */; };
-		0AC266181C3E9936009E28FD /* CircleElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266171C3E9936009E28FD /* CircleElement.swift */; };
-		0AC2661A1C3EB96E009E28FD /* CompletedElement.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266191C3EB96E009E28FD /* CompletedElement.swift */; };
+		0AC266181C3E9936009E28FD /* EventShapeNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266171C3E9936009E28FD /* EventShapeNode.swift */; };
 		0AC2661E1C40775D009E28FD /* OperatorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorTableViewController.swift */; };
 		0AC266201C40F523009E28FD /* DebounceScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661F1C40F523009E28FD /* DebounceScene.swift */; };
 		0AC266221C40F8D9009E28FD /* MapScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266211C40F8D9009E28FD /* MapScene.swift */; };
@@ -66,8 +65,7 @@
 		0AC266051C3E96C2009E28FD /* Subscription.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscription.swift; sourceTree = "<group>"; };
 		0AC266061C3E96C2009E28FD /* TestableObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableObservable.swift; sourceTree = "<group>"; };
 		0AC266071C3E96C2009E28FD /* TestableObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableObserver.swift; sourceTree = "<group>"; };
-		0AC266171C3E9936009E28FD /* CircleElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CircleElement.swift; sourceTree = "<group>"; };
-		0AC266191C3EB96E009E28FD /* CompletedElement.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CompletedElement.swift; sourceTree = "<group>"; };
+		0AC266171C3E9936009E28FD /* EventShapeNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventShapeNode.swift; sourceTree = "<group>"; };
 		0AC2661D1C40775D009E28FD /* OperatorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorTableViewController.swift; sourceTree = "<group>"; };
 		0AC2661F1C40F523009E28FD /* DebounceScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DebounceScene.swift; sourceTree = "<group>"; };
 		0AC266211C40F8D9009E28FD /* MapScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapScene.swift; sourceTree = "<group>"; };
@@ -184,8 +182,7 @@
 		0AC266161C3E98FA009E28FD /* SpriteNodes */ = {
 			isa = PBXGroup;
 			children = (
-				0AC266171C3E9936009E28FD /* CircleElement.swift */,
-				0AC266191C3EB96E009E28FD /* CompletedElement.swift */,
+				0AC266171C3E9936009E28FD /* EventShapeNode.swift */,
 			);
 			name = SpriteNodes;
 			sourceTree = "<group>";
@@ -348,12 +345,11 @@
 				0AC266121C3E96C2009E28FD /* Subscription.swift in Sources */,
 				0AC266111C3E96C2009E28FD /* TestSchedulerVirtualTimeConverter.swift in Sources */,
 				0AC2662A1C40FD98009E28FD /* ElementAtScene.swift in Sources */,
-				0AC266181C3E9936009E28FD /* CircleElement.swift in Sources */,
+				0AC266181C3E9936009E28FD /* EventShapeNode.swift in Sources */,
 				0AC2661E1C40775D009E28FD /* OperatorTableViewController.swift in Sources */,
 				0AC2662C1C40FDE3009E28FD /* FilterScene.swift in Sources */,
 				0AC266241C40FAD1009E28FD /* ScanScene.swift in Sources */,
 				0AC266261C40FCD3009E28FD /* StartWithScene.swift in Sources */,
-				0AC2661A1C3EB96E009E28FD /* CompletedElement.swift in Sources */,
 				0AC266281C40FD3A009E28FD /* DistinctUntilChangedScene.swift in Sources */,
 				0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */,
 				0AC266131C3E96C2009E28FD /* TestableObservable.swift in Sources */,
