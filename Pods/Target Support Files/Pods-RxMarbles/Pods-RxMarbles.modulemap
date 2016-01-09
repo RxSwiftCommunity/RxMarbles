@@ -1,0 +1,6 @@
+framework module Pods_RxMarbles {
+  umbrella header "Pods-RxMarbles-umbrella.h"
+
+  export *
+  module * { export * }
+}
