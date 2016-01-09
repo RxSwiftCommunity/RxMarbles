@@ -20,9 +20,9 @@ class ScanScene: TemplateScene {
             sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 50 * i, t: t))
         }
         
-//        let completedLine = drawEndOnTimeLineWithName("completed", axisX: frame.size.width - 30.0, timelineName: "timeline")
+        let completedLine = drawEndOnTimeLineWithName("completed", axisX: frame.size.width - 30.0, timelineName: "timeline")
         
-//        sourceEvents.append(completedLine)
+        sourceEvents.append(completedLine)
         
         drawTimeLine(200.0, name: "resultTimeline")
         

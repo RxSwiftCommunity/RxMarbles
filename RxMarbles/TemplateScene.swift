@@ -44,24 +44,11 @@ class TemplateScene: SKScene {
         addChild(timeLine)
     }
     
-    func drawEndOnTimeLineWithName(name: String, axisX: CGFloat, timelineName: String) -> SKShapeNode {
+    func drawEndOnTimeLineWithName(name: String, axisX: CGFloat, timelineName: String) -> EventShapeNode {
         let timeline: SKShapeNode = childNodeWithName(timelineName) as! SKShapeNode
         
-        let endLine = UIBezierPath()
-        endLine.moveToPoint(CGPointMake(0.0, -22.0))
-        endLine.addLineToPoint(CGPointMake(0.0, 22.0))
-        
-        let endOfTimeline = SKShapeNode(path: endLine.CGPath)
-        endOfTimeline.name = name
-        
-        endOfTimeline.strokeColor = SKColor(red: 151/255, green: 151/255, blue: 151/255, alpha: 1.0)
-        endOfTimeline.lineWidth = 3.0
-        
-        endOfTimeline.zPosition = 1
-        endOfTimeline.position = CGPointMake(axisX, 0.0)
-        
-//        let endOfTimeline = CompletedElement(name: name, time: axisX, timelineAxisY: timeline.position.y)
-        
+        let endOfTimeline = EventShapeNode(recorded: RecordedType(time: Int(axisX), event: .Completed), name: name, timelineAxisY: 0)
+       
         timeline.addChild(endOfTimeline)
         
         return endOfTimeline
@@ -201,9 +188,8 @@ class TemplateScene: SKScene {
     func updateResult() {
         let scheduler = TestScheduler(initialClock: 0)
         let events = sourceEvents.map({ $0.recorded })
-        let t = scheduler.createColdObservable(
-            events
-        )
+        print(events)
+        let t = scheduler.createColdObservable(events)
         let o = map(t.asObservable(), scheduler: scheduler)
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
             return o

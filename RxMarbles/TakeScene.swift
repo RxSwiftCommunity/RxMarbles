@@ -11,7 +11,6 @@ import RxSwift
 
 class TakeScene: TemplateScene {
     
-    var completedLine: SKShapeNode!
     
     override init(size: CGSize) {
         super.init(size: size)
@@ -22,7 +21,8 @@ class TakeScene: TemplateScene {
             sourceEvents.append(drawCircleElementWithOptions("", color: color, timelineName: "timeline", time: 50 * i, t: t))
         }
         
-        completedLine = drawEndOnTimeLineWithName("completed", axisX: frame.size.width - 30.0, timelineName: "timeline")
+        let completedLine = drawEndOnTimeLineWithName("completed", axisX: frame.size.width - 30.0, timelineName: "timeline")
+        sourceEvents.append(completedLine)
         
         drawTimeLine(200.0, name: "resultTimeline")
         

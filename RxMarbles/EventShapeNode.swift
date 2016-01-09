@@ -54,8 +54,8 @@ class EventShapeNode: SKShapeNode {
             lineWidth = 0.5
         case .Completed:
             let path = UIBezierPath()
-            path.moveToPoint(CGPointMake(CGFloat(recorded.time), timelineAxisY - 22.0))
-            path.addLineToPoint(CGPointMake(CGFloat(recorded.time), timelineAxisY + 22.0))
+            path.moveToPoint(CGPointMake(0, -22.0))
+            path.addLineToPoint(CGPointMake(0, 22.0))
             self.init(path: path.CGPath)
             zPosition = 1
             strokeColor = SKColor(red: 151/255, green: 151/255, blue: 151/255, alpha: 1.0)
