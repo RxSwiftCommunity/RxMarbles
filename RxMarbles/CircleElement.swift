@@ -21,12 +21,14 @@ func ==(lhs: Element, rhs: Element) -> Bool {
 }
 
 class CircleElement<Element: Equatable>: SKShapeNode {
+    typealias RecordedType = Recorded<Event<Element>>
+    
     private var _recorded = Recorded(time: 0, event: Event<Element>.Completed)
     var timelineAxisY: CGFloat!
     
-    var recorded: Recorded<Event<Element>> {
-        set (newValue) { _recorded = newValue }
+    var recorded: RecordedType {
         get { return _recorded }
+        set { _recorded = newValue }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,8 +39,7 @@ class CircleElement<Element: Equatable>: SKShapeNode {
         super.init()
     }
     
-    
-    convenience init(recorded: Recorded<Event<Element>>, color: SKColor, name: String, timelineAxisY: CGFloat) {
+    convenience init(recorded: RecordedType, color: SKColor, name: String, timelineAxisY: CGFloat) {
         self.init()
         self.init(circleOfRadius: 19.0)
         
