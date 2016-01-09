@@ -60,6 +60,7 @@ class ViewController: UIViewController {
     func showOperatorView() {
         _operatorTableViewController = OperatorTableViewController()
         _operatorTableViewController?.selectedOperator = _currentOperator
-        presentViewController(_operatorTableViewController!, animated: true) { () -> Void in }
+        _operatorTableViewController?.title = "Select Operator"
+        navigationController?.pushViewController(_operatorTableViewController!, animated: true)
     }
 }

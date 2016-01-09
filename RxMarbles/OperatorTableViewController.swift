@@ -39,14 +39,8 @@ class OperatorTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         self.tableView.tableFooterView = UIView()
         self.tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "OperatorCell")
-        self.tableView.contentInset = UIEdgeInsetsMake(44.0, 0.0, 0.0, 0.0)
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
     }
 
     // MARK: - Table view data source
@@ -88,7 +82,7 @@ class OperatorTableViewController: UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let op = _rowAtIndexPath(indexPath)
         selectedOperator = op
-        self.dismissViewControllerAnimated(true) { () -> Void in }
+        navigationController?.popViewControllerAnimated(true)
     }
 
 }
