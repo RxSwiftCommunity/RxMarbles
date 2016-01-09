@@ -66,7 +66,8 @@ class TemplateScene: SKScene {
         
         return endOfTimeline
     }
-    
+   
+    // TODO: draw is bad verbe for creating node
     func drawCircleElementWithOptions(name: String, color: SKColor, timelineName: String, time: Int, t: ColoredType) -> EventShapeNode {
         let timeline: SKShapeNode = childNodeWithName(timelineName) as! SKShapeNode
         let event = Event.Next(ColoredType(value: time, color: color))
