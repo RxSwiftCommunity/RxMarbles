@@ -6,12 +6,13 @@
 //  Copyright © 2016 Roman Tutubalin. All rights reserved.
 //
 
+import UIKit
 import SpriteKit
 import RxSwift
 
 struct ColoredType: Equatable {
     var value: Int
-    var color: SKColor
+    var color: UIColor
 }
 
 func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
