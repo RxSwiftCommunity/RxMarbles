@@ -10,15 +10,6 @@ import UIKit
 import SpriteKit
 import RxSwift
 
-struct ColoredType: Equatable {
-    var value: Int
-    var color: UIColor
-}
-
-func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
-    return lhs.value == rhs.value && lhs.color == rhs.color
-}
-
 class EventShapeNode: SKShapeNode {
     typealias RecordedType = Recorded<Event<ColoredType>>
     
