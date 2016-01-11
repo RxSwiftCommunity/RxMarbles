@@ -173,7 +173,9 @@ class ResultTimelineView: TimelineView {
         _sourceEvents.removeAll()
         
         events.forEach { (event) -> () in
-            _sourceEvents.append(EventView(recorded: RecordedType(time: event.time, event: event.value)))
+            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value))
+            eventView.center.y = self.bounds.height / 2
+            _sourceEvents.append(eventView)
         }
 
         _sourceEvents.forEach { (eventView) -> () in
@@ -251,6 +253,8 @@ class ViewController: UIViewController {
             v.use(_sceneView.animator, timeLine: sourceTimeLine)
             sourceTimeLine._sourceEvents.append(v)
         }
+        
+        resultTimeline.updateEvents(sourceTimeLine._sourceEvents)
     }
     
     func addElement() {
