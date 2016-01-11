@@ -166,20 +166,16 @@ class ResultTimelineView: TimelineView {
     }
     
     func addEventsToTimeline(events: [RecordedType]) {
-        print("before: \(self.subviews)")
-        
         _sourceEvents.forEach { (eventView) -> () in
             eventView.removeFromSuperview()
         }
-        
+
         _sourceEvents.removeAll()
         
         events.forEach { (event) -> () in
             _sourceEvents.append(EventView(recorded: RecordedType(time: event.time, event: event.value)))
         }
-        
-        print("after: \(self.subviews)")
-        
+
         _sourceEvents.forEach { (eventView) -> () in
             self.addSubview(eventView)
         }
@@ -187,10 +183,6 @@ class ResultTimelineView: TimelineView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
-    }
-    
-    func updateEvent(sourceEvents: [EventView]) {
-        
     }
 }
 
