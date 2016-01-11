@@ -93,9 +93,8 @@ class SourceTimelineView: TimelineView {
     
     private let _panGestureRecognizer = UIPanGestureRecognizer()
     private var _panEventView: EventView?
-    private var _operator: Operator!
     
-    init(frame: CGRect, currentOperator: Operator) {
+    init(frame: CGRect, resultTimeline: ResultTimelineView) {
         super.init(frame: frame)
         userInteractionEnabled = true
         clipsToBounds = false
@@ -121,7 +120,7 @@ class SourceTimelineView: TimelineView {
                     self!._panEventView?.center = r.locationInView(self)
                     let time = Int(r.locationInView(self).x)
                     self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
-                    self!.updateEvents(self!._sourceEvents)
+                    resultTimeline.updateEvents(self!._sourceEvents)
                 }
                 
                 if r.state == .Ended {
@@ -135,10 +134,22 @@ class SourceTimelineView: TimelineView {
                         self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
                     }
                     self!._panEventView = nil
-                    self!.updateEvents(self!._sourceEvents)
+                    resultTimeline.updateEvents(self!._sourceEvents)
                 }
         }
-        
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+}
+
+class ResultTimelineView: TimelineView {
+    
+    private var _operator: Operator!
+    
+    init(frame: CGRect, currentOperator: Operator) {
+        super.init(frame: frame)
         _operator = currentOperator
     }
     
@@ -150,18 +161,28 @@ class SourceTimelineView: TimelineView {
         let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
             return o
         }
-        print(res.events)
+        
+        addEventsToTimeline(res.events)
     }
-
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-}
-
-class ResultTimelineView: TimelineView {
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    func addEventsToTimeline(events: [RecordedType]) {
+        print("before: \(self.subviews)")
+        
+        _sourceEvents.forEach { (eventView) -> () in
+            eventView.removeFromSuperview()
+        }
+        
+        _sourceEvents.removeAll()
+        
+        events.forEach { (event) -> () in
+            _sourceEvents.append(EventView(recorded: RecordedType(time: event.time, event: event.value)))
+        }
+        
+        print("after: \(self.subviews)")
+        
+        _sourceEvents.forEach { (eventView) -> () in
+            self.addSubview(eventView)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -222,7 +243,11 @@ class ViewController: UIViewController {
         
         _sceneView.animator = UIDynamicAnimator(referenceView: _sceneView)
         
-        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), currentOperator: _currentOperator)
+        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), currentOperator: _currentOperator)
+        resultTimeline.center.y = 200
+        _sceneView.addSubview(resultTimeline)
+        
+        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), resultTimeline: resultTimeline)
         sourceTimeLine.center.y = 120
         _sceneView.addSubview(sourceTimeLine)
         
@@ -234,10 +259,6 @@ class ViewController: UIViewController {
             v.use(_sceneView.animator, timeLine: sourceTimeLine)
             sourceTimeLine._sourceEvents.append(v)
         }
-        
-        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40))
-        resultTimeline.center.y = 200
-        _sceneView.addSubview(resultTimeline)
     }
     
     func addElement() {
