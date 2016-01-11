@@ -127,7 +127,7 @@ class SourceTimelineView: TimelineView {
                     if self!._panEventView != nil {
                         let time = Int(r.locationInView(self).x)
                         let snap = self!._panEventView?._snap
-                        snap!.snapPoint.x = CGFloat(time)
+                        snap!.snapPoint.x = CGFloat(time + 10)
                         snap!.snapPoint.y = self!.center.y
                         self!._panEventView?._animator?.addBehavior(snap!)
                         self!._panEventView?.superview?.bringSubviewToFront(self!._panEventView!)
