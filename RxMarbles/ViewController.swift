@@ -27,10 +27,11 @@ func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
 
 typealias RecordedType = Recorded<Event<ColoredType>>
 
-class EventView: UIView {
+class EventView: UILabel {
     private var _recorded = RecordedType(time: 0, event: .Completed)
     private weak var _animator: UIDynamicAnimator? = nil
     private var _snap: UISnapBehavior? = nil
+    private var _gravity: UIGravityBehavior? = nil
     private weak var _timeLine: UIView?
     
     init(recorded: RecordedType) {
@@ -44,17 +45,19 @@ class EventView: UIView {
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
             layer.borderWidth = 0.5
-            
-            let label = UILabel(frame: frame)
-            label.textAlignment = .Center
-            label.text = "1"
-            addSubview(label)
+            textAlignment = .Center
+            font = UIFont(name: "", size: 17.0)
+            textColor = .whiteColor()
+            if let value = recorded.value.element?.value {
+                text = String(value)
+            }
             
         case .Completed:
             super.init(frame: CGRectMake(0, 0, 37, 38))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
+            backgroundColor = .clearColor()
             
-            let grayLine = UIView(frame: CGRectMake(17, 5, 3, 28))
+            let grayLine = UIView(frame: CGRectMake(17.5, 5, 3, 28))
             grayLine.backgroundColor = .grayColor()
             
             addSubview(grayLine)
@@ -63,13 +66,14 @@ class EventView: UIView {
         case .Error:
             super.init(frame: CGRectMake(0, 0, 37, 38))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
+            backgroundColor = .clearColor()
             
-            let firstLineCross = UIView(frame: CGRectMake(10, 7.5, 3, 23))
+            let firstLineCross = UIView(frame: CGRectMake(17.5, 7.5, 3, 23))
             firstLineCross.backgroundColor = .grayColor()
             firstLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.25))
             addSubview(firstLineCross)
             
-            let secondLineCross = UIView(frame: CGRectMake(10, 7.5, 3, 23))
+            let secondLineCross = UIView(frame: CGRectMake(17.5, 7.5, 3, 23))
             secondLineCross.backgroundColor = .grayColor()
             secondLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.75))
             addSubview(secondLineCross)
@@ -77,6 +81,7 @@ class EventView: UIView {
             bringSubviewToFront(self)
         }
         
+        _gravity = UIGravityBehavior(items: [self])
         _recorded = recorded
     }
     
@@ -131,15 +136,17 @@ class SourceTimelineView: TimelineView {
         _ = _panGestureRecognizer.rx_event
             .subscribeNext { [weak self] r in
                 
+                let sourceEvents = self!._sourceEvents
+                
                 if r.state == .Began {
                     let location = r.locationInView(self)
 
-                    if let i = self!._sourceEvents.indexOf({ $0.frame.contains(location) }) {
-                        self!._panEventView = self!._sourceEvents[i]
+                    if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
+                        self!._panEventView = sourceEvents[i]
                     }
-                    if self!._panEventView != nil {
-                        let snap = self!._panEventView?._snap
-                        self!._panEventView?._animator?.removeBehavior(snap!)
+                    if let panEventView = self!._panEventView {
+                        let snap = panEventView._snap
+                        panEventView._animator?.removeBehavior(snap!)
                     }
                 }
                 
@@ -149,16 +156,32 @@ class SourceTimelineView: TimelineView {
                         self!._ghostEventView = nil
                     }
                     
-                    if self!._panEventView != nil {
-                        self!._ghostEventView = EventView(recorded: self!._panEventView!._recorded)
-                        self!._ghostEventView?.alpha = 0.2
-                        self!._ghostEventView?.center.y = self!.bounds.height / 2
-                        self!.addSubview(self!._ghostEventView!)
+                    if let panEventView = self!._panEventView {
+                        self!._ghostEventView = EventView(recorded: panEventView._recorded)
                         
-                        self!._panEventView?.center = r.locationInView(self)
+                        if let ghostEventView = self!._ghostEventView {
+                            ghostEventView.alpha = 0.2
+                            let sceneHeight = self!.superview!.bounds.height
+                            let y = r.locationInView(self!.superview).y
+                            
+                            let color: UIColor = y / sceneHeight > 0.8 ? .redColor() : .grayColor()
+                            switch ghostEventView._recorded.value {
+                            case .Next:
+                                ghostEventView.backgroundColor = color
+                            case .Completed, .Error:
+                                ghostEventView.subviews.forEach({ (subView) -> () in
+                                    subView.backgroundColor = color
+                                })
+                            }
+                            
+                            ghostEventView.center.y = self!.bounds.height / 2
+                            self!.addSubview(ghostEventView)
+                        }
+                        
                         let time = Int(r.locationInView(self).x)
-                        self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
-                        resultTimeline.updateEvents(self!._sourceEvents)
+                        panEventView.center = r.locationInView(self)
+                        panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
+                        resultTimeline.updateEvents(sourceEvents)
                     }
                 }
                 
@@ -168,14 +191,22 @@ class SourceTimelineView: TimelineView {
                         self!._ghostEventView = nil
                     }
                     
-                    if self!._panEventView != nil {
+                    if let panEventView = self!._panEventView {
+                        
+                        let sceneHeight = self!.superview!.bounds.height
+                        let y = r.locationInView(self!.superview).y
                         let time = Int(r.locationInView(self).x)
-                        let snap = self!._panEventView?._snap
+                        
+                        let snap = panEventView._snap
                         snap!.snapPoint.x = CGFloat(time + 10)
                         snap!.snapPoint.y = self!.center.y
-                        self!._panEventView?._animator?.addBehavior(snap!)
-                        self!._panEventView?.superview?.bringSubviewToFront(self!._panEventView!)
-                        self!._sourceEvents.forEach({ (eventView) -> () in
+                        
+                        if let animator = panEventView._animator {
+                            animator.addBehavior(y / sceneHeight > 0.8 ? panEventView._gravity! : snap!)
+                        }
+                        
+                        panEventView.superview?.bringSubviewToFront(panEventView)
+                        sourceEvents.forEach({ (eventView) -> () in
                             switch eventView._recorded.value {
                             case .Completed:
                                 eventView.superview!.bringSubviewToFront(eventView)
@@ -185,10 +216,10 @@ class SourceTimelineView: TimelineView {
                                 break
                             }
                         })
-                        self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
+                        panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
                     }
                     self!._panEventView = nil
-                    resultTimeline.updateEvents(self!._sourceEvents)
+                    resultTimeline.updateEvents(sourceEvents)
                 }
         }
     }
@@ -216,7 +247,6 @@ class ResultTimelineView: TimelineView {
             return o
         }
         
-        print(res.events)
         addEventsToTimeline(res.events)
     }
     
@@ -319,7 +349,7 @@ class ViewController: UIViewController {
         sourceTimeLine._sourceEvents.append(v)
         
         let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-        let e = EventView(recorded: RecordedType(time: Int(sourceTimeLine.bounds.size.width - 100.0), event: .Error(error)))
+        let e = EventView(recorded: RecordedType(time: Int(sourceTimeLine.bounds.size.width - 30.0), event: .Error(error)))
         sourceTimeLine.addSubview(e)
         e.use(_sceneView.animator, timeLine: sourceTimeLine)
         sourceTimeLine._sourceEvents.append(e)
@@ -330,9 +360,9 @@ class ViewController: UIViewController {
     func addElement() {
         let sourceTimeline = _sceneView._sourceTimeline
         let resultTimeline = _sceneView._resultTimeline
-        let time = 100
+        let time = Int(sourceTimeline.bounds.size.width / 2.0)
         
-        let elementSelector = UIAlertController(title: "Select operator", message: nil, preferredStyle: .ActionSheet)
+        let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
             let event = Event.Next(ColoredType(value: 1, color: RXMUIKit.randomColor()))
@@ -357,9 +387,12 @@ class ViewController: UIViewController {
             sourceTimeline._sourceEvents.append(e)
             resultTimeline.updateEvents(sourceTimeline._sourceEvents)
         }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+        
         elementSelector.addAction(nextAction)
         elementSelector.addAction(completedAction)
         elementSelector.addAction(errorAction)
+        elementSelector.addAction(cancelAction)
         
         presentViewController(elementSelector, animated: true) { () -> Void in }
     }
