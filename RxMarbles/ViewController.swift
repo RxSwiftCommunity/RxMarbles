@@ -18,6 +18,7 @@ struct ColoredType: Equatable {
 
 struct TimelineImage {
     static var timeLine: UIImage { return UIImage(named: "timeLine")! }
+    static var cross: UIImage { return UIImage(named: "cross")! }
 }
 
 func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
@@ -43,12 +44,33 @@ class EventView: UIView {
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
             layer.borderWidth = 0.5
+            
+            let label = UILabel(frame: frame)
+            label.textAlignment = .Center
+            label.text = "1"
+            addSubview(label)
+            
         case .Completed:
-            super.init(frame: CGRectMake(0, 0, 38, 38))
+            super.init(frame: CGRectMake(0, 0, 38, 50))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
+            
+            let grayLine = UIView(frame: CGRectMake(17, 0, 4, 50))
+            grayLine.backgroundColor = .grayColor()
+            
+            addSubview(grayLine)
         case .Error:
-            super.init(frame: CGRectMake(0, 0, 38, 38))
+            super.init(frame: CGRectMake(0, 0, 50, 50))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
+            
+            let firstLineCross = UIView(frame: CGRectMake(23, 0, 4, 50))
+            firstLineCross.backgroundColor = .grayColor()
+            firstLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.25))
+            addSubview(firstLineCross)
+            
+            let secondLineCross = UIView(frame: CGRectMake(23, 0, 4, 50))
+            secondLineCross.backgroundColor = .grayColor()
+            secondLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.75))
+            addSubview(secondLineCross)
         }
         
         _recorded = recorded
@@ -162,6 +184,7 @@ class ResultTimelineView: TimelineView {
             return o
         }
         
+        print(res.events)
         addEventsToTimeline(res.events)
     }
     
@@ -247,12 +270,23 @@ class ViewController: UIViewController {
         
         for t in 1..<6 {
             let time = t * 50
-            let event = Event.Next(ColoredType(value: time, color: RXMUIKit.randomColor()))
+            let event = Event.Next(ColoredType(value: t, color: RXMUIKit.randomColor()))
             let v = EventView(recorded: RecordedType(time: time, event: event))
             sourceTimeLine.addSubview(v)
             v.use(_sceneView.animator, timeLine: sourceTimeLine)
             sourceTimeLine._sourceEvents.append(v)
         }
+        
+        let v = EventView(recorded: RecordedType(time: Int(sourceTimeLine.bounds.size.width - 60.0), event: .Completed))
+        sourceTimeLine.addSubview(v)
+        v.use(_sceneView.animator, timeLine: sourceTimeLine)
+        sourceTimeLine._sourceEvents.append(v)
+        
+        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
+        let e = EventView(recorded: RecordedType(time: Int(sourceTimeLine.bounds.size.width - 100.0), event: .Error(error)))
+        sourceTimeLine.addSubview(e)
+        e.use(_sceneView.animator, timeLine: sourceTimeLine)
+        sourceTimeLine._sourceEvents.append(e)
         
         resultTimeline.updateEvents(sourceTimeLine._sourceEvents)
     }
