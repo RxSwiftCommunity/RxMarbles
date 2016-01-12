@@ -51,26 +51,30 @@ class EventView: UIView {
             addSubview(label)
             
         case .Completed:
-            super.init(frame: CGRectMake(0, 0, 38, 50))
+            super.init(frame: CGRectMake(0, 0, 37, 38))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
             
-            let grayLine = UIView(frame: CGRectMake(17, 0, 4, 50))
+            let grayLine = UIView(frame: CGRectMake(17, 5, 3, 28))
             grayLine.backgroundColor = .grayColor()
             
             addSubview(grayLine)
+            
+            bringSubviewToFront(self)
         case .Error:
-            super.init(frame: CGRectMake(0, 0, 50, 50))
+            super.init(frame: CGRectMake(0, 0, 37, 38))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
             
-            let firstLineCross = UIView(frame: CGRectMake(23, 0, 4, 50))
+            let firstLineCross = UIView(frame: CGRectMake(10, 7.5, 3, 23))
             firstLineCross.backgroundColor = .grayColor()
             firstLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.25))
             addSubview(firstLineCross)
             
-            let secondLineCross = UIView(frame: CGRectMake(23, 0, 4, 50))
+            let secondLineCross = UIView(frame: CGRectMake(10, 7.5, 3, 23))
             secondLineCross.backgroundColor = .grayColor()
             secondLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.75))
             addSubview(secondLineCross)
+            
+            bringSubviewToFront(self)
         }
         
         _recorded = recorded
@@ -153,6 +157,16 @@ class SourceTimelineView: TimelineView {
                         snap!.snapPoint.y = self!.center.y
                         self!._panEventView?._animator?.addBehavior(snap!)
                         self!._panEventView?.superview?.bringSubviewToFront(self!._panEventView!)
+                        self!._sourceEvents.forEach({ (eventView) -> () in
+                            switch eventView._recorded.value {
+                            case .Completed:
+                                eventView.superview!.bringSubviewToFront(eventView)
+                            case .Error:
+                                eventView.superview!.bringSubviewToFront(eventView)
+                            default:
+                                break
+                            }
+                        })
                         self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
                     }
                     self!._panEventView = nil
