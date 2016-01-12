@@ -119,6 +119,7 @@ class SourceTimelineView: TimelineView {
     
     private let _panGestureRecognizer = UIPanGestureRecognizer()
     private var _panEventView: EventView?
+    private var _ghostEventView: EventView?
     
     init(frame: CGRect, resultTimeline: ResultTimelineView) {
         super.init(frame: frame)
@@ -143,13 +144,30 @@ class SourceTimelineView: TimelineView {
                 }
                 
                 if r.state == .Changed {
-                    self!._panEventView?.center = r.locationInView(self)
-                    let time = Int(r.locationInView(self).x)
-                    self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
-                    resultTimeline.updateEvents(self!._sourceEvents)
+                    if self!._ghostEventView != nil {
+                        self!._ghostEventView?.removeFromSuperview()
+                        self!._ghostEventView = nil
+                    }
+                    
+                    if self!._panEventView != nil {
+                        self!._ghostEventView = EventView(recorded: self!._panEventView!._recorded)
+                        self!._ghostEventView?.alpha = 0.2
+                        self!._ghostEventView?.center.y = self!.bounds.height / 2
+                        self!.addSubview(self!._ghostEventView!)
+                        
+                        self!._panEventView?.center = r.locationInView(self)
+                        let time = Int(r.locationInView(self).x)
+                        self!._panEventView?._recorded = RecordedType(time: time, event: (self!._panEventView?._recorded.value)!)
+                        resultTimeline.updateEvents(self!._sourceEvents)
+                    }
                 }
                 
                 if r.state == .Ended {
+                    if self!._ghostEventView != nil {
+                        self!._ghostEventView?.removeFromSuperview()
+                        self!._ghostEventView = nil
+                    }
+                    
                     if self!._panEventView != nil {
                         let time = Int(r.locationInView(self).x)
                         let snap = self!._panEventView?._snap
@@ -227,6 +245,8 @@ class ResultTimelineView: TimelineView {
 
 class SceneView: UIView {
     var animator: UIDynamicAnimator?
+    var _sourceTimeline: TimelineView!
+    var _resultTimeline: ResultTimelineView!
     
     init() {
         super.init(frame: CGRectZero)
@@ -277,10 +297,12 @@ class ViewController: UIViewController {
         let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), currentOperator: _currentOperator)
         resultTimeline.center.y = 200
         _sceneView.addSubview(resultTimeline)
+        _sceneView._resultTimeline = resultTimeline
         
         let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), resultTimeline: resultTimeline)
         sourceTimeLine.center.y = 120
         _sceneView.addSubview(sourceTimeLine)
+        _sceneView._sourceTimeline = sourceTimeLine
         
         for t in 1..<6 {
             let time = t * 50
@@ -306,7 +328,40 @@ class ViewController: UIViewController {
     }
     
     func addElement() {
+        let sourceTimeline = _sceneView._sourceTimeline
+        let resultTimeline = _sceneView._resultTimeline
+        let time = 100
         
+        let elementSelector = UIAlertController(title: "Select operator", message: nil, preferredStyle: .ActionSheet)
+        
+        let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
+            let event = Event.Next(ColoredType(value: 1, color: RXMUIKit.randomColor()))
+            let v = EventView(recorded: RecordedType(time: time, event: event))
+            sourceTimeline.addSubview(v)
+            v.use(self._sceneView.animator, timeLine: sourceTimeline)
+            sourceTimeline._sourceEvents.append(v)
+            resultTimeline.updateEvents(sourceTimeline._sourceEvents)
+        }
+        let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
+            let v = EventView(recorded: RecordedType(time: time, event: .Completed))
+            sourceTimeline.addSubview(v)
+            v.use(self._sceneView.animator, timeLine: sourceTimeline)
+            sourceTimeline._sourceEvents.append(v)
+            resultTimeline.updateEvents(sourceTimeline._sourceEvents)
+        }
+        let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
+            let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
+            let e = EventView(recorded: RecordedType(time: time, event: .Error(error)))
+            sourceTimeline.addSubview(e)
+            e.use(self._sceneView.animator, timeLine: sourceTimeline)
+            sourceTimeline._sourceEvents.append(e)
+            resultTimeline.updateEvents(sourceTimeline._sourceEvents)
+        }
+        elementSelector.addAction(nextAction)
+        elementSelector.addAction(completedAction)
+        elementSelector.addAction(errorAction)
+        
+        presentViewController(elementSelector, animated: true) { () -> Void in }
     }
     
     func showOperatorView() {
