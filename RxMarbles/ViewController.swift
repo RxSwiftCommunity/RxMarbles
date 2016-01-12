@@ -32,6 +32,7 @@ class EventView: UILabel {
     private weak var _animator: UIDynamicAnimator? = nil
     private var _snap: UISnapBehavior? = nil
     private var _gravity: UIGravityBehavior? = nil
+    private var _removeBehavior: UIDynamicItemBehavior? = nil
     private weak var _timeLine: UIView?
     
     init(recorded: RecordedType) {
@@ -82,6 +83,7 @@ class EventView: UILabel {
         }
         
         _gravity = UIGravityBehavior(items: [self])
+        _removeBehavior = UIDynamicItemBehavior(items: [self])
         _recorded = recorded
     }
     
@@ -202,7 +204,23 @@ class SourceTimelineView: TimelineView {
                         snap!.snapPoint.y = self!.center.y
                         
                         if let animator = panEventView._animator {
-                            animator.addBehavior(y / sceneHeight > 0.8 ? panEventView._gravity! : snap!)
+                            if y / sceneHeight > 0.8 {
+                                animator.addBehavior(panEventView._gravity!)
+                                animator.addBehavior(panEventView._removeBehavior!)
+                                panEventView._removeBehavior?.action = {
+                                    if let superView = self!.superview {
+                                        if CGRectIntersectsRect(superView.bounds, panEventView.frame) == false {
+                                            if let index = self!._sourceEvents.indexOf(panEventView) {
+                                                self!._sourceEvents.removeAtIndex(index)
+                                                resultTimeline.updateEvents(self!._sourceEvents)
+                                                print("removed")
+                                            }
+                                        }
+                                    }
+                                }
+                            } else {
+                                animator.addBehavior(snap!)
+                            }
                         }
                         
                         panEventView.superview?.bringSubviewToFront(panEventView)
