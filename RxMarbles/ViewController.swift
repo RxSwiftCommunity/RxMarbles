@@ -101,6 +101,14 @@ class EventView: UILabel {
         userInteractionEnabled = _animator != nil
     }
     
+    var isCompleted: Bool {
+        if case .Completed = _recorded.value {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -108,13 +116,25 @@ class EventView: UILabel {
 
 class TimelineView: UIView {
     var _sourceEvents = [EventView]()
+    let _timeArrow = UIImageView(image: TimelineImage.timeLine)
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        let timeArrow = UIImageView(image: TimelineImage.timeLine)
-        timeArrow.frame = CGRectMake(0, 0, self.bounds.width, TimelineImage.timeLine.size.height)
-        timeArrow.center.y = self.center.y
-        self.addSubview(timeArrow)
+        _timeArrow.frame = CGRectMake(0, 0, self.bounds.width, TimelineImage.timeLine.size.height)
+        _timeArrow.center.y = center.y
+        self.addSubview(_timeArrow)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+//        if let superView = superview {
+//            let orientation = UIApplication.sharedApplication().statusBarOrientation
+//            if orientation == .Portrait {
+//
+//            } else {
+//                
+//            }
+//        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -162,16 +182,18 @@ class SourceTimelineView: TimelineView {
                         self!._ghostEventView = EventView(recorded: panEventView._recorded)
                         
                         if let ghostEventView = self!._ghostEventView {
-                            ghostEventView.alpha = 0.2
                             let sceneHeight = self!.superview!.bounds.height
                             let y = r.locationInView(self!.superview).y
                             
                             let color: UIColor = y / sceneHeight > 0.8 ? .redColor() : .grayColor()
+                            let alpha: CGFloat = y / sceneHeight > 0.8 ? 1.0 : 0.2
                             switch ghostEventView._recorded.value {
                             case .Next:
+                                ghostEventView.alpha = alpha
                                 ghostEventView.backgroundColor = color
                             case .Completed, .Error:
                                 ghostEventView.subviews.forEach({ (subView) -> () in
+                                    subView.alpha = alpha
                                     subView.backgroundColor = color
                                 })
                             }
@@ -213,7 +235,6 @@ class SourceTimelineView: TimelineView {
                                             if let index = self!._sourceEvents.indexOf(panEventView) {
                                                 self!._sourceEvents.removeAtIndex(index)
                                                 resultTimeline.updateEvents(self!._sourceEvents)
-                                                print("removed")
                                             }
                                         }
                                     }
@@ -240,6 +261,10 @@ class SourceTimelineView: TimelineView {
                     resultTimeline.updateEvents(sourceEvents)
                 }
         }
+    }
+    
+    private func maxTime() {
+        
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -408,7 +433,10 @@ class ViewController: UIViewController {
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
         
         elementSelector.addAction(nextAction)
-        elementSelector.addAction(completedAction)
+        let sourceEvents: [EventView] = sourceTimeline._sourceEvents
+        if sourceEvents.indexOf({ $0.isCompleted == true }) == nil {
+            elementSelector.addAction(completedAction)
+        }
         elementSelector.addAction(errorAction)
         elementSelector.addAction(cancelAction)
         
