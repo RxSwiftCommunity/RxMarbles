@@ -201,43 +201,13 @@ class SourceTimelineView: TimelineView {
                     self!._ghostEventView = nil
                     
                     if let panEventView = self!._panEventView {
-                        let sceneHeight = self!.superview!.bounds.height
-                        let y = r.locationInView(self!.superview).y
-                        let time = Int(r.locationInView(self).x)
                         
-                        if let animator = panEventView._animator {
-                            if y / sceneHeight > 0.8 {
-                                animator.addBehavior(panEventView._gravity!)
-                                animator.addBehavior(panEventView._removeBehavior!)
-                                panEventView._removeBehavior?.action = {
-                                    if let superView = self!.superview {
-                                        if CGRectIntersectsRect(superView.bounds, panEventView.frame) == false {
-                                            if let index = self!._sourceEvents.indexOf(panEventView) {
-                                                self!._sourceEvents.removeAtIndex(index)
-                                                resultTimeline.updateEvents(self!._sourceEvents)
-                                            }
-                                        }
-                                    }
-                                }
-                            } else {
-                                let snap = panEventView._snap
-                                snap!.snapPoint.x = CGFloat(time + 10)
-                                snap!.snapPoint.y = self!.center.y
-                                animator.addBehavior(snap!)
-                            }
-                        }
+                        self!.animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: resultTimeline)
                         
                         panEventView.superview?.bringSubviewToFront(panEventView)
-                        sourceEvents.forEach({ (eventView) -> () in
-                            switch eventView._recorded.value {
-                            case .Completed:
-                                eventView.superview!.bringSubviewToFront(eventView)
-                            case .Error:
-                                eventView.superview!.bringSubviewToFront(eventView)
-                            default:
-                                break
-                            }
-                        })
+                        self!.bringStopEventViewsToFront(sourceEvents)
+                        
+                        let time = Int(r.locationInView(self).x)
                         panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
                     }
                     self!._panEventView = nil
@@ -247,40 +217,15 @@ class SourceTimelineView: TimelineView {
     }
     
     private func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
-        let sceneHeight = self.superview!.bounds.height
-        let y = recognizer.locationInView(self.superview).y
-        
-        let needShake = (ghostEventView.backgroundColor == .grayColor()) && (y / sceneHeight > 0.8)
-//        let needShake = y / sceneHeight > 0.8
-        if needShake == true {
-//            let leftWobble = CGAffineTransformRotate(CGAffineTransformIdentity, CGFloat((-5.0 * M_PI) / 180.0))
-//            let rightWobble = CGAffineTransformRotate(CGAffineTransformIdentity, CGFloat((5.0 * M_PI) / 180.0))
-//            
-//            ghostEventView.transform = leftWobble
-//            
-//            UIView.beginAnimations("wobble", context: nil)
-//            UIView.setAnimationRepeatAutoreverses(true)
-//            UIView.setAnimationRepeatCount(1)
-//            UIView.setAnimationDuration(7/100)
-//            UIView.setAnimationDelegate(self)
-//            
-//            ghostEventView.transform = rightWobble
-//            
-//            UIView.commitAnimations()
-            let animation = CAKeyframeAnimation(keyPath: "transform")
-            let wobbleAngle: CGFloat = 0.06
-            
-            let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
-            let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
-            animation.values = [valLeft, valRight]
-            
-            animation.autoreverses = true
-            animation.duration = 0.125
-            animation.repeatCount = 100
-            ghostEventView.layer.addAnimation(animation, forKey: nil)
+
+        if onDeleteZone(recognizer) == true {
+            shakeGhostEventView(ghostEventView)
+        } else {
+            ghostEventView.layer.removeAllAnimations()
         }
-        let color: UIColor = y / sceneHeight > 0.8 ? .redColor() : .grayColor()
-        let alpha: CGFloat = y / sceneHeight > 0.8 ? 1.0 : 0.2
+        
+        let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
+        let alpha: CGFloat = onDeleteZone(recognizer) ? 1.0 : 0.2
         
         switch ghostEventView._recorded.value {
         case .Next:
@@ -292,6 +237,65 @@ class SourceTimelineView: TimelineView {
                 subView.backgroundColor = color
             })
         }
+    }
+    
+    private func shakeGhostEventView(ghostEventView: EventView) {
+        let animation = CAKeyframeAnimation(keyPath: "transform")
+        let wobbleAngle: CGFloat = 0.3
+        
+        let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
+        let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
+        animation.values = [valLeft, valRight]
+        
+        animation.autoreverses = true
+        animation.duration = 0.125
+        animation.repeatCount = 10000
+        
+        if ghostEventView.layer.animationKeys() == nil {
+            ghostEventView.layer.addAnimation(animation, forKey: "shake")
+        }
+    }
+    
+    private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
+        if let animator = panEventView._animator {
+            
+            let time = Int(recognizer.locationInView(self).x)
+            
+            if onDeleteZone(recognizer) == true {
+                animator.addBehavior(panEventView._gravity!)
+                animator.addBehavior(panEventView._removeBehavior!)
+                panEventView._removeBehavior?.action = {
+                    if let superView = self.superview {
+                        if CGRectIntersectsRect(superView.bounds, panEventView.frame) == false {
+                            if let index = self._sourceEvents.indexOf(panEventView) {
+                                self._sourceEvents.removeAtIndex(index)
+                                resultTimeline.updateEvents(self._sourceEvents)
+                            }
+                        }
+                    }
+                }
+            } else {
+                let snap = panEventView._snap
+                snap!.snapPoint.x = CGFloat(time + 10)
+                snap!.snapPoint.y = self.center.y
+                animator.addBehavior(snap!)
+            }
+        }
+    }
+    
+    private func onDeleteZone(recognizer: UIGestureRecognizer) -> Bool {
+        let sceneHeight = self.superview!.bounds.height
+        let y = recognizer.locationInView(self.superview).y
+        
+        return y / sceneHeight > 0.8
+    }
+    
+    private func bringStopEventViewsToFront(sourceEvents: [EventView]) {
+        sourceEvents.forEach({ (eventView) -> () in
+            if eventView._recorded.value.isStopEvent == true {
+                eventView.superview!.bringSubviewToFront(eventView)
+            }
+        })
     }
 
     required init?(coder aDecoder: NSCoder) {
