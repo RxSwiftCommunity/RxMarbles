@@ -128,13 +128,23 @@ class TimelineView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        _timeArrow.frame = CGRectMake(0, 0, self.bounds.width, TimelineImage.timeLine.size.height)
-        _timeArrow.center.y = center.y
         self.addSubview(_timeArrow)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        if orientation == .Portrait {
+            frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.width)! - 20, 40)
+            _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
+        } else {
+            frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.height)! - 20, 40)
+            _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
+        }
+        _sourceEvents.forEach { (eventView) -> () in
+            eventView.removeFromSuperview()
+            self.addSubview(eventView)
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -162,7 +172,7 @@ class SourceTimelineView: TimelineView {
                 
                 if r.state == .Began {
                     let location = r.locationInView(self)
-
+                    print(location)
                     if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
                         self!._panEventView = sourceEvents[i]
                     }
@@ -214,6 +224,10 @@ class SourceTimelineView: TimelineView {
                     resultTimeline.updateEvents(sourceEvents)
                 }
         }
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
     }
     
     private func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
