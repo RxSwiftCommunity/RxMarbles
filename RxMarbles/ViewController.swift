@@ -160,8 +160,9 @@ class SourceTimelineView: TimelineView {
             .subscribeNext { [weak self] r in
                 
                 let sourceEvents = self!._sourceEvents
-                
-                if r.state == .Began {
+               
+                switch r.state {
+                case .Began:
                     let location = r.locationInView(self)
                     if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
                         self!._panEventView = sourceEvents[i]
@@ -176,9 +177,7 @@ class SourceTimelineView: TimelineView {
                             self!.addSubview(ghostEventView)
                         }
                     }
-                }
-                
-                if r.state == .Changed {
+                case .Changed:
                     if let panEventView = self!._panEventView {
                         
                         let time = Int(r.locationInView(self).x)
@@ -194,9 +193,7 @@ class SourceTimelineView: TimelineView {
                         
                         resultTimeline.updateEvents(sourceEvents)
                     }
-                }
-                
-                if r.state == .Ended {
+                case .Ended:
                     self!._ghostEventView?.removeFromSuperview()
                     self!._ghostEventView = nil
                     
@@ -212,7 +209,8 @@ class SourceTimelineView: TimelineView {
                     }
                     self!._panEventView = nil
                     resultTimeline.updateEvents(sourceEvents)
-                }
+                default: break
+            }
         }
     }
     
