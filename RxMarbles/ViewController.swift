@@ -109,6 +109,14 @@ class EventView: UILabel {
         }
     }
     
+    var isNext: Bool {
+        if case .Next = _recorded.value {
+            return true
+        } else {
+            return false
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -127,14 +135,6 @@ class TimelineView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-//        if let superView = superview {
-//            let orientation = UIApplication.sharedApplication().statusBarOrientation
-//            if orientation == .Portrait {
-//
-//            } else {
-//                
-//            }
-//        }
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -169,61 +169,41 @@ class SourceTimelineView: TimelineView {
                     if let panEventView = self!._panEventView {
                         let snap = panEventView._snap
                         panEventView._animator?.removeBehavior(snap!)
+                        self!._ghostEventView = EventView(recorded: panEventView._recorded)
+                        if let ghostEventView = self!._ghostEventView {
+                            ghostEventView.center.y = self!.bounds.height / 2
+                            self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
+                            self!.addSubview(ghostEventView)
+                        }
                     }
                 }
                 
                 if r.state == .Changed {
-                    if self!._ghostEventView != nil {
-                        self!._ghostEventView?.removeFromSuperview()
-                        self!._ghostEventView = nil
-                    }
-                    
                     if let panEventView = self!._panEventView {
-                        self!._ghostEventView = EventView(recorded: panEventView._recorded)
-                        
-                        if let ghostEventView = self!._ghostEventView {
-                            let sceneHeight = self!.superview!.bounds.height
-                            let y = r.locationInView(self!.superview).y
-                            
-                            let color: UIColor = y / sceneHeight > 0.8 ? .redColor() : .grayColor()
-                            let alpha: CGFloat = y / sceneHeight > 0.8 ? 1.0 : 0.2
-                            switch ghostEventView._recorded.value {
-                            case .Next:
-                                ghostEventView.alpha = alpha
-                                ghostEventView.backgroundColor = color
-                            case .Completed, .Error:
-                                ghostEventView.subviews.forEach({ (subView) -> () in
-                                    subView.alpha = alpha
-                                    subView.backgroundColor = color
-                                })
-                            }
-                            
-                            ghostEventView.center.y = self!.bounds.height / 2
-                            self!.addSubview(ghostEventView)
-                        }
                         
                         let time = Int(r.locationInView(self).x)
                         panEventView.center = r.locationInView(self)
                         panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
+                        
+                        if let ghostEventView = self!._ghostEventView {
+                            self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
+                            
+                            ghostEventView._recorded = panEventView._recorded
+                            ghostEventView.center = CGPointMake(CGFloat(ghostEventView._recorded.time), self!.bounds.height / 2)
+                        }
+                        
                         resultTimeline.updateEvents(sourceEvents)
                     }
                 }
                 
                 if r.state == .Ended {
-                    if self!._ghostEventView != nil {
-                        self!._ghostEventView?.removeFromSuperview()
-                        self!._ghostEventView = nil
-                    }
+                    self!._ghostEventView?.removeFromSuperview()
+                    self!._ghostEventView = nil
                     
                     if let panEventView = self!._panEventView {
-                        
                         let sceneHeight = self!.superview!.bounds.height
                         let y = r.locationInView(self!.superview).y
                         let time = Int(r.locationInView(self).x)
-                        
-                        let snap = panEventView._snap
-                        snap!.snapPoint.x = CGFloat(time + 10)
-                        snap!.snapPoint.y = self!.center.y
                         
                         if let animator = panEventView._animator {
                             if y / sceneHeight > 0.8 {
@@ -240,6 +220,9 @@ class SourceTimelineView: TimelineView {
                                     }
                                 }
                             } else {
+                                let snap = panEventView._snap
+                                snap!.snapPoint.x = CGFloat(time + 10)
+                                snap!.snapPoint.y = self!.center.y
                                 animator.addBehavior(snap!)
                             }
                         }
@@ -263,8 +246,52 @@ class SourceTimelineView: TimelineView {
         }
     }
     
-    private func maxTime() {
+    private func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
+        let sceneHeight = self.superview!.bounds.height
+        let y = recognizer.locationInView(self.superview).y
         
+        let needShake = (ghostEventView.backgroundColor == .grayColor()) && (y / sceneHeight > 0.8)
+//        let needShake = y / sceneHeight > 0.8
+        if needShake == true {
+//            let leftWobble = CGAffineTransformRotate(CGAffineTransformIdentity, CGFloat((-5.0 * M_PI) / 180.0))
+//            let rightWobble = CGAffineTransformRotate(CGAffineTransformIdentity, CGFloat((5.0 * M_PI) / 180.0))
+//            
+//            ghostEventView.transform = leftWobble
+//            
+//            UIView.beginAnimations("wobble", context: nil)
+//            UIView.setAnimationRepeatAutoreverses(true)
+//            UIView.setAnimationRepeatCount(1)
+//            UIView.setAnimationDuration(7/100)
+//            UIView.setAnimationDelegate(self)
+//            
+//            ghostEventView.transform = rightWobble
+//            
+//            UIView.commitAnimations()
+            let animation = CAKeyframeAnimation(keyPath: "transform")
+            let wobbleAngle: CGFloat = 0.06
+            
+            let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
+            let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
+            animation.values = [valLeft, valRight]
+            
+            animation.autoreverses = true
+            animation.duration = 0.125
+            animation.repeatCount = 100
+            ghostEventView.layer.addAnimation(animation, forKey: nil)
+        }
+        let color: UIColor = y / sceneHeight > 0.8 ? .redColor() : .grayColor()
+        let alpha: CGFloat = y / sceneHeight > 0.8 ? 1.0 : 0.2
+        
+        switch ghostEventView._recorded.value {
+        case .Next:
+            ghostEventView.alpha = alpha
+            ghostEventView.backgroundColor = color
+        case .Completed, .Error:
+            ghostEventView.subviews.forEach({ (subView) -> () in
+                subView.alpha = alpha
+                subView.backgroundColor = color
+            })
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -403,7 +430,7 @@ class ViewController: UIViewController {
     func addElement() {
         let sourceTimeline = _sceneView._sourceTimeline
         let resultTimeline = _sceneView._resultTimeline
-        let time = Int(sourceTimeline.bounds.size.width / 2.0)
+        var time = Int(sourceTimeline.bounds.size.width / 2.0)
         
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
@@ -416,7 +443,12 @@ class ViewController: UIViewController {
             resultTimeline.updateEvents(sourceTimeline._sourceEvents)
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
-            let v = EventView(recorded: RecordedType(time: time, event: .Completed))
+            if let t = self.maxNextTime(sourceTimeline._sourceEvents) {
+                time = t
+            } else {
+                time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
+            }
+            let v = EventView(recorded: RecordedType(time: time + 20, event: .Completed))
             sourceTimeline.addSubview(v)
             v.use(self._sceneView.animator, timeLine: sourceTimeline)
             sourceTimeline._sourceEvents.append(v)
@@ -441,6 +473,16 @@ class ViewController: UIViewController {
         elementSelector.addAction(cancelAction)
         
         presentViewController(elementSelector, animated: true) { () -> Void in }
+    }
+    
+    private func maxNextTime(sourceEvents: [EventView]!) -> Int? {
+        var times = Array<Int>()
+        sourceEvents.forEach { (eventView) -> () in
+            if eventView.isNext {
+                times.append(eventView._recorded.time)
+            }
+        }
+        return times.maxElement()
     }
     
     func showOperatorView() {
