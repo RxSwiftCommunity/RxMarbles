@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SpriteKit
 import RxSwift
 import RxCocoa
 
@@ -164,7 +163,6 @@ class SourceTimelineView: TimelineView {
                 
                 if r.state == .Began {
                     let location = r.locationInView(self)
-                    print(location)
                     if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
                         self!._panEventView = sourceEvents[i]
                     }
@@ -519,7 +517,7 @@ class ViewController: UIViewController {
                     let scaledTime = Int(CGFloat(eventView._recorded.time) * koef)
                     let recorded = RecordedType(time: scaledTime, event: eventView._recorded.value)
                     eventView._recorded = recorded
-                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                    UIView.animateWithDuration(0.3, animations: { () -> Void in
                         eventView.center = CGPointMake(CGFloat(eventView._recorded.time), self._sceneView._sourceTimeline.frame.size.height / 2)
                     }, completion: { (complete) -> Void in
                         self._sceneView._resultTimeline.updateEvents(self._sceneView._sourceTimeline._sourceEvents)
