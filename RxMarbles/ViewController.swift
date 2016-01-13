@@ -133,7 +133,7 @@ class TimelineView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let orientation = UIApplication.sharedApplication().statusBarOrientation
+        let orientation = UIDevice.currentDevice().orientation
         if orientation == .Portrait {
             frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.width)! - 20, 40)
             _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
