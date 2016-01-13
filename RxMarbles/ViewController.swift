@@ -144,7 +144,7 @@ class TimelineView: UIView {
 
 class SourceTimelineView: TimelineView {
     
-    private let _panGestureRecognizer = UIPanGestureRecognizer()
+    private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
     
@@ -153,9 +153,11 @@ class SourceTimelineView: TimelineView {
         userInteractionEnabled = true
         clipsToBounds = false
         
-        addGestureRecognizer(_panGestureRecognizer)
+        _longPressGestureRecorgnizer.minimumPressDuration = 0.0
         
-        _ = _panGestureRecognizer.rx_event
+        addGestureRecognizer(_longPressGestureRecorgnizer)
+        
+        _ = _longPressGestureRecorgnizer.rx_event
             .subscribeNext { [weak self] r in
                 
                 let sourceEvents = self!._sourceEvents
