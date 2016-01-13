@@ -133,18 +133,8 @@ class TimelineView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let orientation = UIDevice.currentDevice().orientation
-        if orientation == .Portrait {
-            frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.width)! - 20, 40)
-            _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
-        } else {
-            frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.height)! - 20, 40)
-            _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
-        }
-        _sourceEvents.forEach { (eventView) -> () in
-            eventView.removeFromSuperview()
-            self.addSubview(eventView)
-        }
+        frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.width)! - 20, 40)
+        _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -349,10 +339,7 @@ class ResultTimelineView: TimelineView {
             let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value))
             eventView.center.y = self.bounds.height / 2
             _sourceEvents.append(eventView)
-        }
-
-        _sourceEvents.forEach { (eventView) -> () in
-            self.addSubview(eventView)
+            addSubview(eventView)
         }
     }
     
@@ -409,15 +396,20 @@ class ViewController: UIViewController {
     private func setupSceneView() {
         view.addSubview(_sceneView)
         _sceneView.frame = view.frame
+        _sceneView.translatesAutoresizingMaskIntoConstraints = false
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[sceneView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["sceneView" : _sceneView]))
+        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[sceneView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["sceneView" : _sceneView]))
         
         _sceneView.animator = UIDynamicAnimator(referenceView: _sceneView)
         
-        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), currentOperator: _currentOperator)
+        let width = _sceneView.frame.width - 20
+        
+        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, width, 40), currentOperator: _currentOperator)
         resultTimeline.center.y = 200
         _sceneView.addSubview(resultTimeline)
         _sceneView._resultTimeline = resultTimeline
         
-        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, _sceneView.bounds.width - 20, 40), resultTimeline: resultTimeline)
+        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
         sourceTimeLine.center.y = 120
         _sceneView.addSubview(sourceTimeLine)
         _sceneView._sourceTimeline = sourceTimeLine
@@ -488,10 +480,10 @@ class ViewController: UIViewController {
     
     private func addErrorEventToTimeline(time: Int, timeline: TimelineView) {
         let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-        let e = EventView(recorded: RecordedType(time: time, event: .Error(error)))
-        timeline.addSubview(e)
-        e.use(self._sceneView.animator, timeLine: timeline)
-        timeline._sourceEvents.append(e)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(error)))
+        timeline.addSubview(v)
+        v.use(self._sceneView.animator, timeLine: timeline)
+        timeline._sourceEvents.append(v)
     }
     
     private func maxNextTime(sourceEvents: [EventView]!) -> Int? {
@@ -509,5 +501,28 @@ class ViewController: UIViewController {
         _operatorTableViewController?.selectedOperator = _currentOperator
         _operatorTableViewController?.title = "Select Operator"
         navigationController?.pushViewController(_operatorTableViewController!, animated: true)
+    }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        coordinator.animateAlongsideTransition({ (context) -> Void in
+                self._sceneView._resultTimeline._sourceEvents.forEach({ (eventView) -> () in
+                    eventView.removeFromSuperview()
+                })
+            }) { (context) -> Void in
+                let width = self.view.frame.width
+                let height = self.view.frame.height
+                let koef = width / height
+                self._sceneView._sourceTimeline._sourceEvents.forEach { (eventView) -> () in
+                    
+                    let scaledTime = Int(CGFloat(eventView._recorded.time) * koef)
+                    let recorded = RecordedType(time: scaledTime, event: eventView._recorded.value)
+                    eventView._recorded = recorded
+                    UIView.animateWithDuration(0.5, animations: { () -> Void in
+                        eventView.center = CGPointMake(CGFloat(eventView._recorded.time), self._sceneView._sourceTimeline.frame.size.height / 2)
+                    }, completion: { (complete) -> Void in
+                        self._sceneView._resultTimeline.updateEvents(self._sceneView._sourceTimeline._sourceEvents)
+                    })
+                }
+        }
     }
 }
