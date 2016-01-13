@@ -411,22 +411,11 @@ class ViewController: UIViewController {
         for t in 1..<6 {
             let time = t * 50
             let event = Event.Next(ColoredType(value: t, color: RXMUIKit.randomColor()))
-            let v = EventView(recorded: RecordedType(time: time, event: event))
-            sourceTimeLine.addSubview(v)
-            v.use(_sceneView.animator, timeLine: sourceTimeLine)
-            sourceTimeLine._sourceEvents.append(v)
+            addNextEventToTimeline(time, event: event, timeline: sourceTimeLine)
         }
         
-        let v = EventView(recorded: RecordedType(time: Int(sourceTimeLine.bounds.size.width - 60.0), event: .Completed))
-        sourceTimeLine.addSubview(v)
-        v.use(_sceneView.animator, timeLine: sourceTimeLine)
-        sourceTimeLine._sourceEvents.append(v)
-        
-        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-        let e = EventView(recorded: RecordedType(time: Int(sourceTimeLine.bounds.size.width - 30.0), event: .Error(error)))
-        sourceTimeLine.addSubview(e)
-        e.use(_sceneView.animator, timeLine: sourceTimeLine)
-        sourceTimeLine._sourceEvents.append(e)
+        addCompletedEventToTimeline(Int(sourceTimeLine.bounds.size.width - 60.0), timeline: sourceTimeLine)
+        addErrorEventToTimeline(Int(sourceTimeLine.bounds.size.width - 30.0), timeline: sourceTimeLine)
         
         resultTimeline.updateEvents(sourceTimeLine._sourceEvents)
     }
@@ -440,10 +429,7 @@ class ViewController: UIViewController {
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
             let event = Event.Next(ColoredType(value: 1, color: RXMUIKit.randomColor()))
-            let v = EventView(recorded: RecordedType(time: time, event: event))
-            sourceTimeline.addSubview(v)
-            v.use(self._sceneView.animator, timeLine: sourceTimeline)
-            sourceTimeline._sourceEvents.append(v)
+            self.addNextEventToTimeline(time, event: event, timeline: sourceTimeline)
             resultTimeline.updateEvents(sourceTimeline._sourceEvents)
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
@@ -452,18 +438,11 @@ class ViewController: UIViewController {
             } else {
                 time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
             }
-            let v = EventView(recorded: RecordedType(time: time + 20, event: .Completed))
-            sourceTimeline.addSubview(v)
-            v.use(self._sceneView.animator, timeLine: sourceTimeline)
-            sourceTimeline._sourceEvents.append(v)
+            self.addCompletedEventToTimeline(time, timeline: sourceTimeline)
             resultTimeline.updateEvents(sourceTimeline._sourceEvents)
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
-            let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-            let e = EventView(recorded: RecordedType(time: time, event: .Error(error)))
-            sourceTimeline.addSubview(e)
-            e.use(self._sceneView.animator, timeLine: sourceTimeline)
-            sourceTimeline._sourceEvents.append(e)
+            self.addErrorEventToTimeline(time, timeline: sourceTimeline)
             resultTimeline.updateEvents(sourceTimeline._sourceEvents)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
@@ -477,6 +456,28 @@ class ViewController: UIViewController {
         elementSelector.addAction(cancelAction)
         
         presentViewController(elementSelector, animated: true) { () -> Void in }
+    }
+    
+    private func addNextEventToTimeline(time: Int, event: Event<ColoredType>, timeline: TimelineView) {
+        let v = EventView(recorded: RecordedType(time: time, event: event))
+        timeline.addSubview(v)
+        v.use(_sceneView.animator, timeLine: timeline)
+        timeline._sourceEvents.append(v)
+    }
+    
+    private func addCompletedEventToTimeline(time: Int, timeline: TimelineView) {
+        let v = EventView(recorded: RecordedType(time: time, event: .Completed))
+        timeline.addSubview(v)
+        v.use(_sceneView.animator, timeLine: timeline)
+        timeline._sourceEvents.append(v)
+    }
+    
+    private func addErrorEventToTimeline(time: Int, timeline: TimelineView) {
+        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
+        let e = EventView(recorded: RecordedType(time: time, event: .Error(error)))
+        timeline.addSubview(e)
+        e.use(self._sceneView.animator, timeLine: timeline)
+        timeline._sourceEvents.append(e)
     }
     
     private func maxNextTime(sourceEvents: [EventView]!) -> Int? {
