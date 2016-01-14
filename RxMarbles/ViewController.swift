@@ -431,7 +431,7 @@ class ViewController: UIViewController {
             addNextEventToTimeline(time, event: event, timeline: sourceTimeLine)
         }
         
-        addCompletedEventToTimeline(Int(sourceTimeLine.bounds.size.width - 60.0), timeline: sourceTimeLine)
+        addCompletedEventToTimeline(150, timeline: sourceTimeLine)
         
         if _multipleTimelines.contains(_currentOperator) {
             resultTimeline.center.y = 280
@@ -447,7 +447,7 @@ class ViewController: UIViewController {
                 addNextEventToTimeline(time, event: event, timeline: secondSourceTimeline)
             }
             
-            addCompletedEventToTimeline(140, timeline: secondSourceTimeline)
+            addCompletedEventToTimeline(110, timeline: secondSourceTimeline)
         }
         
         sourceTimeLine.updateResultTimeline()
@@ -455,8 +455,6 @@ class ViewController: UIViewController {
     
     func addElement() {
         let sourceTimeline = _sceneView._sourceTimeline
-        let secondSourceTimeline = _sceneView._secondSourceTimeline
-        let resultTimeline = _sceneView._resultTimeline
         var time = Int(sourceTimeline.bounds.size.width / 2.0)
         
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
@@ -464,7 +462,7 @@ class ViewController: UIViewController {
         let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
             let event = Event.Next(ColoredType(value: self.randomNumber(), color: RXMUIKit.randomColor()))
             self.addNextEventToTimeline(time, event: event, timeline: sourceTimeline)
-            resultTimeline.updateEvents((sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+            sourceTimeline.updateResultTimeline()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
             if let t = self.maxNextTime(sourceTimeline._sourceEvents) {
@@ -473,11 +471,11 @@ class ViewController: UIViewController {
                 time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
             }
             self.addCompletedEventToTimeline(time, timeline: sourceTimeline)
-            resultTimeline.updateEvents((sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+            sourceTimeline.updateResultTimeline()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
             self.addErrorEventToTimeline(time, timeline: sourceTimeline)
-            resultTimeline.updateEvents((sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+            sourceTimeline.updateResultTimeline()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
         
