@@ -25,7 +25,7 @@ class OperatorTableViewController: UITableViewController {
         ),
         Section(
             name: "Combining",
-            rows: [.StartWith]
+            rows: [.CombineLatest, .Concat, .StartWith, .Zip]
         ),
         Section(
             name: "Filtering",

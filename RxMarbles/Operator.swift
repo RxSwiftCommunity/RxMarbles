@@ -14,6 +14,9 @@ enum Operator {
     case Map
     case Scan
     case Debounce
+    case CombineLatest
+    case Concat
+    case Zip
     case StartWith
     case DistinctUntilChanged
     case ElementAt
@@ -31,6 +34,9 @@ extension Operator: CustomStringConvertible {
         case Map:                  return "Map"
         case Scan:                 return "Scan"
         case Debounce:             return "Debounce"
+        case CombineLatest:        return "CombineLatest"
+        case Concat:               return "Concat"
+        case Zip:                  return "Zip"
         case StartWith:            return "StartWith"
         case DistinctUntilChanged: return "DistinctUntilChanged"
         case ElementAt:            return "ElementAt"
@@ -44,26 +50,35 @@ extension Operator: CustomStringConvertible {
 }
 
 extension Operator {
-    func map(o: Observable<ColoredType>, scheduler: TestScheduler) -> Observable<ColoredType> {
+    func map(o: (first: TestableObservable<ColoredType>, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
-        case Delay:                return o.delaySubscription(30, scheduler: scheduler)
-        case Map:                  return o.map({ h in ColoredType(value: h.value * 10, color: h.color) })
-        case Scan:                 return o.scan(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
+        case Delay:                return o.first.delaySubscription(30, scheduler: scheduler)
+        case Map:                  return o.first.map({ h in ColoredType(value: h.value * 10, color: h.color) })
+        case Scan:                 return o.first.scan(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
             var res = acc
             res.value += e.value
             res.color = e.color
             return res
         })
-        case Debounce:             return o.debounce(50, scheduler: scheduler)
-        case StartWith:            return o.startWith(ColoredType(value: 2, color: RXMUIKit.randomColor()))
-        case DistinctUntilChanged: return o.distinctUntilChanged()
-        case ElementAt:            return o.elementAt(2)
-        case Filter:               return o.filter { $0.value > 2 }
-        case Skip:                 return o.skip(2)
-        case Take:                 return o.take(2)
-        case TakeLast:             return o.takeLast(2)
+        case Debounce:             return o.first.debounce(50, scheduler: scheduler)
+        case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
+            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
+            return res
+        })
+        case Concat:               return [o.first, o.second!].concat()
+        case Zip:                  return [o.first, o.second!].zip({ event in
+            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
+            return res
+        })
+        case StartWith:            return o.first.startWith(ColoredType(value: 2, color: RXMUIKit.randomColor()))
+        case DistinctUntilChanged: return o.first.distinctUntilChanged()
+        case ElementAt:            return o.first.elementAt(2)
+        case Filter:               return o.first.filter { $0.value > 2 }
+        case Skip:                 return o.first.skip(2)
+        case Take:                 return o.first.take(2)
+        case TakeLast:             return o.first.takeLast(2)
         case Reduce:
-            return o.reduce(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
+            return o.first.reduce(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
                 var res = acc
                 res.value += e.value
                 res.color = e.color
