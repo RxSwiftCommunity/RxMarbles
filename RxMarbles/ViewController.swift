@@ -146,7 +146,7 @@ class SourceTimelineView: TimelineView {
     private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
-    private var _parent: SceneView!
+    private var _sceneView: SceneView!
     
     init(frame: CGRect, resultTimeline: ResultTimelineView) {
         super.init(frame: frame)
@@ -215,10 +215,10 @@ class SourceTimelineView: TimelineView {
     }
     
     private func updateResultTimeline() {
-        if let secondSourceTimeline = self._parent._secondSourceTimeline {
-            self._parent._resultTimeline.updateEvents((self._parent._sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+        if let secondSourceTimeline = self._sceneView._secondSourceTimeline {
+            self._sceneView._resultTimeline.updateEvents((self._sceneView._sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
         } else {
-            self._parent._resultTimeline.updateEvents((self._parent._sourceTimeline._sourceEvents, nil))
+            self._sceneView._resultTimeline.updateEvents((self._sceneView._sourceTimeline._sourceEvents, nil))
         }
     }
     
@@ -420,14 +420,14 @@ class ViewController: UIViewController {
         _sceneView._resultTimeline = resultTimeline
         
         let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
-        sourceTimeLine._parent = _sceneView
+        sourceTimeLine._sceneView = _sceneView
         sourceTimeLine.center.y = 120
         _sceneView.addSubview(sourceTimeLine)
         _sceneView._sourceTimeline = sourceTimeLine
         
-        for t in 1..<6 {
-            let time = t * 50
-            let event = Event.Next(ColoredType(value: t, color: RXMUIKit.randomColor()))
+        for t in 1..<4 {
+            let time = t * 40
+            let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor()))
             addNextEventToTimeline(time, event: event, timeline: sourceTimeLine)
         }
         
@@ -436,12 +436,12 @@ class ViewController: UIViewController {
         if _multipleTimelines.contains(_currentOperator) {
             resultTimeline.center.y = 280
             let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
-            secondSourceTimeline._parent = _sceneView
+            secondSourceTimeline._sceneView = _sceneView
             secondSourceTimeline.center.y = 200
             _sceneView.addSubview(secondSourceTimeline)
             _sceneView._secondSourceTimeline = secondSourceTimeline
             
-            for t in 1..<4 {
+            for t in 1..<3 {
                 let time = t * 40
                 let event = Event.Next(ColoredType(value: t, color: RXMUIKit.randomColor()))
                 addNextEventToTimeline(time, event: event, timeline: secondSourceTimeline)
@@ -462,7 +462,7 @@ class ViewController: UIViewController {
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
-            let event = Event.Next(ColoredType(value: 1, color: RXMUIKit.randomColor()))
+            let event = Event.Next(ColoredType(value: self.randomNumber(), color: RXMUIKit.randomColor()))
             self.addNextEventToTimeline(time, event: event, timeline: sourceTimeline)
             resultTimeline.updateEvents((sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
         }
@@ -544,16 +544,7 @@ class ViewController: UIViewController {
 //                let width = self.view.frame.width
 //                let height = self.view.frame.height
 //                let koef = width / height
-//                self._sceneView._sourceTimeline._sourceEvents.forEach { (eventView) -> () in
-//                    let scaledTime = Int(CGFloat(eventView._recorded.time) * koef)
-//                    let recorded = RecordedType(time: scaledTime, event: eventView._recorded.value)
-//                    eventView._recorded = recorded
-//                    UIView.animateWithDuration(0.3, animations: { () -> Void in
-//                            eventView.center = CGPointMake(CGFloat(eventView._recorded.time), self._sceneView._sourceTimeline.frame.size.height / 2)
-//                        }, completion: { (onComplete) -> Void in
-//                            self._sceneView._resultTimeline.updateEvents(self._sceneView._sourceTimeline._sourceEvents)
-//                    })
-//                }
+//                time * koef
                 if let sourceTimeline = self._sceneView._sourceTimeline {
                     sourceTimeline.updateResultTimeline()
                 }
