@@ -14,7 +14,7 @@ enum Operator {
     case Map
     case Scan
     case Debounce
-//    case Buffer
+    case Buffer
     case FlatMap
     case CombineLatest
     case Concat
@@ -40,7 +40,7 @@ extension Operator: CustomStringConvertible {
         case Map:                  return "Map"
         case Scan:                 return "Scan"
         case Debounce:             return "Debounce"
-//        case Buffer:               return "Buffer"
+        case Buffer:               return "Buffer"
         case FlatMap:              return "FlatMap"
         case CombineLatest:        return "CombineLatest"
         case Concat:               return "Concat"
@@ -73,7 +73,7 @@ extension Operator {
             return res
         })
         case Debounce:             return o.first.debounce(50, scheduler: scheduler)
-//        case Buffer:               return o.first.buffer(timeSpan: 70, count: 2, scheduler: scheduler).map( {EquatableArray($0)} )
+        case Buffer:               return o.first.buffer(timeSpan: 40, count: 1, scheduler: scheduler).map({ event in ColoredType(value: 1, color: .redColor()) })
         case FlatMap:              return o.first.flatMap({ event in Observable.just(ColoredType(value: event.value * 10, color: event.color), scheduler: scheduler) })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
             let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
@@ -113,7 +113,7 @@ extension Operator {
         case Map:                  return false
         case Scan:                 return false
         case Debounce:             return false
-//        case Buffer:               return
+        case Buffer:               return false
         case FlatMap:              return false
         case CombineLatest:        return true
         case Concat:               return true
