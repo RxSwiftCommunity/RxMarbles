@@ -73,7 +73,7 @@ extension Operator {
             return res
         })
         case Debounce:             return o.first.debounce(50, scheduler: scheduler)
-        case Buffer:               return o.first.buffer(timeSpan: 40, count: 1, scheduler: scheduler).map({ event in ColoredType(value: 1, color: .redColor()) })
+        case Buffer:               return o.first.buffer(timeSpan: 100, count: 1, scheduler: scheduler).map({ event in ColoredType(value: 1, color: .redColor()) })
         case FlatMap:              return o.first.flatMap({ event in Observable.just(ColoredType(value: event.value * 10, color: event.color), scheduler: scheduler) })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
             let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
