@@ -21,7 +21,7 @@ class OperatorTableViewController: UITableViewController {
     private let _sections = [
         Section(
             name: "Transforming",
-            rows: [.Delay, .Map, .Scan, .Debounce]
+            rows: [.Delay, .Map, .Scan, .Debounce, .FlatMap]
         ),
         Section(
             name: "Combining",

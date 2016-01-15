@@ -15,7 +15,7 @@ enum Operator {
     case Scan
     case Debounce
 //    case Buffer
-//    case FlatMap
+    case FlatMap
     case CombineLatest
     case Concat
     case Merge
@@ -41,7 +41,7 @@ extension Operator: CustomStringConvertible {
         case Scan:                 return "Scan"
         case Debounce:             return "Debounce"
 //        case Buffer:               return "Buffer"
-//        case FlatMap:              return "FlatMap"
+        case FlatMap:              return "FlatMap"
         case CombineLatest:        return "CombineLatest"
         case Concat:               return "Concat"
         case Merge:                return "Merge"
@@ -74,9 +74,7 @@ extension Operator {
         })
         case Debounce:             return o.first.debounce(50, scheduler: scheduler)
 //        case Buffer:               return o.first.buffer(timeSpan: 70, count: 2, scheduler: scheduler).map( {EquatableArray($0)} )
-//        case FlatMap:              return o.first.flatMap({ event in
-//            
-//        })
+        case FlatMap:              return o.first.flatMap({ event in Observable.just(ColoredType(value: event.value * 10, color: event.color), scheduler: scheduler) })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
             let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
             return res
@@ -87,7 +85,7 @@ extension Operator {
             let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
             return res
         })
-        case StartWith:            return o.first.startWith(ColoredType(value: 2, color: RXMUIKit.randomColor()))
+        case StartWith:            return o.first.startWith(ColoredType(value: 2, color: .redColor()))
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
         case ElementAt:            return o.first.elementAt(2)
         case Filter:               return o.first.filter { $0.value > 2 }
@@ -116,7 +114,7 @@ extension Operator {
         case Scan:                 return false
         case Debounce:             return false
 //        case Buffer:               return
-//        case FlatMap:              return
+        case FlatMap:              return false
         case CombineLatest:        return true
         case Concat:               return true
         case Merge:                return true
