@@ -25,6 +25,7 @@
 		0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266071C3E96C2009E28FD /* TestableObserver.swift */; };
 		0AC2661E1C40775D009E28FD /* OperatorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorTableViewController.swift */; };
 		0AC266361C412026009E28FD /* RXMUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266351C412026009E28FD /* RXMUIKit.swift */; };
+		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
 		B56EA8098BC0F10D42724B4F /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */; };
 		D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25E7A4F1C41BD4800B08F70 /* Operator.swift */; };
 		D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */; };
@@ -51,6 +52,7 @@
 		0AC266071C3E96C2009E28FD /* TestableObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableObserver.swift; sourceTree = "<group>"; };
 		0AC2661D1C40775D009E28FD /* OperatorTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorTableViewController.swift; sourceTree = "<group>"; };
 		0AC266351C412026009E28FD /* RXMUIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RXMUIKit.swift; sourceTree = "<group>"; };
+		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EquatableArray.swift; sourceTree = "<group>"; };
 		0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D25E7A4F1C41BD4800B08F70 /* Operator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				0AC266051C3E96C2009E28FD /* Subscription.swift */,
 				0AC266061C3E96C2009E28FD /* TestableObservable.swift */,
 				0AC266071C3E96C2009E28FD /* TestableObserver.swift */,
+				0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */,
 			);
 			path = RxTests;
 			sourceTree = "<group>";
@@ -284,6 +287,7 @@
 				0AC266361C412026009E28FD /* RXMUIKit.swift in Sources */,
 				0AC266121C3E96C2009E28FD /* Subscription.swift in Sources */,
 				0AC266111C3E96C2009E28FD /* TestSchedulerVirtualTimeConverter.swift in Sources */,
+				0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */,
 				0AC2661E1C40775D009E28FD /* OperatorTableViewController.swift in Sources */,
 				0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */,
 				0AC266131C3E96C2009E28FD /* TestableObservable.swift in Sources */,

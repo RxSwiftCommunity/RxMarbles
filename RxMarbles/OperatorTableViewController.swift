@@ -29,11 +29,15 @@ class OperatorTableViewController: UITableViewController {
         ),
         Section(
             name: "Filtering",
-            rows: [.DistinctUntilChanged, .ElementAt, .Filter, .Skip, .Take, .TakeLast]
+            rows: [.DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Skip, .Take, .TakeLast]
         ),
         Section(
             name: "Mathematical",
             rows: [.Reduce]
+        ),
+        Section(
+            name: "Conditional",
+            rows: [.Amb]
         )
     ]
     

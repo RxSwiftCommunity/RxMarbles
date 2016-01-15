@@ -331,11 +331,19 @@ class ResultTimelineView: TimelineView {
         }
         
         let o = _operator.map((first, second), scheduler: scheduler)
-        let res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-            return o
+        var res: TestableObserver<ColoredType>?
+        switch _operator! {
+        case .Sample:
+            res = scheduler.start({ first.sample(second!) })
+        case .Amb:
+            res = scheduler.start({ first.amb(second!) })
+        default:
+            res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
+                return o
+            }
         }
         
-        addEventsToTimeline(res.events)
+        addEventsToTimeline(res!.events)
     }
     
     func addEventsToTimeline(events: [RecordedType]) {
@@ -376,7 +384,6 @@ class SceneView: UIView {
 class ViewController: UIViewController {
     private var _currentOperator = Operator.Delay
     private var _operatorTableViewController: OperatorTableViewController?
-    private let _multipleTimelines = [Operator.CombineLatest, Operator.Concat, Operator.Zip]
     private var _sceneView: SceneView!
 
     override func viewDidLoad() {
@@ -433,7 +440,7 @@ class ViewController: UIViewController {
         
         addCompletedEventToTimeline(150, timeline: sourceTimeLine)
         
-        if _multipleTimelines.contains(_currentOperator) {
+        if _currentOperator.multiTimelines {
             resultTimeline.center.y = 280
             let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
             secondSourceTimeline._sceneView = _sceneView
@@ -466,7 +473,7 @@ class ViewController: UIViewController {
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
             if let t = self.maxNextTime(sourceTimeline._sourceEvents) {
-                time = t
+                time = t + 20
             } else {
                 time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
             }
