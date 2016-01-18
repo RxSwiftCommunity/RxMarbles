@@ -10,57 +10,61 @@ import Foundation
 import RxSwift
 
 enum Operator {
-    case Delay
-    case Map
-    case Scan
-    case Debounce
+    case Amb
     case Buffer
     case FlatMap
     case FlatMapFirst
     case FlatMapLatest
     case CombineLatest
     case Concat
-    case Merge
-    case Zip
-    case StartWith
+    case Debounce
+    case Delay
     case DistinctUntilChanged
     case ElementAt
     case Filter
+    case FlatMap
+    case FlatMapFirst
     case IgnoreElements
+    case Map
+    case Merge
+    case Reduce
     case Sample
+    case Scan
     case Skip
+    case StartWith
     case Take
     case TakeLast
-    case Reduce
-    case Amb
+    case Zip
 }
 
 extension Operator: CustomStringConvertible {
     var description: String {
         switch self {
-        case Delay:                return "Delay"
-        case Map:                  return "Map"
-        case Scan:                 return "Scan"
-        case Debounce:             return "Debounce"
+        case Amb:                  return "Amb"
         case Buffer:               return "Buffer"
         case FlatMap:              return "FlatMap"
         case FlatMapFirst:         return "FlatMapFirst"
         case FlatMapLatest:        return "FlatMapLatest"
         case CombineLatest:        return "CombineLatest"
         case Concat:               return "Concat"
-        case Merge:                return "Merge"
-        case Zip:                  return "Zip"
-        case StartWith:            return "StartWith"
+        case Debounce:             return "Debounce"
+        case Delay:                return "Delay"
         case DistinctUntilChanged: return "DistinctUntilChanged"
         case ElementAt:            return "ElementAt"
         case Filter:               return "Filter"
+        case FlatMap:              return "FlatMap"
+        case FlatMapFirst:         return "FlatMapFirst"
         case IgnoreElements:       return "IgnoreElements"
+        case Map:                  return "Map"
+        case Merge:                return "Merge"
+        case Reduce:               return "Reduce"
         case Sample:               return "Sample"
+        case Scan:                 return "Scan"
         case Skip:                 return "Skip"
+        case StartWith:            return "StartWith"
         case Take:                 return "Take"
         case TakeLast:             return "TakeLast"
-        case Reduce:               return "Reduce"
-        case Amb:                  return "Amb"
+        case Zip:                  return "Zip"
         }
     }
 }
@@ -117,29 +121,31 @@ extension Operator {
 extension Operator {
     var multiTimelines: Bool {
         switch self {
-        case Delay:                return false
-        case Map:                  return false
-        case Scan:                 return false
-        case Debounce:             return false
+        case Amb:                  return true
         case Buffer:               return false
         case FlatMap:              return true
         case FlatMapFirst:         return true
         case FlatMapLatest:        return true
         case CombineLatest:        return true
         case Concat:               return true
-        case Merge:                return true
-        case Zip:                  return true
-        case StartWith:            return false
+        case Debounce:             return false
+        case Delay:                return false
         case DistinctUntilChanged: return false
         case ElementAt:            return false
         case Filter:               return false
+        case FlatMap:              return true
+        case FlatMapFirst:         return true
         case IgnoreElements:       return false
+        case Map:                  return false
+        case Merge:                return true
+        case Reduce:               return false
         case Sample:               return true
+        case Scan:                 return false
         case Skip:                 return false
+        case StartWith:            return false
         case Take:                 return false
         case TakeLast:             return false
-        case Reduce:               return false
-        case Amb:                  return true
+        case Zip:                  return true
         }
     }
 }
