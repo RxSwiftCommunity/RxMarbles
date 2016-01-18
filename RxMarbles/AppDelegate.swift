@@ -15,9 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow()
-        let viewController = ViewController()
+        let operatorTableViewController = OperatorTableViewController()
         let navigationController = UINavigationController()
-        navigationController.addChildViewController(viewController)
+        navigationController.addChildViewController(operatorTableViewController)
         window?.rootViewController = navigationController
         window?.makeKeyAndVisible()
         return true

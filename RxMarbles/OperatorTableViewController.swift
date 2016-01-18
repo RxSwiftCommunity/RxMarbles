@@ -21,7 +21,7 @@ class OperatorTableViewController: UITableViewController {
     private let _sections = [
         Section(
             name: "Transforming",
-            rows: [.Delay, .Map, .Scan, .Debounce, .FlatMap, .FlatMapFirst, .Buffer]
+            rows: [.Delay, .Map, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]
         ),
         Section(
             name: "Combining",
@@ -29,7 +29,7 @@ class OperatorTableViewController: UITableViewController {
         ),
         Section(
             name: "Filtering",
-            rows: [.DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Skip, .Take, .TakeLast]
+            rows: [.DistinctUntilChanged, .ElementAt, .Filter, .Debounce, .IgnoreElements, .Sample, .Skip, .Take, .TakeLast]
         ),
         Section(
             name: "Mathematical",
@@ -43,6 +43,7 @@ class OperatorTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Select Operator"
         self.tableView.tableFooterView = UIView()
         self.tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "OperatorCell")
     }
@@ -86,7 +87,9 @@ class OperatorTableViewController: UITableViewController {
         tableView.deselectRowAtIndexPath(indexPath, animated: true)
         let op = _rowAtIndexPath(indexPath)
         selectedOperator = op
-        navigationController?.popViewControllerAnimated(true)
+        let viewController = ViewController()
+        viewController._currentOperator = selectedOperator!
+        navigationController?.pushViewController(viewController, animated: true)
     }
 
 }

@@ -17,6 +17,7 @@ enum Operator {
     case Buffer
     case FlatMap
     case FlatMapFirst
+    case FlatMapLatest
     case CombineLatest
     case Concat
     case Merge
@@ -44,6 +45,7 @@ extension Operator: CustomStringConvertible {
         case Buffer:               return "Buffer"
         case FlatMap:              return "FlatMap"
         case FlatMapFirst:         return "FlatMapFirst"
+        case FlatMapLatest:        return "FlatMapLatest"
         case CombineLatest:        return "CombineLatest"
         case Concat:               return "Concat"
         case Merge:                return "Merge"
@@ -79,6 +81,7 @@ extension Operator {
         case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: 13, color: .redColor(), shape: .Rhombus) })
         case FlatMap:              return o.first.flatMap({ event in return o.second! })
         case FlatMapFirst:         return o.first.flatMapFirst({ event in return o.second! })
+        case FlatMapLatest:        return o.first.flatMapLatest({ event in return o.second! })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
             let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!, shape: (event.first?.shape)!)
             return res
@@ -92,7 +95,7 @@ extension Operator {
         case StartWith:            return o.first.startWith(ColoredType(value: 2, color: .redColor(), shape: .Circle))
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
         case ElementAt:            return o.first.elementAt(2)
-        case Filter:               return o.first.filter { $0.value > 2 }
+        case Filter:               return o.first.filter { $0.value > 5 }
         case IgnoreElements:       return o.first.ignoreElements()
         case Sample:               return o.first.sample(o.second!)
         case Skip:                 return o.first.skip(2)
@@ -121,6 +124,7 @@ extension Operator {
         case Buffer:               return false
         case FlatMap:              return true
         case FlatMapFirst:         return true
+        case FlatMapLatest:        return true
         case CombineLatest:        return true
         case Concat:               return true
         case Merge:                return true

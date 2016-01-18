@@ -40,9 +40,11 @@ class EventView: UILabel {
     private var _snap: UISnapBehavior? = nil
     private var _gravity: UIGravityBehavior? = nil
     private var _removeBehavior: UIDynamicItemBehavior? = nil
-    private weak var _timeLine: UIView?
+    private weak var _timeLine: SourceTimelineView?
+    private var _tapGestureRecognizer: UITapGestureRecognizer!
+    private var _parentViewController: ViewController!
     
-    init(recorded: RecordedType, shape: EventShape) {
+    init(recorded: RecordedType, shape: EventShape, viewController: ViewController!) {
         
         switch recorded.value {
         case let .Next(v):
@@ -124,9 +126,11 @@ class EventView: UILabel {
         _gravity = UIGravityBehavior(items: [self])
         _removeBehavior = UIDynamicItemBehavior(items: [self])
         _recorded = recorded
+        _tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setEventView")
+        _parentViewController = viewController
     }
     
-    func use(animator: UIDynamicAnimator?, timeLine: UIView?) {
+    func use(animator: UIDynamicAnimator?, timeLine: SourceTimelineView?) {
         if let snap = _snap {
             _animator?.removeBehavior(snap)
         }
@@ -156,6 +160,55 @@ class EventView: UILabel {
         }
     }
     
+    func addTapRecognizer() {
+        addGestureRecognizer(_tapGestureRecognizer!)
+    }
+    
+    func removeTapRecognizer() {
+        removeGestureRecognizer(_tapGestureRecognizer!)
+    }
+    
+    func setEventView() {
+        let settingsAlertController = UIAlertController(title: "Event settings", message: nil, preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+        if isNext {
+            let contentViewController = UIViewController()
+//            contentViewController.view.backgroundColor = .lightGrayColor()
+//            let colorsSegment = UISegmentedControl(items: ["Color1", "Color2", "Color3", "Color4", "Color5"])
+//            colorsSegment.frame.size.width = settingsAlertController.view.bounds.size.width
+//            colorsSegment.frame.size.height = 25.0
+//            contentViewController.view.addSubview(colorsSegment)
+            
+            settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
+            
+            let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
+                
+            }
+            settingsAlertController.addAction(saveAction)
+        }
+        let removeAction = UIAlertAction(title: "Remove", style: .Default) { (action) -> Void in
+            self._animator!.addBehavior(self._gravity!)
+            self._animator!.addBehavior(self._removeBehavior!)
+            self._removeBehavior?.action = {
+                if let superView = self._parentViewController._sceneView {
+                    if let index = self._timeLine?._sourceEvents.indexOf(self) {
+                        if CGRectIntersectsRect(superView.bounds, self.frame) == false {
+                            self.removeFromSuperview()
+                            self._timeLine?._sourceEvents.removeAtIndex(index)
+                            self._timeLine?.updateResultTimeline()
+                        }
+                    }
+                }
+            }
+        }
+        settingsAlertController.addAction(cancelAction)
+        settingsAlertController.addAction(removeAction)
+        if let parentViewController = self._parentViewController {
+            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
@@ -165,6 +218,7 @@ class TimelineView: UIView {
     var _sourceEvents = [EventView]()
     let _timeArrow = UIImageView(image: TimelineImage.timeLine)
     private var _addButton: UIButton?
+    var _parentViewController: ViewController!
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -186,28 +240,6 @@ class TimelineView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-    
-    func addNextEventToTimeline(time: Int, event: Event<ColoredType>, animator: UIDynamicAnimator!) {
-        let v = EventView(recorded: RecordedType(time: time, event: event), shape: (event.element?.shape)!)
-        addSubview(v)
-        v.use(animator, timeLine: self)
-        _sourceEvents.append(v)
-    }
-    
-    func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .Another)
-        addSubview(v)
-        v.use(animator, timeLine: self)
-        _sourceEvents.append(v)
-    }
-    
-    func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!) {
-        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(error)), shape: .Another)
-        addSubview(v)
-        v.use(animator, timeLine: self)
-        _sourceEvents.append(v)
     }
     
     func maxNextTime() -> Int? {
@@ -252,7 +284,7 @@ class SourceTimelineView: TimelineView {
                         let snap = panEventView._snap
                         panEventView._animator?.removeBehavior(snap!)
                         let shape: EventShape = (panEventView._recorded.value.element?.shape != nil) ? (panEventView._recorded.value.element?.shape)! : .Another
-                        self!._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape)
+                        self!._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape, viewController: self!._parentViewController)
                         if let ghostEventView = self!._ghostEventView {
                             ghostEventView.center.y = self!.bounds.height / 2
                             self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
@@ -301,6 +333,37 @@ class SourceTimelineView: TimelineView {
         } else {
             self._sceneView._resultTimeline.updateEvents((self._sceneView._sourceTimeline._sourceEvents, nil))
         }
+    }
+    
+    func addNextEventToTimeline(time: Int, event: Event<ColoredType>, animator: UIDynamicAnimator!, isEditing: Bool) {
+        let v = EventView(recorded: RecordedType(time: time, event: event), shape: (event.element?.shape)!, viewController: _parentViewController)
+        if isEditing {
+            v.addTapRecognizer()
+        }
+        addSubview(v)
+        v.use(animator, timeLine: self)
+        _sourceEvents.append(v)
+    }
+    
+    func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!, isEditing: Bool) {
+        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .Another, viewController: _parentViewController)
+        if isEditing {
+            v.addTapRecognizer()
+        }
+        addSubview(v)
+        v.use(animator, timeLine: self)
+        _sourceEvents.append(v)
+    }
+    
+    func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
+        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(error)), shape: .Another, viewController: _parentViewController)
+        if isEditing {
+            v.addTapRecognizer()
+        }
+        addSubview(v)
+        v.use(animator, timeLine: self)
+        _sourceEvents.append(v)
     }
     
     private func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
@@ -398,6 +461,18 @@ class SourceTimelineView: TimelineView {
         }
         addGestureRecognizer(_longPressGestureRecorgnizer)
     }
+    
+    func addTapRecognizers() {
+        _sourceEvents.forEach { (eventView) -> () in
+            eventView.addTapRecognizer()
+        }
+    }
+    
+    func removeTapRecognizers() {
+        _sourceEvents.forEach { (eventView) -> () in
+            eventView.removeTapRecognizer()
+        }
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -444,7 +519,7 @@ class ResultTimelineView: TimelineView {
         
         events.forEach { (event) -> () in
             let shape: EventShape = (event.value.element?.shape != nil) ? (event.value.element?.shape)! : .Another
-            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape)
+            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape, viewController: _parentViewController)
             eventView.center.y = self.bounds.height / 2
             _sourceEvents.append(eventView)
             addSubview(eventView)
@@ -472,25 +547,29 @@ class SceneView: UIView {
 }
 
 class ViewController: UIViewController {
-    private var _currentOperator = Operator.Delay
+    var _currentOperator = Operator.Delay
     private var _operatorTableViewController: OperatorTableViewController?
     private var _sceneView: SceneView!
     private var _isEditing: Bool = false {
         didSet {
             if _isEditing {
-                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "enableEditing")
-                self.navigationItem.rightBarButtonItem = nil
-                self._sceneView._sourceTimeline.showAddButton()
-                self._sceneView._sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
-                if self._currentOperator.multiTimelines {
-                    self._sceneView._secondSourceTimeline.showAddButton()
-                    self._sceneView._secondSourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "enableEditing")
+                self.navigationItem.setHidesBackButton(true, animated: true)
+                _sceneView._sourceTimeline.addTapRecognizers()
+                _sceneView._sourceTimeline.showAddButton()
+                _sceneView._sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
+                if _currentOperator.multiTimelines {
+                    _sceneView._secondSourceTimeline.addTapRecognizers()
+                    _sceneView._secondSourceTimeline.showAddButton()
+                    _sceneView._secondSourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
                 }
             } else {
-                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "enableEditing")
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Select", style: UIBarButtonItemStyle.Plain, target: self, action: "showOperatorView")
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "enableEditing")
+                self.navigationItem.setHidesBackButton(false, animated: true)
+                _sceneView._sourceTimeline.removeTapRecognizers()
                 _sceneView._sourceTimeline.hideAddButton()
                 if _currentOperator.multiTimelines {
+                    _sceneView._secondSourceTimeline.removeTapRecognizers()
                     _sceneView._secondSourceTimeline.hideAddButton()
                 }
             }
@@ -500,15 +579,10 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
-    
+        navigationController?.navigationBar.topItem!.backBarButtonItem = UIBarButtonItem(title: _currentOperator.description, style: UIBarButtonItemStyle.Plain, target: self, action: "backToOperatorView")
     }
     
     override func viewWillAppear(animated: Bool) {
-        if let newOperator = _operatorTableViewController?.selectedOperator {
-            _currentOperator = newOperator
-        }
-        title = _currentOperator.description
-        
         setupSceneView()
         _isEditing = false
     }
@@ -534,6 +608,7 @@ class ViewController: UIViewController {
         _sceneView._resultTimeline = resultTimeline
         
         let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
+        sourceTimeLine._parentViewController = self
         sourceTimeLine._sceneView = _sceneView
         sourceTimeLine.center.y = 120
         _sceneView.addSubview(sourceTimeLine)
@@ -542,13 +617,14 @@ class ViewController: UIViewController {
         for t in 1..<4 {
             let time = t * 40
             let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor(), shape: .Circle))
-            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator)
+            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: _isEditing)
         }
-        sourceTimeLine.addCompletedEventToTimeline(150, animator: self._sceneView.animator)
+        sourceTimeLine.addCompletedEventToTimeline(150, animator: self._sceneView.animator, isEditing: _isEditing)
         
         if _currentOperator.multiTimelines {
             resultTimeline.center.y = 280
             let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
+            secondSourceTimeline._parentViewController = self
             secondSourceTimeline._sceneView = _sceneView
             secondSourceTimeline.center.y = 200
             _sceneView.addSubview(secondSourceTimeline)
@@ -557,10 +633,10 @@ class ViewController: UIViewController {
             for t in 1..<3 {
                 let time = t * 40
                 let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor(), shape: .RoundedRect))
-                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator)
+                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: _isEditing)
             }
             
-            secondSourceTimeline.addCompletedEventToTimeline(110, animator: self._sceneView.animator)
+            secondSourceTimeline.addCompletedEventToTimeline(110, animator: self._sceneView.animator, isEditing: _isEditing)
         }
         
         sourceTimeLine.updateResultTimeline()
@@ -579,7 +655,7 @@ class ViewController: UIViewController {
             let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
                 let shape: EventShape = (timeline == self._sceneView._sourceTimeline) ? .Circle : .RoundedRect
                 let event = Event.Next(ColoredType(value: self.randomNumber(), color: RXMUIKit.randomColor(), shape: shape))
-                timeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator)
+                timeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: self._isEditing)
                 timeline.updateResultTimeline()
             }
             let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
@@ -588,11 +664,11 @@ class ViewController: UIViewController {
                 } else {
                     time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
                 }
-                timeline.addCompletedEventToTimeline(time, animator: self._sceneView.animator)
+                timeline.addCompletedEventToTimeline(time, animator: self._sceneView.animator, isEditing: self._isEditing)
                 timeline.updateResultTimeline()
             }
             let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
-                timeline.addErrorEventToTimeline(time, animator: self._sceneView.animator)
+                timeline.addErrorEventToTimeline(time, animator: self._sceneView.animator, isEditing: self._isEditing)
                 timeline.updateResultTimeline()
             }
             let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
@@ -609,11 +685,8 @@ class ViewController: UIViewController {
         }
     }
     
-    func showOperatorView() {
-        _operatorTableViewController = OperatorTableViewController()
-        _operatorTableViewController?.selectedOperator = _currentOperator
-        _operatorTableViewController?.title = "Select Operator"
-        navigationController?.pushViewController(_operatorTableViewController!, animated: true)
+    func backToOperatorView() {
+        navigationController?.popViewControllerAnimated(true)
     }
     
     private func randomNumber() -> Int {
