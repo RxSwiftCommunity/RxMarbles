@@ -21,11 +21,11 @@ class OperatorTableViewController: UITableViewController {
     private let _sections = [
         Section(
             name: "Transforming",
-            rows: [.Delay, .Map, .Scan, .Debounce, .FlatMap, .Buffer]
+            rows: [.Delay, .Map, .Scan, .Debounce, .FlatMap, .FlatMapFirst, .Buffer]
         ),
         Section(
             name: "Combining",
-            rows: [.CombineLatest, .Concat, .StartWith, .Zip]
+            rows: [.CombineLatest, .Concat, .Merge, .StartWith, .Zip]
         ),
         Section(
             name: "Filtering",

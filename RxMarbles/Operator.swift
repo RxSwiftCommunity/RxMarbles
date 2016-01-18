@@ -16,6 +16,7 @@ enum Operator {
     case Debounce
     case Buffer
     case FlatMap
+    case FlatMapFirst
     case CombineLatest
     case Concat
     case Merge
@@ -42,6 +43,7 @@ extension Operator: CustomStringConvertible {
         case Debounce:             return "Debounce"
         case Buffer:               return "Buffer"
         case FlatMap:              return "FlatMap"
+        case FlatMapFirst:         return "FlatMapFirst"
         case CombineLatest:        return "CombineLatest"
         case Concat:               return "Concat"
         case Merge:                return "Merge"
@@ -65,27 +67,28 @@ extension Operator {
     func map(o: (first: TestableObservable<ColoredType>, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
         case Delay:                return o.first.delaySubscription(30, scheduler: scheduler)
-        case Map:                  return o.first.map({ h in ColoredType(value: h.value * 10, color: h.color) })
-        case Scan:                 return o.first.scan(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
+        case Map:                  return o.first.map({ h in ColoredType(value: h.value * 10, color: h.color, shape: h.shape) })
+        case Scan:                 return o.first.scan(ColoredType(value: 0, color: .redColor(), shape: .Circle), accumulator: { acc, e in
             var res = acc
             res.value += e.value
             res.color = e.color
             return res
         })
         case Debounce:             return o.first.debounce(50, scheduler: scheduler)
-        case Buffer:               return o.first.buffer(timeSpan: 100, count: 1, scheduler: scheduler).map({ event in ColoredType(value: 1, color: .redColor()) })
-        case FlatMap:              return o.first.flatMap({ event in Observable.just(ColoredType(value: event.value * 10, color: event.color), scheduler: scheduler) })
+        case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: 13, color: .redColor(), shape: .Circle) })
+        case FlatMap:              return o.first.flatMap({ event in return o.second! })
+        case FlatMapFirst:         return o.first.flatMapFirst({ event in return o.second! })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
-            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
+            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!, shape: (event.first?.shape)!)
             return res
         })
         case Concat:               return [o.first, o.second!].concat()
-        case Merge:                return o.first.ignoreElements()
+        case Merge:                return Observable.of(o.first, o.second!).merge()
         case Zip:                  return [o.first, o.second!].zip({ event in
-            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!)
+            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!, shape: (event.first?.shape)!)
             return res
         })
-        case StartWith:            return o.first.startWith(ColoredType(value: 2, color: .redColor()))
+        case StartWith:            return o.first.startWith(ColoredType(value: 2, color: .redColor(), shape: .Circle))
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
         case ElementAt:            return o.first.elementAt(2)
         case Filter:               return o.first.filter { $0.value > 2 }
@@ -95,10 +98,11 @@ extension Operator {
         case Take:                 return o.first.take(2)
         case TakeLast:             return o.first.takeLast(2)
         case Reduce:
-            return o.first.reduce(ColoredType(value: 0, color: .redColor()), accumulator: { acc, e in
+            return o.first.reduce(ColoredType(value: 0, color: .redColor(), shape: .Circle), accumulator: { acc, e in
                 var res = acc
                 res.value += e.value
                 res.color = e.color
+                res.shape = e.shape
                 return res
             })
         case Amb:                   return o.first.ignoreElements()
@@ -114,7 +118,8 @@ extension Operator {
         case Scan:                 return false
         case Debounce:             return false
         case Buffer:               return false
-        case FlatMap:              return false
+        case FlatMap:              return true
+        case FlatMapFirst:         return true
         case CombineLatest:        return true
         case Concat:               return true
         case Merge:                return true

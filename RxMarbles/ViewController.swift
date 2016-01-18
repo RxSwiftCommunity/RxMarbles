@@ -13,11 +13,19 @@ import RxCocoa
 struct ColoredType: Equatable {
     var value: Int
     var color: UIColor
+    var shape: EventShape
 }
 
 struct TimelineImage {
     static var timeLine: UIImage { return UIImage(named: "timeLine")! }
     static var cross: UIImage { return UIImage(named: "cross")! }
+}
+
+enum EventShape {
+    case Circle
+    case RoundedRect
+    case Rhombus
+    case Another
 }
 
 func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
@@ -34,13 +42,12 @@ class EventView: UILabel {
     private var _removeBehavior: UIDynamicItemBehavior? = nil
     private weak var _timeLine: UIView?
     
-    init(recorded: RecordedType) {
+    init(recorded: RecordedType, shape: EventShape) {
         
         switch recorded.value {
         case let .Next(v):
             super.init(frame: CGRectMake(0, 0, 38, 38))
             center = CGPointMake(CGFloat(recorded.time), bounds.height)
-            layer.cornerRadius = bounds.width / 2.0
             clipsToBounds = true
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
@@ -50,6 +57,27 @@ class EventView: UILabel {
             textColor = .whiteColor()
             if let value = recorded.value.element?.value {
                 text = String(value)
+            }
+            switch shape {
+            case .Circle:
+                layer.cornerRadius = bounds.width / 2.0
+            case .RoundedRect:
+                layer.cornerRadius = 5.0
+            case .Rhombus:
+                let width = layer.frame.size.width
+                let height = layer.frame.size.height
+                
+                var path = CGPathCreateMutable()
+                
+                CGPathMoveToPoint(path, nil, 30, 0)
+                CGPathAddLineToPoint(path, nil, width, 0)
+                CGPathAddLineToPoint(path, nil, width, height)
+                CGPathAddLineToPoint(path, nil, 0, height)
+                CGPathAddLineToPoint(path, nil, 30, 0)
+                
+                
+            case .Another:
+                break
             }
             
         case .Completed:
@@ -124,6 +152,7 @@ class EventView: UILabel {
 class TimelineView: UIView {
     var _sourceEvents = [EventView]()
     let _timeArrow = UIImageView(image: TimelineImage.timeLine)
+    private var _addButton: UIButton?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -134,10 +163,49 @@ class TimelineView: UIView {
         super.layoutSubviews()
         frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.width)! - 20, 40)
         _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
+        if _addButton != nil {
+            _addButton?.center.y = _timeArrow.center.y
+            _addButton?.center.x = frame.size.width - 10.0
+            let timeArrowFrame = self._timeArrow.frame
+            let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
+            self._timeArrow.frame = newTimeArrowFrame
+        }
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func addNextEventToTimeline(time: Int, event: Event<ColoredType>, animator: UIDynamicAnimator!) {
+        let v = EventView(recorded: RecordedType(time: time, event: event), shape: (event.element?.shape)!)
+        addSubview(v)
+        v.use(animator, timeLine: self)
+        _sourceEvents.append(v)
+    }
+    
+    func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!) {
+        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .Another)
+        addSubview(v)
+        v.use(animator, timeLine: self)
+        _sourceEvents.append(v)
+    }
+    
+    func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!) {
+        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(error)), shape: .Another)
+        addSubview(v)
+        v.use(animator, timeLine: self)
+        _sourceEvents.append(v)
+    }
+    
+    func maxNextTime() -> Int? {
+        var times = Array<Int>()
+        _sourceEvents.forEach { (eventView) -> () in
+            if eventView.isNext {
+                times.append(eventView._recorded.time)
+            }
+        }
+        return times.maxElement()
     }
 }
 
@@ -171,7 +239,8 @@ class SourceTimelineView: TimelineView {
                     if let panEventView = self!._panEventView {
                         let snap = panEventView._snap
                         panEventView._animator?.removeBehavior(snap!)
-                        self!._ghostEventView = EventView(recorded: panEventView._recorded)
+                        let shape: EventShape = (panEventView._recorded.value.element?.shape != nil) ? (panEventView._recorded.value.element?.shape)! : .Another
+                        self!._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape)
                         if let ghostEventView = self!._ghostEventView {
                             ghostEventView.center.y = self!.bounds.height / 2
                             self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
@@ -303,6 +372,20 @@ class SourceTimelineView: TimelineView {
             }
         })
     }
+    
+    func showAddButton() {
+        _addButton = UIButton(type: .ContactAdd)
+        self.addSubview(_addButton!)
+        removeGestureRecognizer(_longPressGestureRecorgnizer)
+    }
+    
+    func hideAddButton() {
+        if _addButton != nil {
+            _addButton!.removeFromSuperview()
+            _addButton = nil
+        }
+        addGestureRecognizer(_longPressGestureRecorgnizer)
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -354,7 +437,8 @@ class ResultTimelineView: TimelineView {
         _sourceEvents.removeAll()
         
         events.forEach { (event) -> () in
-            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value))
+            let shape: EventShape = (event.value.element?.shape != nil) ? (event.value.element?.shape)! : .Another
+            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape)
             eventView.center.y = self.bounds.height / 2
             _sourceEvents.append(eventView)
             addSubview(eventView)
@@ -385,16 +469,32 @@ class ViewController: UIViewController {
     private var _currentOperator = Operator.Delay
     private var _operatorTableViewController: OperatorTableViewController?
     private var _sceneView: SceneView!
-
+    private var _isEditing: Bool = false {
+        didSet {
+            if _isEditing {
+                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "enableEditing")
+                self.navigationItem.rightBarButtonItem = nil
+                self._sceneView._sourceTimeline.showAddButton()
+                self._sceneView._sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
+                if self._currentOperator.multiTimelines {
+                    self._sceneView._secondSourceTimeline.showAddButton()
+                    self._sceneView._secondSourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
+                }
+            } else {
+                self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "enableEditing")
+                self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Select", style: UIBarButtonItemStyle.Plain, target: self, action: "showOperatorView")
+                _sceneView._sourceTimeline.hideAddButton()
+                if _currentOperator.multiTimelines {
+                    _sceneView._secondSourceTimeline.hideAddButton()
+                }
+            }
+        }
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
-        
-        let addButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Add, target: self, action: "addElement")
-        self.navigationItem.leftBarButtonItem = addButton
-        
-        let operatorButton = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "showOperatorView")
-        self.navigationItem.rightBarButtonItem = operatorButton
+    
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -404,6 +504,7 @@ class ViewController: UIViewController {
         title = _currentOperator.description
         
         setupSceneView()
+        _isEditing = false
     }
     
     private func setupSceneView() {
@@ -434,11 +535,10 @@ class ViewController: UIViewController {
         
         for t in 1..<4 {
             let time = t * 40
-            let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor()))
-            addNextEventToTimeline(time, event: event, timeline: sourceTimeLine)
+            let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor(), shape: .Circle))
+            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator)
         }
-        
-        addCompletedEventToTimeline(150, timeline: sourceTimeLine)
+        sourceTimeLine.addCompletedEventToTimeline(150, animator: self._sceneView.animator)
         
         if _currentOperator.multiTimelines {
             resultTimeline.center.y = 280
@@ -450,83 +550,57 @@ class ViewController: UIViewController {
             
             for t in 1..<3 {
                 let time = t * 40
-                let event = Event.Next(ColoredType(value: t, color: RXMUIKit.randomColor()))
-                addNextEventToTimeline(time, event: event, timeline: secondSourceTimeline)
+                let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor(), shape: .RoundedRect))
+                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator)
             }
             
-            addCompletedEventToTimeline(110, timeline: secondSourceTimeline)
+            secondSourceTimeline.addCompletedEventToTimeline(110, animator: self._sceneView.animator)
         }
         
         sourceTimeLine.updateResultTimeline()
     }
     
-    func addElement() {
-        let sourceTimeline = _sceneView._sourceTimeline
-        var time = Int(sourceTimeline.bounds.size.width / 2.0)
-        
-        let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
-        
-        let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
-            let event = Event.Next(ColoredType(value: self.randomNumber(), color: RXMUIKit.randomColor()))
-            self.addNextEventToTimeline(time, event: event, timeline: sourceTimeline)
-            sourceTimeline.updateResultTimeline()
-        }
-        let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
-            if let t = self.maxNextTime(sourceTimeline._sourceEvents) {
-                time = t + 20
-            } else {
-                time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
+    func enableEditing() {
+        _isEditing = !_isEditing
+    }
+    
+    func addElementToTimeline(sender: UIButton) {
+        if let timeline: SourceTimelineView = sender.superview as? SourceTimelineView {
+            var time = Int(timeline.bounds.size.width / 2.0)
+            
+            let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
+            
+            let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
+                let shape: EventShape = (timeline == self._sceneView._sourceTimeline) ? .Circle : .RoundedRect
+                let event = Event.Next(ColoredType(value: self.randomNumber(), color: RXMUIKit.randomColor(), shape: shape))
+                timeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator)
+                timeline.updateResultTimeline()
             }
-            self.addCompletedEventToTimeline(time, timeline: sourceTimeline)
-            sourceTimeline.updateResultTimeline()
-        }
-        let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
-            self.addErrorEventToTimeline(time, timeline: sourceTimeline)
-            sourceTimeline.updateResultTimeline()
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
-        
-        elementSelector.addAction(nextAction)
-        let sourceEvents: [EventView] = sourceTimeline._sourceEvents
-        if sourceEvents.indexOf({ $0.isCompleted == true }) == nil {
-            elementSelector.addAction(completedAction)
-        }
-        elementSelector.addAction(errorAction)
-        elementSelector.addAction(cancelAction)
-        
-        presentViewController(elementSelector, animated: true) { () -> Void in }
-    }
-    
-    private func addNextEventToTimeline(time: Int, event: Event<ColoredType>, timeline: TimelineView) {
-        let v = EventView(recorded: RecordedType(time: time, event: event))
-        timeline.addSubview(v)
-        v.use(_sceneView.animator, timeLine: timeline)
-        timeline._sourceEvents.append(v)
-    }
-    
-    private func addCompletedEventToTimeline(time: Int, timeline: TimelineView) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Completed))
-        timeline.addSubview(v)
-        v.use(_sceneView.animator, timeLine: timeline)
-        timeline._sourceEvents.append(v)
-    }
-    
-    private func addErrorEventToTimeline(time: Int, timeline: TimelineView) {
-        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(error)))
-        timeline.addSubview(v)
-        v.use(self._sceneView.animator, timeLine: timeline)
-        timeline._sourceEvents.append(v)
-    }
-    
-    private func maxNextTime(sourceEvents: [EventView]!) -> Int? {
-        var times = Array<Int>()
-        sourceEvents.forEach { (eventView) -> () in
-            if eventView.isNext {
-                times.append(eventView._recorded.time)
+            let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
+                if let t = timeline.maxNextTime() {
+                    time = t + 20
+                } else {
+                    time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
+                }
+                timeline.addCompletedEventToTimeline(time, animator: self._sceneView.animator)
+                timeline.updateResultTimeline()
             }
+            let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
+                timeline.addErrorEventToTimeline(time, animator: self._sceneView.animator)
+                timeline.updateResultTimeline()
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+            
+            elementSelector.addAction(nextAction)
+            let sourceEvents: [EventView] = timeline._sourceEvents
+            if sourceEvents.indexOf({ $0.isCompleted == true }) == nil {
+                elementSelector.addAction(completedAction)
+            }
+            elementSelector.addAction(errorAction)
+            elementSelector.addAction(cancelAction)
+            
+            presentViewController(elementSelector, animated: true) { () -> Void in }
         }
-        return times.maxElement()
     }
     
     func showOperatorView() {
