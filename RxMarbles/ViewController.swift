@@ -427,15 +427,9 @@ class ResultTimelineView: TimelineView {
         
         let o = _operator.map((first, second), scheduler: scheduler)
         var res: TestableObserver<ColoredType>?
-        switch _operator! {
-        case .Sample:
-            res = scheduler.start({ first.sample(second!) })
-        case .Amb:
-            res = scheduler.start({ first.amb(second!) })
-        default:
-            res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
-                return o
-            }
+        
+        res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
+            return o
         }
         
         addEventsToTimeline(res!.events)

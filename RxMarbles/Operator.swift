@@ -94,7 +94,7 @@ extension Operator {
         case ElementAt:            return o.first.elementAt(2)
         case Filter:               return o.first.filter { $0.value > 2 }
         case IgnoreElements:       return o.first.ignoreElements()
-        case Sample:               return o.first.ignoreElements()//scheduler.start({o.first.sample(o.second)})
+        case Sample:               return o.first.sample(o.second!)
         case Skip:                 return o.first.skip(2)
         case Take:                 return o.first.take(2)
         case TakeLast:             return o.first.takeLast(2)
@@ -106,7 +106,7 @@ extension Operator {
                 res.shape = e.shape
                 return res
             })
-        case Amb:                  return o.first.ignoreElements()
+        case Amb:                  return o.first.amb(o.second!)
         }
     }
 }
