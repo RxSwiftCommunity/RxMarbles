@@ -68,14 +68,15 @@ extension Operator {
         switch self {
         case Delay:                return o.first.delaySubscription(30, scheduler: scheduler)
         case Map:                  return o.first.map({ h in ColoredType(value: h.value * 10, color: h.color, shape: h.shape) })
-        case Scan:                 return o.first.scan(ColoredType(value: 0, color: .redColor(), shape: .Circle), accumulator: { acc, e in
+        case Scan:                 return o.first.scan(ColoredType(value: 0, color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .Another), accumulator: { acc, e in
             var res = acc
             res.value += e.value
             res.color = e.color
+            res.shape = e.shape
             return res
         })
         case Debounce:             return o.first.debounce(50, scheduler: scheduler)
-        case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: 13, color: .redColor(), shape: .Circle) })
+        case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: 13, color: .redColor(), shape: .Rhombus) })
         case FlatMap:              return o.first.flatMap({ event in return o.second! })
         case FlatMapFirst:         return o.first.flatMapFirst({ event in return o.second! })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
@@ -98,14 +99,14 @@ extension Operator {
         case Take:                 return o.first.take(2)
         case TakeLast:             return o.first.takeLast(2)
         case Reduce:
-            return o.first.reduce(ColoredType(value: 0, color: .redColor(), shape: .Circle), accumulator: { acc, e in
+            return o.first.reduce(ColoredType(value: 0, color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .Another), accumulator: { acc, e in
                 var res = acc
                 res.value += e.value
                 res.color = e.color
                 res.shape = e.shape
                 return res
             })
-        case Amb:                   return o.first.ignoreElements()
+        case Amb:                  return o.first.ignoreElements()
         }
     }
 }

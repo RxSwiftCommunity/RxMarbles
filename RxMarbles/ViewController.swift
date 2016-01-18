@@ -67,14 +67,26 @@ class EventView: UILabel {
                 let width = layer.frame.size.width
                 let height = layer.frame.size.height
                 
-                var path = CGPathCreateMutable()
+                let mask = CAShapeLayer()
+                mask.frame = self.layer.bounds
                 
-                CGPathMoveToPoint(path, nil, 30, 0)
-                CGPathAddLineToPoint(path, nil, width, 0)
-                CGPathAddLineToPoint(path, nil, width, height)
-                CGPathAddLineToPoint(path, nil, 0, height)
-                CGPathAddLineToPoint(path, nil, 30, 0)
+                let path = CGPathCreateMutable()
+                CGPathMoveToPoint(path, nil, width / 2.0, 0)
+                CGPathAddLineToPoint(path, nil, width, height / 2.0)
+                CGPathAddLineToPoint(path, nil, width / 2.0, height)
+                CGPathAddLineToPoint(path, nil, 0, height / 2.0)
+                CGPathAddLineToPoint(path, nil, width / 2.0, 0)
                 
+                mask.path = path
+                self.layer.mask = mask
+                
+                let border = CAShapeLayer()
+                border.frame = bounds
+                border.path = path
+                border.lineWidth = 0.5
+                border.strokeColor = UIColor.lightGrayColor().CGColor
+                border.fillColor = UIColor.clearColor().CGColor
+                self.layer.insertSublayer(border, atIndex: 0)
                 
             case .Another:
                 break
