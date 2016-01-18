@@ -12,9 +12,6 @@ import RxSwift
 enum Operator {
     case Amb
     case Buffer
-    case FlatMap
-    case FlatMapFirst
-    case FlatMapLatest
     case CombineLatest
     case Concat
     case Debounce
@@ -24,6 +21,7 @@ enum Operator {
     case Filter
     case FlatMap
     case FlatMapFirst
+    case FlatMapLatest
     case IgnoreElements
     case Map
     case Merge
@@ -42,9 +40,6 @@ extension Operator: CustomStringConvertible {
         switch self {
         case Amb:                  return "Amb"
         case Buffer:               return "Buffer"
-        case FlatMap:              return "FlatMap"
-        case FlatMapFirst:         return "FlatMapFirst"
-        case FlatMapLatest:        return "FlatMapLatest"
         case CombineLatest:        return "CombineLatest"
         case Concat:               return "Concat"
         case Debounce:             return "Debounce"
@@ -54,6 +49,7 @@ extension Operator: CustomStringConvertible {
         case Filter:               return "Filter"
         case FlatMap:              return "FlatMap"
         case FlatMapFirst:         return "FlatMapFirst"
+        case FlatMapLatest:        return "FlatMapLatest"
         case IgnoreElements:       return "IgnoreElements"
         case Map:                  return "Map"
         case Merge:                return "Merge"
@@ -123,9 +119,6 @@ extension Operator {
         switch self {
         case Amb:                  return true
         case Buffer:               return false
-        case FlatMap:              return true
-        case FlatMapFirst:         return true
-        case FlatMapLatest:        return true
         case CombineLatest:        return true
         case Concat:               return true
         case Debounce:             return false
@@ -135,6 +128,7 @@ extension Operator {
         case Filter:               return false
         case FlatMap:              return true
         case FlatMapFirst:         return true
+        case FlatMapLatest:        return true
         case IgnoreElements:       return false
         case Map:                  return false
         case Merge:                return true
