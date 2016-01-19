@@ -29,7 +29,7 @@ enum EventShape {
 }
 
 func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
-    return lhs.value == rhs.value && lhs.color == rhs.color
+    return lhs.value == rhs.value && lhs.color == rhs.color && lhs.shape == rhs.shape
 }
 
 typealias RecordedType = Recorded<Event<ColoredType>>
