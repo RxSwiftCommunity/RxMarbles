@@ -47,6 +47,11 @@ class OperatorTableViewController: UITableViewController {
         self.tableView.tableFooterView = UIView()
         self.tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "OperatorCell")
     }
+    
+    override func viewWillAppear(animated: Bool) {
+        super.viewWillAppear(animated)
+        self.tableView.reloadData()
+    }
 
     // MARK: - Table view data source
 
