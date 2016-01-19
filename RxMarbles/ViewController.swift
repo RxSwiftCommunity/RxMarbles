@@ -46,7 +46,6 @@ class EventView: UIView {
     private var _label = UILabel()
     
     init(recorded: RecordedType, shape: EventShape, viewController: ViewController!) {
-        
         switch recorded.value {
         case let .Next(v):
             super.init(frame: CGRectMake(0, 0, 38, 38))

@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 struct Section {
     var name: String
@@ -16,8 +18,7 @@ struct Section {
 class OperatorTableViewController: UITableViewController {
     
     var selectedOperator: Operator?
-    
-   
+
     private let _sections = [
         Section(
             name: "Transforming",
@@ -46,6 +47,17 @@ class OperatorTableViewController: UITableViewController {
         title = "Select Operator"
         self.tableView.tableFooterView = UIView()
         self.tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "OperatorCell")
+        
+        _ = tableView.rx_itemSelected
+            .map { indexPath in
+                return (indexPath, self._rowAtIndexPath(indexPath))
+            }
+            .subscribeNext { indexPath, op in
+                self.selectedOperator = op
+                let viewController = ViewController()
+                viewController._currentOperator = self.selectedOperator!
+                self.navigationController?.pushViewController(viewController, animated: true)
+            }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -87,14 +99,4 @@ class OperatorTableViewController: UITableViewController {
 
         return cell
     }
-    
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        tableView.deselectRowAtIndexPath(indexPath, animated: true)
-        let op = _rowAtIndexPath(indexPath)
-        selectedOperator = op
-        let viewController = ViewController()
-        viewController._currentOperator = selectedOperator!
-        navigationController?.pushViewController(viewController, animated: true)
-    }
-
 }
