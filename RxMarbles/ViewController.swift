@@ -179,6 +179,8 @@ class EventView: UILabel {
 //            colorsSegment.frame.size.width = settingsAlertController.view.bounds.size.width
 //            colorsSegment.frame.size.height = 25.0
 //            contentViewController.view.addSubview(colorsSegment)
+//            let textField = UITextField(frame: CGRectMake(0.0, 0.0, 100.0, 30.0))
+//            contentViewController.view.addSubview(textField)
             
             settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
             
@@ -186,8 +188,11 @@ class EventView: UILabel {
                 
             }
             settingsAlertController.addAction(saveAction)
+        } else {
+            settingsAlertController.message = "Delete event?"
         }
-        let removeAction = UIAlertAction(title: "Remove", style: .Default) { (action) -> Void in
+        let removeAction = UIAlertAction(title: "Delete", style: .Default) { (action) -> Void in
+            self._animator!.removeAllBehaviors()
             self._animator!.addBehavior(self._gravity!)
             self._animator!.addBehavior(self._removeBehavior!)
             self._removeBehavior?.action = {
