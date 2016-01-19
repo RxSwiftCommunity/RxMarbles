@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 struct ColoredType: Equatable {
-    var value: Int
+    var value: String
     var color: UIColor
     var shape: EventShape
 }
@@ -34,7 +34,7 @@ func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
 
 typealias RecordedType = Recorded<Event<ColoredType>>
 
-class EventView: UILabel {
+class EventView: UIView {
     private var _recorded = RecordedType(time: 0, event: .Completed)
     private weak var _animator: UIDynamicAnimator? = nil
     private var _snap: UISnapBehavior? = nil
@@ -43,6 +43,7 @@ class EventView: UILabel {
     private weak var _timeLine: SourceTimelineView?
     private var _tapGestureRecognizer: UITapGestureRecognizer!
     private var _parentViewController: ViewController!
+    private var _label = UILabel()
     
     init(recorded: RecordedType, shape: EventShape, viewController: ViewController!) {
         
@@ -54,11 +55,19 @@ class EventView: UILabel {
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
             layer.borderWidth = 0.5
-            textAlignment = .Center
-            font = UIFont(name: "", size: 17.0)
-            textColor = .whiteColor()
+            
+            _label.center = CGPointMake(19, 19)
+            _label.textAlignment = .Center
+            _label.font = UIFont(name: "", size: 17.0)
+            _label.numberOfLines = 1
+            _label.adjustsFontSizeToFitWidth = true
+            _label.minimumScaleFactor = 0.6
+            _label.lineBreakMode = .ByTruncatingTail
+            _label.textColor = .whiteColor()
+            addSubview(_label)
+            
             if let value = recorded.value.element?.value {
-                text = String(value)
+                _label.text = String(value)
             }
             switch shape {
             case .Circle:
@@ -130,6 +139,16 @@ class EventView: UILabel {
         _parentViewController = viewController
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        
+        if isNext {
+            _label.frame = CGRectInset(frame, 3.0, 10.0)
+            _label.center = CGPointMake(19, 19)
+            _label.baselineAdjustment = .AlignCenters
+        }
+    }
+    
     func use(animator: UIDynamicAnimator?, timeLine: SourceTimelineView?) {
         if let snap = _snap {
             _animator?.removeBehavior(snap)
@@ -169,49 +188,104 @@ class EventView: UILabel {
     }
     
     func setEventView() {
-        let settingsAlertController = UIAlertController(title: "Event settings", message: nil, preferredStyle: .Alert)
+        let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
         if isNext {
             let contentViewController = UIViewController()
-//            contentViewController.view.backgroundColor = .lightGrayColor()
-//            let colorsSegment = UISegmentedControl(items: ["Color1", "Color2", "Color3", "Color4", "Color5"])
-//            colorsSegment.frame.size.width = settingsAlertController.view.bounds.size.width
-//            colorsSegment.frame.size.height = 25.0
-//            contentViewController.view.addSubview(colorsSegment)
-//            let textField = UITextField(frame: CGRectMake(0.0, 0.0, 100.0, 30.0))
-//            contentViewController.view.addSubview(textField)
+            contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
+            
+            let eventView = EventView(recorded: self._recorded, shape: (self._recorded.value.element?.shape)!, viewController: _parentViewController)
+            eventView.center = CGPointMake(100.0, 25.0)
+            contentViewController.view.addSubview(eventView)
+            
+            let colors = [RXMUIKit.lightBlueColor(), RXMUIKit.darkYellowColor(), RXMUIKit.lightGreenColor(), RXMUIKit.blueColor(), RXMUIKit.orangeColor()]
+            let currentColor = self._recorded.value.element?.color
+            let colorsSegment = UISegmentedControl(items: ["", "", "", "", ""])
+            colorsSegment.tintColor = .clearColor()
+            colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
+            var counter = 0
+            colorsSegment.subviews.forEach({ subview in
+                subview.backgroundColor = colors[counter]
+                if currentColor == colors[counter] {
+                    colorsSegment.selectedSegmentIndex = counter
+                }
+                counter++
+            })
+            
+            if colorsSegment.selectedSegmentIndex < 0 {
+                colorsSegment.selectedSegmentIndex = 0
+            }
+            
+            contentViewController.view.addSubview(colorsSegment)
             
             settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
             
+            settingsAlertController.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+                if let text = self._recorded.value.element?.value {
+                    textField.text = text
+                }
+            })
+            
+            _ = Observable
+                .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegment.rx_value, resultSelector: { text, segment in
+                    return (text, segment)
+                })
+                .subscribeNext({ (text, segment) in
+                    eventView._label.text = text
+                    eventView.backgroundColor = colors[segment]
+                })
+            
             let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
-                
+                let index = self._timeLine?._sourceEvents.indexOf(self)
+                let time = self._recorded.time
+                let value = eventView._label.text
+                let color = eventView.backgroundColor
+                let shape = self._recorded.value.element?.shape
+                let event = Event.Next(ColoredType(value: value!, color: color!, shape: shape!))
+                if index != nil {
+                    self._timeLine?._sourceEvents.removeAtIndex(index!)
+                    self.removeFromSuperview()
+                    self._timeLine?.addNextEventToTimeline(time, event: event, animator: self._parentViewController._sceneView.animator, isEditing: true)
+                    self._timeLine?.updateResultTimeline()
+                }
             }
             settingsAlertController.addAction(saveAction)
         } else {
             settingsAlertController.message = "Delete event?"
         }
-        let removeAction = UIAlertAction(title: "Delete", style: .Default) { (action) -> Void in
-            self._animator!.removeAllBehaviors()
-            self._animator!.addBehavior(self._gravity!)
-            self._animator!.addBehavior(self._removeBehavior!)
-            self._removeBehavior?.action = {
-                if let superView = self._parentViewController._sceneView {
-                    if let index = self._timeLine?._sourceEvents.indexOf(self) {
-                        if CGRectIntersectsRect(superView.bounds, self.frame) == false {
-                            self.removeFromSuperview()
-                            self._timeLine?._sourceEvents.removeAtIndex(index)
-                            self._timeLine?.updateResultTimeline()
-                        }
+        let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) -> Void in
+            self.deleteAction()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+        settingsAlertController.addAction(deleteAction)
+        settingsAlertController.addAction(cancelAction)
+        if let parentViewController = self._parentViewController {
+            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
+        }
+    }
+    
+    private func deleteAction() {
+        self._animator!.removeAllBehaviors()
+        self._animator!.addBehavior(self._gravity!)
+        self._animator!.addBehavior(self._removeBehavior!)
+        self._removeBehavior?.action = {
+            if let superView = self._parentViewController._sceneView {
+                if let index = self._timeLine?._sourceEvents.indexOf(self) {
+                    if CGRectIntersectsRect(superView.bounds, self.frame) == false {
+                        self.removeFromSuperview()
+                        self._timeLine?._sourceEvents.removeAtIndex(index)
+                        self._timeLine?.updateResultTimeline()
                     }
                 }
             }
         }
-        settingsAlertController.addAction(cancelAction)
-        settingsAlertController.addAction(removeAction)
-        if let parentViewController = self._parentViewController {
-            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
-        }
+    }
+    
+    private func scaleAnimation() {
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+            self.transform = CGAffineTransformMakeScale(4.0, 4.0)
+            self.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        })
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -478,6 +552,12 @@ class SourceTimelineView: TimelineView {
             eventView.removeTapRecognizer()
         }
     }
+    
+    private func allEventViewsAnimation() {
+        _sourceEvents.forEach { eventView in
+            eventView.scaleAnimation()
+        }
+    }
 
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -560,27 +640,37 @@ class ViewController: UIViewController {
             if _isEditing {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "enableEditing")
                 self.navigationItem.setHidesBackButton(true, animated: true)
+                UIView.animateWithDuration(0.3, animations: { _ in
+                    self._sceneView._resultTimeline.alpha = 0.5
+                })
                 _sceneView._sourceTimeline.addTapRecognizers()
                 _sceneView._sourceTimeline.showAddButton()
+                _sceneView._sourceTimeline.allEventViewsAnimation()
                 _sceneView._sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
                 if _currentOperator.multiTimelines {
                     _sceneView._secondSourceTimeline.addTapRecognizers()
                     _sceneView._secondSourceTimeline.showAddButton()
+                    _sceneView._secondSourceTimeline.allEventViewsAnimation()
                     _sceneView._secondSourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
                 }
             } else {
                 self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "enableEditing")
                 self.navigationItem.setHidesBackButton(false, animated: true)
+                UIView.animateWithDuration(0.3, animations: { _ in
+                    self._sceneView._resultTimeline.alpha = 1.0
+                })
                 _sceneView._sourceTimeline.removeTapRecognizers()
                 _sceneView._sourceTimeline.hideAddButton()
+                _sceneView._sourceTimeline.allEventViewsAnimation()
                 if _currentOperator.multiTimelines {
                     _sceneView._secondSourceTimeline.removeTapRecognizers()
                     _sceneView._secondSourceTimeline.hideAddButton()
+                    _sceneView._secondSourceTimeline.allEventViewsAnimation()
                 }
             }
         }
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
@@ -621,7 +711,7 @@ class ViewController: UIViewController {
         
         for t in 1..<4 {
             let time = t * 40
-            let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor(), shape: .Circle))
+            let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .Circle))
             sourceTimeLine.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: _isEditing)
         }
         sourceTimeLine.addCompletedEventToTimeline(150, animator: self._sceneView.animator, isEditing: _isEditing)
@@ -637,7 +727,7 @@ class ViewController: UIViewController {
             
             for t in 1..<3 {
                 let time = t * 40
-                let event = Event.Next(ColoredType(value: randomNumber(), color: RXMUIKit.randomColor(), shape: .RoundedRect))
+                let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .RoundedRect))
                 secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: _isEditing)
             }
             
@@ -659,7 +749,7 @@ class ViewController: UIViewController {
             
             let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
                 let shape: EventShape = (timeline == self._sceneView._sourceTimeline) ? .Circle : .RoundedRect
-                let event = Event.Next(ColoredType(value: self.randomNumber(), color: RXMUIKit.randomColor(), shape: shape))
+                let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: RXMUIKit.randomColor(), shape: shape))
                 timeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: self._isEditing)
                 timeline.updateResultTimeline()
             }
