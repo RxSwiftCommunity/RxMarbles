@@ -688,6 +688,7 @@ class ViewController: UIViewController {
         if _sceneView != nil {
             _sceneView.removeFromSuperview()
         }
+        let orientation = UIDevice.currentDevice().orientation
         _sceneView = SceneView()
         view.addSubview(_sceneView)
         _sceneView.frame = view.frame
@@ -712,11 +713,12 @@ class ViewController: UIViewController {
         _sceneView._sourceTimeline = sourceTimeLine
         
         for t in 1..<4 {
-            let time = t * 40
+            let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
             let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .Circle))
             sourceTimeLine.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: _isEditing)
         }
-        sourceTimeLine.addCompletedEventToTimeline(150, animator: _sceneView.animator, isEditing: _isEditing)
+        let completedTime = orientation.isPortrait ? 150 : Int(150.0 * scaleKoefficient())
+        sourceTimeLine.addCompletedEventToTimeline(completedTime, animator: _sceneView.animator, isEditing: _isEditing)
         
         if _currentOperator.multiTimelines {
             resultTimeline.center.y = 280
@@ -728,12 +730,12 @@ class ViewController: UIViewController {
             _sceneView._secondSourceTimeline = secondSourceTimeline
             
             for t in 1..<3 {
-                let time = t * 40
+                let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
                 let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .RoundedRect))
                 secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: _isEditing)
             }
-            
-            secondSourceTimeline.addCompletedEventToTimeline(110, animator: _sceneView.animator, isEditing: _isEditing)
+            let secondCompletedTime = orientation.isPortrait ? 110 : Int(110.0 * scaleKoefficient())
+            secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: _sceneView.animator, isEditing: _isEditing)
         }
         
         sourceTimeLine.updateResultTimeline()
@@ -796,13 +798,38 @@ class ViewController: UIViewController {
                     eventView.removeFromSuperview()
                 })
             }) { (context) -> Void in
-//                let width = self.view.frame.width
-//                let height = self.view.frame.height
-//                let koef = width / height
-//                time * koef
-                if let sourceTimeline = self._sceneView._sourceTimeline {
-                    sourceTimeline.updateResultTimeline()
+                self.scaleTimesOnChangeOrientation(self._sceneView._sourceTimeline)
+                if self._currentOperator.multiTimelines {
+                    self.scaleTimesOnChangeOrientation(self._sceneView._secondSourceTimeline)
                 }
         }
+    }
+    
+    private func scaleTimesOnChangeOrientation(timeline: SourceTimelineView) {
+        let scaleKoef = scaleKoefficient()
+        var sourceEvents = timeline._sourceEvents
+        timeline._sourceEvents.forEach({ eventView in
+            eventView.removeFromSuperview()
+        })
+        timeline._sourceEvents.removeAll()
+        sourceEvents.forEach({ eventView in
+            let time = Int(CGFloat(eventView._recorded.time) * scaleKoef)
+            if eventView.isNext {
+                timeline.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _sceneView.animator, isEditing: _isEditing)
+            } else if eventView.isCompleted {
+                timeline.addCompletedEventToTimeline(time, animator: _sceneView.animator, isEditing: _isEditing)
+            } else {
+                timeline.addErrorEventToTimeline(time, animator: _sceneView.animator, isEditing: _isEditing)
+            }
+        })
+        sourceEvents.removeAll()
+        timeline.allEventViewsAnimation()
+        timeline.updateResultTimeline()
+    }
+    
+    private func scaleKoefficient() -> CGFloat {
+        let width = view.frame.width
+        let height = view.frame.height
+        return width / height
     }
 }
