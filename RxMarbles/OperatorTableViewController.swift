@@ -54,15 +54,19 @@ class OperatorTableViewController: UITableViewController {
             }
             .subscribeNext { indexPath, op in
                 self.selectedOperator = op
+                self.tableView.reloadData()
                 let viewController = ViewController()
                 viewController._currentOperator = self.selectedOperator!
-                self.navigationController?.pushViewController(viewController, animated: true)
+                
+                if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+                    viewController.navigationItem.leftItemsSupplementBackButton = true
+                    viewController.navigationItem.leftBarButtonItem = self.splitViewController!.displayModeButtonItem()
+                    let navDetailController = UINavigationController(rootViewController: viewController)
+                    self.splitViewController?.showDetailViewController(navDetailController, sender: nil)
+                } else {
+                    self.navigationController?.pushViewController(viewController, animated: true)
+                }
             }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        self.tableView.reloadData()
     }
 
     // MARK: - Table view data source

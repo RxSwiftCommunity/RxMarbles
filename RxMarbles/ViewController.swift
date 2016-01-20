@@ -638,7 +638,7 @@ class SceneView: UIView {
     }
 }
 
-class ViewController: UIViewController {
+class ViewController: UIViewController, UISplitViewControllerDelegate {
     var _currentOperator = Operator.Delay
     private var _operatorTableViewController: OperatorTableViewController?
     private var _sceneView: SceneView!
@@ -678,13 +678,14 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = _currentOperator.description
         view.backgroundColor = .whiteColor()
         navigationController?.navigationBar.topItem!.backBarButtonItem = UIBarButtonItem(title: _currentOperator.description, style: UIBarButtonItemStyle.Plain, target: self, action: "backToOperatorView")
         setupSceneView()
         _isEditing = false
     }
     
-    private func setupSceneView() {
+    func setupSceneView() {
         if _sceneView != nil {
             _sceneView.removeFromSuperview()
         }
@@ -779,7 +780,8 @@ class ViewController: UIViewController {
             }
             elementSelector.addAction(errorAction)
             elementSelector.addAction(cancelAction)
-            
+            elementSelector.popoverPresentationController?.sourceRect = sender.frame
+            elementSelector.popoverPresentationController?.sourceView = sender.superview
             presentViewController(elementSelector, animated: true) { () -> Void in }
         }
     }
@@ -832,4 +834,6 @@ class ViewController: UIViewController {
         let height = view.frame.height
         return width / height
     }
+//    MARK: UISplitViewControllerDelegate
+
 }

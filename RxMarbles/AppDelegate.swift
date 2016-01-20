@@ -15,10 +15,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow()
-        let operatorTableViewController = OperatorTableViewController()
-        let navigationController = UINavigationController()
-        navigationController.addChildViewController(operatorTableViewController)
-        window?.rootViewController = navigationController
+        
+        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
+            let splitViewController = UISplitViewController()
+            
+            let rootViewController = OperatorTableViewController()
+            
+            let detailViewController = ViewController()
+            detailViewController.navigationItem.leftItemsSupplementBackButton = true
+            detailViewController.navigationItem.leftBarButtonItem = splitViewController.displayModeButtonItem()
+            
+            let navDetailController = UINavigationController(rootViewController: detailViewController)
+            splitViewController.viewControllers = [rootViewController, navDetailController]
+            splitViewController.delegate = detailViewController
+            
+            window?.rootViewController = splitViewController
+        } else {
+            let operatorTableViewController = OperatorTableViewController()
+            
+            let navigationContoller = UINavigationController(rootViewController: operatorTableViewController)
+            window?.rootViewController = navigationContoller
+        }
+        
         window?.makeKeyAndVisible()
         return true
     }
