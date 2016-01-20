@@ -78,7 +78,7 @@ class EventView: UIView {
                 let height = layer.frame.size.height
                 
                 let mask = CAShapeLayer()
-                mask.frame = self.layer.bounds
+                mask.frame = layer.bounds
                 
                 let path = CGPathCreateMutable()
                 CGPathMoveToPoint(path, nil, width / 2.0, 0)
@@ -88,7 +88,7 @@ class EventView: UIView {
                 CGPathAddLineToPoint(path, nil, width / 2.0, 0)
                 
                 mask.path = path
-                self.layer.mask = mask
+                layer.mask = mask
                 
                 let border = CAShapeLayer()
                 border.frame = bounds
@@ -96,7 +96,7 @@ class EventView: UIView {
                 border.lineWidth = 0.5
                 border.strokeColor = UIColor.lightGrayColor().CGColor
                 border.fillColor = UIColor.clearColor().CGColor
-                self.layer.insertSublayer(border, atIndex: 0)
+                layer.insertSublayer(border, atIndex: 0)
                 
             case .Another:
                 break
@@ -193,12 +193,12 @@ class EventView: UIView {
             let contentViewController = UIViewController()
             contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
             
-            let eventView = EventView(recorded: self._recorded, shape: (self._recorded.value.element?.shape)!, viewController: _parentViewController)
+            let eventView = EventView(recorded: _recorded, shape: (_recorded.value.element?.shape)!, viewController: _parentViewController)
             eventView.center = CGPointMake(100.0, 25.0)
             contentViewController.view.addSubview(eventView)
             
             let colors = [RXMUIKit.lightBlueColor(), RXMUIKit.darkYellowColor(), RXMUIKit.lightGreenColor(), RXMUIKit.blueColor(), RXMUIKit.orangeColor()]
-            let currentColor = self._recorded.value.element?.color
+            let currentColor = _recorded.value.element?.color
             let colorsSegment = UISegmentedControl(items: ["", "", "", "", ""])
             colorsSegment.tintColor = .clearColor()
             colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
@@ -230,23 +230,11 @@ class EventView: UIView {
                     return (text, segment)
                 })
                 .subscribeNext({ (text, segment) in
-                    eventView._label.text = text
-                    eventView.backgroundColor = colors[segment]
+                    self.updatePreviewEventView(eventView, params: (color: colors[segment], value: text))
                 })
             
             let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
-                let index = self._timeLine?._sourceEvents.indexOf(self)
-                let time = self._recorded.time
-                let value = eventView._label.text
-                let color = eventView.backgroundColor
-                let shape = self._recorded.value.element?.shape
-                let event = Event.Next(ColoredType(value: value!, color: color!, shape: shape!))
-                if index != nil {
-                    self._timeLine?._sourceEvents.removeAtIndex(index!)
-                    self.removeFromSuperview()
-                    self._timeLine?.addNextEventToTimeline(time, event: event, animator: self._parentViewController._sceneView.animator, isEditing: true)
-                    self._timeLine?.updateResultTimeline()
-                }
+                self.saveAction(eventView)
             }
             settingsAlertController.addAction(saveAction)
         } else {
@@ -263,11 +251,26 @@ class EventView: UIView {
         }
     }
     
+    private func saveAction(eventView: EventView) {
+        let index = _timeLine?._sourceEvents.indexOf(self)
+        let time = _recorded.time
+        let value = eventView._label.text
+        let color = eventView.backgroundColor
+        let shape = _recorded.value.element?.shape
+        let event = Event.Next(ColoredType(value: value!, color: color!, shape: shape!))
+        if index != nil {
+            _timeLine?._sourceEvents.removeAtIndex(index!)
+            removeFromSuperview()
+            _timeLine?.addNextEventToTimeline(time, event: event, animator: _parentViewController._sceneView.animator, isEditing: true)
+            _timeLine?.updateResultTimeline()
+        }
+    }
+    
     private func deleteAction() {
-        self._animator!.removeAllBehaviors()
-        self._animator!.addBehavior(self._gravity!)
-        self._animator!.addBehavior(self._removeBehavior!)
-        self._removeBehavior?.action = {
+        _animator!.removeAllBehaviors()
+        _animator!.addBehavior(_gravity!)
+        _animator!.addBehavior(_removeBehavior!)
+        _removeBehavior?.action = {
             if let superView = self._parentViewController._sceneView {
                 if let index = self._timeLine?._sourceEvents.indexOf(self) {
                     if CGRectIntersectsRect(superView.bounds, self.frame) == false {
@@ -278,6 +281,11 @@ class EventView: UIView {
                 }
             }
         }
+    }
+    
+    private func updatePreviewEventView(eventView: EventView, params: (color: UIColor, value: String)) {
+        eventView._label.text = params.value
+        eventView.backgroundColor = params.color
     }
     
     private func scaleAnimation() {
@@ -434,8 +442,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let error = NSError(domain: "com.anjlab.RxMarbles", code: 100500, userInfo: nil)
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(error)), shape: .Another, viewController: _parentViewController)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)), shape: .Another, viewController: _parentViewController)
         if isEditing {
             v.addTapRecognizer()
         }
@@ -636,47 +643,42 @@ class ViewController: UIViewController {
     private var _sceneView: SceneView!
     private var _isEditing: Bool = false {
         didSet {
-            if _isEditing {
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Done, target: self, action: "enableEditing")
-                self.navigationItem.setHidesBackButton(true, animated: true)
-                UIView.animateWithDuration(0.3, animations: { _ in
-                    self._sceneView._resultTimeline.alpha = 0.5
-                })
-                _sceneView._sourceTimeline.addTapRecognizers()
-                _sceneView._sourceTimeline.showAddButton()
-                _sceneView._sourceTimeline.allEventViewsAnimation()
-                _sceneView._sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
-                if _currentOperator.multiTimelines {
-                    _sceneView._secondSourceTimeline.addTapRecognizers()
-                    _sceneView._secondSourceTimeline.showAddButton()
-                    _sceneView._secondSourceTimeline.allEventViewsAnimation()
-                    _sceneView._secondSourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
-                }
-            } else {
-                self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: UIBarButtonSystemItem.Edit, target: self, action: "enableEditing")
-                self.navigationItem.setHidesBackButton(false, animated: true)
-                UIView.animateWithDuration(0.3, animations: { _ in
-                    self._sceneView._resultTimeline.alpha = 1.0
-                })
-                _sceneView._sourceTimeline.removeTapRecognizers()
-                _sceneView._sourceTimeline.hideAddButton()
-                _sceneView._sourceTimeline.allEventViewsAnimation()
-                if _currentOperator.multiTimelines {
-                    _sceneView._secondSourceTimeline.removeTapRecognizers()
-                    _sceneView._secondSourceTimeline.hideAddButton()
-                    _sceneView._secondSourceTimeline.allEventViewsAnimation()
-                }
+            isEnableEditing(_isEditing)
+        }
+    }
+    
+    private func isEnableEditing(isEdit: Bool) {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: isEdit ? .Done : .Edit, target: self, action: "enableEditing")
+        navigationItem.setHidesBackButton(isEdit, animated: true)
+        UIView.animateWithDuration(0.3) { _ in
+            self._sceneView._resultTimeline.alpha = isEdit ? 0.5 : 1.0
+        }
+        if let sourceTimeline = _sceneView._sourceTimeline {
+            sourceTimelineEditActions(sourceTimeline, isEdit: isEdit)
+        }
+        if _currentOperator.multiTimelines {
+            if let secondSourceTimeline = _sceneView._secondSourceTimeline {
+                sourceTimelineEditActions(secondSourceTimeline, isEdit: isEdit)
             }
         }
+    }
+    
+    private func sourceTimelineEditActions(sourceTimeline: SourceTimelineView, isEdit: Bool) {
+        if isEdit {
+            sourceTimeline.addTapRecognizers()
+            sourceTimeline.showAddButton()
+            sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
+        } else {
+            sourceTimeline.removeTapRecognizers()
+            sourceTimeline.hideAddButton()
+        }
+        sourceTimeline.allEventViewsAnimation()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
         navigationController?.navigationBar.topItem!.backBarButtonItem = UIBarButtonItem(title: _currentOperator.description, style: UIBarButtonItemStyle.Plain, target: self, action: "backToOperatorView")
-    }
-    
-    override func viewWillAppear(animated: Bool) {
         setupSceneView()
         _isEditing = false
     }
@@ -711,9 +713,9 @@ class ViewController: UIViewController {
         for t in 1..<4 {
             let time = t * 40
             let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .Circle))
-            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: _isEditing)
+            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: _isEditing)
         }
-        sourceTimeLine.addCompletedEventToTimeline(150, animator: self._sceneView.animator, isEditing: _isEditing)
+        sourceTimeLine.addCompletedEventToTimeline(150, animator: _sceneView.animator, isEditing: _isEditing)
         
         if _currentOperator.multiTimelines {
             resultTimeline.center.y = 280
@@ -727,10 +729,10 @@ class ViewController: UIViewController {
             for t in 1..<3 {
                 let time = t * 40
                 let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .RoundedRect))
-                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: _isEditing)
+                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: _isEditing)
             }
             
-            secondSourceTimeline.addCompletedEventToTimeline(110, animator: self._sceneView.animator, isEditing: _isEditing)
+            secondSourceTimeline.addCompletedEventToTimeline(110, animator: _sceneView.animator, isEditing: _isEditing)
         }
         
         sourceTimeLine.updateResultTimeline()
