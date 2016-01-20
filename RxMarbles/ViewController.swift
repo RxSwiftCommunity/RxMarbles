@@ -308,7 +308,7 @@ class TimelineView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.addSubview(_timeArrow)
+        addSubview(_timeArrow)
     }
     
     override func layoutSubviews() {
@@ -318,9 +318,9 @@ class TimelineView: UIView {
         if _addButton != nil {
             _addButton?.center.y = _timeArrow.center.y
             _addButton?.center.x = frame.size.width - 10.0
-            let timeArrowFrame = self._timeArrow.frame
+            let timeArrowFrame = _timeArrow.frame
             let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
-            self._timeArrow.frame = newTimeArrowFrame
+            _timeArrow.frame = newTimeArrowFrame
         }
     }
     
@@ -414,10 +414,10 @@ class SourceTimelineView: TimelineView {
     }
     
     private func updateResultTimeline() {
-        if let secondSourceTimeline = self._sceneView._secondSourceTimeline {
-            self._sceneView._resultTimeline.updateEvents((self._sceneView._sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+        if let secondSourceTimeline = _sceneView._secondSourceTimeline {
+            _sceneView._resultTimeline.updateEvents((_sceneView._sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
         } else {
-            self._sceneView._resultTimeline.updateEvents((self._sceneView._sourceTimeline._sourceEvents, nil))
+            _sceneView._resultTimeline.updateEvents((_sceneView._sourceTimeline._sourceEvents, nil))
         }
     }
     
@@ -512,15 +512,15 @@ class SourceTimelineView: TimelineView {
             } else {
                 let snap = panEventView._snap
                 snap!.snapPoint.x = CGFloat(time + 10)
-                snap!.snapPoint.y = self.center.y
+                snap!.snapPoint.y = center.y
                 animator.addBehavior(snap!)
             }
         }
     }
     
     private func onDeleteZone(recognizer: UIGestureRecognizer) -> Bool {
-        let sceneHeight = self.superview!.bounds.height
-        let y = recognizer.locationInView(self.superview).y
+        let sceneHeight = superview!.bounds.height
+        let y = recognizer.locationInView(superview).y
         
         return y / sceneHeight > 0.8
     }
@@ -535,7 +535,7 @@ class SourceTimelineView: TimelineView {
     
     func showAddButton() {
         _addButton = UIButton(type: .ContactAdd)
-        self.addSubview(_addButton!)
+        addSubview(_addButton!)
         removeGestureRecognizer(_longPressGestureRecorgnizer)
     }
     
@@ -611,7 +611,7 @@ class ResultTimelineView: TimelineView {
         events.forEach { (event) -> () in
             let shape: EventShape = (event.value.element?.shape != nil) ? (event.value.element?.shape)! : .Another
             let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape, viewController: _parentViewController)
-            eventView.center.y = self.bounds.height / 2
+            eventView.center.y = bounds.height / 2
             _sourceEvents.append(eventView)
             addSubview(eventView)
         }
