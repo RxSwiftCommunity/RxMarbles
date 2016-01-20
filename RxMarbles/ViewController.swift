@@ -253,15 +253,11 @@ class EventView: UIView {
     
     private func saveAction(eventView: EventView) {
         let index = _timeLine?._sourceEvents.indexOf(self)
-        let time = _recorded.time
-        let value = eventView._label.text
-        let color = eventView.backgroundColor
-        let shape = _recorded.value.element?.shape
-        let event = Event.Next(ColoredType(value: value!, color: color!, shape: shape!))
+        let time = eventView._recorded.time
         if index != nil {
             _timeLine?._sourceEvents.removeAtIndex(index!)
             removeFromSuperview()
-            _timeLine?.addNextEventToTimeline(time, event: event, animator: _parentViewController._sceneView.animator, isEditing: true)
+            _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _parentViewController._sceneView.animator, isEditing: true)
             _timeLine?.updateResultTimeline()
         }
     }
@@ -284,6 +280,11 @@ class EventView: UIView {
     }
     
     private func updatePreviewEventView(eventView: EventView, params: (color: UIColor, value: String)) {
+        let time = eventView._recorded.time
+        let shape = _recorded.value.element?.shape
+        let event = Event.Next(ColoredType(value: params.value, color: params.color, shape: shape!))
+        
+        eventView._recorded = RecordedType(time: time, event: event)
         eventView._label.text = params.value
         eventView.backgroundColor = params.color
     }
