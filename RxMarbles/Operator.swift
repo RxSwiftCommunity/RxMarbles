@@ -30,6 +30,7 @@ enum Operator {
     case FlatMapLatest
     case IgnoreElements
     case Map
+    case MapWithIndex
     case Merge
     case Reduce
     case Retry
@@ -60,6 +61,7 @@ extension Operator: CustomStringConvertible {
         case FlatMapLatest:        return "FlatMapLatest"
         case IgnoreElements:       return "IgnoreElements"
         case Map:                  return "Map"
+        case MapWithIndex:         return "MapWithIndex"
         case Merge:                return "Merge"
         case Reduce:               return "Reduce"
         case Retry:                return "Retry"
@@ -102,6 +104,14 @@ extension Operator {
         case Map:                  return o.first.map({ h in
             guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
             return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
+        })
+        case MapWithIndex:         return o.first.mapWithIndex({ (element, index) in
+            if index == 1 {
+                guard let a = Int(element.value) else { throw Error.CantParseStringToInt }
+                return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
+            } else {
+                return element
+            }
         })
         case Merge:                return Observable.of(o.first, o.second!).merge()
         case Reduce:
@@ -155,6 +165,7 @@ extension Operator {
         case FlatMapLatest:        return true
         case IgnoreElements:       return false
         case Map:                  return false
+        case MapWithIndex:         return false
         case Merge:                return true
         case Reduce:               return false
         case Retry:                return false

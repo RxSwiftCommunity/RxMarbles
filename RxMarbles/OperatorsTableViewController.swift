@@ -25,7 +25,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     private let _sections = [
         Section(
             name: "Transforming",
-            rows: [.Delay, .Map, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]
+            rows: [.Delay, .Map, .MapWithIndex, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]
         ),
         Section(
             name: "Combining",
