@@ -15,9 +15,10 @@ struct Section {
     var rows: [Operator]
 }
 
-class OperatorTableViewController: UITableViewController {
+class OperatorsTableViewController: UITableViewController {
     
-    var selectedOperator: Operator?
+    var selectedOperator = Operator.Delay
+    private let _disposeBag = DisposeBag()
 
     private let _sections = [
         Section(
@@ -44,29 +45,21 @@ class OperatorTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Select Operator"
-        self.tableView.tableFooterView = UIView()
-        self.tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "OperatorCell")
         
-        _ = tableView.rx_itemSelected
-            .map { indexPath in
-                return (indexPath, self._rowAtIndexPath(indexPath))
-            }
-            .subscribeNext { indexPath, op in
+        title = "Operators"
+        tableView.tableFooterView = UIView()
+        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
+        
+        tableView.rx_itemSelected
+            .map(_rowAtIndexPath)
+            .subscribeNext { op in
                 self.selectedOperator = op
                 self.tableView.reloadData()
                 let viewController = ViewController()
-                viewController._currentOperator = self.selectedOperator!
-                
-                if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-                    viewController.navigationItem.leftItemsSupplementBackButton = true
-                    viewController.navigationItem.leftBarButtonItem = self.splitViewController!.displayModeButtonItem()
-                    let navDetailController = UINavigationController(rootViewController: viewController)
-                    self.splitViewController?.showDetailViewController(navDetailController, sender: nil)
-                } else {
-                    self.navigationController?.pushViewController(viewController, animated: true)
-                }
+                viewController.currentOperator = self.selectedOperator
+                self.showDetailViewController(viewController, sender: nil)
             }
+        .addDisposableTo(_disposeBag)
     }
 
     // MARK: - Table view data source

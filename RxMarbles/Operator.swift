@@ -8,6 +8,7 @@
 
 import Foundation
 import RxSwift
+import CoreSpotlight
 
 enum Error: ErrorType {
     case CantParseStringToInt
@@ -155,5 +156,20 @@ extension Operator {
         case TakeLast:             return false
         case Zip:                  return true
         }
+    }
+}
+
+extension Operator {
+    func userActivity() -> NSUserActivity {
+        let activity = NSUserActivity(activityType: "https://anjlab.com/rx/\(self.description)")
+        activity.title = description
+        activity.keywords = ["Rx", "Reactive", "Operator", "Marbles", description]
+        activity.eligibleForSearch = true
+        activity.eligibleForPublicIndexing = true
+        
+        let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
+        attributes.title = description
+        activity.contentAttributeSet = attributes
+        return activity
     }
 }
