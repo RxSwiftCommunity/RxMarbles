@@ -46,9 +46,9 @@ class SourceTimelineView: TimelineView {
                 _panEventView = sourceEvents[i]
             }
             if let panEventView = _panEventView {
-                panEventView._animator?.removeBehavior(panEventView._snap!)
+                panEventView._animator?.removeBehavior(panEventView.snap!)
                 let shape: EventShape = (panEventView._recorded.value.element?.shape != nil) ? (panEventView._recorded.value.element?.shape)! : .Another
-                self._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape, viewController: self._parentViewController)
+                self._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape)
                 if let ghostEventView = self._ghostEventView {
                     ghostEventView.center.y = self.bounds.height / 2
                     self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
@@ -101,7 +101,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addNextEventToTimeline(time: Int, event: Event<ColoredType>, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: event), shape: (event.element?.shape)!, viewController: _parentViewController)
+        let v = EventView(recorded: RecordedType(time: time, event: event), shape: (event.element?.shape)!)
         if isEditing {
             v.addTapRecognizer()
         }
@@ -111,7 +111,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .Another, viewController: _parentViewController)
+        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .Another)
         if isEditing {
             v.addTapRecognizer()
         }
@@ -121,7 +121,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)), shape: .Another, viewController: _parentViewController)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)), shape: .Another)
         if isEditing {
             v.addTapRecognizer()
         }
@@ -170,7 +170,7 @@ class SourceTimelineView: TimelineView {
                     }
                 })
             } else {
-                let snap = panEventView._snap
+                let snap = panEventView.snap
                 snap!.snapPoint.x = CGFloat(time + 10)
                 snap!.snapPoint.y = center.y
                 animator.addBehavior(snap!)

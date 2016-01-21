@@ -20,15 +20,14 @@ enum EventShape {
 class EventView: UIView {
     var _recorded = RecordedType(time: 0, event: .Completed)
     weak var _animator: UIDynamicAnimator? = nil
-    var _snap: UISnapBehavior? = nil
+    var snap: UISnapBehavior? = nil
     private var _gravity: UIGravityBehavior? = nil
     private var _removeBehavior: UIDynamicItemBehavior? = nil
     private weak var _timeLine: SourceTimelineView?
     private var _tapGestureRecognizer: UITapGestureRecognizer!
-    private var _parentViewController: ViewController!
     private var _label = UILabel()
     
-    init(recorded: RecordedType, shape: EventShape, viewController: ViewController!) {
+    init(recorded: RecordedType, shape: EventShape) {
         switch recorded.value {
         case let .Next(v):
             super.init(frame: CGRectMake(0, 0, 38, 38))
@@ -117,7 +116,6 @@ class EventView: UIView {
         _removeBehavior = UIDynamicItemBehavior(items: [self])
         _recorded = recorded
         _tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setEventView")
-        _parentViewController = viewController
     }
     
     override func layoutSubviews() {
@@ -131,7 +129,7 @@ class EventView: UIView {
     }
     
     func use(animator: UIDynamicAnimator?, timeLine: SourceTimelineView?) {
-        if let snap = _snap {
+        if let snap = snap {
             _animator?.removeBehavior(snap)
         }
         _animator = animator
@@ -140,7 +138,7 @@ class EventView: UIView {
             center.y = timeLine.bounds.height / 2
         }
         
-        _snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(_recorded.time), center.y))
+        snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(_recorded.time), center.y))
         userInteractionEnabled = _animator != nil
     }
     
@@ -175,7 +173,7 @@ class EventView: UIView {
             let contentViewController = UIViewController()
             contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
             
-            let eventView = EventView(recorded: _recorded, shape: (_recorded.value.element?.shape)!, viewController: _parentViewController)
+            let eventView = EventView(recorded: _recorded, shape: (_recorded.value.element?.shape)!)
             eventView.center = CGPointMake(100.0, 25.0)
             contentViewController.view.addSubview(eventView)
             
@@ -228,9 +226,10 @@ class EventView: UIView {
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
         settingsAlertController.addAction(deleteAction)
         settingsAlertController.addAction(cancelAction)
-        if let parentViewController = self._parentViewController {
-            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
-        }
+        // TODO: think and fix
+//        if let parentViewController = self._parentViewController {
+//            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
+//        }
     }
     
     private func saveAction(eventView: EventView) {
@@ -239,7 +238,7 @@ class EventView: UIView {
         if index != nil {
             _timeLine?._sourceEvents.removeAtIndex(index!)
             removeFromSuperview()
-            _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _parentViewController.sceneView.animator, isEditing: true)
+            _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _animator, isEditing: true)
             _timeLine?.updateResultTimeline()
         }
     }
@@ -248,17 +247,18 @@ class EventView: UIView {
         _animator!.removeAllBehaviors()
         _animator!.addBehavior(_gravity!)
         _animator!.addBehavior(_removeBehavior!)
-        _removeBehavior?.action = {
-            if let superView = self._parentViewController.sceneView {
-                if let index = self._timeLine?._sourceEvents.indexOf(self) {
-                    if CGRectIntersectsRect(superView.bounds, self.frame) == false {
-                        self.removeFromSuperview()
-                        self._timeLine?._sourceEvents.removeAtIndex(index)
-                        self._timeLine?.updateResultTimeline()
-                    }
-                }
-            }
-        }
+        // TODO: rethink
+//        _removeBehavior?.action = {
+//            if let superView = self._parentViewController.sceneView {
+//                if let index = self._timeLine?._sourceEvents.indexOf(self) {
+//                    if CGRectIntersectsRect(superView.bounds, self.frame) == false {
+//                        self.removeFromSuperview()
+//                        self._timeLine?._sourceEvents.removeAtIndex(index)
+//                        self._timeLine?.updateResultTimeline()
+//                    }
+//                }
+//            }
+//        }
     }
     
     private func updatePreviewEventView(eventView: EventView, params: (color: UIColor, value: String)) {

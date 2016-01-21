@@ -12,7 +12,7 @@ class TimelineView: UIView {
     var _sourceEvents = [EventView]()
     let _timeArrow = UIImageView(image: Image.timeLine)
     var _addButton: UIButton?
-    var _parentViewController: ViewController!
+    private var _parentViewController: ViewController!
     
     override init(frame: CGRect) {
         super.init(frame: frame)

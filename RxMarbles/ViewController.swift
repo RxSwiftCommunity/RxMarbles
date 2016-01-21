@@ -97,7 +97,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         sceneView.resultTimeline = resultTimeline
         
         let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), scene: sceneView)
-        sourceTimeLine._parentViewController = self
         sourceTimeLine.center.y = 120
         sceneView.addSubview(sourceTimeLine)
         sceneView.sourceTimeline = sourceTimeLine
@@ -113,7 +112,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         if currentOperator.multiTimelines {
             resultTimeline.center.y = 280
             let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), scene: sceneView)
-            secondSourceTimeline._parentViewController = self
             secondSourceTimeline.center.y = 200
             sceneView.addSubview(secondSourceTimeline)
             sceneView.secondSourceTimeline = secondSourceTimeline
