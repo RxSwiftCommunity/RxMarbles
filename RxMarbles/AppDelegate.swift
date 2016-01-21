@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreSpotlight
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -28,15 +29,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         window?.rootViewController = splitViewController
         
         window?.makeKeyAndVisible()
+        NSOperationQueue.mainQueue().addOperationWithBlock {
+            Operator.index()
+        }
         return true
     }
 
     // MARK: UserActivity
     func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
-       
+     
+        var operatorRawValue = Operator.Delay.rawValue
+        // NSUserActivity
         if let _ = UserActivityType(rawValue: userActivity.activityType),
-            let opRawValue = userActivity.userInfo?["operator"] as? String,
-            let op = Operator(rawValue: opRawValue),
+            let opRawValue = userActivity.userInfo?["operator"] as? String {
+            operatorRawValue = opRawValue
+        // Spotlite index
+        } else if userActivity.activityType == CSSearchableItemActionType,
+            let opRawValue = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+            operatorRawValue = opRawValue
+        }
+        if let op = Operator(rawValue: operatorRawValue),
             let splitViewController = window?.rootViewController as? UISplitViewController,
             let masterNav = splitViewController.viewControllers.first as? UINavigationController,
             let operatorsController = masterNav.viewControllers.first as? OperatorsTableViewController {
