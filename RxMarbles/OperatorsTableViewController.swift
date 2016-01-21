@@ -42,6 +42,10 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         Section(
             name: "Conditional",
             rows: [.Amb]
+        ),
+        Section(
+            name: "Error",
+            rows: [.CatchError]
         )
     ]
     
