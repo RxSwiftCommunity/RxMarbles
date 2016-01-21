@@ -32,6 +32,7 @@ enum Operator {
     case Map
     case Merge
     case Reduce
+    case Retry
     case Sample
     case Scan
     case Skip
@@ -61,6 +62,7 @@ extension Operator: CustomStringConvertible {
         case Map:                  return "Map"
         case Merge:                return "Merge"
         case Reduce:               return "Reduce"
+        case Retry:                return "Retry"
         case Sample:               return "Sample"
         case Scan:                 return "Scan"
         case Skip:                 return "Skip"
@@ -112,6 +114,7 @@ extension Operator {
                 res.shape = e.shape
                 return res
         })
+        case Retry:                return o.first.retry(2)
         case Sample:               return o.first.sample(o.second!)
         case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .Another), accumulator: { acc, e in
             var res = acc
@@ -154,6 +157,7 @@ extension Operator {
         case Map:                  return false
         case Merge:                return true
         case Reduce:               return false
+        case Retry:                return false
         case Sample:               return true
         case Scan:                 return false
         case Skip:                 return false
