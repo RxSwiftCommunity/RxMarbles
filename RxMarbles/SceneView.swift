@@ -10,9 +10,9 @@ import UIKit
 
 class SceneView: UIView {
     var animator: UIDynamicAnimator?
-    var _sourceTimeline: SourceTimelineView!
-    var _secondSourceTimeline: SourceTimelineView!
-    var _resultTimeline: ResultTimelineView!
+    var sourceTimeline: SourceTimelineView!
+    var secondSourceTimeline: SourceTimelineView!
+    var resultTimeline: ResultTimelineView!
     var _trashView: UIImageView?
     
     init() {

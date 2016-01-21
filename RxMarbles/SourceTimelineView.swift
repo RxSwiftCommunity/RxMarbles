@@ -15,82 +15,88 @@ class SourceTimelineView: TimelineView {
     private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
-    var _sceneView: SceneView!
+    weak var sceneView: SceneView!
     
-    init(frame: CGRect, resultTimeline: ResultTimelineView) {
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    init(frame: CGRect, scene: SceneView) {
         super.init(frame: frame)
         userInteractionEnabled = true
         clipsToBounds = false
+        sceneView = scene
         
         _longPressGestureRecorgnizer.minimumPressDuration = 0.0
         
         addGestureRecognizer(_longPressGestureRecorgnizer)
         
-        _ = _longPressGestureRecorgnizer.rx_event
-            .subscribeNext { [weak self] r in
-                
-                let sourceEvents = self!._sourceEvents
-                
-                switch r.state {
-                case .Began:
-                    let location = r.locationInView(self)
-                    if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
-                        self!._panEventView = sourceEvents[i]
-                    }
-                    if let panEventView = self!._panEventView {
-                        let snap = panEventView._snap
-                        panEventView._animator?.removeBehavior(snap!)
-                        let shape: EventShape = (panEventView._recorded.value.element?.shape != nil) ? (panEventView._recorded.value.element?.shape)! : .Another
-                        self!._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape, viewController: self!._parentViewController)
-                        if let ghostEventView = self!._ghostEventView {
-                            ghostEventView.center.y = self!.bounds.height / 2
-                            self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
-                            self!.addSubview(ghostEventView)
-                            self!._sceneView.showTrashView()
-                        }
-                    }
-                case .Changed:
-                    if let panEventView = self!._panEventView {
-                        
-                        let time = Int(r.locationInView(self).x)
-                        panEventView.center = r.locationInView(self)
-                        panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
-                        
-                        if let ghostEventView = self!._ghostEventView {
-                            self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
-                            
-                            ghostEventView._recorded = panEventView._recorded
-                            ghostEventView.center = CGPointMake(CGFloat(ghostEventView._recorded.time), self!.bounds.height / 2)
-                        }
-                        self!.updateResultTimeline()
-                    }
-                case .Ended:
-                    self!._ghostEventView?.removeFromSuperview()
-                    self!._ghostEventView = nil
-                    
-                    if let panEventView = self!._panEventView {
-                        
-                        self!.animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: resultTimeline)
-                        
-                        panEventView.superview?.bringSubviewToFront(panEventView)
-                        self!.bringStopEventViewsToFront(sourceEvents)
-                        
-                        let time = Int(r.locationInView(self).x)
-                        panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
-                    }
-                    self!._panEventView = nil
-                    self!.updateResultTimeline()
-                    self!._sceneView.hideTrashView()
-                default: break
+        _ = _longPressGestureRecorgnizer
+            .rx_event
+            .subscribeNext { [unowned self] r in self._handleLongPressGestureRecognizer(r) }
+    }
+    
+    private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
+        let sourceEvents = self._sourceEvents
+        let location = r.locationInView(self)
+        
+        switch r.state {
+        case .Began:
+            if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
+                _panEventView = sourceEvents[i]
+            }
+            if let panEventView = _panEventView {
+                panEventView._animator?.removeBehavior(panEventView._snap!)
+                let shape: EventShape = (panEventView._recorded.value.element?.shape != nil) ? (panEventView._recorded.value.element?.shape)! : .Another
+                self._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape, viewController: self._parentViewController)
+                if let ghostEventView = self._ghostEventView {
+                    ghostEventView.center.y = self.bounds.height / 2
+                    self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
+                    self.addSubview(ghostEventView)
+                    self.sceneView.showTrashView()
                 }
+            }
+        case .Changed:
+            if let panEventView = self._panEventView {
+                
+                let time = Int(location.x)
+                panEventView.center = location
+                panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
+                
+                if let ghostEventView = self._ghostEventView {
+                    self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
+                    
+                    ghostEventView._recorded = panEventView._recorded
+                    ghostEventView.center = CGPointMake(CGFloat(ghostEventView._recorded.time), self.bounds.height / 2)
+                }
+                self.updateResultTimeline()
+            }
+        case .Ended:
+            self._ghostEventView?.removeFromSuperview()
+            self._ghostEventView = nil
+            
+            if let panEventView = self._panEventView {
+                
+                self.animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: sceneView.resultTimeline)
+                
+                panEventView.superview?.bringSubviewToFront(panEventView)
+                self.bringStopEventViewsToFront(sourceEvents)
+                
+                let time = Int(r.locationInView(self).x)
+                panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
+            }
+            self._panEventView = nil
+            self.updateResultTimeline()
+            self.sceneView.hideTrashView()
+        default: break
         }
     }
     
     func updateResultTimeline() {
-        if let secondSourceTimeline = _sceneView._secondSourceTimeline {
-            _sceneView._resultTimeline.updateEvents((_sceneView._sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+        if let secondSourceTimeline = sceneView.secondSourceTimeline {
+            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
         } else {
-            _sceneView._resultTimeline.updateEvents((_sceneView._sourceTimeline._sourceEvents, nil))
+            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline._sourceEvents, nil))
         }
     }
     
@@ -124,16 +130,16 @@ class SourceTimelineView: TimelineView {
         _sourceEvents.append(v)
     }
     
-    private func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
+     func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
         
         if onDeleteZone(recognizer) == true {
             ghostEventView.shake()
-            _sceneView._trashView?.shake()
-            _sceneView._trashView?.alpha = 0.5
+            sceneView._trashView?.shake()
+            sceneView._trashView?.alpha = 0.5
         } else {
             ghostEventView.stopAnimations()
-            _sceneView._trashView?.stopAnimations()
-            _sceneView._trashView?.alpha = 0.2
+            sceneView._trashView?.stopAnimations()
+            sceneView._trashView?.alpha = 0.2
         }
         
         let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
@@ -173,7 +179,7 @@ class SourceTimelineView: TimelineView {
     }
     
     private func onDeleteZone(recognizer: UIGestureRecognizer) -> Bool {
-        if let trash = _sceneView._trashView {
+        if let trash = sceneView._trashView {
             let loc = recognizer.locationInView(superview)
             let eventViewFrame = CGRectMake(loc.x - 19, loc.y - 19, 38, 38)
             if CGRectIntersectsRect(trash.frame, eventViewFrame) {
@@ -221,9 +227,5 @@ class SourceTimelineView: TimelineView {
         _sourceEvents.forEach { eventView in
             eventView.scaleAnimation()
         }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
 }

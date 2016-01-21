@@ -239,7 +239,7 @@ class EventView: UIView {
         if index != nil {
             _timeLine?._sourceEvents.removeAtIndex(index!)
             removeFromSuperview()
-            _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _parentViewController._sceneView.animator, isEditing: true)
+            _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _parentViewController.sceneView.animator, isEditing: true)
             _timeLine?.updateResultTimeline()
         }
     }
@@ -249,7 +249,7 @@ class EventView: UIView {
         _animator!.addBehavior(_gravity!)
         _animator!.addBehavior(_removeBehavior!)
         _removeBehavior?.action = {
-            if let superView = self._parentViewController._sceneView {
+            if let superView = self._parentViewController.sceneView {
                 if let index = self._timeLine?._sourceEvents.indexOf(self) {
                     if CGRectIntersectsRect(superView.bounds, self.frame) == false {
                         self.removeFromSuperview()
