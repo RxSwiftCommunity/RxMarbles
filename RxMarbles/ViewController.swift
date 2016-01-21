@@ -16,9 +16,10 @@ struct ColoredType: Equatable {
     var shape: EventShape
 }
 
-struct TimelineImage {
+struct Image {
     static var timeLine: UIImage { return UIImage(named: "timeLine")! }
     static var cross: UIImage { return UIImage(named: "cross")! }
+    static var trash: UIImage { return UIImage(named: "Trash")! }
 }
 
 enum EventShape {
@@ -303,7 +304,7 @@ class EventView: UIView {
 
 class TimelineView: UIView {
     var _sourceEvents = [EventView]()
-    let _timeArrow = UIImageView(image: TimelineImage.timeLine)
+    let _timeArrow = UIImageView(image: Image.timeLine)
     private var _addButton: UIButton?
     var _parentViewController: ViewController!
     
@@ -315,7 +316,7 @@ class TimelineView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         frame = CGRectMake(10, frame.origin.y, (superview?.bounds.size.width)! - 20, 40)
-        _timeArrow.frame = CGRectMake(0, 16, frame.width, TimelineImage.timeLine.size.height)
+        _timeArrow.frame = CGRectMake(0, 16, frame.width, Image.timeLine.size.height)
         if _addButton != nil {
             _addButton?.center.y = _timeArrow.center.y
             _addButton?.center.x = frame.size.width - 10.0
@@ -376,6 +377,7 @@ class SourceTimelineView: TimelineView {
                             ghostEventView.center.y = self!.bounds.height / 2
                             self!.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                             self!.addSubview(ghostEventView)
+                            self!._sceneView.showTrashView()
                         }
                     }
                 case .Changed:
@@ -409,6 +411,7 @@ class SourceTimelineView: TimelineView {
                     }
                     self!._panEventView = nil
                     self!.updateResultTimeline()
+                    self!._sceneView.hideTrashView()
                 default: break
             }
         }
@@ -456,8 +459,12 @@ class SourceTimelineView: TimelineView {
 
         if onDeleteZone(recognizer) == true {
             shakeGhostEventView(ghostEventView)
+            _sceneView.shakeTrashView()
+            _sceneView._trashView?.alpha = 0.5
         } else {
             ghostEventView.layer.removeAllAnimations()
+            _sceneView._trashView?.layer.removeAllAnimations()
+            _sceneView._trashView?.alpha = 0.2
         }
         
         let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
@@ -494,22 +501,18 @@ class SourceTimelineView: TimelineView {
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
         if let animator = panEventView._animator {
-            
+            animator.removeAllBehaviors()
             let time = Int(recognizer.locationInView(self).x)
             
             if onDeleteZone(recognizer) == true {
-                animator.addBehavior(panEventView._gravity!)
-                animator.addBehavior(panEventView._removeBehavior!)
-                panEventView._removeBehavior?.action = {
-                    if let superView = self.superview {
-                        if CGRectIntersectsRect(superView.bounds, panEventView.frame) == false {
-                            if let index = self._sourceEvents.indexOf(panEventView) {
-                                self._sourceEvents.removeAtIndex(index)
-                                self.updateResultTimeline()
-                            }
-                        }
+                UIView.animateWithDuration(0.2, animations: { () -> Void in
+                    panEventView.transform = CGAffineTransformMakeScale(0.01, 0.01)
+                }, completion: { _ in
+                    if let index = self._sourceEvents.indexOf(panEventView) {
+                        self._sourceEvents.removeAtIndex(index)
+                        self.updateResultTimeline()
                     }
-                }
+                })
             } else {
                 let snap = panEventView._snap
                 snap!.snapPoint.x = CGFloat(time + 10)
@@ -520,10 +523,14 @@ class SourceTimelineView: TimelineView {
     }
     
     private func onDeleteZone(recognizer: UIGestureRecognizer) -> Bool {
-        let sceneHeight = superview!.bounds.height
-        let y = recognizer.locationInView(superview).y
-        
-        return y / sceneHeight > 0.8
+        if let trash = _sceneView._trashView {
+            let loc = recognizer.locationInView(superview)
+            let eventViewFrame = CGRectMake(loc.x - 19, loc.y - 19, 38, 38)
+            if CGRectIntersectsRect(trash.frame, eventViewFrame) {
+                return true
+            }
+        }
+        return false
     }
     
     private func bringStopEventViewsToFront(sourceEvents: [EventView]) {
@@ -628,9 +635,63 @@ class SceneView: UIView {
     var _sourceTimeline: SourceTimelineView!
     var _secondSourceTimeline: SourceTimelineView!
     var _resultTimeline: ResultTimelineView!
+    var _trashView: UIImageView?
     
     init() {
         super.init(frame: CGRectZero)
+    }
+    
+    private func showTrashView() {
+        if _trashView != nil {
+            _trashView?.removeFromSuperview()
+            _trashView = nil
+        }
+        let trashView = UIImageView(image: Image.trash)
+        trashView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(trashView)
+        addConstraint(NSLayoutConstraint(item: trashView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
+        let metrics = ["size" : 60.0]
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[trash(==size)]", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: ["trash" : trashView]))
+        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[trash(==size)]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: ["trash" : trashView]))
+        _trashView = trashView
+        
+        _trashView!.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        _trashView?.alpha = 0.05
+        UIView.animateWithDuration(0.3) { _ in
+            trashView.alpha = 0.2
+            self._trashView!.transform = CGAffineTransformMakeScale(1.5, 1.5)
+            self._trashView!.transform = CGAffineTransformMakeScale(1.0, 1.0)
+        }
+    }
+    
+    private func hideTrashView() {
+        if _trashView == nil {
+            return
+        }
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+            self._trashView?.alpha = 0.01
+            self._trashView!.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        }) { complete in
+            self._trashView?.removeFromSuperview()
+            self._trashView = nil
+        }
+    }
+    
+    private func shakeTrashView() {
+        let animation = CAKeyframeAnimation(keyPath: "transform")
+        let wobbleAngle: CGFloat = 0.3
+        
+        let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
+        let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
+        animation.values = [valLeft, valRight]
+        
+        animation.autoreverses = true
+        animation.duration = 0.125
+        animation.repeatCount = 10000
+        
+        if _trashView!.layer.animationKeys() == nil {
+            _trashView!.layer.addAnimation(animation, forKey: "shake")
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -689,7 +750,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         if _sceneView != nil {
             _sceneView.removeFromSuperview()
         }
-        let orientation = UIDevice.currentDevice().orientation
+        let orientation = UIApplication.sharedApplication().statusBarOrientation
         _sceneView = SceneView()
         view.addSubview(_sceneView)
         _sceneView.frame = view.frame
