@@ -168,6 +168,7 @@ extension Operator {
         
         let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
         attributes.title = description
+        attributes.contentDescription = "RxSwift \(self) operator diagram"
         activity.contentAttributeSet = attributes
         return activity
     }
