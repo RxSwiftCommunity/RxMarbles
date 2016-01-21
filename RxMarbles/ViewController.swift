@@ -29,8 +29,8 @@ func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
 typealias RecordedType = Recorded<Event<ColoredType>>
 
 class ViewController: UIViewController, UISplitViewControllerDelegate {
-    var _currentOperator = Operator.Delay
-    private var _operatorTableViewController: OperatorTableViewController?
+    var currentOperator = Operator.Delay
+    private var _currentActivity: NSUserActivity?
     var _sceneView: SceneView!
     private var _isEditing: Bool = false {
         didSet {
@@ -47,7 +47,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         if let sourceTimeline = _sceneView._sourceTimeline {
             sourceTimelineEditActions(sourceTimeline, isEdit: isEdit)
         }
-        if _currentOperator.multiTimelines {
+        if currentOperator.multiTimelines {
             if let secondSourceTimeline = _sceneView._secondSourceTimeline {
                 sourceTimelineEditActions(secondSourceTimeline, isEdit: isEdit)
             }
@@ -68,11 +68,13 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = _currentOperator.description
+        title = currentOperator.description
         view.backgroundColor = .whiteColor()
-        navigationController?.navigationBar.topItem!.backBarButtonItem = UIBarButtonItem(title: _currentOperator.description, style: UIBarButtonItemStyle.Plain, target: self, action: "backToOperatorView")
+        navigationItem.leftItemsSupplementBackButton = true
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         setupSceneView()
         _isEditing = false
+        _currentActivity = currentOperator.userActivity()
     }
     
     func setupSceneView() {
@@ -91,7 +93,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         
         let width = _sceneView.frame.width - 20
         
-        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, width, 40), currentOperator: _currentOperator)
+        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, width, 40), currentOperator: currentOperator)
         resultTimeline.center.y = 200
         _sceneView.addSubview(resultTimeline)
         _sceneView._resultTimeline = resultTimeline
@@ -111,7 +113,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let completedTime = orientation.isPortrait ? 150 : Int(150.0 * scaleKoefficient())
         sourceTimeLine.addCompletedEventToTimeline(completedTime, animator: _sceneView.animator, isEditing: _isEditing)
         
-        if _currentOperator.multiTimelines {
+        if currentOperator.multiTimelines {
             resultTimeline.center.y = 280
             let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), resultTimeline: resultTimeline)
             secondSourceTimeline._parentViewController = self
@@ -134,6 +136,16 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     func enableEditing() {
         _isEditing = !_isEditing
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        _currentActivity?.becomeCurrent()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        _currentActivity?.resignCurrent()
     }
     
     func addElementToTimeline(sender: UIButton) {
@@ -176,10 +188,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         }
     }
     
-    func backToOperatorView() {
-        navigationController?.popViewControllerAnimated(true)
-    }
-    
     private func randomNumber() -> Int {
         return Int(arc4random_uniform(10) + 1)
     }
@@ -191,7 +199,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                 })
             }) { (context) -> Void in
                 self.scaleTimesOnChangeOrientation(self._sceneView._sourceTimeline)
-                if self._currentOperator.multiTimelines {
+                if self.currentOperator.multiTimelines {
                     self.scaleTimesOnChangeOrientation(self._sceneView._secondSourceTimeline)
                 }
         }
@@ -224,6 +232,5 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let height = view.frame.height
         return width / height
     }
-//    MARK: UISplitViewControllerDelegate
 
 }

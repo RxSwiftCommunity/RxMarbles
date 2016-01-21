@@ -15,11 +15,12 @@ struct Section {
     var rows: [Operator]
 }
 
-class OperatorTableViewController: UITableViewController, UISearchResultsUpdating {
-    
-    var selectedOperator: Operator?
-    let _searchController = UISearchController(searchResultsController: nil)
-    var _filteredSections = [Section]()
+class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
+    private let _disposeBag = DisposeBag()
+
+    var selectedOperator = Operator.Delay
+    private let _searchController = UISearchController(searchResultsController: nil)
+    private var _filteredSections = [Section]()
 
     private let _sections = [
         Section(
@@ -46,57 +47,50 @@ class OperatorTableViewController: UITableViewController, UISearchResultsUpdatin
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Select Operator"
-        tableView.tableFooterView = UIView()
-        tableView.registerClass(UITableViewCell.classForCoder(), forCellReuseIdentifier: "OperatorCell")
         
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
         tableView.tableHeaderView = _searchController.searchBar
         
+        title = "Operators"
+        tableView.tableFooterView = UIView()
+        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
         
-        _ = tableView.rx_itemSelected
-            .map { indexPath in
-                return (indexPath, self._rowAtIndexPath(indexPath))
-            }
-            .subscribeNext { indexPath, op in
+        tableView
+            .rx_itemSelected
+            .map(_rowAtIndexPath)
+            .subscribeNext { op in
                 self.selectedOperator = op
                 self.tableView.reloadData()
                 let viewController = ViewController()
-                viewController._currentOperator = self.selectedOperator!
-                
-                if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-                    viewController.navigationItem.leftItemsSupplementBackButton = true
-                    viewController.navigationItem.leftBarButtonItem = self.splitViewController!.displayModeButtonItem()
-                    let navDetailController = UINavigationController(rootViewController: viewController)
-                    self.splitViewController?.showDetailViewController(navDetailController, sender: nil)
-                } else {
-                    self.navigationController?.pushViewController(viewController, animated: true)
-                }
+                viewController.currentOperator = self.selectedOperator
+                self.showDetailViewController(viewController, sender: nil)
             }
+            .addDisposableTo(_disposeBag)
     }
 
     // MARK: - Table view data source
+    
+    private var _activeSections: [Section] {
+        get { return isSearchActive() ? _filteredSections : _sections }
+    }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if isSearchActive() {
-            return _filteredSections.count
-        }
-        return _sections.count
+        return _activeSections.count
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sec = isSearchActive() ? _filteredSections[section] : _sections[section]
+        let sec = _activeSections[section]
         return sec.name
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearchActive() ? _filteredSections[section].rows.count : _sections[section].rows.count
+        return _activeSections[section].rows.count
     }
     
     private func _rowAtIndexPath(indexPath: NSIndexPath) -> Operator {
-        let section = isSearchActive() ? _filteredSections[indexPath.section] : _sections[indexPath.section]
+        let section = _activeSections[indexPath.section]
         return section.rows[indexPath.row]
     }
 
@@ -105,12 +99,7 @@ class OperatorTableViewController: UITableViewController, UISearchResultsUpdatin
         let cell = tableView.dequeueReusableCellWithIdentifier("OperatorCell", forIndexPath: indexPath)
         
         cell.textLabel?.text = op.description
-        
-        if op == selectedOperator {
-            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-        } else {
-            cell.accessoryType = UITableViewCellAccessoryType.None
-        }
+        cell.accessoryType = op == selectedOperator ? .Checkmark : .None
 
         return cell
     }
@@ -132,7 +121,7 @@ class OperatorTableViewController: UITableViewController, UISearchResultsUpdatin
 //    MARK: - UISearchResultsUpdating
     
     func isSearchActive() -> Bool {
-        return (_searchController.active && _searchController.searchBar.text != "")
+        return _searchController.active && _searchController.searchBar.text != ""
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
