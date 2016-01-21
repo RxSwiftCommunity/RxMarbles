@@ -692,6 +692,8 @@ class SceneView: UIView {
 
 class ViewController: UIViewController, UISplitViewControllerDelegate {
     var currentOperator = Operator.Delay
+    private var _currentActivity: NSUserActivity?
+    
     private var _sceneView: SceneView!
     private var _isEditing: Bool = false {
         didSet {
@@ -735,6 +737,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         setupSceneView()
         _isEditing = false
+        _currentActivity = currentOperator.userActivity()
     }
     
     func setupSceneView() {
@@ -800,7 +803,12 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
-        currentOperator.userActivity().becomeCurrent()
+        _currentActivity?.becomeCurrent()
+    }
+    
+    override func viewDidDisappear(animated: Bool) {
+        super.viewDidDisappear(animated)
+        _currentActivity?.resignCurrent()
     }
     
     func addElementToTimeline(sender: UIButton) {
