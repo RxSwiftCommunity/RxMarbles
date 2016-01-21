@@ -15,10 +15,12 @@ struct Section {
     var rows: [Operator]
 }
 
-class OperatorsTableViewController: UITableViewController {
-    
-    var selectedOperator = Operator.Delay
+class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
     private let _disposeBag = DisposeBag()
+
+    var selectedOperator = Operator.Delay
+    private let _searchController = UISearchController(searchResultsController: nil)
+    private var _filteredSections = [Section]()
 
     private let _sections = [
         Section(
@@ -46,6 +48,11 @@ class OperatorsTableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        _searchController.searchResultsUpdater = self
+        _searchController.dimsBackgroundDuringPresentation = false
+        definesPresentationContext = true
+        tableView.tableHeaderView = _searchController.searchBar
+        
         title = "Operators"
         tableView.tableFooterView = UIView()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
@@ -65,20 +72,23 @@ class OperatorsTableViewController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+        if isSearchActive() {
+            return _filteredSections.count
+        }
         return _sections.count
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sec = _sections[section]
+        let sec = isSearchActive() ? _filteredSections[section] : _sections[section]
         return sec.name
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return  _sections[section].rows.count
+        return isSearchActive() ? _filteredSections[section].rows.count : _sections[section].rows.count
     }
     
     private func _rowAtIndexPath(indexPath: NSIndexPath) -> Operator {
-        let section = _sections[indexPath.section]
+        let section = isSearchActive() ? _filteredSections[indexPath.section] : _sections[indexPath.section]
         return section.rows[indexPath.row]
     }
 
@@ -96,4 +106,31 @@ class OperatorsTableViewController: UITableViewController {
 
         return cell
     }
+//    MARK: - Filtering Sections
+    
+    private func filterSectionsWithText(text: String) {
+        _filteredSections.removeAll()
+        _sections.forEach({ section in
+            let results = section.rows.filter({ row in
+                row.description.lowercaseString.containsString(text.lowercaseString)
+            })
+            if results.count > 0 {
+                _filteredSections.append(Section(name: section.name, rows: results))
+            }
+        })
+    }
+    
+//    MARK: - UISearchResultsUpdating
+    
+    func isSearchActive() -> Bool {
+        return (_searchController.active && _searchController.searchBar.text != "")
+    }
+    
+    func updateSearchResultsForSearchController(searchController: UISearchController) {
+        if let searchString = searchController.searchBar.text {
+            filterSectionsWithText(searchString)
+        }
+        tableView.reloadData()
+    }
+    
 }
