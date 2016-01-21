@@ -55,7 +55,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return false
     }
     
+   
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+        if let detailNav = secondaryViewController as? UINavigationController,
+           let masterNav = primaryViewController as? UINavigationController {
+            let detailControllers = detailNav.childViewControllers
+            masterNav.viewControllers = masterNav.childViewControllers + detailControllers
+            return true
+        }
+        return false
+    }
+    
     func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
+        
         if let detail = primaryViewController.separateSecondaryViewControllerForSplitViewController(splitViewController) {
             return UINavigationController(rootViewController: detail)
         } else {
