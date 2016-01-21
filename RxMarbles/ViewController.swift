@@ -35,6 +35,37 @@ func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
 
 typealias RecordedType = Recorded<Event<ColoredType>>
 
+extension UIView {
+    
+    func shake() {
+        let animation = CAKeyframeAnimation(keyPath: "transform")
+        let wobbleAngle: CGFloat = 0.3
+        
+        let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
+        let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
+        animation.values = [valLeft, valRight]
+        
+        animation.autoreverses = true
+        animation.duration = 0.125
+        animation.repeatCount = 10000
+        
+        if layer.animationKeys() == nil {
+            layer.addAnimation(animation, forKey: "shake")
+        }
+    }
+    
+    func hideWithCompletion(completion: (Bool) -> Void) {
+        UIView.animateWithDuration(0.3, animations: { () -> Void in
+            self.alpha = 0.01
+            self.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        }, completion: completion)
+    }
+    
+    func stopAnimations() {
+        self.layer.removeAllAnimations()
+    }
+}
+
 class EventView: UIView {
     private var _recorded = RecordedType(time: 0, event: .Completed)
     private weak var _animator: UIDynamicAnimator? = nil
@@ -55,7 +86,6 @@ class EventView: UIView {
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
             layer.borderWidth = 0.5
-            
             _label.center = CGPointMake(19, 19)
             _label.textAlignment = .Center
             _label.font = UIFont(name: "", size: 17.0)
@@ -458,12 +488,12 @@ class SourceTimelineView: TimelineView {
     private func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
 
         if onDeleteZone(recognizer) == true {
-            shakeGhostEventView(ghostEventView)
-            _sceneView.shakeTrashView()
+            ghostEventView.shake()
+            _sceneView._trashView?.shake()
             _sceneView._trashView?.alpha = 0.5
         } else {
-            ghostEventView.layer.removeAllAnimations()
-            _sceneView._trashView?.layer.removeAllAnimations()
+            ghostEventView.stopAnimations()
+            _sceneView._trashView?.stopAnimations()
             _sceneView._trashView?.alpha = 0.2
         }
         
@@ -482,32 +512,13 @@ class SourceTimelineView: TimelineView {
         }
     }
     
-    private func shakeGhostEventView(ghostEventView: EventView) {
-        let animation = CAKeyframeAnimation(keyPath: "transform")
-        let wobbleAngle: CGFloat = 0.3
-        
-        let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
-        let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
-        animation.values = [valLeft, valRight]
-        
-        animation.autoreverses = true
-        animation.duration = 0.125
-        animation.repeatCount = 10000
-        
-        if ghostEventView.layer.animationKeys() == nil {
-            ghostEventView.layer.addAnimation(animation, forKey: "shake")
-        }
-    }
-    
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
         if let animator = panEventView._animator {
             animator.removeAllBehaviors()
             let time = Int(recognizer.locationInView(self).x)
             
             if onDeleteZone(recognizer) == true {
-                UIView.animateWithDuration(0.2, animations: { () -> Void in
-                    panEventView.transform = CGAffineTransformMakeScale(0.01, 0.01)
-                }, completion: { _ in
+                panEventView.hideWithCompletion({ _ in
                     if let index = self._sourceEvents.indexOf(panEventView) {
                         self._sourceEvents.removeAtIndex(index)
                         self.updateResultTimeline()
@@ -668,30 +679,10 @@ class SceneView: UIView {
         if _trashView == nil {
             return
         }
-        UIView.animateWithDuration(0.3, animations: { () -> Void in
-            self._trashView?.alpha = 0.01
-            self._trashView!.transform = CGAffineTransformMakeScale(0.1, 0.1)
-        }) { complete in
+        _trashView?.hideWithCompletion({ _ in
             self._trashView?.removeFromSuperview()
             self._trashView = nil
-        }
-    }
-    
-    private func shakeTrashView() {
-        let animation = CAKeyframeAnimation(keyPath: "transform")
-        let wobbleAngle: CGFloat = 0.3
-        
-        let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
-        let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
-        animation.values = [valLeft, valRight]
-        
-        animation.autoreverses = true
-        animation.duration = 0.125
-        animation.repeatCount = 10000
-        
-        if _trashView!.layer.animationKeys() == nil {
-            _trashView!.layer.addAnimation(animation, forKey: "shake")
-        }
+        })
     }
 
     required init?(coder aDecoder: NSCoder) {
