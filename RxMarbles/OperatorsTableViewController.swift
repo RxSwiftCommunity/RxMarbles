@@ -18,7 +18,15 @@ struct Section {
 class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
     private let _disposeBag = DisposeBag()
 
-    var selectedOperator = Operator.Delay
+    var selectedOperator: Operator  = Operator.Delay {
+        didSet {
+            tableView.reloadData()
+            let viewController = ViewController()
+            viewController.currentOperator = selectedOperator
+            showDetailViewController(viewController, sender: nil)
+        }
+    }
+    
     private let _searchController = UISearchController(searchResultsController: nil)
     private var _filteredSections = [Section]()
 
@@ -64,13 +72,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         tableView
             .rx_itemSelected
             .map(_rowAtIndexPath)
-            .subscribeNext { op in
-                self.selectedOperator = op
-                self.tableView.reloadData()
-                let viewController = ViewController()
-                viewController.currentOperator = self.selectedOperator
-                self.showDetailViewController(viewController, sender: nil)
-            }
+            .subscribeNext { op in self.selectedOperator = op }
             .addDisposableTo(_disposeBag)
     }
 

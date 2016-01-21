@@ -10,11 +10,15 @@ import Foundation
 import RxSwift
 import CoreSpotlight
 
+enum UserActivityType: String {
+    case OperatorView
+}
+
 enum Error: ErrorType {
     case CantParseStringToInt
 }
 
-enum Operator {
+enum Operator: String {
     case Amb
     case Buffer
     case CatchError
@@ -45,34 +49,7 @@ enum Operator {
 
 extension Operator: CustomStringConvertible {
     var description: String {
-        switch self {
-        case Amb:                  return "Amb"
-        case Buffer:               return "Buffer"
-        case CatchError:           return "CatchError"
-        case CombineLatest:        return "CombineLatest"
-        case Concat:               return "Concat"
-        case Debounce:             return "Debounce"
-        case Delay:                return "Delay"
-        case DistinctUntilChanged: return "DistinctUntilChanged"
-        case ElementAt:            return "ElementAt"
-        case Filter:               return "Filter"
-        case FlatMap:              return "FlatMap"
-        case FlatMapFirst:         return "FlatMapFirst"
-        case FlatMapLatest:        return "FlatMapLatest"
-        case IgnoreElements:       return "IgnoreElements"
-        case Map:                  return "Map"
-        case MapWithIndex:         return "MapWithIndex"
-        case Merge:                return "Merge"
-        case Reduce:               return "Reduce"
-        case Retry:                return "Retry"
-        case Sample:               return "Sample"
-        case Scan:                 return "Scan"
-        case Skip:                 return "Skip"
-        case StartWith:            return "StartWith"
-        case Take:                 return "Take"
-        case TakeLast:             return "TakeLast"
-        case Zip:                  return "Zip"
-        }
+        return self.rawValue
     }
 }
 
@@ -182,11 +159,12 @@ extension Operator {
 
 extension Operator {
     func userActivity() -> NSUserActivity {
-        let activity = NSUserActivity(activityType: "https://anjlab.com/rx/\(self.description)")
+        let activity = NSUserActivity(activityType: UserActivityType.OperatorView.rawValue)
         activity.title = description
         activity.keywords = ["Rx", "Reactive", "Operator", "Marbles", description]
         activity.eligibleForSearch = true
         activity.eligibleForPublicIndexing = true
+        activity.userInfo = ["operator": self.rawValue]
         
         let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
         attributes.title = description

@@ -33,7 +33,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     // MARK: UserActivity
     func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
-            return true
+       
+        if let _ = UserActivityType(rawValue: userActivity.activityType),
+            let opRawValue = userActivity.userInfo?["operator"] as? String,
+            let op = Operator(rawValue: opRawValue),
+            let splitViewController = window?.rootViewController as? UISplitViewController,
+            let masterNav = splitViewController.viewControllers.first as? UINavigationController,
+            let operatorsController = masterNav.viewControllers.first as? OperatorsTableViewController {
+                operatorsController.selectedOperator = op
+                return true
+        }
+        return false
     }
     
     // MARK: UISplitViewControllerDelegate
