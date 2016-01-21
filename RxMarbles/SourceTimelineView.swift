@@ -206,20 +206,14 @@ class SourceTimelineView: TimelineView {
     }
     
     func addTapRecognizers() {
-        _sourceEvents.forEach { (eventView) -> () in
-            eventView.addTapRecognizer()
-        }
+        _sourceEvents.forEach { $0.addTapRecognizer() }
     }
     
     func removeTapRecognizers() {
-        _sourceEvents.forEach { (eventView) -> () in
-            eventView.removeTapRecognizer()
-        }
+        _sourceEvents.forEach { $0.removeTapRecognizer() }
     }
     
     func allEventViewsAnimation() {
-        _sourceEvents.forEach { eventView in
-            eventView.scaleAnimation()
-        }
+        _sourceEvents.forEach { $0.scaleAnimation() }
     }
 }
