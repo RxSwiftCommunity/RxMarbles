@@ -15,6 +15,7 @@ class SourceTimelineView: TimelineView {
     private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
+    
     weak var sceneView: SceneView!
     
     required init?(coder aDecoder: NSCoder) {
@@ -37,13 +38,12 @@ class SourceTimelineView: TimelineView {
     }
     
     private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
-        let sourceEvents = self._sourceEvents
         let location = r.locationInView(self)
         
         switch r.state {
         case .Began:
-            if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
-                _panEventView = sourceEvents[i]
+            if let i = _sourceEvents.indexOf({ $0.frame.contains(location) }) {
+                _panEventView = _sourceEvents[i]
             }
             if let panEventView = _panEventView {
                 panEventView._animator?.removeBehavior(panEventView.snap!)
@@ -58,13 +58,12 @@ class SourceTimelineView: TimelineView {
             }
         case .Changed:
             if let panEventView = self._panEventView {
-                
                 let time = Int(location.x)
                 panEventView.center = location
                 panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
                 
                 if let ghostEventView = self._ghostEventView {
-                    self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
+                    changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                     
                     ghostEventView._recorded = panEventView._recorded
                     ghostEventView.center = CGPointMake(CGFloat(ghostEventView._recorded.time), self.bounds.height / 2)
@@ -72,22 +71,21 @@ class SourceTimelineView: TimelineView {
                 self.updateResultTimeline()
             }
         case .Ended:
-            self._ghostEventView?.removeFromSuperview()
-            self._ghostEventView = nil
+            _ghostEventView?.removeFromSuperview()
+            _ghostEventView = nil
             
-            if let panEventView = self._panEventView {
-                
-                self.animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: sceneView.resultTimeline)
+            if let panEventView = _panEventView {
+                animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: sceneView.resultTimeline)
                 
                 panEventView.superview?.bringSubviewToFront(panEventView)
-                self.bringStopEventViewsToFront(sourceEvents)
+                bringStopEventViewsToFront(_sourceEvents)
                 
                 let time = Int(r.locationInView(self).x)
                 panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
             }
-            self._panEventView = nil
-            self.updateResultTimeline()
-            self.sceneView.hideTrashView()
+            _panEventView = nil
+            updateResultTimeline()
+            sceneView.hideTrashView()
         default: break
         }
     }
@@ -131,15 +129,14 @@ class SourceTimelineView: TimelineView {
     }
     
      func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
-        
         if onDeleteZone(recognizer) == true {
             ghostEventView.shake()
-            sceneView._trashView?.shake()
-            sceneView._trashView?.alpha = 0.5
+            sceneView.trashView.shake()
+            sceneView.trashView.alpha = 0.5
         } else {
             ghostEventView.stopAnimations()
-            sceneView._trashView?.stopAnimations()
-            sceneView._trashView?.alpha = 0.2
+            sceneView.trashView.stopAnimations()
+            sceneView.trashView.alpha = 0.2
         }
         
         let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
@@ -179,12 +176,11 @@ class SourceTimelineView: TimelineView {
     }
     
     private func onDeleteZone(recognizer: UIGestureRecognizer) -> Bool {
-        if let trash = sceneView._trashView {
-            let loc = recognizer.locationInView(superview)
-            let eventViewFrame = CGRectMake(loc.x - 19, loc.y - 19, 38, 38)
-            if CGRectIntersectsRect(trash.frame, eventViewFrame) {
-                return true
-            }
+        let trash = sceneView.trashView
+        let loc = recognizer.locationInView(superview)
+        let eventViewFrame = CGRectMake(loc.x - 19, loc.y - 19, 38, 38)
+        if CGRectIntersectsRect(trash.frame, eventViewFrame) {
+            return true
         }
         return false
     }
@@ -204,10 +200,8 @@ class SourceTimelineView: TimelineView {
     }
     
     func hideAddButton() {
-        if _addButton != nil {
-            _addButton!.removeFromSuperview()
-            _addButton = nil
-        }
+        _addButton?.removeFromSuperview()
+        _addButton = nil
         addGestureRecognizer(_longPressGestureRecorgnizer)
     }
     
