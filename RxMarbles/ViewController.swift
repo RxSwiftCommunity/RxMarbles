@@ -32,24 +32,23 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     var currentOperator = Operator.Delay
     private var _currentActivity: NSUserActivity?
     var _sceneView: SceneView!
-    private var _isEditing: Bool = false {
-        didSet {
-            isEnableEditing(_isEditing)
-        }
-    }
     
-    private func isEnableEditing(isEdit: Bool) {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: isEdit ? .Done : .Edit, target: self, action: "enableEditing")
-        navigationItem.setHidesBackButton(isEdit, animated: true)
-        UIView.animateWithDuration(0.3) { _ in
-            self._sceneView._resultTimeline.alpha = isEdit ? 0.5 : 1.0
+    override func setEditing(editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        navigationItem.setHidesBackButton(editing, animated: animated)
+        if animated {
+            UIView.animateWithDuration(0.3) { _ in
+                self._sceneView._resultTimeline.alpha = editing ? 0.5 : 1.0
+            }
+        } else {
+            _sceneView._resultTimeline.alpha = editing ? 0.5 : 1.0
         }
         if let sourceTimeline = _sceneView._sourceTimeline {
-            sourceTimelineEditActions(sourceTimeline, isEdit: isEdit)
+            sourceTimelineEditActions(sourceTimeline, isEdit: editing)
         }
         if currentOperator.multiTimelines {
             if let secondSourceTimeline = _sceneView._secondSourceTimeline {
-                sourceTimelineEditActions(secondSourceTimeline, isEdit: isEdit)
+                sourceTimelineEditActions(secondSourceTimeline, isEdit: editing)
             }
         }
     }
@@ -72,8 +71,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         view.backgroundColor = .whiteColor()
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
+        navigationItem.rightBarButtonItem = editButtonItem()
         setupSceneView()
-        _isEditing = false
+//        setEditing(false, animated: false)
         _currentActivity = currentOperator.userActivity()
     }
     
@@ -108,10 +108,10 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         for t in 1..<4 {
             let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
             let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .Circle))
-            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: _isEditing)
+            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: editing)
         }
         let completedTime = orientation.isPortrait ? 150 : Int(150.0 * scaleKoefficient())
-        sourceTimeLine.addCompletedEventToTimeline(completedTime, animator: _sceneView.animator, isEditing: _isEditing)
+        sourceTimeLine.addCompletedEventToTimeline(completedTime, animator: _sceneView.animator, isEditing: editing)
         
         if currentOperator.multiTimelines {
             resultTimeline.center.y = 280
@@ -125,17 +125,13 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             for t in 1..<3 {
                 let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
                 let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .RoundedRect))
-                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: _isEditing)
+                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: _sceneView.animator, isEditing: editing)
             }
             let secondCompletedTime = orientation.isPortrait ? 110 : Int(110.0 * scaleKoefficient())
-            secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: _sceneView.animator, isEditing: _isEditing)
+            secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: _sceneView.animator, isEditing: editing)
         }
         
         sourceTimeLine.updateResultTimeline()
-    }
-    
-    func enableEditing() {
-        _isEditing = !_isEditing
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -157,7 +153,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             let nextAction = UIAlertAction(title: "Next", style: .Default) { (action) -> Void in
                 let shape: EventShape = (timeline == self._sceneView._sourceTimeline) ? .Circle : .RoundedRect
                 let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: RXMUIKit.randomColor(), shape: shape))
-                timeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: self._isEditing)
+                timeline.addNextEventToTimeline(time, event: event, animator: self._sceneView.animator, isEditing: self.editing)
                 timeline.updateResultTimeline()
             }
             let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
@@ -166,11 +162,11 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                 } else {
                     time = Int(self._sceneView._sourceTimeline.bounds.size.width - 60.0)
                 }
-                timeline.addCompletedEventToTimeline(time, animator: self._sceneView.animator, isEditing: self._isEditing)
+                timeline.addCompletedEventToTimeline(time, animator: self._sceneView.animator, isEditing: self.editing)
                 timeline.updateResultTimeline()
             }
             let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
-                timeline.addErrorEventToTimeline(time, animator: self._sceneView.animator, isEditing: self._isEditing)
+                timeline.addErrorEventToTimeline(time, animator: self._sceneView.animator, isEditing: self.editing)
                 timeline.updateResultTimeline()
             }
             let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
@@ -215,11 +211,11 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         sourceEvents.forEach({ eventView in
             let time = Int(CGFloat(eventView._recorded.time) * scaleKoef)
             if eventView.isNext {
-                timeline.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _sceneView.animator, isEditing: _isEditing)
+                timeline.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _sceneView.animator, isEditing: self.editing)
             } else if eventView.isCompleted {
-                timeline.addCompletedEventToTimeline(time, animator: _sceneView.animator, isEditing: _isEditing)
+                timeline.addCompletedEventToTimeline(time, animator: _sceneView.animator, isEditing: editing)
             } else {
-                timeline.addErrorEventToTimeline(time, animator: _sceneView.animator, isEditing: _isEditing)
+                timeline.addErrorEventToTimeline(time, animator: _sceneView.animator, isEditing: editing)
             }
         })
         sourceEvents.removeAll()
