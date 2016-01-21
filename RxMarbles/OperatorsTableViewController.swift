@@ -57,7 +57,8 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         tableView.tableFooterView = UIView()
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
         
-        tableView.rx_itemSelected
+        tableView
+            .rx_itemSelected
             .map(_rowAtIndexPath)
             .subscribeNext { op in
                 self.selectedOperator = op
@@ -66,29 +67,30 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
                 viewController.currentOperator = self.selectedOperator
                 self.showDetailViewController(viewController, sender: nil)
             }
-        .addDisposableTo(_disposeBag)
+            .addDisposableTo(_disposeBag)
     }
 
     // MARK: - Table view data source
+    
+    private var _activeSections: [Section] {
+        get { return isSearchActive() ? _filteredSections : _sections }
+    }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
-        if isSearchActive() {
-            return _filteredSections.count
-        }
-        return _sections.count
+        return _activeSections.count
     }
     
     override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sec = isSearchActive() ? _filteredSections[section] : _sections[section]
+        let sec = _activeSections[section]
         return sec.name
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return isSearchActive() ? _filteredSections[section].rows.count : _sections[section].rows.count
+        return _activeSections[section].rows.count
     }
     
     private func _rowAtIndexPath(indexPath: NSIndexPath) -> Operator {
-        let section = isSearchActive() ? _filteredSections[indexPath.section] : _sections[indexPath.section]
+        let section = _activeSections[indexPath.section]
         return section.rows[indexPath.row]
     }
 
@@ -97,12 +99,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         let cell = tableView.dequeueReusableCellWithIdentifier("OperatorCell", forIndexPath: indexPath)
         
         cell.textLabel?.text = op.description
-        
-        if op == selectedOperator {
-            cell.accessoryType = UITableViewCellAccessoryType.Checkmark
-        } else {
-            cell.accessoryType = UITableViewCellAccessoryType.None
-        }
+        cell.accessoryType = op == selectedOperator ? .Checkmark : .None
 
         return cell
     }
@@ -123,7 +120,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
 //    MARK: - UISearchResultsUpdating
     
     func isSearchActive() -> Bool {
-        return (_searchController.active && _searchController.searchBar.text != "")
+        return _searchController.active && _searchController.searchBar.text != ""
     }
     
     func updateSearchResultsForSearchController(searchController: UISearchController) {
