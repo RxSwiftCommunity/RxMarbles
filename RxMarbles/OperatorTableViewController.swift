@@ -114,6 +114,7 @@ class OperatorTableViewController: UITableViewController, UISearchResultsUpdatin
 
         return cell
     }
+    
 //    MARK: - Filtering Sections
     
     private func filterSectionsWithText(text: String) {
