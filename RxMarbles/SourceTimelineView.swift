@@ -139,19 +139,7 @@ class SourceTimelineView: TimelineView {
             sceneView.trashView.alpha = 0.2
         }
         
-        let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
-        let alpha: CGFloat = onDeleteZone(recognizer) ? 1.0 : 0.2
-        
-        switch ghostEventView.recorded.value {
-        case .Next:
-            ghostEventView.alpha = alpha
-            ghostEventView.backgroundColor = color
-        case .Completed, .Error:
-            ghostEventView.subviews.forEach({ (subView) -> () in
-                subView.alpha = alpha
-                subView.backgroundColor = color
-            })
-        }
+        ghostEventView.setGhostColorByOnDeleteZone(onDeleteZone(recognizer))
     }
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
