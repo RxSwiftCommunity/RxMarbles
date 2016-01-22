@@ -114,6 +114,18 @@ class EventView: UIView {
         
         _gravity = UIGravityBehavior(items: [self])
         _removeBehavior = UIDynamicItemBehavior(items: [self])
+        _removeBehavior?.action = {
+            let timeline = self._timeLine
+            if let viewController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+                if let index = timeline?.sourceEvents.indexOf(self) {
+                    if CGRectIntersectsRect(viewController.view.bounds, self.frame) == false {
+                        self.removeFromSuperview()
+                        timeline?.sourceEvents.removeAtIndex(index)
+                        timeline!.updateResultTimeline()
+                    }
+                }
+            }
+        }
         _recorded = recorded
         _tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setEventView")
     }
@@ -230,13 +242,16 @@ class EventView: UIView {
 //        if let parentViewController = self._parentViewController {
 //            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
 //        }
+        if let viewControler = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            viewControler.presentViewController(settingsAlertController, animated: true, completion: nil)
+        }
     }
     
     private func saveAction(eventView: EventView) {
-        let index = _timeLine?._sourceEvents.indexOf(self)
+        let index = _timeLine?.sourceEvents.indexOf(self)
         let time = eventView._recorded.time
         if index != nil {
-            _timeLine?._sourceEvents.removeAtIndex(index!)
+            _timeLine?.sourceEvents.removeAtIndex(index!)
             removeFromSuperview()
             _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _animator, isEditing: true)
             _timeLine?.updateResultTimeline()

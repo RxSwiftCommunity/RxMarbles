@@ -42,8 +42,8 @@ class SourceTimelineView: TimelineView {
         
         switch r.state {
         case .Began:
-            if let i = _sourceEvents.indexOf({ $0.frame.contains(location) }) {
-                _panEventView = _sourceEvents[i]
+            if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
+                _panEventView = sourceEvents[i]
             }
             if let panEventView = _panEventView {
                 panEventView._animator?.removeBehavior(panEventView.snap!)
@@ -78,7 +78,7 @@ class SourceTimelineView: TimelineView {
                 animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: sceneView.resultTimeline)
                 
                 panEventView.superview?.bringSubviewToFront(panEventView)
-                bringStopEventViewsToFront(_sourceEvents)
+                bringStopEventViewsToFront(sourceEvents)
                 
                 let time = Int(r.locationInView(self).x)
                 panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
@@ -92,9 +92,9 @@ class SourceTimelineView: TimelineView {
     
     func updateResultTimeline() {
         if let secondSourceTimeline = sceneView.secondSourceTimeline {
-            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline._sourceEvents, secondSourceTimeline._sourceEvents))
+            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline.sourceEvents, secondSourceTimeline.sourceEvents))
         } else {
-            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline._sourceEvents, nil))
+            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline.sourceEvents, nil))
         }
     }
     
@@ -105,7 +105,7 @@ class SourceTimelineView: TimelineView {
         }
         addSubview(v)
         v.use(animator, timeLine: self)
-        _sourceEvents.append(v)
+        sourceEvents.append(v)
     }
     
     func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!, isEditing: Bool) {
@@ -115,7 +115,7 @@ class SourceTimelineView: TimelineView {
         }
         addSubview(v)
         v.use(animator, timeLine: self)
-        _sourceEvents.append(v)
+        sourceEvents.append(v)
     }
     
     func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
@@ -125,7 +125,7 @@ class SourceTimelineView: TimelineView {
         }
         addSubview(v)
         v.use(animator, timeLine: self)
-        _sourceEvents.append(v)
+        sourceEvents.append(v)
     }
     
      func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
@@ -161,8 +161,8 @@ class SourceTimelineView: TimelineView {
             
             if onDeleteZone(recognizer) == true {
                 panEventView.hideWithCompletion({ _ in
-                    if let index = self._sourceEvents.indexOf(panEventView) {
-                        self._sourceEvents.removeAtIndex(index)
+                    if let index = self.sourceEvents.indexOf(panEventView) {
+                        self.sourceEvents.removeAtIndex(index)
                         self.updateResultTimeline()
                     }
                 })
@@ -206,14 +206,14 @@ class SourceTimelineView: TimelineView {
     }
     
     func addTapRecognizers() {
-        _sourceEvents.forEach { $0.addTapRecognizer() }
+        sourceEvents.forEach { $0.addTapRecognizer() }
     }
     
     func removeTapRecognizers() {
-        _sourceEvents.forEach { $0.removeTapRecognizer() }
+        sourceEvents.forEach { $0.removeTapRecognizer() }
     }
     
     func allEventViewsAnimation() {
-        _sourceEvents.forEach { $0.scaleAnimation() }
+        sourceEvents.forEach { $0.scaleAnimation() }
     }
 }

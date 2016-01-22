@@ -166,7 +166,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
         
         elementSelector.addAction(nextAction)
-        let sourceEvents: [EventView] = timeline._sourceEvents
+        let sourceEvents: [EventView] = timeline.sourceEvents
         if sourceEvents.indexOf({ $0.isCompleted == true }) == nil {
             elementSelector.addAction(completedAction)
         }
@@ -184,7 +184,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         coordinator.animateAlongsideTransition(
             { context in
-                self.sceneView.resultTimeline._sourceEvents.forEach({ $0.removeFromSuperview() })
+                self.sceneView.resultTimeline.sourceEvents.forEach({ $0.removeFromSuperview() })
             },
             completion: { context in
                 self.scaleTimesOnChangeOrientation(self.sceneView.sourceTimeline)
@@ -197,9 +197,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     private func scaleTimesOnChangeOrientation(timeline: SourceTimelineView) {
         let scaleKoef = scaleKoefficient()
-        var sourceEvents = timeline._sourceEvents
-        timeline._sourceEvents.forEach({ $0.removeFromSuperview() })
-        timeline._sourceEvents.removeAll()
+        var sourceEvents = timeline.sourceEvents
+        timeline.sourceEvents.forEach({ $0.removeFromSuperview() })
+        timeline.sourceEvents.removeAll()
         sourceEvents.forEach({ eventView in
             let time = Int(CGFloat(eventView._recorded.time) * scaleKoef)
             if eventView.isNext {

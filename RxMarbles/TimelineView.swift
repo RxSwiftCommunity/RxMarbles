@@ -9,7 +9,7 @@
 import UIKit
 
 class TimelineView: UIView {
-    var _sourceEvents = [EventView]()
+    var sourceEvents = [EventView]()
     let _timeArrow = UIImageView(image: Image.timeLine)
     var _addButton: UIButton?
     private var _parentViewController: ViewController!
@@ -38,7 +38,7 @@ class TimelineView: UIView {
     
     func maxNextTime() -> Int? {
         var times = Array<Int>()
-        _sourceEvents.forEach { (eventView) -> () in
+        sourceEvents.forEach { (eventView) -> () in
             if eventView.isNext {
                 times.append(eventView._recorded.time)
             }

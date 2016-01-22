@@ -40,17 +40,17 @@ class ResultTimelineView: TimelineView {
     }
     
     func addEventsToTimeline(events: [RecordedType]) {
-        _sourceEvents.forEach { (eventView) -> () in
+        sourceEvents.forEach { (eventView) -> () in
             eventView.removeFromSuperview()
         }
         
-        _sourceEvents.removeAll()
+        sourceEvents.removeAll()
         
         events.forEach { (event) -> () in
             let shape: EventShape = (event.value.element?.shape != nil) ? (event.value.element?.shape)! : .Another
             let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape)
             eventView.center.y = bounds.height / 2
-            _sourceEvents.append(eventView)
+            sourceEvents.append(eventView)
             addSubview(eventView)
         }
     }
