@@ -212,7 +212,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
 
     func setEventView(notification: NSNotification) {
         let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
-        if let eventView: EventView = notification.object as? EventView {
+        if let eventView = notification.object as? EventView {
             if eventView.isNext {
                 let contentViewController = UIViewController()
                 contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
@@ -279,9 +279,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let time = newEventView.recorded.time
         if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.removeFromSuperview()
-            oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: newEventView.animator, isEditing: true)
+            oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: sceneView.animator, isEditing: true)
             oldEventView.timeLine?.updateResultTimeline()
+            oldEventView.removeFromSuperview()
         }
     }
     
