@@ -21,16 +21,25 @@ class SceneView: UIView {
     
     init() {
         super.init(frame: CGRectZero)
+        trashView.frame = CGRectMake(0, 0, 60, 60)
+    }
+    
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        resultTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
+        resultTimeline.center.y = center.y
+        sourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
+        sourceTimeline.center.y = center.y * 0.33
+        if secondSourceTimeline != nil {
+            secondSourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
+            secondSourceTimeline.center.y = center.y * 0.66
+        }
+        trashView.center.x = bounds.size.width / 2.0
+        trashView.center.y = bounds.size.height - 50
     }
     
     func showTrashView() {
-        trashView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(trashView)
-        addConstraint(NSLayoutConstraint(item: trashView, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0.0))
-        let metrics = ["size" : 60.0]
-        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:[trash(==size)]", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: ["trash" : trashView]))
-        addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[trash(==size)]-|", options: NSLayoutFormatOptions(rawValue: 0), metrics: metrics, views: ["trash" : trashView]))
-       
         trashView.hidden = false
         trashView.transform = CGAffineTransformMakeScale(0.1, 0.1)
         trashView.alpha = 0.05
@@ -42,7 +51,7 @@ class SceneView: UIView {
     }
     
     func hideTrashView() {
-        trashView.hideWithCompletion({ _ in })
+        trashView.hideWithCompletion({ _ in self.trashView.removeFromSuperview() })
     }
     
 }
