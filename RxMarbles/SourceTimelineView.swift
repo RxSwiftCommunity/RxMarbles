@@ -47,7 +47,7 @@ class SourceTimelineView: TimelineView {
             }
             if let panEventView = _panEventView {
                 panEventView.animator?.removeBehavior(panEventView.snap!)
-                let shape: EventShape = (panEventView.recorded.value.element?.shape != nil) ? (panEventView.recorded.value.element?.shape)! : .Another
+                let shape: EventShape = (panEventView.recorded.value.element?.shape != nil) ? (panEventView.recorded.value.element?.shape)! : .None
                 self._ghostEventView = EventView(recorded: panEventView.recorded, shape: shape)
                 if let ghostEventView = self._ghostEventView {
                     ghostEventView.center.y = self.bounds.height / 2
@@ -109,7 +109,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .Another)
+        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .None)
         if isEditing {
             v.addTapRecognizer()
         }
@@ -119,7 +119,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)), shape: .Another)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)), shape: .None)
         if isEditing {
             v.addTapRecognizer()
         }

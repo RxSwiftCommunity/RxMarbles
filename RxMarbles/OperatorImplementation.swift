@@ -13,7 +13,7 @@ extension Operator {
     func map(o: (first: TestableObservable<ColoredType>, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
         case Amb:                  return o.first.amb(o.second!)
-        case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: "13", color: .redColor(), shape: .Rhombus) })
+        case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: "13", color: .redColor(), shape: .Triangle) })
         case CatchError:           return o.first.catchError({ error in
             return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         })
@@ -48,7 +48,7 @@ extension Operator {
         })
         case Merge:                return Observable.of(o.first, o.second!).merge()
         case Reduce:
-            return o.first.reduce(ColoredType(value: "0", color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .Another), accumulator: { acc, e in
+            return o.first.reduce(ColoredType(value: "0", color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
                 var res = acc
                 guard let a = Int(e.value),
                     let b = Int(res.value) else { throw Error.CantParseStringToInt }
@@ -59,7 +59,7 @@ extension Operator {
         })
         case Retry:                return o.first.retry(2)
         case Sample:               return o.first.sample(o.second!)
-        case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .Another), accumulator: { acc, e in
+        case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
             var res = acc
             guard let a = Int(e.value),
                   let b = Int(res.value) else { throw Error.CantParseStringToInt }
