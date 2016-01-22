@@ -168,7 +168,7 @@ class SourceTimelineView: TimelineView {
                 })
             } else {
                 let snap = panEventView.snap
-                snap!.snapPoint.x = CGFloat(time + 10)
+                snap!.snapPoint.x = CGFloat(time)
                 snap!.snapPoint.y = center.y
                 animator.addBehavior(snap!)
             }

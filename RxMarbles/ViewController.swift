@@ -64,27 +64,26 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: "SetEventView", object: nil)
     }
     
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
+    }
+    
     func setupSceneView() {
         sceneView?.removeFromSuperview()
         let orientation = UIApplication.sharedApplication().statusBarOrientation
         sceneView = SceneView()
-        view.addSubview(sceneView)
-        sceneView.frame = view.frame
-        sceneView.translatesAutoresizingMaskIntoConstraints = false
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[sceneView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["sceneView" : sceneView]))
-        view.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:|[sceneView]|", options: NSLayoutFormatOptions(rawValue: 0), metrics: nil, views: ["sceneView" : sceneView]))
-        
         sceneView.animator = UIDynamicAnimator(referenceView: sceneView)
+        view.addSubview(sceneView)
         
-        let width = sceneView.frame.width - 20
-        
-        let resultTimeline = ResultTimelineView(frame: CGRectMake(10, 0, width, 40), currentOperator: currentOperator)
-        resultTimeline.center.y = 200
+        let width = sceneView.frame.width
+        let resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, width, 40), currentOperator: currentOperator)
+        resultTimeline.center.y = sceneView.center.y
         sceneView.addSubview(resultTimeline)
         sceneView.resultTimeline = resultTimeline
         
-        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), scene: sceneView)
-        sourceTimeLine.center.y = 120
+        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(0, 0, width, 40), scene: sceneView)
+        sourceTimeLine.center.y = sceneView.center.y * 0.33
         sceneView.addSubview(sourceTimeLine)
         sceneView.sourceTimeline = sourceTimeLine
         
@@ -97,9 +96,8 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         sourceTimeLine.addCompletedEventToTimeline(completedTime, animator: sceneView.animator, isEditing: editing)
         
         if currentOperator.multiTimelines {
-            resultTimeline.center.y = 280
-            let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(10, 0, width, 40), scene: sceneView)
-            secondSourceTimeline.center.y = 200
+            let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, width, 40), scene: sceneView)
+            secondSourceTimeline.center.y = sceneView.center.y * 0.66
             sceneView.addSubview(secondSourceTimeline)
             sceneView.secondSourceTimeline = secondSourceTimeline
             
@@ -212,7 +210,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
 
     func setEventView(notification: NSNotification) {
         let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
-        if let eventView: EventView = notification.object as? EventView {
+        if let eventView = notification.object as? EventView {
             if eventView.isNext {
                 let contentViewController = UIViewController()
                 contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
@@ -279,9 +277,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let time = newEventView.recorded.time
         if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.removeFromSuperview()
-            oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: newEventView.animator, isEditing: true)
+            oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: sceneView.animator, isEditing: true)
             oldEventView.timeLine?.updateResultTimeline()
+            oldEventView.removeFromSuperview()
         }
     }
     
