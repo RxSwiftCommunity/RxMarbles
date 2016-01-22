@@ -68,7 +68,7 @@ class SourceTimelineView: TimelineView {
                     ghostEventView.recorded = panEventView.recorded
                     ghostEventView.center = CGPointMake(CGFloat(ghostEventView.recorded.time), self.bounds.height / 2)
                 }
-                self.updateResultTimeline()
+                sceneView.updateResultTimeline()
             }
         case .Ended:
             _ghostEventView?.removeFromSuperview()
@@ -84,17 +84,9 @@ class SourceTimelineView: TimelineView {
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
-            updateResultTimeline()
+            sceneView.updateResultTimeline()
             sceneView.hideTrashView()
         default: break
-        }
-    }
-    
-    func updateResultTimeline() {
-        if let secondSourceTimeline = sceneView.secondSourceTimeline {
-            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline.sourceEvents, secondSourceTimeline.sourceEvents))
-        } else {
-            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline.sourceEvents, nil))
         }
     }
     
@@ -151,7 +143,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.hideWithCompletion({ _ in
                     if let index = self.sourceEvents.indexOf(panEventView) {
                         self.sourceEvents.removeAtIndex(index)
-                        self.updateResultTimeline()
+                        self.sceneView.updateResultTimeline()
                     }
                 })
             } else {
