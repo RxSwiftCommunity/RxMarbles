@@ -227,7 +227,7 @@
 				CLASSPREFIX = RXM;
 				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0720;
-				ORGANIZATIONNAME = "Roman Tutubalin";
+				ORGANIZATIONNAME = AnjLab;
 				TargetAttributes = {
 					0AC2658E1C3D2C24009E28FD = {
 						CreatedOnToolsVersion = 7.2;

@@ -46,4 +46,5 @@ struct Color {
         let allColors = nextAll
         return allColors[random() % allColors.count]
     }
+    
 }
