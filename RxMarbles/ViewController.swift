@@ -103,7 +103,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             
             for t in 1..<3 {
                 let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
-                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .RoundedRect))
+                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Rect))
                 secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: sceneView.animator, isEditing: editing)
             }
             let secondCompletedTime = orientation.isPortrait ? 110 : Int(110.0 * scaleKoefficient())
@@ -130,7 +130,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { action in
-            let shape: EventShape = (timeline == self.sceneView.sourceTimeline) ? .Circle : .RoundedRect
+            let shape: EventShape = (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect
             let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: Color.nextRandom, shape: shape))
             timeline.addNextEventToTimeline(time, event: event, animator: self.sceneView.animator, isEditing: self.editing)
             timeline.updateResultTimeline()

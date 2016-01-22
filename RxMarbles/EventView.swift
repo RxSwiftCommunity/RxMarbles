@@ -17,88 +17,37 @@ class EventView: UIView {
     var removeBehavior: UIDynamicItemBehavior? = nil
     weak var timeLine: SourceTimelineView?
     private var _tapGestureRecognizer: UITapGestureRecognizer!
+    private var _imageView = UIImageView()
     var label = UILabel()
     
     init(recorded: RecordedType, shape: EventShape) {
+        super.init(frame: CGRectMake(0, 0, 36, 50))
+       
+        _imageView.contentMode = .Center
+        label.textColor = UIColor.blackColor()
+        label.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
+        addSubview(_imageView)
+        addSubview(label)
+        
         switch recorded.value {
         case let .Next(v):
-            super.init(frame: CGRectMake(0, 0, 38, 38))
-            clipsToBounds = true
-            backgroundColor = v.color
-            layer.borderColor = UIColor.lightGrayColor().CGColor
-            layer.borderWidth = 0.5
-            label.center = CGPointMake(19, 19)
-            label.textAlignment = .Center
-            label.font = UIFont(name: "", size: 17.0)
-            label.numberOfLines = 1
-            label.adjustsFontSizeToFitWidth = true
-            label.minimumScaleFactor = 0.6
-            label.lineBreakMode = .ByTruncatingTail
-            label.textColor = .whiteColor()
-            addSubview(label)
-            
             if let value = recorded.value.element?.value {
-                label.text = String(value)
+                label.text = value
+                label.sizeToFit()
             }
-            switch shape {
-            case .Circle:
-                layer.cornerRadius = bounds.width / 2.0
-            case .RoundedRect:
-                layer.cornerRadius = 5.0
-            case .Rhombus:
-                let width = layer.frame.size.width
-                let height = layer.frame.size.height
-                
-                let mask = CAShapeLayer()
-                mask.frame = layer.bounds
-                
-                let path = CGPathCreateMutable()
-                CGPathMoveToPoint(path, nil, width / 2.0, 0)
-                CGPathAddLineToPoint(path, nil, width, height / 2.0)
-                CGPathAddLineToPoint(path, nil, width / 2.0, height)
-                CGPathAddLineToPoint(path, nil, 0, height / 2.0)
-                CGPathAddLineToPoint(path, nil, width / 2.0, 0)
-                
-                mask.path = path
-                layer.mask = mask
-                
-                let border = CAShapeLayer()
-                border.frame = bounds
-                border.path = path
-                border.lineWidth = 0.5
-                border.strokeColor = UIColor.lightGrayColor().CGColor
-                border.fillColor = UIColor.clearColor().CGColor
-                layer.insertSublayer(border, atIndex: 0)
-                
-            case .Another:
-                break
-            }
-            
+
+
+            _imageView.image = shape.image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            _imageView.frame = CGRectMake(0, 0, 16, 16)
+            _imageView.tintColor = v.color
+            _imageView.layer.shadowColor = UIColor.blackColor().CGColor
+            _imageView.layer.shadowOffset = CGSizeMake(0, 0)
+            _imageView.layer.shadowRadius = 0.75
+            _imageView.layer.shadowOpacity = 1.0
         case .Completed:
-            super.init(frame: CGRectMake(0, 0, 37, 38))
-            backgroundColor = .clearColor()
-            
-            let grayLine = UIView(frame: CGRectMake(17.5, 5, 3, 28))
-            grayLine.backgroundColor = .grayColor()
-            
-            addSubview(grayLine)
-            
-            bringSubviewToFront(self)
+            _imageView.image = Image.complete
         case .Error:
-            super.init(frame: CGRectMake(0, 0, 37, 38))
-            backgroundColor = .clearColor()
-            
-            let firstLineCross = UIView(frame: CGRectMake(17.5, 7.5, 3, 23))
-            firstLineCross.backgroundColor = .grayColor()
-            firstLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.25))
-            addSubview(firstLineCross)
-            
-            let secondLineCross = UIView(frame: CGRectMake(17.5, 7.5, 3, 23))
-            secondLineCross.backgroundColor = .grayColor()
-            secondLineCross.transform = CGAffineTransformMakeRotation(CGFloat(M_PI * 0.75))
-            addSubview(secondLineCross)
-            
-            bringSubviewToFront(self)
+            _imageView.image = Image.error
         }
         
         center = CGPointMake(CGFloat(recorded.time), bounds.height)
@@ -123,12 +72,8 @@ class EventView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        if isNext {
-            label.frame = CGRectInset(frame, 3.0, 10.0)
-            label.center = CGPointMake(19, 19)
-            label.baselineAdjustment = .AlignCenters
-        }
+        _imageView.center = CGPointMake(bounds.width / 2.0, bounds.height / 2.0)
+        label.center = CGPointMake(bounds.width / 2.0, bounds.height * 0.15)
     }
     
     func use(animator: UIDynamicAnimator?, timeLine: SourceTimelineView?) {
@@ -138,7 +83,7 @@ class EventView: UIView {
         self.animator = animator
         self.timeLine = timeLine
         if let timeLine = timeLine {
-            center.y = timeLine.bounds.height / 2
+            center.y = timeLine.bounds.height / 2.0
         }
         
         snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(recorded.time), center.y))

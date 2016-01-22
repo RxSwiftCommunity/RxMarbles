@@ -9,13 +9,6 @@
 import Foundation
 import UIKit
 
-enum EventShape {
-    case Circle
-    case RoundedRect
-    case Rhombus
-    case Another
-}
-
 struct ColoredType: Equatable {
     var value: String
     var color: UIColor
