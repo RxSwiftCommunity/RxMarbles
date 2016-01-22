@@ -23,7 +23,6 @@ class EventView: UIView {
         switch recorded.value {
         case let .Next(v):
             super.init(frame: CGRectMake(0, 0, 38, 38))
-            center = CGPointMake(CGFloat(recorded.time), bounds.height)
             clipsToBounds = true
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
@@ -77,7 +76,6 @@ class EventView: UIView {
             
         case .Completed:
             super.init(frame: CGRectMake(0, 0, 37, 38))
-            center = CGPointMake(CGFloat(recorded.time), bounds.height)
             backgroundColor = .clearColor()
             
             let grayLine = UIView(frame: CGRectMake(17.5, 5, 3, 28))
@@ -88,7 +86,6 @@ class EventView: UIView {
             bringSubviewToFront(self)
         case .Error:
             super.init(frame: CGRectMake(0, 0, 37, 38))
-            center = CGPointMake(CGFloat(recorded.time), bounds.height)
             backgroundColor = .clearColor()
             
             let firstLineCross = UIView(frame: CGRectMake(17.5, 7.5, 3, 23))
@@ -103,6 +100,8 @@ class EventView: UIView {
             
             bringSubviewToFront(self)
         }
+        
+        center = CGPointMake(CGFloat(recorded.time), bounds.height)
         
         gravity = UIGravityBehavior(items: [self])
         removeBehavior = UIDynamicItemBehavior(items: [self])
