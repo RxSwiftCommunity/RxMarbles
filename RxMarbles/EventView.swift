@@ -18,14 +18,14 @@ enum EventShape {
 }
 
 class EventView: UIView {
-    var _recorded = RecordedType(time: 0, event: .Completed)
-    weak var _animator: UIDynamicAnimator? = nil
+    var recorded = RecordedType(time: 0, event: .Completed)
+    weak var animator: UIDynamicAnimator? = nil
     var snap: UISnapBehavior? = nil
-    private var _gravity: UIGravityBehavior? = nil
-    private var _removeBehavior: UIDynamicItemBehavior? = nil
-    private weak var _timeLine: SourceTimelineView?
+    var gravity: UIGravityBehavior? = nil
+    var removeBehavior: UIDynamicItemBehavior? = nil
+    weak var timeLine: SourceTimelineView?
     private var _tapGestureRecognizer: UITapGestureRecognizer!
-    private var _label = UILabel()
+    var label = UILabel()
     
     init(recorded: RecordedType, shape: EventShape) {
         switch recorded.value {
@@ -36,18 +36,18 @@ class EventView: UIView {
             backgroundColor = v.color
             layer.borderColor = UIColor.lightGrayColor().CGColor
             layer.borderWidth = 0.5
-            _label.center = CGPointMake(19, 19)
-            _label.textAlignment = .Center
-            _label.font = UIFont(name: "", size: 17.0)
-            _label.numberOfLines = 1
-            _label.adjustsFontSizeToFitWidth = true
-            _label.minimumScaleFactor = 0.6
-            _label.lineBreakMode = .ByTruncatingTail
-            _label.textColor = .whiteColor()
-            addSubview(_label)
+            label.center = CGPointMake(19, 19)
+            label.textAlignment = .Center
+            label.font = UIFont(name: "", size: 17.0)
+            label.numberOfLines = 1
+            label.adjustsFontSizeToFitWidth = true
+            label.minimumScaleFactor = 0.6
+            label.lineBreakMode = .ByTruncatingTail
+            label.textColor = .whiteColor()
+            addSubview(label)
             
             if let value = recorded.value.element?.value {
-                _label.text = String(value)
+                label.text = String(value)
             }
             switch shape {
             case .Circle:
@@ -112,10 +112,10 @@ class EventView: UIView {
             bringSubviewToFront(self)
         }
         
-        _gravity = UIGravityBehavior(items: [self])
-        _removeBehavior = UIDynamicItemBehavior(items: [self])
-        _removeBehavior?.action = {
-            let timeline = self._timeLine
+        gravity = UIGravityBehavior(items: [self])
+        removeBehavior = UIDynamicItemBehavior(items: [self])
+        removeBehavior?.action = {
+            let timeline = self.timeLine
             if let viewController = UIApplication.sharedApplication().keyWindow?.rootViewController {
                 if let index = timeline?.sourceEvents.indexOf(self) {
                     if CGRectIntersectsRect(viewController.view.bounds, self.frame) == false {
@@ -126,7 +126,7 @@ class EventView: UIView {
                 }
             }
         }
-        _recorded = recorded
+        self.recorded = recorded
         _tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setEventView")
     }
     
@@ -134,28 +134,28 @@ class EventView: UIView {
         super.layoutSubviews()
         
         if isNext {
-            _label.frame = CGRectInset(frame, 3.0, 10.0)
-            _label.center = CGPointMake(19, 19)
-            _label.baselineAdjustment = .AlignCenters
+            label.frame = CGRectInset(frame, 3.0, 10.0)
+            label.center = CGPointMake(19, 19)
+            label.baselineAdjustment = .AlignCenters
         }
     }
     
     func use(animator: UIDynamicAnimator?, timeLine: SourceTimelineView?) {
         if let snap = snap {
-            _animator?.removeBehavior(snap)
+            animator?.removeBehavior(snap)
         }
-        _animator = animator
-        _timeLine = timeLine
+        self.animator = animator
+        self.timeLine = timeLine
         if let timeLine = timeLine {
             center.y = timeLine.bounds.height / 2
         }
         
-        snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(_recorded.time), center.y))
-        userInteractionEnabled = _animator != nil
+        snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(recorded.time), center.y))
+        userInteractionEnabled = animator != nil
     }
     
     var isCompleted: Bool {
-        if case .Completed = _recorded.value {
+        if case .Completed = recorded.value {
             return true
         } else {
             return false
@@ -163,7 +163,7 @@ class EventView: UIView {
     }
     
     var isNext: Bool {
-        if case .Next = _recorded.value {
+        if case .Next = recorded.value {
             return true
         } else {
             return false
@@ -179,111 +179,7 @@ class EventView: UIView {
     }
     
     func setEventView() {
-        let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
-        
-        if isNext {
-            let contentViewController = UIViewController()
-            contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
-            
-            let eventView = EventView(recorded: _recorded, shape: (_recorded.value.element?.shape)!)
-            eventView.center = CGPointMake(100.0, 25.0)
-            contentViewController.view.addSubview(eventView)
-            
-            let colors = [RXMUIKit.lightBlueColor(), RXMUIKit.darkYellowColor(), RXMUIKit.lightGreenColor(), RXMUIKit.blueColor(), RXMUIKit.orangeColor()]
-            let currentColor = _recorded.value.element?.color
-            let colorsSegment = UISegmentedControl(items: ["", "", "", "", ""])
-            colorsSegment.tintColor = .clearColor()
-            colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
-            var counter = 0
-            colorsSegment.subviews.forEach({ subview in
-                subview.backgroundColor = colors[counter]
-                if currentColor == colors[counter] {
-                    colorsSegment.selectedSegmentIndex = counter
-                }
-                counter++
-            })
-            
-            if colorsSegment.selectedSegmentIndex < 0 {
-                colorsSegment.selectedSegmentIndex = 0
-            }
-            
-            contentViewController.view.addSubview(colorsSegment)
-            
-            settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
-            
-            settingsAlertController.addTextFieldWithConfigurationHandler({ (textField) -> Void in
-                if let text = self._recorded.value.element?.value {
-                    textField.text = text
-                }
-            })
-            
-            _ = Observable
-                .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegment.rx_value, resultSelector: { text, segment in
-                    return (text, segment)
-                })
-                .subscribeNext({ (text, segment) in
-                    self.updatePreviewEventView(eventView, params: (color: colors[segment], value: text))
-                })
-            
-            let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
-                self.saveAction(eventView)
-            }
-            settingsAlertController.addAction(saveAction)
-        } else {
-            settingsAlertController.message = "Delete event?"
-        }
-        let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) -> Void in
-            self.deleteAction()
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
-        settingsAlertController.addAction(deleteAction)
-        settingsAlertController.addAction(cancelAction)
-        // TODO: think and fix
-//        if let parentViewController = self._parentViewController {
-//            parentViewController.presentViewController(settingsAlertController, animated: true) { () -> Void in }
-//        }
-        if let viewControler = UIApplication.sharedApplication().keyWindow?.rootViewController {
-            viewControler.presentViewController(settingsAlertController, animated: true, completion: nil)
-        }
-    }
-    
-    private func saveAction(eventView: EventView) {
-        let index = _timeLine?.sourceEvents.indexOf(self)
-        let time = eventView._recorded.time
-        if index != nil {
-            _timeLine?.sourceEvents.removeAtIndex(index!)
-            removeFromSuperview()
-            _timeLine?.addNextEventToTimeline(time, event: eventView._recorded.value, animator: _animator, isEditing: true)
-            _timeLine?.updateResultTimeline()
-        }
-    }
-    
-    private func deleteAction() {
-        _animator!.removeAllBehaviors()
-        _animator!.addBehavior(_gravity!)
-        _animator!.addBehavior(_removeBehavior!)
-        // TODO: rethink
-//        _removeBehavior?.action = {
-//            if let superView = self._parentViewController.sceneView {
-//                if let index = self._timeLine?._sourceEvents.indexOf(self) {
-//                    if CGRectIntersectsRect(superView.bounds, self.frame) == false {
-//                        self.removeFromSuperview()
-//                        self._timeLine?._sourceEvents.removeAtIndex(index)
-//                        self._timeLine?.updateResultTimeline()
-//                    }
-//                }
-//            }
-//        }
-    }
-    
-    private func updatePreviewEventView(eventView: EventView, params: (color: UIColor, value: String)) {
-        let time = eventView._recorded.time
-        let shape = _recorded.value.element?.shape
-        let event = Event.Next(ColoredType(value: params.value, color: params.color, shape: shape!))
-        
-        eventView._recorded = RecordedType(time: time, event: event)
-        eventView._label.text = params.value
-        eventView.backgroundColor = params.color
+        NSNotificationCenter.defaultCenter().postNotificationName("SetEventView", object: self, userInfo: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

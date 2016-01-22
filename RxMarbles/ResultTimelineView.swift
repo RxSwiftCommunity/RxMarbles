@@ -20,12 +20,12 @@ class ResultTimelineView: TimelineView {
     func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
         let scheduler = TestScheduler(initialClock: 0)
         
-        let events = sourceEvents.first.map({ $0._recorded })
+        let events = sourceEvents.first.map({ $0.recorded })
         let first = scheduler.createColdObservable(events)
         
         var second: TestableObservable<ColoredType>? = nil
         if let s = sourceEvents.second {
-            let secondEvents = s.map({ $0._recorded })
+            let secondEvents = s.map({ $0.recorded })
             second = scheduler.createColdObservable(secondEvents)
         }
         

@@ -13,7 +13,6 @@ class SceneView: UIView {
     var sourceTimeline: SourceTimelineView!
     var secondSourceTimeline: SourceTimelineView!
     var resultTimeline: ResultTimelineView!
-    
     var trashView = UIImageView(image: Image.trash)
     
     required init?(coder aDecoder: NSCoder) {

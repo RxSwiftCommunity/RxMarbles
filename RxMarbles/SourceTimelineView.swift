@@ -46,9 +46,9 @@ class SourceTimelineView: TimelineView {
                 _panEventView = sourceEvents[i]
             }
             if let panEventView = _panEventView {
-                panEventView._animator?.removeBehavior(panEventView.snap!)
-                let shape: EventShape = (panEventView._recorded.value.element?.shape != nil) ? (panEventView._recorded.value.element?.shape)! : .Another
-                self._ghostEventView = EventView(recorded: panEventView._recorded, shape: shape)
+                panEventView.animator?.removeBehavior(panEventView.snap!)
+                let shape: EventShape = (panEventView.recorded.value.element?.shape != nil) ? (panEventView.recorded.value.element?.shape)! : .Another
+                self._ghostEventView = EventView(recorded: panEventView.recorded, shape: shape)
                 if let ghostEventView = self._ghostEventView {
                     ghostEventView.center.y = self.bounds.height / 2
                     self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
@@ -60,13 +60,13 @@ class SourceTimelineView: TimelineView {
             if let panEventView = self._panEventView {
                 let time = Int(location.x)
                 panEventView.center = location
-                panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
+                panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
                 if let ghostEventView = self._ghostEventView {
                     changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                     
-                    ghostEventView._recorded = panEventView._recorded
-                    ghostEventView.center = CGPointMake(CGFloat(ghostEventView._recorded.time), self.bounds.height / 2)
+                    ghostEventView.recorded = panEventView.recorded
+                    ghostEventView.center = CGPointMake(CGFloat(ghostEventView.recorded.time), self.bounds.height / 2)
                 }
                 self.updateResultTimeline()
             }
@@ -81,7 +81,7 @@ class SourceTimelineView: TimelineView {
                 bringStopEventViewsToFront(sourceEvents)
                 
                 let time = Int(r.locationInView(self).x)
-                panEventView._recorded = RecordedType(time: time, event: panEventView._recorded.value)
+                panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
             updateResultTimeline()
@@ -142,7 +142,7 @@ class SourceTimelineView: TimelineView {
         let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
         let alpha: CGFloat = onDeleteZone(recognizer) ? 1.0 : 0.2
         
-        switch ghostEventView._recorded.value {
+        switch ghostEventView.recorded.value {
         case .Next:
             ghostEventView.alpha = alpha
             ghostEventView.backgroundColor = color
@@ -155,7 +155,7 @@ class SourceTimelineView: TimelineView {
     }
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
-        if let animator = panEventView._animator {
+        if let animator = panEventView.animator {
             animator.removeAllBehaviors()
             let time = Int(recognizer.locationInView(self).x)
             
@@ -187,7 +187,7 @@ class SourceTimelineView: TimelineView {
     
     private func bringStopEventViewsToFront(sourceEvents: [EventView]) {
         sourceEvents.forEach({ (eventView) -> () in
-            if eventView._recorded.value.isStopEvent == true {
+            if eventView.recorded.value.isStopEvent == true {
                 eventView.superview!.bringSubviewToFront(eventView)
             }
         })

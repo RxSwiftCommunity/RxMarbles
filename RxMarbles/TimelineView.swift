@@ -40,7 +40,7 @@ class TimelineView: UIView {
         var times = Array<Int>()
         sourceEvents.forEach { (eventView) -> () in
             if eventView.isNext {
-                times.append(eventView._recorded.time)
+                times.append(eventView.recorded.time)
             }
         }
         return times.maxElement()

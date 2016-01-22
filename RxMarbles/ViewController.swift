@@ -30,6 +30,7 @@ typealias RecordedType = Recorded<Event<ColoredType>>
 
 class ViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
+    private var _eventSetupAlertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
     
     var currentOperator = Operator.Delay
     var sceneView: SceneView!
@@ -75,6 +76,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.rightBarButtonItem = editButtonItem()
         setupSceneView()
         _currentActivity = currentOperator.userActivity()
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: "SetEventView", object: nil)
     }
     
     func setupSceneView() {
@@ -201,9 +203,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         timeline.sourceEvents.forEach({ $0.removeFromSuperview() })
         timeline.sourceEvents.removeAll()
         sourceEvents.forEach({ eventView in
-            let time = Int(CGFloat(eventView._recorded.time) * scaleKoef)
+            let time = Int(CGFloat(eventView.recorded.time) * scaleKoef)
             if eventView.isNext {
-                timeline.addNextEventToTimeline(time, event: eventView._recorded.value, animator: sceneView.animator, isEditing: self.editing)
+                timeline.addNextEventToTimeline(time, event: eventView.recorded.value, animator: sceneView.animator, isEditing: self.editing)
             } else if eventView.isCompleted {
                 timeline.addCompletedEventToTimeline(time, animator: sceneView.animator, isEditing: editing)
             } else {
@@ -220,5 +222,97 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let height = view.frame.height
         return width / height
     }
+    
+//    MARK: Alert controller
 
+    func setEventView(notification: NSNotification) {
+        let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
+        if let eventView: EventView = notification.object as? EventView {
+            if eventView.isNext {
+                let contentViewController = UIViewController()
+                contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
+                
+                let shape = eventView.recorded.value.element?.shape
+                let preview = EventView(recorded: eventView.recorded, shape: shape!)
+                preview.center = CGPointMake(100.0, 25.0)
+                contentViewController.view.addSubview(preview)
+                
+                let colors = [RXMUIKit.lightBlueColor(), RXMUIKit.darkYellowColor(), RXMUIKit.lightGreenColor(), RXMUIKit.blueColor(), RXMUIKit.orangeColor()]
+                let currentColor = eventView.recorded.value.element?.color
+                let colorsSegment = UISegmentedControl(items: ["", "", "", "", ""])
+                colorsSegment.tintColor = .clearColor()
+                colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
+                var counter = 0
+                colorsSegment.subviews.forEach({ subview in
+                    subview.backgroundColor = colors[counter]
+                    if currentColor == colors[counter] {
+                        colorsSegment.selectedSegmentIndex = counter
+                    }
+                    counter++
+                })
+                
+                if colorsSegment.selectedSegmentIndex < 0 {
+                    colorsSegment.selectedSegmentIndex = 0
+                }
+                
+                contentViewController.view.addSubview(colorsSegment)
+                
+                settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
+                
+                settingsAlertController.addTextFieldWithConfigurationHandler({ (textField) -> Void in
+                    if let text = eventView.recorded.value.element?.value {
+                        textField.text = text
+                    }
+                })
+                
+                _ = Observable
+                    .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegment.rx_value, resultSelector: { text, segment in
+                        return (text, segment)
+                    })
+                    .subscribeNext({ (text, segment) in
+                        self.updatePreviewEventView(preview, params: (color: colors[segment], value: text))
+                    })
+                
+                let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
+                    self.saveAction(preview, oldEventView: eventView)
+                }
+                settingsAlertController.addAction(saveAction)
+            } else {
+                settingsAlertController.message = "Delete event?"
+            }
+            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) -> Void in
+                self.deleteAction(eventView)
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+            settingsAlertController.addAction(deleteAction)
+            settingsAlertController.addAction(cancelAction)
+            presentViewController(settingsAlertController, animated: true, completion: nil)
+        }
+    }
+    
+    private func saveAction(newEventView: EventView, oldEventView: EventView) {
+        let time = newEventView.recorded.time
+        if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
+            oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
+            oldEventView.removeFromSuperview()
+            oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: newEventView.animator, isEditing: true)
+            oldEventView.timeLine?.updateResultTimeline()
+        }
+    }
+    
+    private func deleteAction(eventView: EventView) {
+        eventView.animator!.removeAllBehaviors()
+        eventView.animator!.addBehavior(eventView.gravity!)
+        eventView.animator!.addBehavior(eventView.removeBehavior!)
+    }
+    
+    private func updatePreviewEventView(preview: EventView, params: (color: UIColor, value: String)) {
+        let time = preview.recorded.time
+        let shape = preview.recorded.value.element?.shape
+        let event = Event.Next(ColoredType(value: params.value, color: params.color, shape: shape!))
+        
+        preview.recorded = RecordedType(time: time, event: event)
+        preview.label.text = params.value
+        preview.backgroundColor = params.color
+    }
 }
