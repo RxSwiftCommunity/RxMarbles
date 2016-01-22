@@ -118,14 +118,6 @@ class EventView: UIView {
         NSNotificationCenter.defaultCenter().postNotificationName("SetEventView", object: self, userInfo: nil)
     }
     
-    func setColorAndAlpha(color: UIColor, alpha: CGFloat) {
-        if !isNext {
-            _imageView.image?.imageWithRenderingMode(.AlwaysTemplate)
-        }
-        _imageView.tintColor = color
-        self.alpha = alpha
-    }
-    
     func setGhostColorByOnDeleteZone(onDeleteZone: Bool) {
         let color: UIColor = onDeleteZone ? .redColor() : .grayColor()
         let alpha: CGFloat = onDeleteZone ? 1.0 : 0.2
@@ -134,6 +126,10 @@ class EventView: UIView {
         }
         _imageView.tintColor = color
         self.alpha = alpha
+    }
+    
+    func setColorOnPreview(color: UIColor) {
+        _imageView.tintColor = color
     }
     
     required init?(coder aDecoder: NSCoder) {

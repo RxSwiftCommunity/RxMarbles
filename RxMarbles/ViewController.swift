@@ -296,6 +296,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         
         preview.recorded = RecordedType(time: time, event: event)
         preview.label.text = params.value
-        preview.backgroundColor = params.color
+        preview.setColorOnPreview(params.color)
     }
 }
