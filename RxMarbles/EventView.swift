@@ -8,14 +8,6 @@
 
 import UIKit
 import RxSwift
-import RxCocoa
-
-enum EventShape {
-    case Circle
-    case RoundedRect
-    case Rhombus
-    case Another
-}
 
 class EventView: UIView {
     var recorded = RecordedType(time: 0, event: .Completed)

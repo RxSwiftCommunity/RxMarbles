@@ -10,21 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-struct ColoredType: Equatable {
-    var value: String
-    var color: UIColor
-    var shape: EventShape
-}
-
-struct Image {
-    static let timeLine = UIImage(named: "timeLine")!
-    static let cross    = UIImage(named: "cross")!
-    static let trash    = UIImage(named: "Trash")!
-}
-
-func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
-    return lhs.value == rhs.value && lhs.color == rhs.color && lhs.shape == rhs.shape
-}
 
 typealias RecordedType = Recorded<Event<ColoredType>>
 
