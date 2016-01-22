@@ -29,11 +29,12 @@
 		0AC266131C3E96C2009E28FD /* TestableObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266061C3E96C2009E28FD /* TestableObservable.swift */; };
 		0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266071C3E96C2009E28FD /* TestableObserver.swift */; };
 		0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */; };
-		0AC266361C412026009E28FD /* RXMUIKit.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266351C412026009E28FD /* RXMUIKit.swift */; };
 		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
 		B56EA8098BC0F10D42724B4F /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */; };
 		D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25E7A4F1C41BD4800B08F70 /* Operator.swift */; };
 		D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */; };
+		D2F561A51C52AAEE0041C9A3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F561A41C52AAEE0041C9A3 /* Color.swift */; };
+		D2F561A71C52AEF30041C9A3 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F561A61C52AEF30041C9A3 /* UIView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -61,11 +62,12 @@
 		0AC266061C3E96C2009E28FD /* TestableObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableObservable.swift; sourceTree = "<group>"; };
 		0AC266071C3E96C2009E28FD /* TestableObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableObserver.swift; sourceTree = "<group>"; };
 		0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorsTableViewController.swift; sourceTree = "<group>"; };
-		0AC266351C412026009E28FD /* RXMUIKit.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RXMUIKit.swift; sourceTree = "<group>"; };
 		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EquatableArray.swift; sourceTree = "<group>"; };
 		0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D25E7A4F1C41BD4800B08F70 /* Operator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
+		D2F561A41C52AAEE0041C9A3 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		D2F561A61C52AEF30041C9A3 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		E53F520ED8D12F16A6CA768B /* Pods-RxMarbles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.release.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.release.xcconfig"; sourceTree = "<group>"; };
 		FC5F3BE6490B02E2D9D720E3 /* Pods-RxMarbles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -126,11 +128,11 @@
 		0AC265911C3D2C24009E28FD /* RxMarbles */ = {
 			isa = PBXGroup;
 			children = (
+				D2F561A31C52AAD90041C9A3 /* UIKit */,
 				0AC265FA1C3E96C2009E28FD /* RxTests */,
 				0AC265921C3D2C24009E28FD /* AppDelegate.swift */,
 				0A4111D51C51113C0067D0E3 /* ViewControllers */,
 				0A4111D61C51114D0067D0E3 /* Views */,
-				0AC266351C412026009E28FD /* RXMUIKit.swift */,
 				D25E7A4F1C41BD4800B08F70 /* Operator.swift */,
 				0AC265991C3D2C24009E28FD /* Assets.xcassets */,
 				0AC2659E1C3D2C24009E28FD /* Info.plist */,
@@ -182,6 +184,15 @@
 				0AC265A41C3D2D1B009E28FD /* SpriteKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D2F561A31C52AAD90041C9A3 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				D2F561A41C52AAEE0041C9A3 /* Color.swift */,
+				D2F561A61C52AEF30041C9A3 /* UIView.swift */,
+			);
+			name = UIKit;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -310,19 +321,20 @@
 			files = (
 				0A4111D21C51103D0067D0E3 /* ResultTimelineView.swift in Sources */,
 				0AC266101C3E96C2009E28FD /* TestScheduler.swift in Sources */,
+				D2F561A51C52AAEE0041C9A3 /* Color.swift in Sources */,
 				0AC2660E1C3E96C2009E28FD /* Recorded.swift in Sources */,
 				0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */,
 				0AC2660A1C3E96C2009E28FD /* ColdObservable.swift in Sources */,
 				0AC265951C3D2C24009E28FD /* ViewController.swift in Sources */,
 				0AC2660B1C3E96C2009E28FD /* Event+Equatable.swift in Sources */,
 				D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */,
-				0AC266361C412026009E28FD /* RXMUIKit.swift in Sources */,
 				0AC266121C3E96C2009E28FD /* Subscription.swift in Sources */,
 				0AC266111C3E96C2009E28FD /* TestSchedulerVirtualTimeConverter.swift in Sources */,
 				0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */,
 				0A4111CC1C510C2F0067D0E3 /* EventView.swift in Sources */,
 				0A4111CE1C510FE80067D0E3 /* TimelineView.swift in Sources */,
 				0A4111D41C5110610067D0E3 /* SceneView.swift in Sources */,
+				D2F561A71C52AEF30041C9A3 /* UIView.swift in Sources */,
 				0A4111D01C5110090067D0E3 /* SourceTimelineView.swift in Sources */,
 				0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */,
 				0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */,

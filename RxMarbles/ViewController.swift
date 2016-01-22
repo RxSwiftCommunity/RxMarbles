@@ -105,7 +105,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         
         for t in 1..<4 {
             let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
-            let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .Circle))
+            let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Circle))
             sourceTimeLine.addNextEventToTimeline(time, event: event, animator: sceneView.animator, isEditing: editing)
         }
         let completedTime = orientation.isPortrait ? 150 : Int(150.0 * scaleKoefficient())
@@ -120,7 +120,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             
             for t in 1..<3 {
                 let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
-                let event = Event.Next(ColoredType(value: String(randomNumber()), color: RXMUIKit.randomColor(), shape: .RoundedRect))
+                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .RoundedRect))
                 secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: sceneView.animator, isEditing: editing)
             }
             let secondCompletedTime = orientation.isPortrait ? 110 : Int(110.0 * scaleKoefficient())
@@ -148,7 +148,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { action in
             let shape: EventShape = (timeline == self.sceneView.sourceTimeline) ? .Circle : .RoundedRect
-            let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: RXMUIKit.randomColor(), shape: shape))
+            let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: Color.nextRandom, shape: shape))
             timeline.addNextEventToTimeline(time, event: event, animator: self.sceneView.animator, isEditing: self.editing)
             timeline.updateResultTimeline()
         }
@@ -237,9 +237,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                 preview.center = CGPointMake(100.0, 25.0)
                 contentViewController.view.addSubview(preview)
                 
-                let colors = [RXMUIKit.lightBlueColor(), RXMUIKit.darkYellowColor(), RXMUIKit.lightGreenColor(), RXMUIKit.blueColor(), RXMUIKit.orangeColor()]
+                let colors = Color.nextAll
                 let currentColor = eventView.recorded.value.element?.color
-                let colorsSegment = UISegmentedControl(items: ["", "", "", "", ""])
+                let colorsSegment = UISegmentedControl(items: colors.map { _ in "" } )
                 colorsSegment.tintColor = .clearColor()
                 colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
                 var counter = 0

@@ -95,7 +95,7 @@ extension Operator {
         case Amb:                  return o.first.amb(o.second!)
         case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: "13", color: .redColor(), shape: .Rhombus) })
         case CatchError:           return o.first.catchError({ error in
-            return Observable.of(ColoredType(value: "1", color: RXMUIKit.blueColor(), shape: .Circle))
+            return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         })
         case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
             let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!, shape: (event.first?.shape)!)
