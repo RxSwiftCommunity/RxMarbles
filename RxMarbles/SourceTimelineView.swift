@@ -58,7 +58,7 @@ class SourceTimelineView: TimelineView {
     override func layoutSubviews() {
         super.layoutSubviews()
         _preLabel.frame = CGRectMake(0, 0, bounds.width, 20)
-        _postLabel.frame = CGRectMake(0, bounds.height - 20, bounds.width, 20)
+        _postLabel.frame = CGRectMake(0, bounds.height - 25, bounds.width, 20)
     }
     
     private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {

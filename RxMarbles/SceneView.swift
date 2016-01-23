@@ -63,21 +63,20 @@ class SceneView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let defaultHeight: CGFloat = 60
+        let defaultHeight: CGFloat = 70
         
         var firstHeight = defaultHeight
         if let firstCode = rxOperator.code.first {
-            firstHeight += additionalHeight(firstCode.pre, post: firstCode.post)
+            firstHeight += additionalHeight(firstCode.pre)
         }
         
         sourceTimeline.frame = CGRectMake(0, 80, bounds.size.width, firstHeight)
-        
         refreshSourceEventsCenters(sourceTimeline)
         
         if secondSourceTimeline != nil {
             var secondHeight = defaultHeight
-            if let secondCode = rxOperator.code.first {
-                secondHeight += additionalHeight(secondCode.pre, post: secondCode.post)
+            if let secondCode = rxOperator.code.last {
+                secondHeight += additionalHeight(secondCode.pre)
             }
             
             secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.size.width, secondHeight)
@@ -87,19 +86,15 @@ class SceneView: UIView {
         } else {
             resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.size.width, defaultHeight)
         }
-        
         trashView.center.x = bounds.size.width / 2.0
         trashView.center.y = bounds.size.height - 50
         
         updateResultTimeline()
     }
     
-    private func additionalHeight(pre: String, post: String) -> CGFloat {
+    private func additionalHeight(pre: String) -> CGFloat {
         var addHeight: CGFloat = 0
         if pre != "" {
-            addHeight += 20
-        }
-        if post != "" {
             addHeight += 20
         }
         return addHeight
