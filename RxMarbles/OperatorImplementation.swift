@@ -117,6 +117,18 @@ extension Operator {
                 ],
                 line2: []
             )
+        case Scan:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(600, "5", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -143,6 +155,10 @@ extension Operator {
             return [
                 (pre: "[", post: ""),
                 (pre: ",", post: "].concat()"),
+            ]
+        case .Scan:
+            return [
+                (pre: "", post: ".scan(0) { $0 + $1 } "),
             ]
         case .Debounce:
             return [
@@ -217,7 +233,7 @@ extension Operator {
         })
         case .Retry:                return o.first.retry(2)
         case Sample:               return o.first.sample(o.second!)
-        case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
+        case .Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
             var res = acc
             guard let a = Int(e.value),
                   let b = Int(res.value) else { throw Error.CantParseStringToInt }
