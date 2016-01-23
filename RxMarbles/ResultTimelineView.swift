@@ -52,8 +52,7 @@ class ResultTimelineView: TimelineView {
         sourceEvents.removeAll()
         
         events.forEach { (event) -> () in
-            let shape: EventShape = (event.value.element?.shape != nil) ? (event.value.element?.shape)! : .None
-            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape)
+            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value))
             eventView.center.x = xPositionByTime(event.time)
             eventView.center.y = bounds.height / 2
             sourceEvents.append(eventView)
