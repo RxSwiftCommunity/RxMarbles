@@ -117,6 +117,19 @@ extension Operator {
                 ],
                 line2: []
             )
+        case .Filter:
+            return InitialValues(
+                line1: [
+                    next(100, "2", Color.nextRandom, .Circle),
+                    next(200, "30", Color.nextRandom, .Circle),
+                    next(300, "22", Color.nextRandom, .Circle),
+                    next(400, "5", Color.nextRandom, .Circle),
+                    next(500, "60", Color.nextRandom, .Circle),
+                    next(600, "1", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         case Scan:
             return InitialValues(
                 line1: [
@@ -177,7 +190,8 @@ extension Operator {
                 (pre: "", post: ".distinctUntilChanged()")
             ]
         case .ElementAt: return [(pre: "", post: ".elementAt(2)")]
-        case .FlatMap: return   [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
+        case .FlatMap:   return [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
+        case .Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
         default: return []
         }
     }
@@ -200,9 +214,9 @@ extension Operator {
         case Delay:                return o.first.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
         case ElementAt:            return o.first.elementAt(2)
-        case Filter:               return o.first.filter {
+        case .Filter:              return o.first.filter {
             guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
-            return a > 5
+            return a > 10
         }
         case FlatMap:              return o.first.flatMap({ event in return o.second! })
         case FlatMapFirst:         return o.first.flatMapFirst({ event in return o.second! })
