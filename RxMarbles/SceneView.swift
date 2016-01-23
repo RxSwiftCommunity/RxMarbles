@@ -61,16 +61,35 @@ class SceneView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         resultTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
         resultTimeline.center.y = center.y
+        
         sourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
         sourceTimeline.center.y = center.y * 0.33
+        refreshSourceEventsCenters(sourceTimeline)
+        
         if secondSourceTimeline != nil {
             secondSourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
             secondSourceTimeline.center.y = center.y * 0.66
+            refreshSourceEventsCenters(secondSourceTimeline)
         }
+        
         trashView.center.x = bounds.size.width / 2.0
         trashView.center.y = bounds.size.height - 50
+        
+        updateResultTimeline()
+    }
+    
+    private func refreshSourceEventsCenters(timeline: SourceTimelineView) {
+        timeline.sourceEvents.forEach {
+            $0.center.x = timeline.xPositionByTime($0.recorded.time)
+            $0.center.y = timeline.bounds.height / 2.0
+            if let snap = $0.snap {
+                snap.snapPoint.x = CGFloat($0.recorded.time) >= 0 ? timeline.xPositionByTime($0.recorded.time) : 0.0
+                snap.snapPoint.y = timeline.center.y
+            }
+        }
     }
     
     func updateResultTimeline() {

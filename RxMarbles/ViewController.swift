@@ -142,39 +142,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         return Int(arc4random_uniform(10) + 1)
     }
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        coordinator.animateAlongsideTransition(
-            { context in
-                self.sceneView.resultTimeline.sourceEvents.forEach({ $0.removeFromSuperview() })
-                self.sceneView.sourceTimeline.sourceEvents.forEach({
-                    $0.center.y = self.sceneView.sourceTimeline.bounds.height / 2.0
-                })
-                if self.currentOperator.multiTimelines {
-                    self.sceneView.secondSourceTimeline.sourceEvents.forEach({
-                        $0.center.y = self.sceneView.secondSourceTimeline.bounds.height / 2.0
-                    })
-                }
-            },
-            completion: { context in
-                self.scaleTimesOnChangeOrientation(self.sceneView.sourceTimeline)
-                if self.currentOperator.multiTimelines {
-                    self.scaleTimesOnChangeOrientation(self.sceneView.secondSourceTimeline)
-                }
-            }
-        )
-    }
-    
-    private func scaleTimesOnChangeOrientation(timeline: SourceTimelineView) {
-        timeline.sourceEvents.forEach({ eventView in
-            UIView.animateWithDuration(0.3, animations: {
-                eventView.center.x = timeline.xPositionByTime(eventView.recorded.time)
-                eventView.center.y = timeline.bounds.height / 2.0
-            })
-        })
-        timeline.allEventViewsAnimation()
-        sceneView.updateResultTimeline()
-    }
-    
 //    MARK: Alert controller
 
     func setEventView(notification: NSNotification) {

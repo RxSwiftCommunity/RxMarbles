@@ -14,6 +14,10 @@ class TimelineView: UIView {
     var _addButton: UIButton?
     private var _parentViewController: ViewController!
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(_timeArrow)
@@ -29,10 +33,6 @@ class TimelineView: UIView {
             let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
             _timeArrow.frame = newTimeArrowFrame
         }
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     func maxNextTime() -> Int? {
