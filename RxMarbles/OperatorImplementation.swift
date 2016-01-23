@@ -95,6 +95,17 @@ extension Operator {
                 ],
                 line2: []
             )
+        case .Retry:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    error(400),
+                    completed(900)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -125,6 +136,10 @@ extension Operator {
         case .Delay:
             return [
                 (pre: "", post: ".delaySubscription(150, scheduler: scheduler)"),
+            ]
+        case .Retry:
+            return [
+                (pre: "", post: ".retry(2)"),
             ]
         case .DistinctUntilChanged:
             return [
@@ -185,7 +200,7 @@ extension Operator {
                 res.shape = e.shape
                 return res
         })
-        case Retry:                return o.first.retry(2)
+        case .Retry:                return o.first.retry(2)
         case Sample:               return o.first.sample(o.second!)
         case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
             var res = acc
