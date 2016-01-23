@@ -26,7 +26,7 @@ extension Operator {
                     next(400, "40", Color.nextRandom, .Circle),
                     next(500, "50", Color.nextRandom, .Circle),
                     next(600, "60", Color.nextRandom, .Circle),
-                    next(700, "60", Color.nextRandom, .Circle),
+                    next(700, "70", Color.nextRandom, .Circle),
                     completed(900)
                 ],
                 line2: [
@@ -36,7 +36,7 @@ extension Operator {
                     next(450, "4", Color.nextRandom, .Star),
                     next(550, "5", Color.nextRandom, .Star),
                     next(650, "6", Color.nextRandom, .Star),
-                    next(750, "6", Color.nextRandom, .Star),
+                    next(750, "7", Color.nextRandom, .Star),
                     completed(900)
                 ]
             )
@@ -67,6 +67,19 @@ extension Operator {
                     next(400, "", Color.nextRandom, .Circle),
                     next(500, "", Color.nextRandom, .Circle),
                     completed(700)
+                ],
+                line2: []
+            )
+        case .Debounce:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(450, "3", Color.nextRandom, .Circle),
+                    next(500, "4", Color.nextRandom, .Circle),
+                    next(550, "5", Color.nextRandom, .Circle),
+                    next(700, "6", Color.nextRandom, .Circle),
+                    completed(900)
                 ],
                 line2: []
             )
