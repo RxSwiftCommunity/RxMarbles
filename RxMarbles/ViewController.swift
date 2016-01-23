@@ -22,6 +22,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        sceneView.editing = editing
         navigationItem.setHidesBackButton(editing, animated: animated)
         if animated {
             UIView.animateWithDuration(0.3) { _ in
@@ -71,46 +72,21 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     func setupSceneView() {
         sceneView?.removeFromSuperview()
-        let orientation = UIApplication.sharedApplication().statusBarOrientation
         sceneView = SceneView()
+        sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
         sceneView.animator = UIDynamicAnimator(referenceView: sceneView)
+        sceneView.editing = editing
         view.addSubview(sceneView)
         
         let width = sceneView.frame.width
-        let resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, width, 40), currentOperator: currentOperator)
-        resultTimeline.center.y = sceneView.center.y
-        sceneView.addSubview(resultTimeline)
-        sceneView.resultTimeline = resultTimeline
-        
-        let sourceTimeLine = SourceTimelineView(frame: CGRectMake(0, 0, width, 40), scene: sceneView)
-        sourceTimeLine.center.y = sceneView.center.y * 0.33
-        sceneView.addSubview(sourceTimeLine)
-        sceneView.sourceTimeline = sourceTimeLine
-        
-        for t in 1..<4 {
-            let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
-            let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Circle))
-            sourceTimeLine.addNextEventToTimeline(time, event: event, animator: sceneView.animator, isEditing: editing)
-        }
-        let completedTime = orientation.isPortrait ? 150 : Int(150.0 * scaleKoefficient())
-        sourceTimeLine.addCompletedEventToTimeline(completedTime, animator: sceneView.animator, isEditing: editing)
+        sceneView.resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, width, 40), currentOperator: currentOperator)
+        sceneView.sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, width, 40), scene: sceneView)
         
         if currentOperator.multiTimelines {
-            let secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, width, 40), scene: sceneView)
-            secondSourceTimeline.center.y = sceneView.center.y * 0.66
-            sceneView.addSubview(secondSourceTimeline)
-            sceneView.secondSourceTimeline = secondSourceTimeline
-            
-            for t in 1..<3 {
-                let time = orientation.isPortrait ? t * 40 : Int(CGFloat(t) * 40.0 * scaleKoefficient())
-                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Rect))
-                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: sceneView.animator, isEditing: editing)
-            }
-            let secondCompletedTime = orientation.isPortrait ? 110 : Int(110.0 * scaleKoefficient())
-            secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: sceneView.animator, isEditing: editing)
+            sceneView.secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, width, 40), scene: sceneView)
         }
         
-        sourceTimeLine.updateResultTimeline()
+        sceneView.updateResultTimeline()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -133,7 +109,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             let shape: EventShape = (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect
             let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: Color.nextRandom, shape: shape))
             timeline.addNextEventToTimeline(time, event: event, animator: self.sceneView.animator, isEditing: self.editing)
-            timeline.updateResultTimeline()
+            self.sceneView.updateResultTimeline()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
             if let t = timeline.maxNextTime() {
@@ -142,11 +118,11 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                 time = Int(self.sceneView.sourceTimeline.bounds.size.width - 60.0)
             }
             timeline.addCompletedEventToTimeline(time, animator: self.sceneView.animator, isEditing: self.editing)
-            timeline.updateResultTimeline()
+            self.sceneView.updateResultTimeline()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
             timeline.addErrorEventToTimeline(time, animator: self.sceneView.animator, isEditing: self.editing)
-            timeline.updateResultTimeline()
+            self.sceneView.updateResultTimeline()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
         
@@ -197,7 +173,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         })
         sourceEvents.removeAll()
         timeline.allEventViewsAnimation()
-        timeline.updateResultTimeline()
+        sceneView.updateResultTimeline()
     }
     
     private func scaleKoefficient() -> CGFloat {
@@ -278,8 +254,8 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
             oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: sceneView.animator, isEditing: true)
-            oldEventView.timeLine?.updateResultTimeline()
             oldEventView.removeFromSuperview()
+            sceneView.updateResultTimeline()
         }
     }
     
@@ -296,6 +272,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         
         preview.recorded = RecordedType(time: time, event: event)
         preview.label.text = params.value
-        preview.backgroundColor = params.color
+        preview.setColorOnPreview(params.color)
     }
 }

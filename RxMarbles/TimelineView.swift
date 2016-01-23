@@ -44,4 +44,16 @@ class TimelineView: UIView {
         }
         return times.maxElement()
     }
+    
+    func xPositionByTime(time: Int) -> CGFloat {
+        let maxTime: CGFloat = 1000.0
+        let width = bounds.size.width
+        return (width / maxTime) * CGFloat(time)
+    }
+    
+    func timeByXPosition(x: CGFloat) -> Int {
+        let maxTime: CGFloat = 1000.0
+        let width = bounds.size.width
+        return Int((maxTime / width) * x)
+    }
 }

@@ -7,13 +7,48 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class SceneView: UIView {
     var animator: UIDynamicAnimator?
-    var sourceTimeline: SourceTimelineView!
-    var secondSourceTimeline: SourceTimelineView!
-    var resultTimeline: ResultTimelineView!
+    var sourceTimeline: SourceTimelineView! {
+        didSet {
+            sourceTimeline.center.y = center.y * 0.33
+            addSubview(sourceTimeline)
+            
+            for t in 1..<4 {
+                let time = t * 40
+                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Circle))
+                sourceTimeline.addNextEventToTimeline(time, event: event, animator: animator, isEditing: editing)
+            }
+            let completedTime = 150
+            sourceTimeline.addCompletedEventToTimeline(completedTime, animator: animator, isEditing: editing)
+        }
+    }
+    var secondSourceTimeline: SourceTimelineView! {
+        didSet {
+            secondSourceTimeline.center.y = center.y * 0.66
+            addSubview(secondSourceTimeline)
+            
+            for t in 1..<3 {
+                let time = t * 40
+                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Rect))
+                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: animator, isEditing: editing)
+            }
+            let secondCompletedTime = 110
+            secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: animator, isEditing: editing)
+        }
+    }
+    var resultTimeline: ResultTimelineView! {
+        didSet {
+            resultTimeline.center.y = center.y
+            addSubview(resultTimeline)
+        }
+    }
     var trashView = UIImageView(image: Image.trash)
+    var currentOperator: Operator!
+    var editing: Bool!
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -38,6 +73,14 @@ class SceneView: UIView {
         trashView.center.y = bounds.size.height - 50
     }
     
+    func updateResultTimeline() {
+        if let secondSourceTimeline = secondSourceTimeline {
+            resultTimeline.updateEvents((sourceTimeline.sourceEvents, secondSourceTimeline.sourceEvents))
+        } else {
+            resultTimeline.updateEvents((sourceTimeline.sourceEvents, nil))
+        }
+    }
+    
     func showTrashView() {
         addSubview(trashView)
         trashView.hidden = false
@@ -52,6 +95,10 @@ class SceneView: UIView {
     
     func hideTrashView() {
         trashView.hideWithCompletion({ _ in self.trashView.removeFromSuperview() })
+    }
+    
+    private func randomNumber() -> Int {
+        return Int(arc4random_uniform(10) + 1)
     }
     
 }

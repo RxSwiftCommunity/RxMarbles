@@ -35,8 +35,8 @@ class EventView: UIView {
                 label.text = value
                 label.sizeToFit()
             }
-            
-            
+
+
             _imageView.image = shape.image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             _imageView.frame = CGRectMake(0, 0, 16, 16)
             _imageView.tintColor = v.color
@@ -50,6 +50,8 @@ class EventView: UIView {
             _imageView.image = Image.error
         }
         
+        center = CGPointMake(CGFloat(recorded.time), bounds.height)
+        
         gravity = UIGravityBehavior(items: [self])
         removeBehavior = UIDynamicItemBehavior(items: [self])
         removeBehavior?.action = {
@@ -59,7 +61,7 @@ class EventView: UIView {
                     if CGRectIntersectsRect(viewController.view.bounds, self.frame) == false {
                         self.removeFromSuperview()
                         timeline?.sourceEvents.removeAtIndex(index)
-                        timeline!.updateResultTimeline()
+                        timeline!.sceneView.updateResultTimeline()
                     }
                 }
             }
@@ -114,6 +116,20 @@ class EventView: UIView {
     
     func setEventView() {
         NSNotificationCenter.defaultCenter().postNotificationName("SetEventView", object: self, userInfo: nil)
+    }
+    
+    func setGhostColorByOnDeleteZone(onDeleteZone: Bool) {
+        let color: UIColor = onDeleteZone ? .redColor() : .grayColor()
+        let alpha: CGFloat = onDeleteZone ? 1.0 : 0.2
+        if recorded.value.isStopEvent {
+            _imageView.image = isCompleted ? Image.complete.imageWithRenderingMode(.AlwaysTemplate) : Image.error.imageWithRenderingMode(.AlwaysTemplate)
+        }
+        _imageView.tintColor = color
+        self.alpha = alpha
+    }
+    
+    func setColorOnPreview(color: UIColor) {
+        _imageView.tintColor = color
     }
     
     required init?(coder aDecoder: NSCoder) {

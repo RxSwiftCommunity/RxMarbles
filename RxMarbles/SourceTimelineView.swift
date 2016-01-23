@@ -58,8 +58,8 @@ class SourceTimelineView: TimelineView {
             }
         case .Changed:
             if let panEventView = self._panEventView {
-                let time = Int(location.x)
-                panEventView.center = location
+                let time = Int(location.x) >= 0 ? Int(location.x) : 0
+                panEventView.center = CGPointMake(location.x >= 0 ? location.x : 0.0, location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
                 if let ghostEventView = self._ghostEventView {
@@ -68,7 +68,7 @@ class SourceTimelineView: TimelineView {
                     ghostEventView.recorded = panEventView.recorded
                     ghostEventView.center = CGPointMake(CGFloat(ghostEventView.recorded.time), self.bounds.height / 2)
                 }
-                self.updateResultTimeline()
+                sceneView.updateResultTimeline()
             }
         case .Ended:
             _ghostEventView?.removeFromSuperview()
@@ -84,17 +84,9 @@ class SourceTimelineView: TimelineView {
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
-            updateResultTimeline()
+            sceneView.updateResultTimeline()
             sceneView.hideTrashView()
         default: break
-        }
-    }
-    
-    func updateResultTimeline() {
-        if let secondSourceTimeline = sceneView.secondSourceTimeline {
-            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline.sourceEvents, secondSourceTimeline.sourceEvents))
-        } else {
-            sceneView.resultTimeline.updateEvents((sceneView.sourceTimeline.sourceEvents, nil))
         }
     }
     
@@ -139,19 +131,7 @@ class SourceTimelineView: TimelineView {
             sceneView.trashView.alpha = 0.2
         }
         
-        let color: UIColor = onDeleteZone(recognizer) ? .redColor() : .grayColor()
-        let alpha: CGFloat = onDeleteZone(recognizer) ? 1.0 : 0.2
-        
-        switch ghostEventView.recorded.value {
-        case .Next:
-            ghostEventView.alpha = alpha
-            ghostEventView.backgroundColor = color
-        case .Completed, .Error:
-            ghostEventView.subviews.forEach({ (subView) -> () in
-                subView.alpha = alpha
-                subView.backgroundColor = color
-            })
-        }
+        ghostEventView.setGhostColorByOnDeleteZone(onDeleteZone(recognizer))
     }
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
@@ -163,12 +143,12 @@ class SourceTimelineView: TimelineView {
                 panEventView.hideWithCompletion({ _ in
                     if let index = self.sourceEvents.indexOf(panEventView) {
                         self.sourceEvents.removeAtIndex(index)
-                        self.updateResultTimeline()
+                        self.sceneView.updateResultTimeline()
                     }
                 })
             } else {
                 let snap = panEventView.snap
-                snap!.snapPoint.x = CGFloat(time)
+                snap!.snapPoint.x = CGFloat(time) >= 0 ? CGFloat(time) : 0.0
                 snap!.snapPoint.y = center.y
                 animator.addBehavior(snap!)
             }
