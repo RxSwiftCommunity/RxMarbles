@@ -19,8 +19,8 @@ class EventView: UIView {
     var gravity: UIGravityBehavior? = nil
     var removeBehavior: UIDynamicItemBehavior? = nil
     
-    private var _tapGestureRecognizer: UITapGestureRecognizer!
-    private var _imageView = UIImageView()
+    private let _tapGestureRecognizer = UITapGestureRecognizer()
+    private let _imageView = UIImageView()
     
     var label = UILabel()
     
@@ -73,7 +73,7 @@ class EventView: UIView {
             }
         }
         self.recorded = recorded
-        _tapGestureRecognizer = UITapGestureRecognizer(target: self, action: "setEventView")
+        _tapGestureRecognizer.addTarget(self, action: "setEventView")
     }
     
     override func layoutSubviews() {
@@ -114,11 +114,11 @@ class EventView: UIView {
     }
     
     func addTapRecognizer() {
-        addGestureRecognizer(_tapGestureRecognizer!)
+        addGestureRecognizer(_tapGestureRecognizer)
     }
     
     func removeTapRecognizer() {
-        removeGestureRecognizer(_tapGestureRecognizer!)
+        removeGestureRecognizer(_tapGestureRecognizer)
     }
     
     func setEventView() {
