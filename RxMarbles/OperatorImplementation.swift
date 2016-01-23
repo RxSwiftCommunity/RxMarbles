@@ -40,6 +40,24 @@ extension Operator {
                     completed(900)
                 ]
             )
+        case .CombineLatest:
+            return InitialValues(
+                line1: [
+                    next( 80, "1", Color.nextRandom, .Circle),
+                    next(300, "2", Color.nextRandom, .Circle),
+                    next(500, "3", Color.nextRandom, .Circle),
+                    next(650, "4", Color.nextRandom, .Circle),
+                    next(800, "5", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(200, "a", Color.nextRandom, .Rect),
+                    next(400, "b", Color.nextRandom, .Rect),
+                    next(550, "c", Color.nextRandom, .Rect),
+                    next(750, "d", Color.nextRandom, .Rect),
+                    completed(900)
+                ]
+            )
         default:
             return InitialValues(
                 line1: [],
