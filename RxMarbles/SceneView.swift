@@ -134,9 +134,4 @@ class SceneView: UIView {
     func hideTrashView() {
         trashView.hideWithCompletion({ _ in self.trashView.removeFromSuperview() })
     }
-    
-    private func randomNumber() -> Int {
-        return Int(arc4random_uniform(10) + 1)
-    }
-    
 }

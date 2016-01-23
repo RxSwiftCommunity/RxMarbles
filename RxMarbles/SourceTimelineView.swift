@@ -13,10 +13,13 @@ import RxCocoa
 class SourceTimelineView: TimelineView {
     
     private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
+    
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
+    
     private var _preLabel = UILabel()
     private var _postLabel = UILabel()
+    
     var labelsText: (pre: String, post: String)? {
         didSet {
             if labelsText!.pre != "" {
@@ -52,7 +55,9 @@ class SourceTimelineView: TimelineView {
         _postLabel.textColor = .blackColor()
         _ = _longPressGestureRecorgnizer
             .rx_event
-            .subscribeNext { [unowned self] r in self._handleLongPressGestureRecognizer(r) }
+            .subscribeNext {
+                [unowned self] r in self._handleLongPressGestureRecognizer(r)
+        }
     }
     
     override func layoutSubviews() {
@@ -81,12 +86,12 @@ class SourceTimelineView: TimelineView {
                 }
             }
         case .Changed:
-            if let panEventView = self._panEventView {
+            if let panEventView = _panEventView {
                 let time = Int(location.x) >= 0 ? timeByXPosition(location.x) : 0
                 panEventView.center = CGPointMake(location.x >= 0 ? location.x : 0.0, location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
-                if let ghostEventView = self._ghostEventView {
+                if let ghostEventView = _ghostEventView {
                     changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                     
                     ghostEventView.recorded = panEventView.recorded
