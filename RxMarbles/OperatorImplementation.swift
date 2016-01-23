@@ -142,6 +142,17 @@ extension Operator {
                 ],
                 line2: []
             )
+        case .Skip:
+            return InitialValues(
+                line1: [
+                    next(300, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(600, "3", Color.nextRandom, .Circle),
+                    next(700, "4", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -192,6 +203,7 @@ extension Operator {
         case .ElementAt: return [(pre: "", post: ".elementAt(2)")]
         case .FlatMap:   return [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
         case .Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
+        case .Skip:      return [(pre: "", post: ".skip(2)")]
         default: return []
         }
     }
@@ -246,7 +258,7 @@ extension Operator {
                 return res
         })
         case .Retry:                return o.first.retry(2)
-        case Sample:               return o.first.sample(o.second!)
+        case .Sample:               return o.first.sample(o.second!)
         case .Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
             var res = acc
             guard let a = Int(e.value),
@@ -256,7 +268,7 @@ extension Operator {
             res.shape = e.shape
             return res
         })
-        case Skip:                 return o.first.skip(2)
+        case .Skip:                 return o.first.skip(2)
         case StartWith:            return o.first.startWith(ColoredType(value: "2", color: .redColor(), shape: .Circle))
         case Take:                 return o.first.take(2)
         case TakeLast:             return o.first.takeLast(2)
