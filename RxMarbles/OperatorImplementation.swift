@@ -17,6 +17,20 @@ struct InitialValues {
 extension Operator {
     var initial: InitialValues {
         switch self {
+        case .ElementAt:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Circle),
+                    next(700, "7", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         case .Amb:
             return InitialValues(
                 line1: [
@@ -188,8 +202,26 @@ extension Operator {
             )
         default:
             return InitialValues(
-                line1: [],
-                line2: []
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Circle),
+                    next(700, "7", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(100, "1", Color.nextRandom, .Rect),
+                    next(200, "2", Color.nextRandom, .Rect),
+                    next(300, "3", Color.nextRandom, .Rect),
+                    next(400, "4", Color.nextRandom, .Rect),
+                    next(500, "5", Color.nextRandom, .Rect),
+                    next(600, "6", Color.nextRandom, .Rect),
+                    next(700, "7", Color.nextRandom, .Rect),
+                    completed(900)
+                ]
             )
         }
     }
@@ -260,7 +292,7 @@ extension Operator {
         case Debounce:             return o.first.debounce(100, scheduler: scheduler)
         case Delay:                return o.first.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
-        case ElementAt:            return o.first.elementAt(2)
+        case .ElementAt:           return o.first.elementAt(2)
         case .Filter:              return o.first.filter {
             guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
             return a > 10
