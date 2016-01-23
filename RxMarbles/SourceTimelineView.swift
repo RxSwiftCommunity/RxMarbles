@@ -77,12 +77,12 @@ class SourceTimelineView: TimelineView {
             if let panEventView = _panEventView {
                 panEventView.animator?.removeBehavior(panEventView.snap!)
                 self._ghostEventView = EventView(recorded: panEventView.recorded)
-                if let ghostEventView = self._ghostEventView {
+                if let ghostEventView = _ghostEventView {
                     ghostEventView.center.x = xPositionByTime(ghostEventView.recorded.time)
                     ghostEventView.center.y = self.bounds.height / 2
-                    self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
-                    self.addSubview(ghostEventView)
-                    self.sceneView.showTrashView()
+                    changeGhostColorAndAlpha(ghostEventView, recognizer: r)
+                    addSubview(ghostEventView)
+                    sceneView.showTrashView()
                 }
             }
         case .Changed:
