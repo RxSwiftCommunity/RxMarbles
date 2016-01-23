@@ -146,6 +146,14 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         coordinator.animateAlongsideTransition(
             { context in
                 self.sceneView.resultTimeline.sourceEvents.forEach({ $0.removeFromSuperview() })
+                self.sceneView.sourceTimeline.sourceEvents.forEach({
+                    $0.center.y = self.sceneView.sourceTimeline.bounds.height / 2.0
+                })
+                if self.currentOperator.multiTimelines {
+                    self.sceneView.secondSourceTimeline.sourceEvents.forEach({
+                        $0.center.y = self.sceneView.secondSourceTimeline.bounds.height / 2.0
+                    })
+                }
             },
             completion: { context in
                 self.scaleTimesOnChangeOrientation(self.sceneView.sourceTimeline)
@@ -157,29 +165,14 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     }
     
     private func scaleTimesOnChangeOrientation(timeline: SourceTimelineView) {
-        let scaleKoef = scaleKoefficient()
-        var sourceEvents = timeline.sourceEvents
-        timeline.sourceEvents.forEach({ $0.removeFromSuperview() })
-        timeline.sourceEvents.removeAll()
-        sourceEvents.forEach({ eventView in
-            let time = Int(CGFloat(eventView.recorded.time) * scaleKoef)
-            if eventView.isNext {
-                timeline.addNextEventToTimeline(time, event: eventView.recorded.value, animator: sceneView.animator, isEditing: self.editing)
-            } else if eventView.isCompleted {
-                timeline.addCompletedEventToTimeline(time, animator: sceneView.animator, isEditing: editing)
-            } else {
-                timeline.addErrorEventToTimeline(time, animator: sceneView.animator, isEditing: editing)
-            }
+        timeline.sourceEvents.forEach({ eventView in
+            UIView.animateWithDuration(0.3, animations: {
+                eventView.center.x = timeline.xPositionByTime(eventView.recorded.time)
+                eventView.center.y = timeline.bounds.height / 2.0
+            })
         })
-        sourceEvents.removeAll()
         timeline.allEventViewsAnimation()
         sceneView.updateResultTimeline()
-    }
-    
-    private func scaleKoefficient() -> CGFloat {
-        let width = view.frame.width
-        let height = view.frame.height
-        return width / height
     }
     
 //    MARK: Alert controller

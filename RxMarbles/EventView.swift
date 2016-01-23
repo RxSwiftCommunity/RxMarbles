@@ -50,8 +50,6 @@ class EventView: UIView {
             _imageView.image = Image.error
         }
         
-        center = CGPointMake(CGFloat(recorded.time), bounds.height)
-        
         gravity = UIGravityBehavior(items: [self])
         removeBehavior = UIDynamicItemBehavior(items: [self])
         removeBehavior?.action = {
@@ -83,7 +81,8 @@ class EventView: UIView {
         self.animator = animator
         self.timeLine = timeLine
         if let timeLine = timeLine {
-            center.y = timeLine.bounds.height / 2.0
+            let x = timeLine.xPositionByTime(recorded.time)
+            center = CGPointMake(x, timeLine.bounds.height / 2.0)
         }
         
         snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(recorded.time), center.y))

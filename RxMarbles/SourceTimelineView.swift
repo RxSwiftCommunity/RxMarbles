@@ -50,6 +50,7 @@ class SourceTimelineView: TimelineView {
                 let shape: EventShape = (panEventView.recorded.value.element?.shape != nil) ? (panEventView.recorded.value.element?.shape)! : .None
                 self._ghostEventView = EventView(recorded: panEventView.recorded, shape: shape)
                 if let ghostEventView = self._ghostEventView {
+                    ghostEventView.center.x = xPositionByTime(ghostEventView.recorded.time)
                     ghostEventView.center.y = self.bounds.height / 2
                     self.changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                     self.addSubview(ghostEventView)
@@ -58,7 +59,7 @@ class SourceTimelineView: TimelineView {
             }
         case .Changed:
             if let panEventView = self._panEventView {
-                let time = Int(location.x) >= 0 ? Int(location.x) : 0
+                let time = Int(location.x) >= 0 ? timeByXPosition(location.x) : 0
                 panEventView.center = CGPointMake(location.x >= 0 ? location.x : 0.0, location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
@@ -66,7 +67,7 @@ class SourceTimelineView: TimelineView {
                     changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                     
                     ghostEventView.recorded = panEventView.recorded
-                    ghostEventView.center = CGPointMake(CGFloat(ghostEventView.recorded.time), self.bounds.height / 2)
+                    ghostEventView.center = CGPointMake(xPositionByTime(ghostEventView.recorded.time), self.bounds.height / 2)
                 }
                 sceneView.updateResultTimeline()
             }
@@ -80,7 +81,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.superview?.bringSubviewToFront(panEventView)
                 bringStopEventViewsToFront(sourceEvents)
                 
-                let time = Int(r.locationInView(self).x)
+                let time = timeByXPosition(r.locationInView(self).x)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
