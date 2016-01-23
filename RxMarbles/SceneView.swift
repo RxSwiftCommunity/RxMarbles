@@ -67,15 +67,15 @@ class SceneView: UIView {
         super.layoutSubviews()
         
         resultTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
-        resultTimeline.center.y = center.y
+        resultTimeline.center.y = 300
         
         sourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 80)
-        sourceTimeline.center.y = center.y * 0.4
+        sourceTimeline.center.y = 140
         refreshSourceEventsCenters(sourceTimeline)
         
         if secondSourceTimeline != nil {
             secondSourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 80)
-            secondSourceTimeline.center.y = center.y * 0.7
+            secondSourceTimeline.center.y = 220
             refreshSourceEventsCenters(secondSourceTimeline)
         }
         
