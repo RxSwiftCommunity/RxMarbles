@@ -10,24 +10,8 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-
-typealias RecordedType = Recorded<Event<ColoredType>>
-
-func next(time: Int, _ value: String, _ color: UIColor, _ shape: EventShape) -> RecordedType {
-    return RecordedType(time: time, event: .Next(ColoredType(value: value, color: color, shape: shape)))
-}
-
-func completed(time: Int) -> RecordedType {
-    return RecordedType(time: time, event: .Completed)
-}
-
-func error(time: Int) -> RecordedType {
-    return RecordedType(time: time, event: .Error(Error.CantParseStringToInt))
-}
-
 class ViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
-    private var _eventSetupAlertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
     
     var currentOperator = Operator.Delay
     var sceneView: SceneView!

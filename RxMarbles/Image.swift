@@ -17,6 +17,7 @@ struct Image {
     static let nextTriangle = UIImage(named: "nextTriangle")!.template()
     static let nextRect     = UIImage(named: "nextRect")!.template()
     static let nextStar     = UIImage(named: "nextStar")!.template()
+    
     static let complete     = UIImage(named: "complete")!.template()
     static let error        = UIImage(named: "error")!.template()
 }
