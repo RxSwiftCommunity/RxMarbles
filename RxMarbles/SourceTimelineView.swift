@@ -111,28 +111,8 @@ class SourceTimelineView: TimelineView {
         }
     }
     
-    func addNextEventToTimeline(time: Int, event: Event<ColoredType>, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: event))
-        if isEditing {
-            v.addTapRecognizer()
-        }
-        addSubview(v)
-        v.use(animator, timeLine: self)
-        sourceEvents.append(v)
-    }
-    
-    func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Completed))
-        if isEditing {
-            v.addTapRecognizer()
-        }
-        addSubview(v)
-        v.use(animator, timeLine: self)
-        sourceEvents.append(v)
-    }
-    
-    func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)))
+    func addEventToTimeline(recorded: RecordedType, animator: UIDynamicAnimator!, isEditing: Bool) {
+        let v = EventView(recorded: recorded)
         if isEditing {
             v.addTapRecognizer()
         }

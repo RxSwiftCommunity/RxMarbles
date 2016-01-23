@@ -17,6 +17,29 @@ struct InitialValues {
 extension Operator {
     var initial: InitialValues {
         switch self {
+        case .Amb:
+            return InitialValues(
+                line1: [
+                    next(100, "10", Color.nextRandom, .Circle),
+                    next(200, "20", Color.nextRandom, .Circle),
+                    next(300, "30", Color.nextRandom, .Circle),
+                    next(400, "40", Color.nextRandom, .Circle),
+                    next(500, "50", Color.nextRandom, .Circle),
+                    next(600, "60", Color.nextRandom, .Circle),
+                    next(700, "60", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(150, "1", Color.nextRandom, .Star),
+                    next(250, "2", Color.nextRandom, .Star),
+                    next(350, "3", Color.nextRandom, .Star),
+                    next(450, "4", Color.nextRandom, .Star),
+                    next(550, "5", Color.nextRandom, .Star),
+                    next(650, "6", Color.nextRandom, .Star),
+                    next(750, "6", Color.nextRandom, .Star),
+                    completed(900)
+                ]
+            )
         default:
             return InitialValues(
                 line1: [],

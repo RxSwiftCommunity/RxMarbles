@@ -84,8 +84,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     func setupSceneView() {
         sceneView?.removeFromSuperview()
-        sceneView = SceneView()
-        sceneView.currentOperator = currentOperator
+        sceneView = SceneView(rxOperator: currentOperator)
         sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
         sceneView.animator = UIDynamicAnimator(referenceView: sceneView)
         sceneView.editing = editing
@@ -119,9 +118,8 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { action in
-            let shape: EventShape = (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect
-            let event = Event.Next(ColoredType(value: String(self.randomNumber()), color: Color.nextRandom, shape: shape))
-            timeline.addNextEventToTimeline(time, event: event, animator: self.sceneView.animator, isEditing: self.editing)
+            let e = next(time, String(random() % 10), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
+            timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
             self.sceneView.updateResultTimeline()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
@@ -130,11 +128,13 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             } else {
                 time = Int(self.sceneView.sourceTimeline.bounds.size.width - 60.0)
             }
-            timeline.addCompletedEventToTimeline(time, animator: self.sceneView.animator, isEditing: self.editing)
+            let e = completed(time)
+            timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
             self.sceneView.updateResultTimeline()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
-            timeline.addErrorEventToTimeline(time, animator: self.sceneView.animator, isEditing: self.editing)
+            let e = error(time)
+            timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
             self.sceneView.updateResultTimeline()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
@@ -222,10 +222,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     }
     
     private func saveAction(newEventView: EventView, oldEventView: EventView) {
-        let time = newEventView.recorded.time
         if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.timeLine?.addNextEventToTimeline(time, event: newEventView.recorded.value, animator: sceneView.animator, isEditing: true)
+            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: sceneView.animator, isEditing: true)
             oldEventView.removeFromSuperview()
             sceneView.updateResultTimeline()
         }

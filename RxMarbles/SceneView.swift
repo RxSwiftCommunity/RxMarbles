@@ -17,17 +17,14 @@ class SceneView: UIView {
             sourceTimeline.center.y = center.y * 0.33
             addSubview(sourceTimeline)
             
-            if currentOperator.code.first != nil {
-                sourceTimeline.labelsText = currentOperator.code.first
+            if rxOperator.code.first != nil {
+                sourceTimeline.labelsText = rxOperator.code.first
             }
             
-            for t in 1..<4 {
-                let time = t * 100
-                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Circle))
-                sourceTimeline.addNextEventToTimeline(time, event: event, animator: animator, isEditing: editing)
+            let initial = rxOperator.initial
+            for t in initial.line1 {
+               sourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
             }
-            let completedTime = 700
-            sourceTimeline.addCompletedEventToTimeline(completedTime, animator: animator, isEditing: editing)
         }
     }
     var secondSourceTimeline: SourceTimelineView! {
@@ -35,17 +32,15 @@ class SceneView: UIView {
             secondSourceTimeline.center.y = center.y * 0.66
             addSubview(secondSourceTimeline)
             
-            if currentOperator.code.last != nil {
-                secondSourceTimeline.labelsText = currentOperator.code.last
+            if rxOperator.code.last != nil {
+                secondSourceTimeline.labelsText = rxOperator.code.last
             }
             
-            for t in 1..<3 {
-                let time = t * 100
-                let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Rect))
-                secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: animator, isEditing: editing)
+           
+            let initial = rxOperator.initial
+            for t in initial.line2 {
+               secondSourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
             }
-            let secondCompletedTime = 500
-            secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: animator, isEditing: editing)
         }
     }
     var resultTimeline: ResultTimelineView! {
@@ -55,14 +50,15 @@ class SceneView: UIView {
         }
     }
     var trashView = UIImageView(image: Image.trash)
-    var currentOperator: Operator!
+    var rxOperator: Operator
     var editing: Bool!
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init() {
+    init(rxOperator: Operator) {
+        self.rxOperator = rxOperator
         super.init(frame: CGRectZero)
         trashView.frame = CGRectMake(0, 0, 60, 60)
     }
