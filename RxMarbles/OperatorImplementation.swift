@@ -106,6 +106,17 @@ extension Operator {
                 ],
                 line2: []
             )
+        case Map:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(400, "3", Color.nextRandom, .Circle),
+                    next(500, "4", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -123,6 +134,10 @@ extension Operator {
             return [
                 (pre: "Observable.combineLatest(", post: ""),
                 (pre: ",", post: ") { $0 + $1 }")
+            ]
+        case Map:
+            return [
+                (pre: "", post: ".map( { $0 * 10 } )"),
             ]
         case .Concat:
             return [
