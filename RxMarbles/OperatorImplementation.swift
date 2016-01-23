@@ -83,6 +83,18 @@ extension Operator {
                 ],
                 line2: []
             )
+        case .DistinctUntilChanged:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "2", Color.nextRandom, .Circle),
+                    next(500, "1", Color.nextRandom, .Circle),
+                    next(600, "3", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
