@@ -27,7 +27,7 @@ class TimelineView: UIView {
         super.layoutSubviews()
         timeArrow.frame = CGRectMake(0, 0, frame.width, Image.timeLine.size.height)
         if _addButton != nil {
-            _addButton?.center.y = timeArrow.center.y
+            _addButton?.center.y = bounds.height / 2.0
             _addButton?.center.x = frame.size.width - 10.0
             let timeArrowFrame = timeArrow.frame
             let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
