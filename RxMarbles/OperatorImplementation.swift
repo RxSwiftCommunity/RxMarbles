@@ -58,6 +58,18 @@ extension Operator {
                     completed(900)
                 ]
             )
+        case .Delay:
+            return InitialValues(
+                line1: [
+                    next(100, "", Color.nextRandom, .Circle),
+                    next(200, "", Color.nextRandom, .Circle),
+                    next(300, "", Color.nextRandom, .Circle),
+                    next(400, "", Color.nextRandom, .Circle),
+                    next(500, "", Color.nextRandom, .Circle),
+                    completed(700)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -87,7 +99,7 @@ extension Operator {
             ]
         case .Delay:
             return [
-                (pre: "", post: ".delaySubscription(100, scheduler: scheduler)"),
+                (pre: "", post: ".delaySubscription(150, scheduler: scheduler)"),
             ]
         case .DistinctUntilChanged:
             return [
@@ -114,7 +126,7 @@ extension Operator {
         }
         case Concat:               return [o.first, o.second!].concat()
         case Debounce:             return o.first.debounce(100, scheduler: scheduler)
-        case Delay:                return o.first.delaySubscription(100, scheduler: scheduler)
+        case Delay:                return o.first.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
         case ElementAt:            return o.first.elementAt(2)
         case Filter:               return o.first.filter {
