@@ -10,6 +10,37 @@ import Foundation
 import RxSwift
 
 extension Operator {
+    var code:[(pre: String, post: String)] {
+        switch self {
+        case CombineLatest:
+            return [
+                (pre: "Observable.combineLatest(", post: ""),
+                (pre: ",", post: ") { $0 + $1 }")
+            ]
+        case Concat:
+            return [
+                (pre: "[", post: ""),
+                (pre: ",", post: "].concat()"),
+            ]
+        case Debounce:
+            return [
+                (pre: "", post: ".debounce(100, scheduler: scheduler)"),
+            ]
+        case Delay:
+            return [
+                (pre: "", post: ".delaySubscription(100, scheduler: scheduler)"),
+            ]
+        case .DistinctUntilChanged:
+            return [
+                (pre: "", post: ".distinctUntilChanged()")
+            ]
+//        case DistinctUntilChanged: return o.first.distinctUntilChanged()
+        default: return []
+        }
+    }
+}
+
+extension Operator {
     func map(o: (first: TestableObservable<ColoredType>, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
         case Amb:                  return o.first.amb(o.second!)
@@ -17,10 +48,10 @@ extension Operator {
         case CatchError:           return o.first.catchError({ error in
             return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         })
-        case CombineLatest:        return [o.first, o.second!].combineLatest({ event in
-            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!, shape: (event.first?.shape)!)
-            return res
-        })
+        case CombineLatest:        return Observable.combineLatest(o.first, o.second!) {
+            a, b in
+            return ColoredType(value: a.value + b.value, color: a.color, shape: a.shape)
+        }
         case Concat:               return [o.first, o.second!].concat()
         case Debounce:             return o.first.debounce(100, scheduler: scheduler)
         case Delay:                return o.first.delaySubscription(100, scheduler: scheduler)
