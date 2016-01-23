@@ -33,6 +33,9 @@ class EventView: UIView {
         addSubview(_imageView)
         addSubview(label)
         
+        layer.shouldRasterize = true
+        layer.rasterizationScale = UIScreen.mainScreen().scale //.rasterizationScale = [[UIScreen mainScreen] scale];
+        
         switch recorded.value {
         case let .Next(v):
             if let value = recorded.value.element?.value {
@@ -49,8 +52,10 @@ class EventView: UIView {
             _imageView.layer.shadowOpacity = 1.0
         case .Completed:
             _imageView.image = Image.complete
+            _imageView.tintColor = Color.black
         case .Error:
             _imageView.image = Image.error
+            _imageView.tintColor = Color.black
         }
         
         gravity = UIGravityBehavior(items: [self])
