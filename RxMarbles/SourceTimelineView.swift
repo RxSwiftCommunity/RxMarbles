@@ -58,8 +58,8 @@ class SourceTimelineView: TimelineView {
             }
         case .Changed:
             if let panEventView = self._panEventView {
-                let time = Int(location.x)
-                panEventView.center = location
+                let time = Int(location.x) >= 0 ? Int(location.x) : 0
+                panEventView.center = CGPointMake(location.x >= 0 ? location.x : 0.0, location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
                 if let ghostEventView = self._ghostEventView {
@@ -148,7 +148,7 @@ class SourceTimelineView: TimelineView {
                 })
             } else {
                 let snap = panEventView.snap
-                snap!.snapPoint.x = CGFloat(time)
+                snap!.snapPoint.x = CGFloat(time) >= 0 ? CGFloat(time) : 0.0
                 snap!.snapPoint.y = center.y
                 animator.addBehavior(snap!)
             }

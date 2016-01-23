@@ -32,7 +32,7 @@ class ResultTimelineView: TimelineView {
         let o = _operator.map((first, second), scheduler: scheduler)
         var res: TestableObserver<ColoredType>?
         
-        res = scheduler.start(0, subscribed: 0, disposed: Int(frame.width)) {
+        res = scheduler.start(0, subscribed: 0, disposed: Int(bounds.width)) {
             return o
         }
         

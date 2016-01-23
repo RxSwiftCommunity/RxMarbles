@@ -73,6 +73,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     func setupSceneView() {
         sceneView?.removeFromSuperview()
         sceneView = SceneView()
+        sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
         sceneView.animator = UIDynamicAnimator(referenceView: sceneView)
         sceneView.editing = editing
         view.addSubview(sceneView)
