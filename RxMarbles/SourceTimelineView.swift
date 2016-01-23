@@ -17,6 +17,12 @@ class SourceTimelineView: TimelineView {
     private var _ghostEventView: EventView?
     private var _preLabel = UILabel()
     private var _postLabel = UILabel()
+    var labelsText: (pre: String, post: String)? {
+        didSet {
+            _preLabel.text = labelsText!.pre
+            _postLabel.text = labelsText!.post
+        }
+    }
     
     weak var sceneView: SceneView!
     
@@ -33,9 +39,13 @@ class SourceTimelineView: TimelineView {
         _longPressGestureRecorgnizer.minimumPressDuration = 0.0
         
         addGestureRecognizer(_longPressGestureRecorgnizer)
+        
         addSubview(_preLabel)
         addSubview(_postLabel)
-        
+        _preLabel.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
+        _preLabel.textColor = .blackColor()
+        _postLabel.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
+        _postLabel.textColor = .blackColor()
         _ = _longPressGestureRecorgnizer
             .rx_event
             .subscribeNext { [unowned self] r in self._handleLongPressGestureRecognizer(r) }

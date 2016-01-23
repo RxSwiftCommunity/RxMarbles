@@ -17,6 +17,10 @@ class SceneView: UIView {
             sourceTimeline.center.y = center.y * 0.33
             addSubview(sourceTimeline)
             
+            if currentOperator.code.first != nil {
+                sourceTimeline.labelsText = currentOperator.code.first
+            }
+            
             for t in 1..<4 {
                 let time = t * 100
                 let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Circle))
@@ -30,6 +34,10 @@ class SceneView: UIView {
         didSet {
             secondSourceTimeline.center.y = center.y * 0.66
             addSubview(secondSourceTimeline)
+            
+            if currentOperator.code.last != nil {
+                secondSourceTimeline.labelsText = currentOperator.code.last
+            }
             
             for t in 1..<3 {
                 let time = t * 100
