@@ -10,21 +10,25 @@ import UIKit
 import RxSwift
 
 class EventView: UIView {
-    var recorded = RecordedType(time: 0, event: .Completed)
     weak var animator: UIDynamicAnimator? = nil
+    weak var timeLine: SourceTimelineView?
+    
+    var recorded = RecordedType(time: 0, event: .Completed)
+    
     var snap: UISnapBehavior? = nil
     var gravity: UIGravityBehavior? = nil
     var removeBehavior: UIDynamicItemBehavior? = nil
-    weak var timeLine: SourceTimelineView?
+    
     private var _tapGestureRecognizer: UITapGestureRecognizer!
     private var _imageView = UIImageView()
+    
     var label = UILabel()
     
     init(recorded: RecordedType) {
         super.init(frame: CGRectMake(0, 0, 38, 50))
        
         _imageView.contentMode = .Center
-        label.textColor = UIColor.blackColor()
+        label.textColor = Color.black
         label.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
         addSubview(_imageView)
         addSubview(label)
@@ -36,8 +40,7 @@ class EventView: UIView {
                 label.sizeToFit()
             }
 
-
-            _imageView.image = v.shape.image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            _imageView.image = v.shape.image
             _imageView.frame = CGRectMake(0, 0, 16, 16)
             _imageView.tintColor = v.color
             _imageView.layer.shadowColor = UIColor.blackColor().CGColor

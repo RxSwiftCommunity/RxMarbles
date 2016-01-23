@@ -33,6 +33,8 @@ struct Color {
     static let nextViolet       = UIColor(netHex: 0xBD10E0)
     static let nextLighterBlue  = UIColor(netHex: 0x50E3C2)
     static let nextLightGreen   = UIColor(netHex: 0xB8E986)
+    
+    static let black            = UIColor.blackColor()
    
     static var nextAll: [UIColor] {
         return [

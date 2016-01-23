@@ -14,10 +14,16 @@ struct Image {
     static let cross    = UIImage(named: "cross")!
     static let trash    = UIImage(named: "Trash")!
     
-    static let nextCircle   = UIImage(named: "nextCircle")!
-    static let nextTriangle = UIImage(named: "nextTriangle")!
-    static let nextRect     = UIImage(named: "nextRect")!
-    static let nextStar     = UIImage(named: "nextStar")!
-    static let complete     = UIImage(named: "complete")!
-    static let error        = UIImage(named: "error")!
+    static let nextCircle   = UIImage(named: "nextCircle")!.template()
+    static let nextTriangle = UIImage(named: "nextTriangle")!.template()
+    static let nextRect     = UIImage(named: "nextRect")!.template()
+    static let nextStar     = UIImage(named: "nextStar")!.template()
+    static let complete     = UIImage(named: "complete")!.template()
+    static let error        = UIImage(named: "error")!.template()
+}
+
+extension UIImage {
+    func template() -> UIImage {
+        return imageWithRenderingMode(.AlwaysTemplate)
+    }
 }
