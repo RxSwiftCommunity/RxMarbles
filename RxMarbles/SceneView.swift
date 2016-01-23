@@ -65,13 +65,13 @@ class SceneView: UIView {
         resultTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
         resultTimeline.center.y = center.y
         
-        sourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
-        sourceTimeline.center.y = center.y * 0.33
+        sourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 80)
+        sourceTimeline.center.y = center.y * 0.4
         refreshSourceEventsCenters(sourceTimeline)
         
         if secondSourceTimeline != nil {
-            secondSourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 40)
-            secondSourceTimeline.center.y = center.y * 0.66
+            secondSourceTimeline.frame = CGRectMake(0, 0, bounds.size.width, 80)
+            secondSourceTimeline.center.y = center.y * 0.7
             refreshSourceEventsCenters(secondSourceTimeline)
         }
         

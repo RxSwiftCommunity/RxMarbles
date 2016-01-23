@@ -17,6 +17,11 @@ class ResultTimelineView: TimelineView {
         _operator = currentOperator
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        timeArrow.center.y = 20.0
+    }
+    
     func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
         let scheduler = TestScheduler(initialClock: 0)
         

@@ -10,7 +10,7 @@ import UIKit
 
 class TimelineView: UIView {
     var sourceEvents = [EventView]()
-    let _timeArrow = UIImageView(image: Image.timeLine)
+    let timeArrow = UIImageView(image: Image.timeLine)
     var _addButton: UIButton?
     private var _parentViewController: ViewController!
     
@@ -20,18 +20,18 @@ class TimelineView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        addSubview(_timeArrow)
+        addSubview(timeArrow)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        _timeArrow.frame = CGRectMake(0, 16, frame.width, Image.timeLine.size.height)
+        timeArrow.frame = CGRectMake(0, 0, frame.width, Image.timeLine.size.height)
         if _addButton != nil {
-            _addButton?.center.y = _timeArrow.center.y
+            _addButton?.center.y = timeArrow.center.y
             _addButton?.center.x = frame.size.width - 10.0
-            let timeArrowFrame = _timeArrow.frame
+            let timeArrowFrame = timeArrow.frame
             let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
-            _timeArrow.frame = newTimeArrowFrame
+            timeArrow.frame = newTimeArrowFrame
         }
     }
     
