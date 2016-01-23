@@ -168,6 +168,24 @@ extension Operator {
                 ],
                 line2: []
             )
+        case .Zip:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(300, "2", Color.nextRandom, .Circle),
+                    next(700, "3", Color.nextRandom, .Circle),
+                    next(750, "4", Color.nextRandom, .Circle),
+                    next(800, "5", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(200, "a", Color.nextRandom, .Rect),
+                    next(350, "b", Color.nextRandom, .Rect),
+                    next(600, "c", Color.nextRandom, .Rect),
+                    next(650, "d", Color.nextRandom, .Rect),
+                    completed(900)
+                ]
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -220,6 +238,7 @@ extension Operator {
         case .Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
         case .Skip:      return [(pre: "", post: ".skip(2)")]
         case .IgnoreElements: return [(pre: "", post: ".ignoreElements()")]
+        case Zip:        return [(pre: "Observable.zip(", post: ","), (pre: "", post: ") { $0 + $1 }")]
         default: return []
         }
     }
@@ -288,10 +307,10 @@ extension Operator {
         case StartWith:            return o.first.startWith(ColoredType(value: "2", color: .redColor(), shape: .Circle))
         case Take:                 return o.first.take(2)
         case TakeLast:             return o.first.takeLast(2)
-        case Zip:                  return [o.first, o.second!].zip({ event in
-            let res = ColoredType(value: ((event.first?.value)! + (event.last?.value)!), color: (event.first?.color)!, shape: (event.first?.shape)!)
-            return res
-        })
+        case Zip:                  return Observable.zip(o.first, o.second!) {
+            a, b in
+                return ColoredType(value: a.value + b.value, color: a.color, shape: b.shape)
+            }
         }
     }
 }
