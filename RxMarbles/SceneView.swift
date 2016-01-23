@@ -18,11 +18,11 @@ class SceneView: UIView {
             addSubview(sourceTimeline)
             
             for t in 1..<4 {
-                let time = t * 40
+                let time = t * 100
                 let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Circle))
                 sourceTimeline.addNextEventToTimeline(time, event: event, animator: animator, isEditing: editing)
             }
-            let completedTime = 150
+            let completedTime = 700
             sourceTimeline.addCompletedEventToTimeline(completedTime, animator: animator, isEditing: editing)
         }
     }
@@ -32,11 +32,11 @@ class SceneView: UIView {
             addSubview(secondSourceTimeline)
             
             for t in 1..<3 {
-                let time = t * 40
+                let time = t * 100
                 let event = Event.Next(ColoredType(value: String(randomNumber()), color: Color.nextRandom, shape: .Rect))
                 secondSourceTimeline.addNextEventToTimeline(time, event: event, animator: animator, isEditing: editing)
             }
-            let secondCompletedTime = 110
+            let secondCompletedTime = 500
             secondSourceTimeline.addCompletedEventToTimeline(secondCompletedTime, animator: animator, isEditing: editing)
         }
     }

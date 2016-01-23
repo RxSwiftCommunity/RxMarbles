@@ -32,7 +32,7 @@ class ResultTimelineView: TimelineView {
         let o = _operator.map((first, second), scheduler: scheduler)
         var res: TestableObserver<ColoredType>?
         
-        res = scheduler.start(0, subscribed: 0, disposed: Int(bounds.width)) {
+        res = scheduler.start(0, subscribed: 0, disposed: 1000) {
             return o
         }
         
@@ -49,6 +49,7 @@ class ResultTimelineView: TimelineView {
         events.forEach { (event) -> () in
             let shape: EventShape = (event.value.element?.shape != nil) ? (event.value.element?.shape)! : .None
             let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value), shape: shape)
+            eventView.center.x = xPositionByTime(event.time)
             eventView.center.y = bounds.height / 2
             sourceEvents.append(eventView)
             addSubview(eventView)
