@@ -42,9 +42,9 @@ class SourceTimelineView: TimelineView {
         
         addSubview(_preLabel)
         addSubview(_postLabel)
-        _preLabel.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
+        _preLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
         _preLabel.textColor = .blackColor()
-        _postLabel.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
+        _postLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
         _postLabel.textColor = .blackColor()
         _ = _longPressGestureRecorgnizer
             .rx_event
