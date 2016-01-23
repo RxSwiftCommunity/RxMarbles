@@ -6,7 +6,6 @@
 //  Copyright © 2016 AnjLab. All rights reserved.
 //
 
-import Foundation
 import UIKit
 
 enum EventShape {
@@ -18,16 +17,11 @@ enum EventShape {
     
     var image: UIImage {
         switch self {
-        case Circle:
-            return Image.nextCircle
-        case Rect:
-            return Image.nextRect
-        case Triangle:
-            return Image.nextTriangle
-        case Star:
-            return Image.nextStar
-        case None:
-            return UIImage()
+        case Circle:   return Image.nextCircle
+        case Rect:     return Image.nextRect
+        case Triangle: return Image.nextTriangle
+        case Star:     return Image.nextStar
+        case None:     return UIImage()
         }
     }
 }

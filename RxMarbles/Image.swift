@@ -11,7 +11,6 @@ import UIKit
 
 struct Image {
     static let timeLine = UIImage(named: "timeLine")!
-    static let cross    = UIImage(named: "cross")!
     static let trash    = UIImage(named: "Trash")!
     
     static let nextCircle   = UIImage(named: "nextCircle")!.template()
