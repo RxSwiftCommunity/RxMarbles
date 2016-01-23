@@ -9,24 +9,42 @@
 import Foundation
 import RxSwift
 
+struct InitialValues {
+    let line1: [RecordedType]
+    let line2: [RecordedType]
+}
+
+extension Operator {
+    var initial: InitialValues {
+        switch self {
+        default:
+            return InitialValues(
+                line1: [],
+                line2: []
+            )
+        }
+    }
+}
+
 extension Operator {
     var code:[(pre: String, post: String)] {
         switch self {
-        case CombineLatest:
+        case .Amb: return [(pre: "", post: ""), (pre:".amb(", post: ")")]
+        case .CombineLatest:
             return [
                 (pre: "Observable.combineLatest(", post: ""),
                 (pre: ",", post: ") { $0 + $1 }")
             ]
-        case Concat:
+        case .Concat:
             return [
                 (pre: "[", post: ""),
                 (pre: ",", post: "].concat()"),
             ]
-        case Debounce:
+        case .Debounce:
             return [
                 (pre: "", post: ".debounce(100, scheduler: scheduler)"),
             ]
-        case Delay:
+        case .Delay:
             return [
                 (pre: "", post: ".delaySubscription(100, scheduler: scheduler)"),
             ]
@@ -34,7 +52,8 @@ extension Operator {
             return [
                 (pre: "", post: ".distinctUntilChanged()")
             ]
-//        case DistinctUntilChanged: return o.first.distinctUntilChanged()
+        case .ElementAt: return [(pre: "", post: ".elementAt(2)")]
+        case .FlatMap: return   [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
         default: return []
         }
     }

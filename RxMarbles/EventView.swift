@@ -20,7 +20,7 @@ class EventView: UIView {
     private var _imageView = UIImageView()
     var label = UILabel()
     
-    init(recorded: RecordedType, shape: EventShape) {
+    init(recorded: RecordedType) {
         super.init(frame: CGRectMake(0, 0, 38, 50))
        
         _imageView.contentMode = .Center
@@ -37,7 +37,7 @@ class EventView: UIView {
             }
 
 
-            _imageView.image = shape.image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
+            _imageView.image = v.shape.image.imageWithRenderingMode(UIImageRenderingMode.AlwaysTemplate)
             _imageView.frame = CGRectMake(0, 0, 16, 16)
             _imageView.tintColor = v.color
             _imageView.layer.shadowColor = UIColor.blackColor().CGColor

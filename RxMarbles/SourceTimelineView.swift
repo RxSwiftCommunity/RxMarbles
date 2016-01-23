@@ -47,8 +47,7 @@ class SourceTimelineView: TimelineView {
             }
             if let panEventView = _panEventView {
                 panEventView.animator?.removeBehavior(panEventView.snap!)
-                let shape: EventShape = (panEventView.recorded.value.element?.shape != nil) ? (panEventView.recorded.value.element?.shape)! : .None
-                self._ghostEventView = EventView(recorded: panEventView.recorded, shape: shape)
+                self._ghostEventView = EventView(recorded: panEventView.recorded)
                 if let ghostEventView = self._ghostEventView {
                     ghostEventView.center.x = xPositionByTime(ghostEventView.recorded.time)
                     ghostEventView.center.y = self.bounds.height / 2
@@ -92,7 +91,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addNextEventToTimeline(time: Int, event: Event<ColoredType>, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: event), shape: (event.element?.shape)!)
+        let v = EventView(recorded: RecordedType(time: time, event: event))
         if isEditing {
             v.addTapRecognizer()
         }
@@ -102,7 +101,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addCompletedEventToTimeline(time: Int, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Completed), shape: .None)
+        let v = EventView(recorded: RecordedType(time: time, event: .Completed))
         if isEditing {
             v.addTapRecognizer()
         }
@@ -112,7 +111,7 @@ class SourceTimelineView: TimelineView {
     }
     
     func addErrorEventToTimeline(time: Int!, animator: UIDynamicAnimator!, isEditing: Bool) {
-        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)), shape: .None)
+        let v = EventView(recorded: RecordedType(time: time, event: .Error(Error.CantParseStringToInt)))
         if isEditing {
             v.addTapRecognizer()
         }

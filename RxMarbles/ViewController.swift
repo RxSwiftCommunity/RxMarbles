@@ -13,6 +13,18 @@ import RxCocoa
 
 typealias RecordedType = Recorded<Event<ColoredType>>
 
+func next(time: Int, _ value: String, _ color: UIColor, _ shape: EventShape) -> RecordedType {
+    return RecordedType(time: time, event: .Next(ColoredType(value: value, color: color, shape: shape)))
+}
+
+func completed(time: Int) -> RecordedType {
+    return RecordedType(time: time, event: .Completed)
+}
+
+func error(time: Int) -> RecordedType {
+    return RecordedType(time: time, event: .Error(Error.CantParseStringToInt))
+}
+
 class ViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
     private var _eventSetupAlertController: UIAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
@@ -151,8 +163,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                 let contentViewController = UIViewController()
                 contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
                 
-                let shape = eventView.recorded.value.element?.shape
-                let preview = EventView(recorded: eventView.recorded, shape: shape!)
+                let preview = EventView(recorded: eventView.recorded)
                 preview.center = CGPointMake(100.0, 25.0)
                 contentViewController.view.addSubview(preview)
                 
