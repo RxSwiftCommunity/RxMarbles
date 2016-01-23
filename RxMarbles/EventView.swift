@@ -74,6 +74,8 @@ class EventView: UIView {
         }
         self.recorded = recorded
         _tapGestureRecognizer.addTarget(self, action: "setEventView")
+        _tapGestureRecognizer.enabled = false
+        addGestureRecognizer(_tapGestureRecognizer)
     }
     
     override func layoutSubviews() {
@@ -114,11 +116,11 @@ class EventView: UIView {
     }
     
     func addTapRecognizer() {
-        addGestureRecognizer(_tapGestureRecognizer)
+        _tapGestureRecognizer.enabled = true
     }
     
     func removeTapRecognizer() {
-        removeGestureRecognizer(_tapGestureRecognizer)
+        _tapGestureRecognizer.enabled = false
     }
     
     func setEventView() {
