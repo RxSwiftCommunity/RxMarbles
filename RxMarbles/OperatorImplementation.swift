@@ -153,6 +153,21 @@ extension Operator {
                 ],
                 line2: []
             )
+        case .IgnoreElements:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Rect),
+                    next(300, "3", Color.nextRandom, .Triangle),
+                    next(400, "4", Color.nextRandom, .Star),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Rect),
+                    next(700, "7", Color.nextRandom, .Triangle),
+                    next(800, "8", Color.nextRandom, .Star),
+                    completed(900)
+                ],
+                line2: []
+            )
         default:
             return InitialValues(
                 line1: [],
@@ -204,6 +219,7 @@ extension Operator {
         case .FlatMap:   return [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
         case .Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
         case .Skip:      return [(pre: "", post: ".skip(2)")]
+        case .IgnoreElements: return [(pre: "", post: ".ignoreElements()")]
         default: return []
         }
     }
