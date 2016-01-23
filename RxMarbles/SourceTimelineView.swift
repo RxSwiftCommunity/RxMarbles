@@ -147,10 +147,11 @@ class SourceTimelineView: TimelineView {
                     }
                 })
             } else {
-                let snap = panEventView.snap
-                snap!.snapPoint.x = CGFloat(time) >= 0 ? xPositionByTime(time) : 0.0
-                snap!.snapPoint.y = center.y
-                animator.addBehavior(snap!)
+                if let snap = panEventView.snap {
+                    snap.snapPoint.x = CGFloat(time) >= 0 ? xPositionByTime(time) : 0.0
+                    snap.snapPoint.y = center.y
+                    animator.addBehavior(snap)
+                }
             }
         }
     }
