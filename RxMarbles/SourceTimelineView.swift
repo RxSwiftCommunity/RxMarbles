@@ -19,8 +19,14 @@ class SourceTimelineView: TimelineView {
     private var _postLabel = UILabel()
     var labelsText: (pre: String, post: String)? {
         didSet {
-            _preLabel.text = labelsText!.pre
-            _postLabel.text = labelsText!.post
+            if labelsText!.pre != "" {
+                addSubview(_preLabel)
+                _preLabel.text = labelsText!.pre
+            }
+            if labelsText!.post != "" {
+                addSubview(_postLabel)
+                _postLabel.text = labelsText!.post
+            }
         }
     }
     
@@ -40,8 +46,6 @@ class SourceTimelineView: TimelineView {
         
         addGestureRecognizer(_longPressGestureRecorgnizer)
         
-        addSubview(_preLabel)
-        addSubview(_postLabel)
         _preLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
         _preLabel.textColor = .blackColor()
         _postLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
@@ -54,8 +58,7 @@ class SourceTimelineView: TimelineView {
     override func layoutSubviews() {
         super.layoutSubviews()
         _preLabel.frame = CGRectMake(0, 0, bounds.width, 20)
-        _postLabel.frame = CGRectMake(0, 60, bounds.width, 20)
-        timeArrow.center.y = 40.0
+        _postLabel.frame = CGRectMake(0, bounds.height - 20, bounds.width, 20)
     }
     
     private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {

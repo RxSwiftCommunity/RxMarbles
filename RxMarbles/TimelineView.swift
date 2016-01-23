@@ -26,6 +26,7 @@ class TimelineView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         timeArrow.frame = CGRectMake(0, 0, frame.width, Image.timeLine.size.height)
+        timeArrow.center.y = bounds.height / 2.0
         if _addButton != nil {
             _addButton?.center.y = bounds.height / 2.0
             _addButton?.center.x = frame.size.width - 10.0
