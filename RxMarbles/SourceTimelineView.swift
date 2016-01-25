@@ -33,8 +33,6 @@ class SourceTimelineView: TimelineView {
         }
     }
     
-    weak var sceneView: SceneView!
-    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -107,7 +105,6 @@ class SourceTimelineView: TimelineView {
                 animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: sceneView.resultTimeline)
                 
                 panEventView.superview?.bringSubviewToFront(panEventView)
-                bringStopEventViewsToFront(sourceEvents)
                 
                 let time = timeByXPosition(r.locationInView(self).x)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
@@ -173,14 +170,6 @@ class SourceTimelineView: TimelineView {
             return true
         }
         return false
-    }
-    
-    private func bringStopEventViewsToFront(sourceEvents: [EventView]) {
-        sourceEvents.forEach({ (eventView) -> () in
-            if eventView.recorded.value.isStopEvent == true {
-                eventView.superview!.bringSubviewToFront(eventView)
-            }
-        })
     }
     
     func showAddButton() {

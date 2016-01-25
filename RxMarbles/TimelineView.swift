@@ -12,7 +12,7 @@ class TimelineView: UIView {
     var sourceEvents = [EventView]()
     let timeArrow = UIImageView(image: Image.timeLine)
     var _addButton: UIButton?
-    private var _parentViewController: ViewController!
+    weak var sceneView: SceneView!
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -34,15 +34,11 @@ class TimelineView: UIView {
             let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
             timeArrow.frame = newTimeArrowFrame
         }
+        bringStopEventViewsToFront(sourceEvents)
     }
     
     func maxNextTime() -> Int? {
-        var times = Array<Int>()
-        sourceEvents.forEach { (eventView) -> () in
-            if eventView.isNext {
-                times.append(eventView.recorded.time)
-            }
-        }
+        let times = sourceEvents.map({ $0.recorded.time })
         return times.maxElement()
     }
     
@@ -56,5 +52,9 @@ class TimelineView: UIView {
         let maxTime: CGFloat = 1000.0
         let width = bounds.size.width
         return Int((maxTime / width) * x)
+    }
+    
+    func bringStopEventViewsToFront(sourceEvents: [EventView]) {
+        sourceEvents.forEach({ if $0.recorded.value.isStopEvent { self.bringSubviewToFront($0) } })
     }
 }
