@@ -30,8 +30,9 @@ class TimelineView: UIView {
     }
     
     func maxEventTime() -> Int? {
-        let times = sourceEvents.map({ $0.recorded.time })
-        return times.maxElement()
+        return sourceEvents
+            .map({ $0.recorded.time })
+            .maxElement()
     }
     
     func xPositionByTime(time: Int) -> CGFloat {

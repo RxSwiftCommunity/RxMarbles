@@ -12,13 +12,9 @@ class ResultTimelineView: TimelineView {
     
     private var _operator: Operator!
     
-    init(frame: CGRect, currentOperator: Operator) {
+    init(frame: CGRect, rxOperator: Operator) {
         super.init(frame: frame)
-        _operator = currentOperator
-    }
-    
-    override func layoutSubviews() {
-        super.layoutSubviews()
+        _operator = rxOperator
     }
     
     func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
@@ -47,7 +43,6 @@ class ResultTimelineView: TimelineView {
         sourceEvents.forEach { (eventView) -> () in
             eventView.removeFromSuperview()
         }
-        
         sourceEvents.removeAll()
         
         events.forEach { (event) -> () in

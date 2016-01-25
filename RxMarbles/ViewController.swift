@@ -68,21 +68,9 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     
     func setupSceneView() {
         sceneView?.removeFromSuperview()
-        sceneView = SceneView(rxOperator: currentOperator)
-        sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
-        sceneView.animator = UIDynamicAnimator(referenceView: sceneView)
-        sceneView.editing = editing
+        let sceneFrame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
+        sceneView = SceneView(rxOperator: currentOperator, frame: sceneFrame)
         view.addSubview(sceneView)
-        
-        let width = sceneView.frame.width
-        sceneView.resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, width, 40), currentOperator: currentOperator)
-        sceneView.sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, width, 80), scene: sceneView)
-        
-        if currentOperator.multiTimelines {
-            sceneView.secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, width, 80), scene: sceneView)
-        }
-        
-        sceneView.updateResultTimeline()
     }
     
     override func viewDidAppear(animated: Bool) {

@@ -22,7 +22,7 @@ class SceneView: UIView {
             
             let initial = rxOperator.initial
             for t in initial.line1 {
-               sourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
+                sourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
             }
         }
     }
@@ -34,10 +34,9 @@ class SceneView: UIView {
                 secondSourceTimeline.labelsText = rxOperator.code.last
             }
             
-           
             let initial = rxOperator.initial
             for t in initial.line2 {
-               secondSourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
+                secondSourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
             }
         }
     }
@@ -48,16 +47,27 @@ class SceneView: UIView {
     }
     var trashView = UIImageView(image: Image.trash)
     var rxOperator: Operator
-    var editing: Bool!
+    var editing: Bool = false
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    init(rxOperator: Operator) {
+    init(rxOperator: Operator, frame: CGRect) {
         self.rxOperator = rxOperator
-        super.init(frame: CGRectZero)
+        super.init(frame: frame)
         trashView.frame = CGRectMake(0, 0, 60, 60)
+        animator = UIDynamicAnimator(referenceView: self)
+        setTimelines()
+    }
+    
+    private func setTimelines() {
+        resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 40), rxOperator: rxOperator)
+        sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+        if rxOperator.multiTimelines {
+            secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+        }
+        updateResultTimeline()
     }
     
     override func layoutSubviews() {
