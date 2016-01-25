@@ -22,7 +22,7 @@ class SceneView: UIView {
             
             let initial = rxOperator.initial
             for t in initial.line1 {
-                sourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
+                sourceTimeline.addEventToTimeline(t, animator: animator)
             }
         }
     }
@@ -36,7 +36,7 @@ class SceneView: UIView {
             
             let initial = rxOperator.initial
             for t in initial.line2 {
-                secondSourceTimeline.addEventToTimeline(t, animator: animator, isEditing: editing)
+                secondSourceTimeline.addEventToTimeline(t, animator: animator)
             }
         }
     }
@@ -49,6 +49,7 @@ class SceneView: UIView {
     var rxOperator: Operator
     var editing: Bool = false {
         didSet {
+            resultTimeline.editing = editing
             sourceTimeline.editing = editing
             if rxOperator.multiTimelines {
                 secondSourceTimeline.editing = editing
@@ -74,7 +75,6 @@ class SceneView: UIView {
         if rxOperator.multiTimelines {
             secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
         }
-        updateResultTimeline()
     }
     
     override func layoutSubviews() {
@@ -103,8 +103,7 @@ class SceneView: UIView {
         } else {
             resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.size.width, defaultHeight)
         }
-        trashView.center.x = bounds.size.width / 2.0
-        trashView.center.y = bounds.size.height - 50
+        trashView.center = CGPointMake(bounds.size.width / 2.0, bounds.size.height - 50)
         
         updateResultTimeline()
     }
@@ -122,8 +121,7 @@ class SceneView: UIView {
             $0.center.x = timeline.xPositionByTime($0.recorded.time)
             $0.center.y = timeline.bounds.height / 2.0
             if let snap = $0.snap {
-                snap.snapPoint.x = CGFloat($0.recorded.time) >= 0 ? timeline.xPositionByTime($0.recorded.time) : 0.0
-                snap.snapPoint.y = timeline.center.y
+                snap.snapPoint = CGPointMake($0.recorded.time >= 0 ? timeline.xPositionByTime($0.recorded.time) : 0.0, timeline.center.y)
             }
         }
     }

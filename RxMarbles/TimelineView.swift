@@ -53,7 +53,7 @@ class TimelineView: UIView {
     }
     
     func setEditing() {
-        
+        //overloading
     }
     
     func bringStopEventViewsToFront(sourceEvents: [EventView]) {

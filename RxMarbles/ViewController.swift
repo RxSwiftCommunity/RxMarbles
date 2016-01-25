@@ -35,6 +35,10 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: "AddEvent", object: nil)
     }
     
+    deinit {
+        NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
@@ -68,22 +72,18 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
             let e = next(time, String(random() % 10), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
-            timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
+            timeline.addEventToTimeline(e, animator: self.sceneView.animator)
             self.sceneView.updateResultTimeline()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
-            if let t = timeline.maxEventTime() {
-                time = t + 20
-            } else {
-                time = Int(self.sceneView.sourceTimeline.bounds.size.width - 60.0)
-            }
+            time = timeline.maxEventTime()! > 850 ? timeline.maxEventTime()! + 30 : 850
             let e = completed(time)
-            timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
+            timeline.addEventToTimeline(e, animator: self.sceneView.animator)
             self.sceneView.updateResultTimeline()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
-            let e = error(time)
-            timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
+            let e = error(500)
+            timeline.addEventToTimeline(e, animator: self.sceneView.animator)
             self.sceneView.updateResultTimeline()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
@@ -141,17 +141,17 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                         self.updatePreviewEventView(preview, params: (color: colors[segment], value: text))
                     })
                 
-                let saveAction = UIAlertAction(title: "Save", style: .Default) { (action) -> Void in
+                let saveAction = UIAlertAction(title: "Save", style: .Default) { _ in
                     self.saveAction(preview, oldEventView: eventView)
                 }
                 settingsAlertController.addAction(saveAction)
             } else {
                 settingsAlertController.message = "Delete event?"
             }
-            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { (action) -> Void in
+            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { _ in
                 self.deleteAction(eventView)
             }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
             settingsAlertController.addAction(deleteAction)
             settingsAlertController.addAction(cancelAction)
             presentViewController(settingsAlertController, animated: true, completion: nil)
@@ -161,7 +161,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
     private func saveAction(newEventView: EventView, oldEventView: EventView) {
         if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: sceneView.animator, isEditing: true)
+            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: sceneView.animator)
             oldEventView.removeFromSuperview()
             sceneView.updateResultTimeline()
         }

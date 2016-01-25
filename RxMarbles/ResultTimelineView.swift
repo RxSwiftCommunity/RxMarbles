@@ -44,14 +44,12 @@ class ResultTimelineView: TimelineView {
     }
     
     func addEventsToTimeline(events: [RecordedType]) {
-        sourceEvents.forEach { (eventView) -> () in
-            eventView.removeFromSuperview()
-        }
+        sourceEvents.forEach { $0.removeFromSuperview() }
         sourceEvents.removeAll()
         
-        events.forEach { (event) -> () in
-            let eventView = EventView(recorded: RecordedType(time: event.time, event: event.value))
-            eventView.center.x = xPositionByTime(event.time)
+        events.forEach {
+            let eventView = EventView(recorded: RecordedType(time: $0.time, event: $0.value))
+            eventView.center.x = xPositionByTime($0.time)
             eventView.center.y = bounds.height / 2
             sourceEvents.append(eventView)
             addSubview(eventView)
@@ -62,6 +60,9 @@ class ResultTimelineView: TimelineView {
         super.setEditing()
         UIView.animateWithDuration(0.3) { _ in
             self.alpha = self.editing ? 0.5 : 1.0
+        }
+        if !editing {
+            sourceEvents.forEach({ $0.scaleAnimation() })
         }
     }
 }

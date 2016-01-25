@@ -127,7 +127,7 @@ class EventView: UIView {
         NSNotificationCenter.defaultCenter().postNotificationName("SetEventView", object: self, userInfo: nil)
     }
     
-    func setGhostColorByOnDeleteZone(onDeleteZone: Bool) {
+    func setGhostColorOnDeleteZone(onDeleteZone: Bool) {
         let color: UIColor = onDeleteZone ? .redColor() : .grayColor()
         let alpha: CGFloat = onDeleteZone ? 1.0 : 0.2
         if recorded.value.isStopEvent {

@@ -125,9 +125,9 @@ class SourceTimelineView: TimelineView {
         }
     }
     
-    func addEventToTimeline(recorded: RecordedType, animator: UIDynamicAnimator!, isEditing: Bool) {
+    func addEventToTimeline(recorded: RecordedType, animator: UIDynamicAnimator!) {
         let v = EventView(recorded: recorded)
-        if isEditing {
+        if editing {
             v.addTapRecognizer()
         }
         addSubview(v)
@@ -145,7 +145,7 @@ class SourceTimelineView: TimelineView {
             sceneView.trashView.stopAnimations()
             sceneView.trashView.alpha = 0.2
         }
-        ghostEventView.setGhostColorByOnDeleteZone(onDeleteZone(recognizer))
+        ghostEventView.setGhostColorOnDeleteZone(onDeleteZone(recognizer))
     }
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
