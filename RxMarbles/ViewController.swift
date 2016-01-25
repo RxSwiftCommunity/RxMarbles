@@ -116,18 +116,12 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
                 let colorsSegment = UISegmentedControl(items: colors.map { _ in "" } )
                 colorsSegment.tintColor = .clearColor()
                 colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
-                var counter = 0
-                colorsSegment.subviews.forEach({ subview in
-                    subview.backgroundColor = colors[counter]
-                    if currentColor == colors[counter] {
-                        colorsSegment.selectedSegmentIndex = counter
-                    }
-                    counter++
-                })
                 
-                if colorsSegment.selectedSegmentIndex < 0 {
-                    colorsSegment.selectedSegmentIndex = 0
+                let subviewsCount = colorsSegment.subviews.count
+                for i in 0..<subviewsCount {
+                    colorsSegment.subviews[i].backgroundColor = colors[i]
                 }
+                colorsSegment.selectedSegmentIndex = colors.indexOf({ $0 == currentColor! })!
                 
                 contentViewController.view.addSubview(colorsSegment)
                 
