@@ -11,7 +11,6 @@ import UIKit
 class TimelineView: UIView {
     var sourceEvents = [EventView]()
     let timeArrow = UIImageView(image: Image.timeLine)
-    var _addButton: UIButton?
     weak var sceneView: SceneView!
     
     required init?(coder aDecoder: NSCoder) {
@@ -25,19 +24,12 @@ class TimelineView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        timeArrow.frame = CGRectMake(0, 0, frame.width, Image.timeLine.size.height)
-        timeArrow.center.y = bounds.height / 2.0
-        if _addButton != nil {
-            _addButton?.center.y = bounds.height / 2.0
-            _addButton?.center.x = frame.size.width - 10.0
-            let timeArrowFrame = timeArrow.frame
-            let newTimeArrowFrame = CGRectMake(timeArrowFrame.origin.x, timeArrowFrame.origin.y, timeArrowFrame.size.width - 23.0, timeArrowFrame.size.height)
-            timeArrow.frame = newTimeArrowFrame
-        }
+        timeArrow.frame = CGRectMake(0, 0, self.frame.width, Image.timeLine.size.height)
+        timeArrow.center.y = self.bounds.height / 2.0
         bringStopEventViewsToFront(sourceEvents)
     }
     
-    func maxNextTime() -> Int? {
+    func maxEventTime() -> Int? {
         let times = sourceEvents.map({ $0.recorded.time })
         return times.maxElement()
     }

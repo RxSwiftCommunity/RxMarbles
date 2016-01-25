@@ -41,7 +41,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         if isEdit {
             sourceTimeline.addTapRecognizers()
             sourceTimeline.showAddButton()
-            sourceTimeline._addButton!.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
+            sourceTimeline.addButton.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
         } else {
             sourceTimeline.removeTapRecognizers()
             sourceTimeline.hideAddButton()
@@ -107,7 +107,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             self.sceneView.updateResultTimeline()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
-            if let t = timeline.maxNextTime() {
+            if let t = timeline.maxEventTime() {
                 time = t + 20
             } else {
                 time = Int(self.sceneView.sourceTimeline.bounds.size.width - 60.0)

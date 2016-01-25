@@ -19,7 +19,6 @@ class ResultTimelineView: TimelineView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        timeArrow.center.y = bounds.height / 2.0
     }
     
     func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {

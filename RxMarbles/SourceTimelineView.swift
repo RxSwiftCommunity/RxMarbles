@@ -12,6 +12,8 @@ import RxCocoa
 
 class SourceTimelineView: TimelineView {
     
+    var addButton = UIButton(type: .ContactAdd)
+    
     private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     
     private var _panEventView: EventView?
@@ -47,6 +49,7 @@ class SourceTimelineView: TimelineView {
         
         addGestureRecognizer(_longPressGestureRecorgnizer)
         
+        addButton.hidden = true
         _preLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
         _preLabel.textColor = .blackColor()
         _postLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
@@ -60,8 +63,19 @@ class SourceTimelineView: TimelineView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        
         _preLabel.frame = CGRectMake(0, 0, bounds.width, 20)
         _postLabel.frame = CGRectMake(0, bounds.height - 25, bounds.width, 20)
+        
+        addButton.center = CGPointMake(frame.size.width - 10.0, bounds.height / 2.0)
+        
+        if addButton.superview != nil {
+            addButton.hidden = false
+            timeArrow.frame = CGRectMake(self.timeArrow.frame.origin.x, self.timeArrow.frame.origin.y, self.timeArrow.frame.size.width - 23.0, self.timeArrow.frame.size.height)
+            timeArrow.center.y = self.bounds.height / 2.0
+        } else {
+            addButton.hidden = true
+        }
     }
     
     private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
@@ -76,8 +90,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.animator?.removeBehavior(panEventView.snap!)
                 self._ghostEventView = EventView(recorded: panEventView.recorded)
                 if let ghostEventView = _ghostEventView {
-                    ghostEventView.center.x = xPositionByTime(ghostEventView.recorded.time)
-                    ghostEventView.center.y = self.bounds.height / 2
+                    ghostEventView.center = CGPointMake(xPositionByTime(ghostEventView.recorded.time), self.bounds.height / 2)
                     changeGhostColorAndAlpha(ghostEventView, recognizer: r)
                     addSubview(ghostEventView)
                     sceneView.showTrashView()
@@ -173,14 +186,12 @@ class SourceTimelineView: TimelineView {
     }
     
     func showAddButton() {
-        _addButton = UIButton(type: .ContactAdd)
-        addSubview(_addButton!)
+        addSubview(addButton)
         removeGestureRecognizer(_longPressGestureRecorgnizer)
     }
     
     func hideAddButton() {
-        _addButton?.removeFromSuperview()
-        _addButton = nil
+        addButton.removeFromSuperview()
         addGestureRecognizer(_longPressGestureRecorgnizer)
     }
     
