@@ -12,6 +12,10 @@ class ResultTimelineView: TimelineView {
     
     private var _operator: Operator!
     
+    required init?(coder aDecoder: NSCoder) {
+        fatalError()
+    }
+    
     init(frame: CGRect, rxOperator: Operator) {
         super.init(frame: frame)
         _operator = rxOperator
@@ -54,7 +58,10 @@ class ResultTimelineView: TimelineView {
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError()
+    override func setEditing() {
+        super.setEditing()
+        UIView.animateWithDuration(0.3) { _ in
+            self.alpha = self.editing ? 0.5 : 1.0
+        }
     }
 }

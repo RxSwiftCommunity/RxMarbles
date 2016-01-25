@@ -20,33 +20,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         super.setEditing(editing, animated: animated)
         sceneView.editing = editing
         navigationItem.setHidesBackButton(editing, animated: animated)
-        if animated {
-            UIView.animateWithDuration(0.3) { _ in
-                self.sceneView.resultTimeline.alpha = editing ? 0.5 : 1.0
-            }
-        } else {
-            sceneView.resultTimeline.alpha = editing ? 0.5 : 1.0
-        }
-        if let sourceTimeline = sceneView.sourceTimeline {
-            sourceTimelineEditActions(sourceTimeline, isEdit: editing)
-        }
-        if currentOperator.multiTimelines {
-            if let secondSourceTimeline = sceneView.secondSourceTimeline {
-                sourceTimelineEditActions(secondSourceTimeline, isEdit: editing)
-            }
-        }
-    }
-    
-    private func sourceTimelineEditActions(sourceTimeline: SourceTimelineView, isEdit: Bool) {
-        if isEdit {
-            sourceTimeline.addTapRecognizers()
-            sourceTimeline.showAddButton()
-            sourceTimeline.addButton.addTarget(self, action: "addElementToTimeline:", forControlEvents: .TouchUpInside)
-        } else {
-            sourceTimeline.removeTapRecognizers()
-            sourceTimeline.hideAddButton()
-        }
-        sourceTimeline.allEventViewsAnimation()
     }
 
     override func viewDidLoad() {
@@ -59,6 +32,7 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         setupSceneView()
         _currentActivity = currentOperator.userActivity()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: "SetEventView", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: "AddEvent", object: nil)
     }
     
     override func viewDidLayoutSubviews() {
@@ -83,18 +57,21 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         _currentActivity?.resignCurrent()
     }
     
-    func addElementToTimeline(sender: UIButton) {
+//    MARK: Alert controllers
+    
+    func addEventToTimeline(notification: NSNotification) {
+        let sender = notification.object as! UIButton
         guard let timeline = sender.superview as? SourceTimelineView else { return }
         var time = Int(timeline.bounds.size.width / 2.0)
         
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
-        let nextAction = UIAlertAction(title: "Next", style: .Default) { action in
+        let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
             let e = next(time, String(random() % 10), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
             self.sceneView.updateResultTimeline()
         }
-        let completedAction = UIAlertAction(title: "Completed", style: .Default) { (action) -> Void in
+        let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
             if let t = timeline.maxEventTime() {
                 time = t + 20
             } else {
@@ -104,12 +81,12 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
             timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
             self.sceneView.updateResultTimeline()
         }
-        let errorAction = UIAlertAction(title: "Error", style: .Default) { (action) -> Void in
+        let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
             let e = error(time)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator, isEditing: self.editing)
             self.sceneView.updateResultTimeline()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { (action) -> Void in }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
         
         elementSelector.addAction(nextAction)
         let sourceEvents: [EventView] = timeline.sourceEvents
@@ -122,12 +99,6 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         elementSelector.popoverPresentationController?.sourceView = sender.superview
         presentViewController(elementSelector, animated: true) { () -> Void in }
     }
-    
-    private func randomNumber() -> Int {
-        return Int(arc4random_uniform(10) + 1)
-    }
-    
-//    MARK: Alert controller
 
     func setEventView(notification: NSNotification) {
         let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)

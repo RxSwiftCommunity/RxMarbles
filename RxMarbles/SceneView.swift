@@ -47,7 +47,14 @@ class SceneView: UIView {
     }
     var trashView = UIImageView(image: Image.trash)
     var rxOperator: Operator
-    var editing: Bool = false
+    var editing: Bool = false {
+        didSet {
+            sourceTimeline.editing = editing
+            if rxOperator.multiTimelines {
+                secondSourceTimeline.editing = editing
+            }
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

@@ -201,4 +201,21 @@ class SourceTimelineView: TimelineView {
     func allEventViewsAnimation() {
         sourceEvents.forEach { $0.scaleAnimation() }
     }
+    
+    override func setEditing() {
+        super.setEditing()
+        if editing {
+            addTapRecognizers()
+            showAddButton()
+            addButton.addTarget(self, action: "addEventToTimeline:", forControlEvents: .TouchUpInside)
+        } else {
+            removeTapRecognizers()
+            hideAddButton()
+        }
+        allEventViewsAnimation()
+    }
+    
+    func addEventToTimeline(sender: UIButton) {
+        NSNotificationCenter.defaultCenter().postNotificationName("AddEvent", object: sender)
+    }
 }

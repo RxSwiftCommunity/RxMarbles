@@ -12,6 +12,11 @@ class TimelineView: UIView {
     var sourceEvents = [EventView]()
     let timeArrow = UIImageView(image: Image.timeLine)
     weak var sceneView: SceneView!
+    var editing: Bool = false {
+        didSet {
+            setEditing()
+        }
+    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -45,6 +50,10 @@ class TimelineView: UIView {
         let maxTime: CGFloat = 1000.0
         let width = bounds.size.width
         return Int((maxTime / width) * x)
+    }
+    
+    func setEditing() {
+        
     }
     
     func bringStopEventViewsToFront(sourceEvents: [EventView]) {
