@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController, UISplitViewControllerDelegate {
+class ViewController: UIViewController, UISplitViewControllerDelegate, UIGestureRecognizerDelegate {
     private var _currentActivity: NSUserActivity?
     
     var currentOperator = Operator.Delay
@@ -31,12 +31,20 @@ class ViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.rightBarButtonItem = editButtonItem()
         setupSceneView()
         _currentActivity = currentOperator.userActivity()
+        
+        navigationController?.interactivePopGestureRecognizer?.enabled = false
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: "SetEventView", object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: "AddEvent", object: nil)
     }
     
     deinit {
         NSNotificationCenter.defaultCenter().removeObserver(self)
+    }
+    
+    func gestureRecognizerShouldBegin(gestureRecognizer: UIGestureRecognizer) -> Bool {
+        return false
     }
     
     override func viewDidLayoutSubviews() {
