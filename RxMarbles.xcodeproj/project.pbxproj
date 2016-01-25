@@ -13,7 +13,7 @@
 		0A4111D21C51103D0067D0E3 /* ResultTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111D11C51103D0067D0E3 /* ResultTimelineView.swift */; };
 		0A4111D41C5110610067D0E3 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111D31C5110610067D0E3 /* SceneView.swift */; };
 		0AC265931C3D2C24009E28FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265921C3D2C24009E28FD /* AppDelegate.swift */; };
-		0AC265951C3D2C24009E28FD /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265941C3D2C24009E28FD /* ViewController.swift */; };
+		0AC265951C3D2C24009E28FD /* OperatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265941C3D2C24009E28FD /* OperatorViewController.swift */; };
 		0AC2659A1C3D2C24009E28FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AC265991C3D2C24009E28FD /* Assets.xcassets */; };
 		0AC265A51C3D2D1B009E28FD /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC265A41C3D2D1B009E28FD /* SpriteKit.framework */; };
 		0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FB1C3E96C2009E28FD /* Any+Equatable.swift */; };
@@ -51,7 +51,7 @@
 		0A4111D31C5110610067D0E3 /* SceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		0AC2658F1C3D2C24009E28FD /* RxMarbles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxMarbles.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AC265921C3D2C24009E28FD /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		0AC265941C3D2C24009E28FD /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		0AC265941C3D2C24009E28FD /* OperatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorViewController.swift; sourceTree = "<group>"; };
 		0AC265991C3D2C24009E28FD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0AC2659E1C3D2C24009E28FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AC265A41C3D2D1B009E28FD /* SpriteKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SpriteKit.framework; path = System/Library/Frameworks/SpriteKit.framework; sourceTree = SDKROOT; };
@@ -100,7 +100,7 @@
 		0A4111D51C51113C0067D0E3 /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				0AC265941C3D2C24009E28FD /* ViewController.swift */,
+				0AC265941C3D2C24009E28FD /* OperatorViewController.swift */,
 				0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */,
 			);
 			name = ViewControllers;
@@ -363,7 +363,7 @@
 				0AC2660E1C3E96C2009E28FD /* Recorded.swift in Sources */,
 				0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */,
 				0AC2660A1C3E96C2009E28FD /* ColdObservable.swift in Sources */,
-				0AC265951C3D2C24009E28FD /* ViewController.swift in Sources */,
+				0AC265951C3D2C24009E28FD /* OperatorViewController.swift in Sources */,
 				0AC2660B1C3E96C2009E28FD /* Event+Equatable.swift in Sources */,
 				D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */,
 				0AC266121C3E96C2009E28FD /* Subscription.swift in Sources */,

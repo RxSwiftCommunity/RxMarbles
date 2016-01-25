@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class ViewController: UIViewController, UISplitViewControllerDelegate, UIGestureRecognizerDelegate {
+class OperatorViewController: UIViewController, UISplitViewControllerDelegate, UIGestureRecognizerDelegate {
     private var _currentActivity: NSUserActivity?
     
     var currentOperator = Operator.Delay

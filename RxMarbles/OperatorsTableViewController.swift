@@ -21,7 +21,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     var selectedOperator: Operator  = Operator.Delay {
         didSet {
             tableView.reloadData()
-            let viewController = ViewController()
+            let viewController = OperatorViewController()
             viewController.currentOperator = selectedOperator
             showDetailViewController(viewController, sender: nil)
         }
@@ -160,7 +160,7 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
                   cell = tableView.cellForRowAtIndexPath(indexPath) else { return nil }
         
         // Create a detail view controller and set its properties.
-        let detailController = ViewController()
+        let detailController = OperatorViewController()
         detailController.currentOperator = _rowAtIndexPath(indexPath)
         
         /*
