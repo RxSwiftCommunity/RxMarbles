@@ -43,13 +43,13 @@ class EventView: UIView {
                 label.sizeToFit()
             }
 
-            _imageView.image = v.shape.image
+            _imageView.image = v.shape.image(v.color)
             _imageView.frame = CGRectMake(0, 0, 16, 16)
-            _imageView.tintColor = v.color
-            _imageView.layer.shadowColor = UIColor.blackColor().CGColor
-            _imageView.layer.shadowOffset = CGSizeMake(0, 0)
-            _imageView.layer.shadowRadius = 0.75
-            _imageView.layer.shadowOpacity = 1.0
+//            _imageView.tintColor = v.color
+//            _imageView.layer.shadowColor = UIColor.blackColor().CGColor
+//            _imageView.layer.shadowOffset = CGSizeMake(0, 0)
+//            _imageView.layer.shadowRadius = 0.75
+//            _imageView.layer.shadowOpacity = 1.0
         case .Completed:
             _imageView.image = Image.complete
             _imageView.tintColor = Color.black

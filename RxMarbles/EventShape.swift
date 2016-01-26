@@ -8,7 +8,9 @@
 
 import UIKit
 
-enum EventShape {
+var __coloredImages = [String: UIImage]()
+
+enum EventShape: String {
     case Circle
     case Rect
     case Triangle
@@ -23,6 +25,38 @@ enum EventShape {
         case Star:     return Image.nextStar
         case None:     return UIImage()
         }
+    }
+    
+    func image(color: UIColor) -> UIImage {
+        let key = "\(color.description)-\(self)"
+        
+        if let res = __coloredImages[key] {
+            return res
+        }
+        
+        let grayscaleImg = image
+        let rect = CGRectMake(0, 0, 16, 16)
+        
+        UIGraphicsBeginImageContextWithOptions(grayscaleImg.size, false, grayscaleImg.scale)
+        
+        let c = UIGraphicsGetCurrentContext()
+        
+        grayscaleImg.drawInRect(rect, blendMode: .Normal, alpha: 1.0)
+        
+        CGContextScaleCTM(c, 1.0, -1.0);
+        let r = CGRectMake(0, -16, 16, 16)
+        CGContextClipToMask(c, r, grayscaleImg.CGImage)
+    
+        color.setFill()
+        
+        UIRectFillUsingBlendMode(r, CGBlendMode.Color)
+        
+        let res = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        
+        __coloredImages[key] = res!
+        return res
     }
 }
 
