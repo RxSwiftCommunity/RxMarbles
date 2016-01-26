@@ -14,7 +14,7 @@ class SourceTimelineView: TimelineView {
     
     var addButton = UIButton(type: .ContactAdd)
     
-    private let _longPressGestureRecorgnizer = UILongPressGestureRecognizer()
+    let longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
@@ -45,16 +45,16 @@ class SourceTimelineView: TimelineView {
         clipsToBounds = false
         sceneView = scene
         
-        _longPressGestureRecorgnizer.minimumPressDuration = 0.0
+        longPressGestureRecorgnizer.minimumPressDuration = 0.0
         
-        addGestureRecognizer(_longPressGestureRecorgnizer)
+        addGestureRecognizer(longPressGestureRecorgnizer)
         
         addButton.hidden = true
         _preLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
         _preLabel.textColor = .blackColor()
         _postLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
         _postLabel.textColor = .blackColor()
-        _ = _longPressGestureRecorgnizer
+        _ = longPressGestureRecorgnizer
             .rx_event
             .subscribeNext {
                 [unowned self] r in self._handleLongPressGestureRecognizer(r)
@@ -182,12 +182,12 @@ class SourceTimelineView: TimelineView {
     
     func showAddButton() {
         addSubview(addButton)
-        removeGestureRecognizer(_longPressGestureRecorgnizer)
+        removeGestureRecognizer(longPressGestureRecorgnizer)
     }
     
     func hideAddButton() {
         addButton.removeFromSuperview()
-        addGestureRecognizer(_longPressGestureRecorgnizer)
+        addGestureRecognizer(longPressGestureRecorgnizer)
     }
     
     func addTapRecognizers() {
