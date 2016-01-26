@@ -7,6 +7,8 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 class ResultTimelineView: TimelineView {
     
@@ -45,15 +47,49 @@ class ResultTimelineView: TimelineView {
     
     func addEventsToTimeline(events: [RecordedType]) {
         sourceEvents.forEach { $0.removeFromSuperview() }
-        sourceEvents.removeAll()
-        
+        var newSourceEvents = [EventView]()
         events.forEach {
-            let eventView = EventView(recorded: RecordedType(time: $0.time, event: $0.value))
-            eventView.center.x = xPositionByTime($0.time)
-            eventView.center.y = bounds.height / 2
-            sourceEvents.append(eventView)
-            addSubview(eventView)
+            switch $0.value {
+            case .Next:
+                if let index = sourceEvents.indexOf({ $0.isNext }) {
+                    newSourceEvents.append(reuseEventView(index, recorded: $0))
+                } else {
+                    newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: $0.value)))
+                }
+            case .Completed:
+                if let index = sourceEvents.indexOf({ $0.isCompleted }) {
+                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: $0.time, event: .Completed)))
+                } else {
+                    newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: .Completed)))
+                }
+            case .Error:
+                if let index = sourceEvents.indexOf({ $0.isError }) {
+                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: $0.time, event: .Error(Error.CantParseStringToInt))))
+                } else {
+                    newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: .Error(Error.CantParseStringToInt))))
+                }
+            }
         }
+        
+        sourceEvents = newSourceEvents
+    }
+    
+    private func reuseEventView(index: Int, recorded: RecordedType) -> EventView {
+        let reuseEventView = sourceEvents[index]
+        sourceEvents.removeAtIndex(index)
+        reuseEventView.recorded = RecordedType(time: recorded.time, event: recorded.value)
+        reuseEventView.center.x = xPositionByTime(recorded.time)
+        reuseEventView.center.y = bounds.height / 2
+        addSubview(reuseEventView)
+        return reuseEventView
+    }
+    
+    private func newEventView(recorded: RecordedType) -> EventView {
+        let newEventView = EventView(recorded: recorded)
+        newEventView.center.x = xPositionByTime(recorded.time)
+        newEventView.center.y = bounds.height / 2
+        addSubview(newEventView)
+        return newEventView
     }
     
     override func setEditing() {

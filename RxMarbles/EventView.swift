@@ -62,9 +62,9 @@ class EventView: UIView {
         removeBehavior = UIDynamicItemBehavior(items: [self])
         removeBehavior?.action = {
             let timeline = self.timeLine
-            if let viewController = UIApplication.sharedApplication().keyWindow?.rootViewController {
+            if let scene = timeline?.sceneView {
                 if let index = timeline?.sourceEvents.indexOf(self) {
-                    if CGRectIntersectsRect(viewController.view.bounds, self.frame) == false {
+                    if CGRectIntersectsRect(scene.bounds, self.frame) == false {
                         self.removeFromSuperview()
                         timeline?.sourceEvents.removeAtIndex(index)
                         timeline!.sceneView.updateResultTimeline()
@@ -109,6 +109,14 @@ class EventView: UIView {
     
     var isNext: Bool {
         if case .Next = recorded.value {
+            return true
+        } else {
+            return false
+        }
+    }
+    
+    var isError: Bool {
+        if case .Error = recorded.value {
             return true
         } else {
             return false
