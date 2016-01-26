@@ -149,6 +149,14 @@ class EventView: UIView {
         _imageView.tintColor = color
     }
     
+    func refreshColorAndValue() {
+        _imageView.tintColor = recorded.value.element?.color
+        if let value = recorded.value.element?.value {
+            label.text = value
+            label.sizeToFit()
+        }
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }

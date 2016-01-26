@@ -52,7 +52,9 @@ class ResultTimelineView: TimelineView {
             switch $0.value {
             case .Next:
                 if let index = sourceEvents.indexOf({ $0.isNext }) {
-                    newSourceEvents.append(reuseEventView(index, recorded: $0))
+                    let eventView = reuseEventView(index, recorded: $0)
+                    eventView.refreshColorAndValue()
+                    newSourceEvents.append(eventView)
                 } else {
                     newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: $0.value)))
                 }
