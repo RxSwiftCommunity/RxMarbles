@@ -163,21 +163,18 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
         let detailController = OperatorViewController()
         detailController.currentOperator = _rowAtIndexPath(indexPath)
         
-        /*
-            Set the height of the preview by setting the preferred content size of the detail view controller.
-            Width should be zero, because it's not used in portrait.
-        */
-//        detailViewController.preferredContentSize = CGSize(width: 0.0, height: detailController.preferredHeight)
-        
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame
         
-        return detailController
+        let navController = UINavigationController(rootViewController: detailController)
+        return navController
     }
     
     /// Present the view controller for the "Pop" action.
     func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
         // Reuse the "Peek" view controller for presentation.
-        showDetailViewController(viewControllerToCommit, sender: self)
+        if let navController = viewControllerToCommit as? UINavigationController {
+            showDetailViewController(navController.viewControllers.first!, sender: self)
+        }
     }
 }
