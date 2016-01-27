@@ -29,9 +29,8 @@ class TimelineView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        timeArrow.frame = CGRectMake(0, 0, self.frame.width, Image.timeLine.size.height)
-        timeArrow.center.y = self.bounds.height / 2.0
-        bringStopEventViewsToFront(sourceEvents)
+        timeArrow.frame = CGRectMake(0, 0, bounds.width, Image.timeLine.size.height)
+        timeArrow.center.y = bounds.height / 2.0
     }
     
     func maxEventTime() -> Int? {
@@ -54,9 +53,5 @@ class TimelineView: UIView {
     
     func setEditing() {
         //overloading
-    }
-    
-    func bringStopEventViewsToFront(sourceEvents: [EventView]) {
-        sourceEvents.forEach({ if $0.recorded.value.isStopEvent { self.bringSubviewToFront($0) } })
     }
 }
