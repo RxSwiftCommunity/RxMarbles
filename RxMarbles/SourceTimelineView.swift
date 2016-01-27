@@ -107,7 +107,7 @@ class SourceTimelineView: TimelineView {
                 
                 sceneView.resultTimeline.subject.onNext()
             }
-        case .Ended:
+        case .Ended, .Cancelled:
             _ghostEventView?.removeFromSuperview()
             _ghostEventView = nil
             
