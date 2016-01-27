@@ -14,6 +14,7 @@ class ResultTimelineView: TimelineView {
     
     private var _operator: Operator!
     private weak var _sceneView: SceneView!
+    private var _disposeBag = DisposeBag()
     
     var subject = PublishSubject<Void>()
     
@@ -26,10 +27,17 @@ class ResultTimelineView: TimelineView {
         _operator = rxOperator
         _sceneView = sceneView
         
-        _ = subject
-            .subscribeNext { _ in
-            self.updateEvents((first: self._sceneView.sourceTimeline.sourceEvents, second: self._sceneView.secondSourceTimeline != nil ? self._sceneView.secondSourceTimeline.sourceEvents : nil))
+        subject
+            .debounce(0.008, scheduler: MainScheduler.instance)
+            .subscribeNext { [unowned self] _ in
+                self.updateEvents(
+                (
+                    first: self._sceneView.sourceTimeline.sourceEvents,
+                    second: self._sceneView.secondSourceTimeline?.sourceEvents
+                )
+            )
         }
+        .addDisposableTo(_disposeBag)
     }
     
     private func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
