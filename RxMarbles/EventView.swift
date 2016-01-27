@@ -67,7 +67,7 @@ class EventView: UIView {
                     if CGRectIntersectsRect(scene.bounds, self.frame) == false {
                         self.removeFromSuperview()
                         timeline?.sourceEvents.removeAtIndex(index)
-                        timeline!.sceneView.updateResultTimeline()
+                        timeline!.sceneView.resultTimeline.subject.onNext(0)
                     }
                 }
             }
@@ -93,9 +93,9 @@ class EventView: UIView {
         if let timeLine = timeLine {
             let x = timeLine.xPositionByTime(recorded.time)
             center = CGPointMake(x, timeLine.bounds.height / 2.0)
+            snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(x, center.y))
         }
         
-        snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(CGFloat(recorded.time), center.y))
         userInteractionEnabled = animator != nil
     }
     
@@ -132,7 +132,7 @@ class EventView: UIView {
     }
     
     func setEventView() {
-        NSNotificationCenter.defaultCenter().postNotificationName("SetEventView", object: self, userInfo: nil)
+        NSNotificationCenter.defaultCenter().postNotificationName(Names.setEventView, object: self, userInfo: nil)
     }
     
     func setGhostColorOnDeleteZone(onDeleteZone: Bool) {
@@ -146,11 +146,13 @@ class EventView: UIView {
     }
     
     func setColorOnPreview(color: UIColor) {
-        _imageView.tintColor = color
+        _imageView.image = recorded.value.element?.shape.image(color)
     }
     
     func refreshColorAndValue() {
-        _imageView.tintColor = recorded.value.element?.color
+        if let color = recorded.value.element?.color {
+            _imageView.image = recorded.value.element?.shape.image(color)
+        }
         if let value = recorded.value.element?.value {
             label.text = value
             label.sizeToFit()

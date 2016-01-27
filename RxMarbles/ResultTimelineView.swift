@@ -13,29 +13,42 @@ import RxCocoa
 class ResultTimelineView: TimelineView {
     
     private var _operator: Operator!
+    private weak var _sceneView: SceneView!
+    
+    var subject = PublishSubject<Int>()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
     }
     
-    init(frame: CGRect, rxOperator: Operator) {
+    init(frame: CGRect, rxOperator: Operator, sceneView: SceneView) {
         super.init(frame: frame)
         _operator = rxOperator
+        _sceneView = sceneView
+        
+        _ = subject
+            .subscribeNext { _ in
+            self.updateEvents((first: self._sceneView.sourceTimeline.sourceEvents, second: self._sceneView.secondSourceTimeline != nil ? self._sceneView.secondSourceTimeline.sourceEvents : nil))
+        }
     }
     
-    func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
+    private func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
         let scheduler = TestScheduler(initialClock: 0)
         
         let events = sourceEvents.first.map({ $0.recorded })
         let first = scheduler.createColdObservable(events)
         
         var second: TestableObservable<ColoredType>? = nil
-        if let s = sourceEvents.second {
-            let secondEvents = s.map({ $0.recorded })
-            second = scheduler.createColdObservable(secondEvents)
+        if _operator.multiTimelines {
+            if let s = sourceEvents.second {
+                let secondEvents = s.map({ $0.recorded })
+                second = scheduler.createColdObservable(secondEvents)
+            }
+            
         }
         
         let o = _operator.map((first, second), scheduler: scheduler)
+        
         var res: TestableObserver<ColoredType>?
         
         res = scheduler.start(0, subscribed: 0, disposed: 1000) {

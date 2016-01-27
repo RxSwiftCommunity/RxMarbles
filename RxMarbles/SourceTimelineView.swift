@@ -80,7 +80,6 @@ class SourceTimelineView: TimelineView {
     
     private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
         let location = r.locationInView(self)
-        
         switch r.state {
         case .Began:
             if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
@@ -106,7 +105,7 @@ class SourceTimelineView: TimelineView {
                 _ghostEventView!.recorded = panEventView.recorded
                 _ghostEventView!.center = CGPointMake(xPositionByTime(_ghostEventView!.recorded.time), bounds.height / 2)
                 
-                sceneView.updateResultTimeline()
+                sceneView.resultTimeline.subject.onNext(0)
             }
         case .Ended:
             _ghostEventView?.removeFromSuperview()
@@ -119,7 +118,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
-            sceneView.updateResultTimeline()
+            sceneView.resultTimeline.subject.onNext(0)
             sceneView.hideTrashView()
         default: break
         }
@@ -157,7 +156,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.hideWithCompletion({ _ in
                     if let index = self.sourceEvents.indexOf(panEventView) {
                         self.sourceEvents.removeAtIndex(index)
-                        self.sceneView.updateResultTimeline()
+//                        self.sceneView.resultTimeline.subject.onNext(0)
                     }
                 })
             } else {
@@ -216,6 +215,6 @@ class SourceTimelineView: TimelineView {
     }
     
     func addEventToTimeline(sender: UIButton) {
-        NSNotificationCenter.defaultCenter().postNotificationName("AddEvent", object: sender)
+        NSNotificationCenter.defaultCenter().postNotificationName(Names.addEvent, object: sender)
     }
 }

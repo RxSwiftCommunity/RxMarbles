@@ -10,6 +10,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
+struct Names {
+    static let setEventView = "SetEventView"
+    static let addEvent = "AddEvent"
+}
+
 class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
     
@@ -41,8 +46,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         
         // TODO: move names to constants
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: "SetEventView", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: "AddEvent", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: Names.setEventView, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: Names.addEvent, object: nil)
     }
     
     deinit {
@@ -83,18 +88,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
             let e = next(time, String(random() % 10), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator)
-            self.sceneView.updateResultTimeline()
+            self.sceneView.resultTimeline.subject.onNext(0)
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
             time = timeline.maxEventTime()! > 850 ? timeline.maxEventTime()! + 30 : 850
             let e = completed(time)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator)
-            self.sceneView.updateResultTimeline()
+            self.sceneView.resultTimeline.subject.onNext(0)
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
             let e = error(500)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator)
-            self.sceneView.updateResultTimeline()
+            self.sceneView.resultTimeline.subject.onNext(0)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
         
@@ -173,7 +178,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
             oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: sceneView.animator)
             oldEventView.removeFromSuperview()
-            sceneView.updateResultTimeline()
+            sceneView.resultTimeline.subject.onNext(0)
         }
     }
     

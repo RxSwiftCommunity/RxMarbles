@@ -290,7 +290,7 @@ extension Operator {
         }
         case Concat:               return [o.first, o.second!].concat()
         case Debounce:             return o.first.debounce(100, scheduler: scheduler)
-        case Delay:                return o.first.delaySubscription(100, scheduler: scheduler)
+        case Delay:                return o.first.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
         case .ElementAt:           return o.first.elementAt(2)
         case .Filter:              return o.first.filter {

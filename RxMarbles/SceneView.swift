@@ -70,7 +70,7 @@ class SceneView: UIView {
     }
     
     private func setTimelines() {
-        resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 40), rxOperator: rxOperator)
+        resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 40), rxOperator: rxOperator, sceneView: self)
         sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
         if rxOperator.multiTimelines {
             secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
@@ -105,7 +105,7 @@ class SceneView: UIView {
         }
         trashView.center = CGPointMake(bounds.size.width / 2.0, bounds.size.height - 50)
         
-        updateResultTimeline()
+        resultTimeline.subject.onNext(0)
     }
     
     private func additionalHeight(pre: String) -> CGFloat {
@@ -123,14 +123,6 @@ class SceneView: UIView {
             if let snap = $0.snap {
                 snap.snapPoint = CGPointMake($0.recorded.time >= 0 ? timeline.xPositionByTime($0.recorded.time) : 0.0, timeline.center.y)
             }
-        }
-    }
-    
-    func updateResultTimeline() {
-        if let secondSourceTimeline = secondSourceTimeline {
-            resultTimeline.updateEvents((sourceTimeline.sourceEvents, secondSourceTimeline.sourceEvents))
-        } else {
-            resultTimeline.updateEvents((sourceTimeline.sourceEvents, nil))
         }
     }
     
