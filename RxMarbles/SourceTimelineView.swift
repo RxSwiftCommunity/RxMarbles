@@ -105,7 +105,7 @@ class SourceTimelineView: TimelineView {
                 _ghostEventView!.recorded = panEventView.recorded
                 _ghostEventView!.center = CGPointMake(xPositionByTime(_ghostEventView!.recorded.time), bounds.height / 2)
                 
-                sceneView.resultTimeline.subject.onNext(0)
+                sceneView.resultTimeline.subject.onNext()
             }
         case .Ended:
             _ghostEventView?.removeFromSuperview()
@@ -118,7 +118,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
-            sceneView.resultTimeline.subject.onNext(0)
+            sceneView.resultTimeline.subject.onNext()
             sceneView.hideTrashView()
         default: break
         }

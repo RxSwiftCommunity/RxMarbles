@@ -105,7 +105,7 @@ class SceneView: UIView {
         }
         trashView.center = CGPointMake(bounds.size.width / 2.0, bounds.size.height - 50)
         
-        resultTimeline.subject.onNext(0)
+        resultTimeline.subject.onNext()
     }
     
     private func additionalHeight(pre: String) -> CGFloat {

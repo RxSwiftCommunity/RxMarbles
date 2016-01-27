@@ -15,7 +15,7 @@ class ResultTimelineView: TimelineView {
     private var _operator: Operator!
     private weak var _sceneView: SceneView!
     
-    var subject = PublishSubject<Int>()
+    var subject = PublishSubject<Void>()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
