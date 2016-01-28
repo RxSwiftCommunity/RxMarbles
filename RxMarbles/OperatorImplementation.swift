@@ -297,37 +297,37 @@ extension Operator {
 }
 
 extension Operator {
-    func map(o: (first: TestableObservable<ColoredType>, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
+    func map(o: (first: TestableObservable<ColoredType>?, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
-        case Amb:                  return o.first.amb(o.second!)
-        case Buffer:               return o.first.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: "13", color: .redColor(), shape: .Triangle) })
-        case CatchError:           return o.first.catchError({ error in
+        case Amb:                  return o.first!.amb(o.second!)
+        case Buffer:               return o.first!.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: "13", color: .redColor(), shape: .Triangle) })
+        case CatchError:           return o.first!.catchError({ error in
             return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         })
-        case CombineLatest:        return Observable.combineLatest(o.first, o.second!) {
+        case CombineLatest:        return Observable.combineLatest(o.first!, o.second!) {
             a, b in
             return ColoredType(value: a.value + b.value, color: a.color, shape: a.shape)
         }
-        case Concat:               return [o.first, o.second!].concat()
-        case Debounce:             return o.first.debounce(100, scheduler: scheduler)
-        case Delay:                return o.first.delaySubscription(150, scheduler: scheduler)
-        case DistinctUntilChanged: return o.first.distinctUntilChanged()
-        case ElementAt:            return o.first.elementAt(2)
+        case Concat:               return [o.first!, o.second!].concat()
+        case Debounce:             return o.first!.debounce(100, scheduler: scheduler)
+        case Delay:                return o.first!.delaySubscription(150, scheduler: scheduler)
+        case DistinctUntilChanged: return o.first!.distinctUntilChanged()
+        case ElementAt:            return o.first!.elementAt(2)
         case Empty:                return Observable<ColoredType>.empty()
-        case Filter:               return o.first.filter {
+        case Filter:               return o.first!.filter {
             guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
             return a > 10
         }
-        case FlatMap:              return o.first.flatMap({ event in return o.second! })
-        case FlatMapFirst:         return o.first.flatMapFirst({ event in return o.second! })
-        case FlatMapLatest:        return o.first.flatMapLatest({ event in return o.second! })
-        case IgnoreElements:       return o.first.ignoreElements()
+        case FlatMap:              return o.first!.flatMap({ event in return o.second! })
+        case FlatMapFirst:         return o.first!.flatMapFirst({ event in return o.second! })
+        case FlatMapLatest:        return o.first!.flatMapLatest({ event in return o.second! })
+        case IgnoreElements:       return o.first!.ignoreElements()
         case Just:                 return Observable<ColoredType>.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
-        case Map:                  return o.first.map({ h in
+        case Map:                  return o.first!.map({ h in
             guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
             return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
         })
-        case MapWithIndex:         return o.first.mapWithIndex({ (element, index) in
+        case MapWithIndex:         return o.first!.mapWithIndex({ (element, index) in
             if index == 1 {
                 guard let a = Int(element.value) else { throw Error.CantParseStringToInt }
                 return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
@@ -335,10 +335,10 @@ extension Operator {
                 return element
             }
         })
-        case Merge:                return Observable.of(o.first, o.second!).merge()
+        case Merge:                return Observable.of(o.first!, o.second!).merge()
         case Never:                return Observable.never()
         case Reduce:
-            return o.first.reduce(ColoredType(value: "0", color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
+            return o.first!.reduce(ColoredType(value: "0", color: .redColor(), shape: o.first!.recordedEvents.first?.value.element?.shape != nil ? (o.first!.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
                 var res = acc
                 guard let a = Int(e.value),
                     let b = Int(res.value) else { throw Error.CantParseStringToInt }
@@ -347,9 +347,9 @@ extension Operator {
                 res.shape = e.shape
                 return res
         })
-        case Retry:                return o.first.retry(2)
-        case Sample:               return o.first.sample(o.second!)
-        case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
+        case Retry:                return o.first!.retry(2)
+        case Sample:               return o.first!.sample(o.second!)
+        case Scan:                 return o.first!.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first!.recordedEvents.first?.value.element?.shape != nil ? (o.first!.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
             var res = acc
             guard let a = Int(e.value),
                   let b = Int(res.value) else { throw Error.CantParseStringToInt }
@@ -358,12 +358,12 @@ extension Operator {
             res.shape = e.shape
             return res
         })
-        case Skip:                 return o.first.skip(2)
-        case StartWith:            return o.first.startWith(ColoredType(value: "2", color: .redColor(), shape: .Circle))
-        case Take:                 return o.first.take(2)
-        case TakeLast:             return o.first.takeLast(2)
+        case Skip:                 return o.first!.skip(2)
+        case StartWith:            return o.first!.startWith(ColoredType(value: "2", color: .redColor(), shape: .Circle))
+        case Take:                 return o.first!.take(2)
+        case TakeLast:             return o.first!.takeLast(2)
         case Throw:                return Observable.error(Error.CantParseStringToInt)
-        case Zip:                  return Observable.zip(o.first, o.second!) {
+        case Zip:                  return Observable.zip(o.first!, o.second!) {
             a, b in
                 return ColoredType(value: a.value + b.value, color: a.color, shape: b.shape)
             }
@@ -405,5 +405,9 @@ extension Operator {
         case Throw:                return false
         case Zip:                  return true
         }
+    }
+    
+    var withoutTimelines: Bool {
+        return [Empty, Never, Throw, Just].contains(self)
     }
 }

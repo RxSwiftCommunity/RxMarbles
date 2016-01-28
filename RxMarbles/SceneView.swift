@@ -50,9 +50,11 @@ class SceneView: UIView {
     var editing: Bool = false {
         didSet {
             resultTimeline.editing = editing
-            sourceTimeline.editing = editing
-            if rxOperator.multiTimelines {
-                secondSourceTimeline.editing = editing
+            if !rxOperator.withoutTimelines {
+                sourceTimeline.editing = editing
+                if rxOperator.multiTimelines {
+                    secondSourceTimeline.editing = editing
+                }
             }
         }
     }
@@ -71,9 +73,11 @@ class SceneView: UIView {
     
     private func setTimelines() {
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 40), rxOperator: rxOperator, sceneView: self)
-        sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
-        if rxOperator.multiTimelines {
-            secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+        if !rxOperator.withoutTimelines {
+            sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+            if rxOperator.multiTimelines {
+                secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+            }
         }
     }
     
@@ -87,24 +91,26 @@ class SceneView: UIView {
             firstHeight += additionalHeight(firstCode.pre)
         }
         
-        sourceTimeline.frame = CGRectMake(0, 80, bounds.size.width, firstHeight)
-        refreshSourceEventsCenters(sourceTimeline)
+        if !rxOperator.withoutTimelines {
+            sourceTimeline.frame = CGRectMake(0, 80, bounds.width, firstHeight)
+            refreshSourceEventsCenters(sourceTimeline)
         
-        if secondSourceTimeline != nil {
-            var secondHeight = defaultHeight
-            if let secondCode = rxOperator.code.last {
-                secondHeight += additionalHeight(secondCode.pre)
+            if secondSourceTimeline != nil {
+                var secondHeight = defaultHeight
+                if let secondCode = rxOperator.code.last {
+                    secondHeight += additionalHeight(secondCode.pre)
+                }
+            
+                secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, secondHeight)
+                refreshSourceEventsCenters(secondSourceTimeline)
+            
+                resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, defaultHeight)
+            } else {
+                resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, defaultHeight)
             }
-            
-            secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.size.width, secondHeight)
-            refreshSourceEventsCenters(secondSourceTimeline)
-            
-            resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.size.width, defaultHeight)
-        } else {
-            resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.size.width, defaultHeight)
-        }
-        trashView.center = CGPointMake(bounds.size.width / 2.0, bounds.size.height - 50)
+        } else { resultTimeline.frame = CGRectMake(0, 80, bounds.width, firstHeight) }
         
+        trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 50)
         resultTimeline.subject.onNext()
     }
     

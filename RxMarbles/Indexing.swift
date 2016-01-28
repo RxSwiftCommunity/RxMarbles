@@ -28,14 +28,17 @@ extension Operator {
     ,.Delay
     ,.DistinctUntilChanged
     ,.ElementAt
+    ,.Empty
     ,.Filter
     ,.FlatMap
     ,.FlatMapFirst
     ,.FlatMapLatest
     ,.IgnoreElements
+    ,.Just
     ,.Map
     ,.MapWithIndex
     ,.Merge
+    ,.Never
     ,.Reduce
     ,.Retry
     ,.Sample
@@ -44,6 +47,7 @@ extension Operator {
     ,.StartWith
     ,.Take
     ,.TakeLast
+    ,.Throw
     ,.Zip
     ]
     }

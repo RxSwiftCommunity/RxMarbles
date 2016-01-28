@@ -32,7 +32,7 @@ class ResultTimelineView: TimelineView {
             .subscribeNext { [unowned self] _ in
                 self.updateEvents(
                 (
-                    first: self._sceneView.sourceTimeline.sourceEvents,
+                    first: self._sceneView.sourceTimeline?.sourceEvents,
                     second: self._sceneView.secondSourceTimeline?.sourceEvents
                 )
             )
@@ -40,11 +40,15 @@ class ResultTimelineView: TimelineView {
         .addDisposableTo(_disposeBag)
     }
     
-    private func updateEvents(sourceEvents: (first: [EventView], second: [EventView]?)) {
+    private func updateEvents(sourceEvents: (first: [EventView]?, second: [EventView]?)) {
         let scheduler = TestScheduler(initialClock: 0)
         
-        let events = sourceEvents.first.map({ $0.recorded })
-        let first = scheduler.createColdObservable(events)
+        var first: TestableObservable<ColoredType>? = nil
+        
+        if sourceEvents.first != nil {
+            let events = sourceEvents.first!.map({ $0.recorded })
+            first = scheduler.createColdObservable(events)
+        }
         
         var second: TestableObservable<ColoredType>? = nil
         if _operator.multiTimelines {

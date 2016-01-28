@@ -37,7 +37,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         setupSceneView()
         _currentActivity = currentOperator.userActivity()
        
-        let recognizers = [sceneView.sourceTimeline.longPressGestureRecorgnizer,
+        let recognizers = [sceneView.sourceTimeline?.longPressGestureRecorgnizer,
                            sceneView.secondSourceTimeline?.longPressGestureRecorgnizer]
         
         for r in recognizers where r != nil {
