@@ -157,8 +157,7 @@ class SourceTimelineView: TimelineView {
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
         if let animator = panEventView.animator {
-            animator.removeAllBehaviors()
-            let time = Int(recognizer.locationInView(self).x)
+            let time = timeByXPosition(recognizer.locationInView(self).x)
             
             if onDeleteZone(recognizer) == true {
                 panEventView.hideWithCompletion({ _ in
