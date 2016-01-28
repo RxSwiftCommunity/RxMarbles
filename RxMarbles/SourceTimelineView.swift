@@ -105,12 +105,12 @@ class SourceTimelineView: TimelineView {
         case .Changed:
             if let panEventView = _panEventView {
                 let time = timeByXPosition(location.x)
-                panEventView.center = CGPointMake(location.x >= 0 ? location.x : 0.0, location.y)
+                panEventView.center = CGPointMake(xPositionByTime(time), location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
                 changeGhostColorAndAlpha(_ghostEventView!, recognizer: r)
                 _ghostEventView!.recorded = panEventView.recorded
-                _ghostEventView!.center = CGPointMake(xPositionByTime(_ghostEventView!.recorded.time), bounds.height / 2)
+                _ghostEventView!.center = CGPointMake(xPositionByTime(time), bounds.height / 2)
                 
                 sceneView.resultTimeline.subject.onNext()
             }
@@ -169,7 +169,7 @@ class SourceTimelineView: TimelineView {
                 })
             } else {
                 if let snap = panEventView.snap {
-                    snap.snapPoint.x = CGFloat(time) >= 0 ? xPositionByTime(time) : 0.0
+                    snap.snapPoint.x = xPositionByTime(time)
                     snap.snapPoint.y = center.y
                     animator.addBehavior(snap)
                 }

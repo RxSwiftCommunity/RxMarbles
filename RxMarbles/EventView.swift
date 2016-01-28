@@ -34,7 +34,7 @@ class EventView: UIView {
         addSubview(label)
         
         layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.mainScreen().scale //.rasterizationScale = [[UIScreen mainScreen] scale];
+        layer.rasterizationScale = UIScreen.mainScreen().scale
         
         switch recorded.value {
         case let .Next(v):
