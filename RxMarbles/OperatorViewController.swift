@@ -44,8 +44,6 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r!)
         }
         
-        
-        // TODO: move names to constants
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: Names.setEventView, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: Names.addEvent, object: nil)
     }

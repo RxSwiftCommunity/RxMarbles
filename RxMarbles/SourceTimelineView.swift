@@ -22,13 +22,15 @@ class SourceTimelineView: TimelineView {
     private var _preLabel = UILabel()
     private var _postLabel = UILabel()
     
+    private var _needRefreshEventViews: Bool = false
+    
     var labelsText: (pre: String, post: String)? {
         didSet {
-            if labelsText!.pre != "" {
+            if !labelsText!.pre.isEmpty {
                 addSubview(_preLabel)
                 _preLabel.text = labelsText!.pre
             }
-            if labelsText!.post != "" {
+            if !labelsText!.post.isEmpty {
                 addSubview(_postLabel)
                 _postLabel.text = labelsText!.post
             }
@@ -71,10 +73,15 @@ class SourceTimelineView: TimelineView {
         
         if addButton.superview != nil {
             addButton.hidden = false
-            timeArrow.frame = CGRectMake(self.timeArrow.frame.origin.x, self.timeArrow.frame.origin.y, self.timeArrow.frame.size.width - 23.0, self.timeArrow.frame.size.height)
-            timeArrow.center.y = self.bounds.height / 2.0
+            timeArrow.frame = CGRectMake(timeArrow.frame.origin.x, timeArrow.frame.origin.y, timeArrow.frame.size.width - 23.0, timeArrow.frame.size.height)
+            timeArrow.center.y = bounds.height / 2.0
         } else {
             addButton.hidden = true
+        }
+        
+        if _needRefreshEventViews {
+            _needRefreshEventViews = false
+            sceneView.refreshSourceEventsCenters(self)
         }
     }
     
@@ -204,6 +211,7 @@ class SourceTimelineView: TimelineView {
     
     override func setEditing() {
         super.setEditing()
+        _needRefreshEventViews = true
         if editing {
             addTapRecognizers()
             showAddButton()

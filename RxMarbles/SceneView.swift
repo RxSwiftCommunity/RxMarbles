@@ -110,18 +110,18 @@ class SceneView: UIView {
     
     private func additionalHeight(pre: String) -> CGFloat {
         var addHeight: CGFloat = 0
-        if pre != "" {
+        if !pre.isEmpty {
             addHeight += 20
         }
         return addHeight
     }
     
-    private func refreshSourceEventsCenters(timeline: SourceTimelineView) {
+    func refreshSourceEventsCenters(timeline: SourceTimelineView) {
         timeline.sourceEvents.forEach {
             $0.center.x = timeline.xPositionByTime($0.recorded.time)
             $0.center.y = timeline.bounds.height / 2.0
             if let snap = $0.snap {
-                snap.snapPoint = CGPointMake($0.recorded.time >= 0 ? timeline.xPositionByTime($0.recorded.time) : 0.0, timeline.center.y)
+                snap.snapPoint = CGPointMake(timeline.xPositionByTime($0.recorded.time), timeline.center.y)
             }
         }
     }
