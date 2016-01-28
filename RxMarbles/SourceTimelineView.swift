@@ -97,7 +97,7 @@ class SourceTimelineView: TimelineView {
             }
         case .Changed:
             if let panEventView = _panEventView {
-                let time = Int(location.x) >= 0 ? timeByXPosition(location.x) : 0
+                let time = timeByXPosition(location.x)
                 panEventView.center = CGPointMake(location.x >= 0 ? location.x : 0.0, location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
@@ -120,6 +120,7 @@ class SourceTimelineView: TimelineView {
             _panEventView = nil
             sceneView.resultTimeline.subject.onNext()
             sceneView.hideTrashView()
+            
         default: break
         }
     }
@@ -156,7 +157,7 @@ class SourceTimelineView: TimelineView {
                 panEventView.hideWithCompletion({ _ in
                     if let index = self.sourceEvents.indexOf(panEventView) {
                         self.sourceEvents.removeAtIndex(index)
-//                        self.sceneView.resultTimeline.subject.onNext(0)
+                        self.sceneView.resultTimeline.subject.onNext()
                     }
                 })
             } else {

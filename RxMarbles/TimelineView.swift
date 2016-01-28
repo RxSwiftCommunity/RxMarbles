@@ -41,14 +41,22 @@ class TimelineView: UIView {
     
     func xPositionByTime(time: Int) -> CGFloat {
         let maxTime: CGFloat = 1000.0
-        let width = bounds.size.width
+        let width = timeArrow.bounds.size.width - 30
         return (width / maxTime) * CGFloat(time)
     }
     
     func timeByXPosition(x: CGFloat) -> Int {
         let maxTime: CGFloat = 1000.0
-        let width = bounds.size.width
-        return Int((maxTime / width) * x)
+        let width = timeArrow.bounds.size.width - 30
+        var time: Int = 0
+        if x < 0 {
+            time = 0
+        } else if x >= width {
+            time = 1000
+        } else {
+            time = Int((maxTime / width) * x)
+        }
+        return time
     }
     
     func setEditing() {
