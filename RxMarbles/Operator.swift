@@ -16,14 +16,17 @@ enum Operator: String {
     case Delay
     case DistinctUntilChanged
     case ElementAt
+    case Empty
     case Filter
     case FlatMap
     case FlatMapFirst
     case FlatMapLatest
     case IgnoreElements
+    case Just
     case Map
     case MapWithIndex
     case Merge
+    case Never
     case Reduce
     case Retry
     case Sample
@@ -32,6 +35,7 @@ enum Operator: String {
     case StartWith
     case Take
     case TakeLast
+    case Throw
     case Zip
 }
 

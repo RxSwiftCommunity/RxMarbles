@@ -17,21 +17,7 @@ struct InitialValues {
 extension Operator {
     var initial: InitialValues {
         switch self {
-        case .ElementAt:
-            return InitialValues(
-                line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Circle),
-                    next(700, "7", Color.nextRandom, .Circle),
-                    completed(900)
-                ],
-                line2: []
-            )
-        case .Amb:
+        case Amb:
             return InitialValues(
                 line1: [
                     next(100, "10", Color.nextRandom, .Circle),
@@ -54,7 +40,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .CombineLatest:
+        case CombineLatest:
             return InitialValues(
                 line1: [
                     next( 80, "1", Color.nextRandom, .Circle),
@@ -72,7 +58,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Delay:
+        case Delay:
             return InitialValues(
                 line1: [
                     next(100, "", Color.nextRandom, .Circle),
@@ -84,7 +70,7 @@ extension Operator {
                 ],
                 line2: []
             )
-        case .Debounce:
+        case Debounce:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -97,7 +83,7 @@ extension Operator {
                 ],
                 line2: []
             )
-        case .DistinctUntilChanged:
+        case DistinctUntilChanged:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -109,7 +95,41 @@ extension Operator {
                 ],
                 line2: []
             )
-        case .Retry:
+        case ElementAt:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Circle),
+                    next(700, "7", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case Empty:
+            return InitialValues(
+                line1: [],
+                line2: []
+            )
+        case IgnoreElements:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Rect),
+                    next(300, "3", Color.nextRandom, .Triangle),
+                    next(400, "4", Color.nextRandom, .Star),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Rect),
+                    next(700, "7", Color.nextRandom, .Triangle),
+                    next(800, "8", Color.nextRandom, .Star),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case Retry:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -131,7 +151,12 @@ extension Operator {
                 ],
                 line2: []
             )
-        case .Filter:
+        case Never:
+            return InitialValues(
+                line1: [],
+                line2: []
+            )
+        case Filter:
             return InitialValues(
                 line1: [
                     next(100, "2", Color.nextRandom, .Circle),
@@ -142,6 +167,11 @@ extension Operator {
                     next(600, "1", Color.nextRandom, .Circle),
                     completed(900)
                 ],
+                line2: []
+            )
+        case Just:
+            return InitialValues(
+                line1: [],
                 line2: []
             )
         case Scan:
@@ -156,7 +186,7 @@ extension Operator {
                 ],
                 line2: []
             )
-        case .Skip:
+        case Skip:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .Circle),
@@ -167,22 +197,12 @@ extension Operator {
                 ],
                 line2: []
             )
-        case .IgnoreElements:
+        case Throw:
             return InitialValues(
-                line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Rect),
-                    next(300, "3", Color.nextRandom, .Triangle),
-                    next(400, "4", Color.nextRandom, .Star),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Rect),
-                    next(700, "7", Color.nextRandom, .Triangle),
-                    next(800, "8", Color.nextRandom, .Star),
-                    completed(900)
-                ],
+                line1: [],
                 line2: []
             )
-        case .Zip:
+        case Zip:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -230,46 +250,46 @@ extension Operator {
 extension Operator {
     var code:[(pre: String, post: String)] {
         switch self {
-        case .Amb: return [(pre: "", post: ""), (pre:".amb(", post: ")")]
-        case .CombineLatest:
+        case Amb: return [(pre: "", post: ""), (pre:".amb(", post: ")")]
+        case CombineLatest:
             return [
                 (pre: "Observable.combineLatest(", post: ""),
                 (pre: ",", post: ") { $0 + $1 }")
             ]
-        case Map:
-            return [
-                (pre: "", post: ".map( { $0 * 10 } )"),
-            ]
-        case .Concat:
+        case Concat:
             return [
                 (pre: "[", post: ""),
                 (pre: ",", post: "].concat()"),
             ]
-        case .Scan:
-            return [
-                (pre: "", post: ".scan(0) { $0 + $1 } "),
-            ]
-        case .Debounce:
+        case Debounce:
             return [
                 (pre: "", post: ".debounce(100, scheduler: scheduler)"),
             ]
-        case .Delay:
+        case Delay:
             return [
                 (pre: "", post: ".delaySubscription(150, scheduler: scheduler)"),
             ]
-        case .Retry:
-            return [
-                (pre: "", post: ".retry(2)"),
-            ]
-        case .DistinctUntilChanged:
+        case DistinctUntilChanged:
             return [
                 (pre: "", post: ".distinctUntilChanged()")
             ]
-        case .ElementAt: return [(pre: "", post: ".elementAt(2)")]
-        case .FlatMap:   return [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
-        case .Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
-        case .Skip:      return [(pre: "", post: ".skip(2)")]
-        case .IgnoreElements: return [(pre: "", post: ".ignoreElements()")]
+        case ElementAt: return [(pre: "", post: ".elementAt(2)")]
+        case FlatMap:   return [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
+        case Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
+        case IgnoreElements: return [(pre: "", post: ".ignoreElements()")]
+        case Map:
+            return [
+                (pre: "", post: ".map( { $0 * 10 } )"),
+            ]
+        case Retry:
+            return [
+                (pre: "", post: ".retry(2)"),
+            ]
+        case Scan:
+            return [
+                (pre: "", post: ".scan(0) { $0 + $1 } "),
+            ]
+        case Skip:      return [(pre: "", post: ".skip(2)")]
         case Zip:        return [(pre: "Observable.zip(", post: ","), (pre: "", post: ") { $0 + $1 }")]
         default: return []
         }
@@ -292,8 +312,9 @@ extension Operator {
         case Debounce:             return o.first.debounce(100, scheduler: scheduler)
         case Delay:                return o.first.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged: return o.first.distinctUntilChanged()
-        case .ElementAt:           return o.first.elementAt(2)
-        case .Filter:              return o.first.filter {
+        case ElementAt:            return o.first.elementAt(2)
+        case Empty:                return Observable<ColoredType>.empty()
+        case Filter:               return o.first.filter {
             guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
             return a > 10
         }
@@ -301,6 +322,7 @@ extension Operator {
         case FlatMapFirst:         return o.first.flatMapFirst({ event in return o.second! })
         case FlatMapLatest:        return o.first.flatMapLatest({ event in return o.second! })
         case IgnoreElements:       return o.first.ignoreElements()
+        case Just:                 return Observable<ColoredType>.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
         case Map:                  return o.first.map({ h in
             guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
             return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
@@ -314,6 +336,7 @@ extension Operator {
             }
         })
         case Merge:                return Observable.of(o.first, o.second!).merge()
+        case Never:                return Observable.never()
         case Reduce:
             return o.first.reduce(ColoredType(value: "0", color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
                 var res = acc
@@ -324,9 +347,9 @@ extension Operator {
                 res.shape = e.shape
                 return res
         })
-        case .Retry:                return o.first.retry(2)
-        case .Sample:               return o.first.sample(o.second!)
-        case .Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
+        case Retry:                return o.first.retry(2)
+        case Sample:               return o.first.sample(o.second!)
+        case Scan:                 return o.first.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first.recordedEvents.first?.value.element?.shape != nil ? (o.first.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
             var res = acc
             guard let a = Int(e.value),
                   let b = Int(res.value) else { throw Error.CantParseStringToInt }
@@ -335,10 +358,11 @@ extension Operator {
             res.shape = e.shape
             return res
         })
-        case .Skip:                 return o.first.skip(2)
+        case Skip:                 return o.first.skip(2)
         case StartWith:            return o.first.startWith(ColoredType(value: "2", color: .redColor(), shape: .Circle))
         case Take:                 return o.first.take(2)
         case TakeLast:             return o.first.takeLast(2)
+        case Throw:                return Observable.error(Error.CantParseStringToInt)
         case Zip:                  return Observable.zip(o.first, o.second!) {
             a, b in
                 return ColoredType(value: a.value + b.value, color: a.color, shape: b.shape)
@@ -359,14 +383,17 @@ extension Operator {
         case Delay:                return false
         case DistinctUntilChanged: return false
         case ElementAt:            return false
+        case Empty:                return false
         case Filter:               return false
         case FlatMap:              return true
         case FlatMapFirst:         return true
         case FlatMapLatest:        return true
         case IgnoreElements:       return false
+        case Just:                 return false
         case Map:                  return false
         case MapWithIndex:         return false
         case Merge:                return true
+        case Never:                return false
         case Reduce:               return false
         case Retry:                return false
         case Sample:               return true
@@ -375,6 +402,7 @@ extension Operator {
         case StartWith:            return false
         case Take:                 return false
         case TakeLast:             return false
+        case Throw:                return false
         case Zip:                  return true
         }
     }

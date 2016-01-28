@@ -52,14 +52,12 @@ class ResultTimelineView: TimelineView {
                 let secondEvents = s.map({ $0.recorded })
                 second = scheduler.createColdObservable(secondEvents)
             }
-            
         }
         
         let o = _operator.map((first, second), scheduler: scheduler)
         
         var res: TestableObserver<ColoredType>?
-        
-        res = scheduler.start(0, subscribed: 0, disposed: 1000) {
+        res = scheduler.start(0, subscribed: 0, disposed: 1001) {
             return o
         }
         

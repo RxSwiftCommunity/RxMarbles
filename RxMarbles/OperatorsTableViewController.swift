@@ -54,6 +54,10 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         Section(
             name: "Error",
             rows: [.CatchError, .Retry]
+        ),
+        Section(
+            name: "Creating",
+            rows: [.Empty, .Never, .Throw, .Just]
         )
     ]
     
