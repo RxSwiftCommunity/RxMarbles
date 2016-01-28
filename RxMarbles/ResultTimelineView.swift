@@ -28,7 +28,7 @@ class ResultTimelineView: TimelineView {
         _sceneView = sceneView
         
         subject
-            .debounce(0.008, scheduler: MainScheduler.instance)
+            .debounce(0.009, scheduler: MainScheduler.instance)
             .subscribeNext { [unowned self] _ in
                 self.updateEvents(
                 (
