@@ -135,8 +135,13 @@ class EventView: UIView {
     func setGhostColorOnDeleteZone(onDeleteZone: Bool) {
         let color: UIColor = onDeleteZone ? .redColor() : .grayColor()
         let alpha: CGFloat = onDeleteZone ? 1.0 : 0.2
-        if recorded.value.isStopEvent {
-            _imageView.image = isCompleted ? Image.complete.imageWithRenderingMode(.AlwaysTemplate) : Image.error.imageWithRenderingMode(.AlwaysTemplate)
+        switch recorded.value {
+        case .Next:
+            _imageView.image = recorded.value.element?.shape.image.imageWithRenderingMode(.AlwaysTemplate)
+        case .Completed:
+            _imageView.image = Image.complete.imageWithRenderingMode(.AlwaysTemplate)
+        case .Error:
+            _imageView.image = Image.error.imageWithRenderingMode(.AlwaysTemplate)
         }
         _imageView.tintColor = color
         self.alpha = alpha
