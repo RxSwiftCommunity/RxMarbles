@@ -16,10 +16,6 @@ class SceneView: UIView {
         didSet {
             addSubview(sourceTimeline)
             
-            if rxOperator.code.first != nil {
-                sourceTimeline.labelsText = rxOperator.code.first
-            }
-            
             let initial = rxOperator.initial
             for t in initial.line1 {
                 sourceTimeline.addEventToTimeline(t, animator: animator)
@@ -29,11 +25,7 @@ class SceneView: UIView {
     var secondSourceTimeline: SourceTimelineView! {
         didSet {
             addSubview(secondSourceTimeline)
-            
-            if rxOperator.code.last != nil {
-                secondSourceTimeline.labelsText = rxOperator.code.last
-            }
-            
+
             let initial = rxOperator.initial
             for t in initial.line2 {
                 secondSourceTimeline.addEventToTimeline(t, animator: animator)
@@ -84,42 +76,25 @@ class SceneView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        let defaultHeight: CGFloat = 70
-        
-        var firstHeight = defaultHeight
-        if let firstCode = rxOperator.code.first {
-            firstHeight += additionalHeight(firstCode.pre)
-        }
-        
+        let height: CGFloat = 60
+    
         if !rxOperator.withoutTimelines {
-            sourceTimeline.frame = CGRectMake(0, 80, bounds.width, firstHeight)
+            sourceTimeline.frame = CGRectMake(0, 80, bounds.width, height)
             refreshSourceEventsCenters(sourceTimeline)
         
             if secondSourceTimeline != nil {
-                var secondHeight = defaultHeight
-                if let secondCode = rxOperator.code.last {
-                    secondHeight += additionalHeight(secondCode.pre)
-                }
-            
-                secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, secondHeight)
+                
+                secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
                 refreshSourceEventsCenters(secondSourceTimeline)
             
-                resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, defaultHeight)
+                resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
             } else {
-                resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, defaultHeight)
+                resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
             }
-        } else { resultTimeline.frame = CGRectMake(0, 80, bounds.width, firstHeight) }
+        } else { resultTimeline.frame = CGRectMake(0, 80, bounds.width, height) }
         
         trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 50)
         resultTimeline.subject.onNext()
-    }
-    
-    private func additionalHeight(pre: String) -> CGFloat {
-        var addHeight: CGFloat = 0
-        if !pre.isEmpty {
-            addHeight += 20
-        }
-        return addHeight
     }
     
     func refreshSourceEventsCenters(timeline: SourceTimelineView) {

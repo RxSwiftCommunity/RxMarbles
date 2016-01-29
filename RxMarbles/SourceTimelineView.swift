@@ -19,23 +19,7 @@ class SourceTimelineView: TimelineView {
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
     
-    private var _preLabel = UILabel()
-    private var _postLabel = UILabel()
-    
     private var _needRefreshEventViews: Bool = false
-    
-    var labelsText: (pre: String, post: String)? {
-        didSet {
-            if !labelsText!.pre.isEmpty {
-                addSubview(_preLabel)
-                _preLabel.text = labelsText!.pre
-            }
-            if !labelsText!.post.isEmpty {
-                addSubview(_postLabel)
-                _postLabel.text = labelsText!.post
-            }
-        }
-    }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -52,10 +36,6 @@ class SourceTimelineView: TimelineView {
         addGestureRecognizer(longPressGestureRecorgnizer)
         
         addButton.hidden = true
-        _preLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
-        _preLabel.textColor = .blackColor()
-        _postLabel.font = UIFont.monospacedDigitSystemFontOfSize(16, weight: UIFontWeightRegular)
-        _postLabel.textColor = .blackColor()
         _ = longPressGestureRecorgnizer
             .rx_event
             .subscribeNext {
@@ -65,9 +45,6 @@ class SourceTimelineView: TimelineView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
-        _preLabel.frame = CGRectMake(0, 0, bounds.width, 20)
-        _postLabel.frame = CGRectMake(0, bounds.height - 25, bounds.width, 20)
         
         addButton.center = CGPointMake(frame.size.width - 10.0, bounds.height / 2.0)
         
