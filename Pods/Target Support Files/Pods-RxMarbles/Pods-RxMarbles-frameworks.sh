@@ -84,10 +84,12 @@ strip_invalid_archs() {
 
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
+  install_framework "Pods-RxMarbles/Device.framework"
   install_framework "Pods-RxMarbles/RxCocoa.framework"
   install_framework "Pods-RxMarbles/RxSwift.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
+  install_framework "Pods-RxMarbles/Device.framework"
   install_framework "Pods-RxMarbles/RxCocoa.framework"
   install_framework "Pods-RxMarbles/RxSwift.framework"
 fi

@@ -4,6 +4,11 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
+		<key>Device.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>Pods-RxMarbles.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -22,17 +27,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>29A109CD9C52E2A26A9041648C709431</key>
+		<key>2160E6400B45E26DD27FAE35886D773F</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>42ADB954602225AE60BAFD93A3194352</key>
+		<key>55ABC5300F5EF855C57F9B23657FB8F7</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>44E68F3F821499B621BDB536C84DB747</key>
+		<key>867C313FDBAB5D850E62D76A949D840F</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>BA2F3A65C5D7FC161DDECD1B36DEEA9C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

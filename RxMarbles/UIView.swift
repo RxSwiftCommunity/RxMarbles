@@ -44,6 +44,17 @@ extension UIView {
         })
     }
     
+    func rotateToAngle(angle: CGFloat) {
+        UIView.animateWithDuration(0.6) {
+            if angle > 0.0 {
+                self.transform = CGAffineTransformMakeRotation(angle)
+                self.transform = CGAffineTransformTranslate(self.transform, 0.0, 3.0)
+            } else {
+                self.transform = CGAffineTransformIdentity
+            }
+        }
+    }
+    
     func stopAnimations() {
         self.layer.removeAllAnimations()
     }

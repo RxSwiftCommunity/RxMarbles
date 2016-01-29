@@ -9,6 +9,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Device
 
 class ResultTimelineView: TimelineView {
     
@@ -27,8 +28,21 @@ class ResultTimelineView: TimelineView {
         _operator = rxOperator
         _sceneView = sceneView
         
+        let powerDevices = [
+            Version.iPhone6,
+            Version.iPhone6S,
+            Version.iPhone6Plus,
+            Version.iPhone6SPlus,
+            Version.iPodTouch6Gen,
+            Version.iPadAir2,
+            Version.iPadMini3,
+            Version.iPadMini4,
+            Version.iPadPro
+        ]
+        let debounce: RxTimeInterval = powerDevices.contains(Device.version()) ? 0.008 : 0.03
+        
         subject
-            .debounce(0.009, scheduler: MainScheduler.instance)
+            .debounce(debounce, scheduler: MainScheduler.instance)
             .subscribeNext { [unowned self] _ in
                 self.updateEvents(
                 (
@@ -70,28 +84,39 @@ class ResultTimelineView: TimelineView {
     
     func addEventsToTimeline(events: [RecordedType]) {
         sourceEvents.forEach { $0.removeFromSuperview() }
+        
+        let sortedEvents = events.sort {
+            return $0.time < $1.time
+        }
+        let ang = angles(sortedEvents)
+
         var newSourceEvents = [EventView]()
-        events.forEach {
-            switch $0.value {
+        sortedEvents.forEach { event in
+            switch event.value {
             case .Next:
+                let angleIndex = sortedEvents.indexOf({ $0 == event })
+                let angle = ang[angleIndex!]
                 if let index = sourceEvents.indexOf({ $0.isNext }) {
-                    let eventView = reuseEventView(index, recorded: $0)
+                    let eventView = reuseEventView(index, recorded: event)
                     eventView.refreshColorAndValue()
                     newSourceEvents.append(eventView)
+                    eventView.rotateToAngle(angle)
                 } else {
-                    newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: $0.value)))
+                    let eventView = newEventView(RecordedType(time: event.time, event: event.value))
+                    newSourceEvents.append(eventView)
+                    eventView.rotateToAngle(angle)
                 }
             case .Completed:
                 if let index = sourceEvents.indexOf({ $0.isCompleted }) {
-                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: $0.time, event: .Completed)))
+                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Completed)))
                 } else {
-                    newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: .Completed)))
+                    newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Completed)))
                 }
             case .Error:
                 if let index = sourceEvents.indexOf({ $0.isError }) {
-                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: $0.time, event: .Error(Error.CantParseStringToInt))))
+                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
                 } else {
-                    newSourceEvents.append(newEventView(RecordedType(time: $0.time, event: .Error(Error.CantParseStringToInt))))
+                    newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
                 }
             }
         }

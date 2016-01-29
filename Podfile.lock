@@ -1,13 +1,16 @@
 PODS:
+  - Device (0.0.6)
   - RxCocoa (2.0.0):
     - RxSwift (~> 2.0)
   - RxSwift (2.0.0)
 
 DEPENDENCIES:
+  - Device
   - RxCocoa
   - RxSwift
 
 SPEC CHECKSUMS:
+  Device: 2b48a78b55e5631a8b1006b325dfefc32f6b8690
   RxCocoa: b0ebd70b4f7450bdb3c8987b122f8fd568dc1e2f
   RxSwift: d83246efa6f16c50c143bec134649d045498f601
 

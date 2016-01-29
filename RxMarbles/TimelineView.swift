@@ -60,6 +60,23 @@ class TimelineView: UIView {
         return time
     }
     
+    func angles(events: [RecordedType]) -> [CGFloat] {
+        var angles: [CGFloat] = []
+        angles.append(0.0)
+        for index in 1..<events.count {
+            let prev = events[index - 1]
+            let prevAngle = angles[index - 1]
+            let current = events[index]
+            let delta: Int = 10
+            if ((current.time > prev.time - delta) && (current.time < prev.time + delta)) && current.value.isStopEvent == false {
+                angles.append(prevAngle + CGFloat(M_PI / 6.0))
+            } else {
+                angles.append(0.0)
+            }
+        }
+        return angles
+    }
+    
     func setEditing() {
         //overloading
     }
