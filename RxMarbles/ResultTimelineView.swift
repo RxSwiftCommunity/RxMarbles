@@ -15,9 +15,6 @@ class ResultTimelineView: TimelineView {
     
     private var _operator: Operator!
     private weak var _sceneView: SceneView!
-    private var _disposeBag = DisposeBag()
-    
-    var subject = PublishSubject<Void>()
     
     required init?(coder aDecoder: NSCoder) {
         fatalError()
@@ -27,19 +24,6 @@ class ResultTimelineView: TimelineView {
         super.init(frame: frame)
         _operator = rxOperator
         _sceneView = sceneView
-        
-        let powerDevices = [
-            Version.iPhone6,
-            Version.iPhone6S,
-            Version.iPhone6Plus,
-            Version.iPhone6SPlus,
-            Version.iPodTouch6Gen,
-            Version.iPadAir2,
-            Version.iPadMini3,
-            Version.iPadMini4,
-            Version.iPadPro
-        ]
-        let debounce: RxTimeInterval = powerDevices.contains(Device.version()) ? 0.008 : 0.03
         
         subject
             .debounce(debounce, scheduler: MainScheduler.instance)
@@ -51,7 +35,7 @@ class ResultTimelineView: TimelineView {
                 )
             )
         }
-        .addDisposableTo(_disposeBag)
+        .addDisposableTo(disposeBag)
     }
     
     private func updateEvents(sourceEvents: (first: [EventView]?, second: [EventView]?)) {

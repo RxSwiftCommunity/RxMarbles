@@ -41,6 +41,13 @@ class SourceTimelineView: TimelineView {
             .subscribeNext {
                 [unowned self] r in self._handleLongPressGestureRecognizer(r)
         }
+        
+        subject
+            .debounce(debounce, scheduler: MainScheduler.instance)
+            .subscribeNext { [unowned self] in
+                self.rotateEventViews()
+            }
+            .addDisposableTo(disposeBag)
     }
     
     override func layoutSubviews() {
@@ -103,6 +110,7 @@ class SourceTimelineView: TimelineView {
             }
             _panEventView = nil
             sceneView.resultTimeline.subject.onNext()
+            subject.onNext()
             sceneView.hideTrashView()
             
         default: break
@@ -201,5 +209,16 @@ class SourceTimelineView: TimelineView {
     
     func addEventToTimeline(sender: UIButton) {
         NSNotificationCenter.defaultCenter().postNotificationName(Names.addEvent, object: sender)
+    }
+    
+    private func rotateEventViews() {
+        let sortedEvents = self.sourceEvents.sort({ $0.recorded.time < $1.recorded.time })
+        let sortedEventsRecorded = sortedEvents.map({ $0.recorded })
+        let angs = self.angles(sortedEventsRecorded)
+        sortedEvents.forEach({ eventView in
+            if let index = sortedEvents.indexOf({ $0 == eventView }) {
+                eventView.rotateToAngle(angs[index])
+            }
+        })
     }
 }

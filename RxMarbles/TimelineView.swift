@@ -7,11 +7,16 @@
 //
 
 import UIKit
+import RxSwift
+import Device
 
 class TimelineView: UIView {
     var sourceEvents = [EventView]()
     let timeArrow = UIImageView(image: Image.timeLine)
+    var debounce: RxTimeInterval!
+    var disposeBag = DisposeBag()
     weak var sceneView: SceneView!
+    var subject = PublishSubject<Void>()
     var editing: Bool = false {
         didSet {
             setEditing()
@@ -25,6 +30,19 @@ class TimelineView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         addSubview(timeArrow)
+        
+        let powerDevices = [
+            Version.iPhone6,
+            Version.iPhone6S,
+            Version.iPhone6Plus,
+            Version.iPhone6SPlus,
+            Version.iPodTouch6Gen,
+            Version.iPadAir2,
+            Version.iPadMini3,
+            Version.iPadMini4,
+            Version.iPadPro
+        ]
+        debounce = powerDevices.contains(Device.version()) ? 0.008 : 0.03
     }
     
     override func layoutSubviews() {
@@ -67,7 +85,7 @@ class TimelineView: UIView {
             let prev = events[index - 1]
             let prevAngle = angles[index - 1]
             let current = events[index]
-            let delta: Int = 10
+            let delta: Int = 19
             if ((current.time > prev.time - delta) && (current.time < prev.time + delta)) && current.value.isStopEvent == false {
                 angles.append(prevAngle + CGFloat(M_PI / 6.0))
             } else {
