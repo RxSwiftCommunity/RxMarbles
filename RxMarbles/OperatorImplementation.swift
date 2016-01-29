@@ -300,7 +300,12 @@ extension Operator {
     func map(o: (first: TestableObservable<ColoredType>?, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
         case Amb:                  return o.first!.amb(o.second!)
-        case Buffer:               return o.first!.buffer(timeSpan: 100, count: 3, scheduler: scheduler).map({ event in ColoredType(value: "13", color: .redColor(), shape: .Triangle) })
+        case Buffer:               return o.first!
+            .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
+            .map({ events in
+                let values = events.map({$0.value }).joinWithSeparator(", ")
+                return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
+            })
         case CatchError:           return o.first!.catchError({ error in
             return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         })
@@ -322,7 +327,7 @@ extension Operator {
         case FlatMapFirst:         return o.first!.flatMapFirst({ event in return o.second! })
         case FlatMapLatest:        return o.first!.flatMapLatest({ event in return o.second! })
         case IgnoreElements:       return o.first!.ignoreElements()
-        case Just:                 return Observable<ColoredType>.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
+        case Just:                 return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
         case Map:                  return o.first!.map({ h in
             guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
             return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)

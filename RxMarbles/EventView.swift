@@ -54,6 +54,7 @@ class EventView: UIView {
             _imageView.tintColor = Color.black
             layer.zPosition = -1
         }
+      
         
         gravity = UIGravityBehavior(items: [self])
         removeBehavior = UIDynamicItemBehavior(items: [self])
@@ -92,6 +93,7 @@ class EventView: UIView {
             center = CGPointMake(x, timeLine.bounds.height / 2.0)
             snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(x, center.y))
         }
+        
         
         userInteractionEnabled = animator != nil
     }
