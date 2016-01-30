@@ -72,40 +72,42 @@ class ResultTimelineView: TimelineView {
         let sortedEvents = events.sort {
             return $0.time < $1.time
         }
-        let ang = angles(sortedEvents)
+        
+        if !sortedEvents.isEmpty {
+            let ang = angles(sortedEvents)
 
-        var newSourceEvents = [EventView]()
-        sortedEvents.forEach { event in
-            switch event.value {
-            case .Next:
-                let angleIndex = sortedEvents.indexOf({ $0 == event })
-                let angle = ang[angleIndex!]
-                if let index = sourceEvents.indexOf({ $0.isNext }) {
-                    let eventView = reuseEventView(index, recorded: event)
-                    eventView.refreshColorAndValue()
-                    newSourceEvents.append(eventView)
-                    eventView.rotateToAngle(angle)
-                } else {
-                    let eventView = newEventView(RecordedType(time: event.time, event: event.value))
-                    newSourceEvents.append(eventView)
-                    eventView.rotateToAngle(angle)
-                }
-            case .Completed:
-                if let index = sourceEvents.indexOf({ $0.isCompleted }) {
-                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Completed)))
-                } else {
-                    newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Completed)))
-                }
-            case .Error:
-                if let index = sourceEvents.indexOf({ $0.isError }) {
-                    newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
-                } else {
-                    newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
+            var newSourceEvents = [EventView]()
+            sortedEvents.forEach { event in
+                switch event.value {
+                case .Next:
+                    let angleIndex = sortedEvents.indexOf({ $0 == event })
+                    let angle = ang[angleIndex!]
+                    if let index = sourceEvents.indexOf({ $0.isNext }) {
+                        let eventView = reuseEventView(index, recorded: event)
+                        eventView.refreshColorAndValue()
+                        newSourceEvents.append(eventView)
+                        eventView.rotateToAngle(angle)
+                    } else {
+                        let eventView = newEventView(RecordedType(time: event.time, event: event.value))
+                        newSourceEvents.append(eventView)
+                        eventView.rotateToAngle(angle)
+                    }
+                case .Completed:
+                    if let index = sourceEvents.indexOf({ $0.isCompleted }) {
+                        newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Completed)))
+                    } else {
+                        newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Completed)))
+                    }
+                case .Error:
+                    if let index = sourceEvents.indexOf({ $0.isError }) {
+                        newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
+                    } else {
+                        newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
+                    }
                 }
             }
+            sourceEvents = newSourceEvents
         }
-        
-        sourceEvents = newSourceEvents
     }
     
     private func reuseEventView(index: Int, recorded: RecordedType) -> EventView {
