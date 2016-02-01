@@ -43,7 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // MARK: UserActivity
     func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
      
-        var operatorRawValue = Operator.Delay.rawValue
+        var operatorRawValue = Operator.DelaySubscription.rawValue
         // NSUserActivity
         if let _ = UserActivityType(rawValue: userActivity.activityType),
             let opRawValue = userActivity.userInfo?["operator"] as? String {

@@ -13,7 +13,7 @@ enum Operator: String {
     case CombineLatest
     case Concat
     case Debounce
-    case Delay
+    case DelaySubscription
     case DistinctUntilChanged
     case ElementAt
     case Empty

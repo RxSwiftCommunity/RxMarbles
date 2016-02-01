@@ -58,7 +58,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case Delay:
+        case DelaySubscription:
             return InitialValues(
                 line1: [
                     next(100, "", Color.nextRandom, .Circle),
@@ -271,7 +271,7 @@ extension Operator {
             return [aO!, bO!].concat()
         case Debounce:
             return aO!.debounce(100, scheduler: scheduler)
-        case Delay:
+        case DelaySubscription:
             return aO!.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged:
             return aO!.distinctUntilChanged()
@@ -363,7 +363,7 @@ extension Operator {
         .Buffer,
         .CatchError,
         .Debounce,
-        .Delay,
+        .DelaySubscription,
         .DistinctUntilChanged,
         .ElementAt,
         .Empty,

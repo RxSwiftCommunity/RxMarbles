@@ -18,7 +18,7 @@ struct Section {
 class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
     private let _disposeBag = DisposeBag()
 
-    var selectedOperator: Operator  = Operator.Delay {
+    var selectedOperator: Operator  = Operator.DelaySubscription {
         didSet {
             tableView.reloadData()
             let viewController = OperatorViewController(rxOperator: selectedOperator)
@@ -32,7 +32,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     private let _sections = [
         Section(
             name: "Transforming",
-            rows: [.Delay, .Map, .MapWithIndex, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]
+            rows: [.DelaySubscription, .Map, .MapWithIndex, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]
         ),
         Section(
             name: "Combining",

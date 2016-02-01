@@ -25,7 +25,7 @@ extension Operator {
     ,.CombineLatest
     ,.Concat
     ,.Debounce
-    ,.Delay
+    ,.DelaySubscription
     ,.DistinctUntilChanged
     ,.ElementAt
     ,.Empty
