@@ -48,6 +48,7 @@ class SceneView: UIView {
                     secondSourceTimeline.editing = editing
                 }
             }
+            setNeedsLayout()
         }
     }
     
@@ -81,11 +82,14 @@ class SceneView: UIView {
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(0, 80, bounds.width, height)
             refreshSourceEventsCenters(sourceTimeline)
+//            sourceTimeline.subject.onNext()
         
             if secondSourceTimeline != nil {
                 
                 secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
                 refreshSourceEventsCenters(secondSourceTimeline)
+                
+//                secondSourceTimeline.subject.onNext()
             
                 resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
             } else {

@@ -95,8 +95,6 @@ class SourceTimelineView: TimelineView {
                 changeGhostColorAndAlpha(_ghostEventView!, recognizer: r)
                 _ghostEventView!.recorded = panEventView.recorded
                 _ghostEventView!.center = CGPointMake(xPositionByTime(time), bounds.height / 2)
-                
-                sceneView.resultTimeline.subject.onNext()
             }
         case .Ended, .Cancelled:
             _ghostEventView?.removeFromSuperview()
@@ -109,8 +107,6 @@ class SourceTimelineView: TimelineView {
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
-            sceneView.resultTimeline.subject.onNext()
-            subject.onNext()
             sceneView.hideTrashView()
             
         default: break
@@ -148,7 +144,6 @@ class SourceTimelineView: TimelineView {
                 panEventView.hideWithCompletion({ _ in
                     if let index = self.sourceEvents.indexOf(panEventView) {
                         self.sourceEvents.removeAtIndex(index)
-                        self.sceneView.resultTimeline.subject.onNext()
                     }
                 })
             } else {
@@ -211,7 +206,7 @@ class SourceTimelineView: TimelineView {
         NSNotificationCenter.defaultCenter().postNotificationName(Names.addEvent, object: sender)
     }
     
-    private func rotateEventViews() {
+    func rotateEventViews() {
         let sortedEvents = self.sourceEvents.sort({ $0.recorded.time < $1.recorded.time })
         let sortedEventsRecorded = sortedEvents.map({ $0.recorded })
         let angs = self.angles(sortedEventsRecorded)
