@@ -82,20 +82,21 @@ class SceneView: UIView {
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(0, 80, bounds.width, height)
             refreshSourceEventsCenters(sourceTimeline)
-//            sourceTimeline.subject.onNext()
+            sourceTimeline.subject.onNext()
         
             if secondSourceTimeline != nil {
                 
                 secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
                 refreshSourceEventsCenters(secondSourceTimeline)
-                
-//                secondSourceTimeline.subject.onNext()
+                secondSourceTimeline.subject.onNext()
             
                 resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
             } else {
                 resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
             }
-        } else { resultTimeline.frame = CGRectMake(0, 80, bounds.width, height) }
+        } else {
+            resultTimeline.frame = CGRectMake(0, 80, bounds.width, height)
+        }
         
         trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 50)
         resultTimeline.subject.onNext()

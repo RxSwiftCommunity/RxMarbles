@@ -95,6 +95,7 @@ class SourceTimelineView: TimelineView {
                 changeGhostColorAndAlpha(_ghostEventView!, recognizer: r)
                 _ghostEventView!.recorded = panEventView.recorded
                 _ghostEventView!.center = CGPointMake(xPositionByTime(time), bounds.height / 2)
+                subject.onNext()
             }
         case .Ended, .Cancelled:
             _ghostEventView?.removeFromSuperview()
@@ -108,7 +109,7 @@ class SourceTimelineView: TimelineView {
             }
             _panEventView = nil
             sceneView.hideTrashView()
-            
+            subject.onNext()
         default: break
         }
     }
@@ -129,8 +130,8 @@ class SourceTimelineView: TimelineView {
             sceneView.trashView.shake()
             sceneView.trashView.alpha = 0.5
         } else {
-            ghostEventView.stopAnimations()
-            sceneView.trashView.stopAnimations()
+            ghostEventView.stopShakeAnimation()
+            sceneView.trashView.stopShakeAnimation()
             sceneView.trashView.alpha = 0.2
         }
         ghostEventView.setGhostColorOnDeleteZone(onDeleteZone(recognizer))

@@ -30,6 +30,10 @@ extension UIView {
         }
     }
     
+    func stopShakeAnimation() {
+        self.layer.removeAnimationForKey("shake")
+    }
+    
     func hideWithCompletion(completion: (Bool) -> Void) {
         UIView.animateWithDuration(0.3, animations: { () -> Void in
             self.alpha = 0.01
