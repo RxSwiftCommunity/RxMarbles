@@ -248,42 +248,42 @@ extension Operator {
 }
 
 extension Operator {
-    func map(o: (first: TestableObservable<ColoredType>?, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
+    func map(scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
-        case Amb:                  return o.first!.amb(o.second!)
-        case Buffer:               return o.first!
+        case Amb:                  return aO!.amb(bO!)
+        case Buffer:               return aO!
             .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
             .map({ events in
                 let values = events.map({$0.value }).joinWithSeparator(", ")
                 return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
             })
-        case CatchError:           return o.first!.catchError({ error in
+        case CatchError:           return aO!.catchError({ error in
             return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         })
-        case CombineLatest:        return Observable.combineLatest(o.first!, o.second!) {
+        case CombineLatest:        return Observable.combineLatest(aO!, bO!) {
             a, b in
             return ColoredType(value: a.value + b.value, color: a.color, shape: a.shape)
         }
-        case Concat:               return [o.first!, o.second!].concat()
-        case Debounce:             return o.first!.debounce(100, scheduler: scheduler)
-        case Delay:                return o.first!.delaySubscription(150, scheduler: scheduler)
-        case DistinctUntilChanged: return o.first!.distinctUntilChanged()
-        case ElementAt:            return o.first!.elementAt(2)
+        case Concat:               return [aO!, bO!].concat()
+        case Debounce:             return aO!.debounce(100, scheduler: scheduler)
+        case Delay:                return aO!.delaySubscription(150, scheduler: scheduler)
+        case DistinctUntilChanged: return aO!.distinctUntilChanged()
+        case ElementAt:            return aO!.elementAt(2)
         case Empty:                return Observable.empty()
-        case Filter:               return o.first!.filter {
+        case Filter:               return aO!.filter {
             guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
             return a > 10
         }
-        case FlatMap:              return o.first!.flatMap({ event in return o.second! })
-        case FlatMapFirst:         return o.first!.flatMapFirst({ event in return o.second! })
-        case FlatMapLatest:        return o.first!.flatMapLatest({ event in return o.second! })
-        case IgnoreElements:       return o.first!.ignoreElements()
+        case FlatMap:              return aO!.flatMap { _ in bO! }
+        case FlatMapFirst:         return aO!.flatMapFirst { _ in bO! }
+        case FlatMapLatest:        return aO!.flatMapLatest { _ in bO! }
+        case IgnoreElements:       return aO!.ignoreElements()
         case Just:                 return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
-        case Map:                  return o.first!.map({ h in
+        case Map:                  return aO!.map({ h in
             guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
             return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
         })
-        case MapWithIndex:         return o.first!.mapWithIndex({ (element, index) in
+        case MapWithIndex:         return aO!.mapWithIndex({ (element, index) in
             if index == 1 {
                 guard let a = Int(element.value) else { throw Error.CantParseStringToInt }
                 return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
@@ -291,21 +291,20 @@ extension Operator {
                 return element
             }
         })
-        case Merge:                return Observable.of(o.first!, o.second!).merge()
+        case Merge:                return Observable.of(aO!, bO!).merge()
         case Never:                return Observable.never()
         case Reduce:
-            return o.first!.reduce(ColoredType(value: "0", color: .redColor(), shape: o.first!.recordedEvents.first?.value.element?.shape != nil ? (o.first!.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
+            return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: aO!.recordedEvents.first?.value.element?.shape ?? .None), accumulator: { acc, e in
                 var res = acc
-                guard let a = Int(e.value),
-                    let b = Int(res.value) else { throw Error.CantParseStringToInt }
+                guard let a = Int(e.value), let b = Int(res.value) else { throw Error.CantParseStringToInt }
                 res.value = String(a + b)
                 res.color = e.color
                 res.shape = e.shape
                 return res
         })
-        case Retry:                return o.first!.retry(2)
-        case Sample:               return o.first!.sample(o.second!)
-        case Scan:                 return o.first!.scan(ColoredType(value: String(0), color: .redColor(), shape: o.first!.recordedEvents.first?.value.element?.shape != nil ? (o.first!.recordedEvents.first?.value.element?.shape)! : .None), accumulator: { acc, e in
+        case Retry:                return aO!.retry(2)
+        case Sample:               return aO!.sample(bO!)
+        case Scan:                 return aO!.scan(ColoredType(value: String(0), color: Color.nextGreen, shape: aO!.recordedEvents.first?.value.element?.shape ?? .None), accumulator: { acc, e in
             var res = acc
             guard let a = Int(e.value),
                   let b = Int(res.value) else { throw Error.CantParseStringToInt }
@@ -314,12 +313,12 @@ extension Operator {
             res.shape = e.shape
             return res
         })
-        case Skip:                 return o.first!.skip(2)
-        case StartWith:            return o.first!.startWith(ColoredType(value: "2", color: .redColor(), shape: .Circle))
-        case Take:                 return o.first!.take(2)
-        case TakeLast:             return o.first!.takeLast(2)
+        case Skip:                 return aO!.skip(2)
+        case StartWith:            return aO!.startWith(ColoredType(value: "2", color: Color.nextGreen, shape: .Circle))
+        case Take:                 return aO!.take(2)
+        case TakeLast:             return aO!.takeLast(2)
         case Throw:                return Observable.error(Error.CantParseStringToInt)
-        case Zip:                  return Observable.zip(o.first!, o.second!) {
+        case Zip:                  return Observable.zip(aO!, bO!) {
             a, b in
                 return ColoredType(value: a.value + b.value, color: a.color, shape: b.shape)
             }
@@ -330,36 +329,41 @@ extension Operator {
 extension Operator {
     var multiTimelines: Bool {
         switch self {
-        case Amb:                  return true
-        case Buffer:               return false
-        case CatchError:           return false
-        case CombineLatest:        return true
-        case Concat:               return true
-        case Debounce:             return false
-        case Delay:                return false
-        case DistinctUntilChanged: return false
-        case ElementAt:            return false
-        case Empty:                return false
-        case Filter:               return false
-        case FlatMap:              return true
-        case FlatMapFirst:         return true
-        case FlatMapLatest:        return true
-        case IgnoreElements:       return false
-        case Just:                 return false
-        case Map:                  return false
-        case MapWithIndex:         return false
-        case Merge:                return true
-        case Never:                return false
-        case Reduce:               return false
-        case Retry:                return false
-        case Sample:               return true
-        case Scan:                 return false
-        case Skip:                 return false
-        case StartWith:            return false
-        case Take:                 return false
-        case TakeLast:             return false
-        case Throw:                return false
-        case Zip:                  return true
+        case
+        .Amb,
+        .CombineLatest,
+        .Concat,
+        .FlatMap,
+        .FlatMapFirst,
+        .FlatMapLatest,
+        .Merge,
+        .Sample,
+        .Zip:
+            return true
+            
+        case
+        .Buffer,
+        .CatchError,
+        .Debounce,
+        .Delay,
+        .DistinctUntilChanged,
+        .ElementAt,
+        .Empty,
+        .Filter,
+        .IgnoreElements,
+        .Just,
+        .Map,
+        .MapWithIndex,
+        .Never,
+        .Reduce,
+        .Retry,
+        .Scan,
+        .Skip,
+        .StartWith,
+        .Take,
+        .TakeLast,
+        .Throw:
+            return false
         }
     }
     
