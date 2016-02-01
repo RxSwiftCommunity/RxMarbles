@@ -269,7 +269,7 @@ extension Operator {
         case Delay:                return o.first!.delaySubscription(150, scheduler: scheduler)
         case DistinctUntilChanged: return o.first!.distinctUntilChanged()
         case ElementAt:            return o.first!.elementAt(2)
-        case Empty:                return Observable<ColoredType>.empty()
+        case Empty:                return Observable.empty()
         case Filter:               return o.first!.filter {
             guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
             return a > 10
