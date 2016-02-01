@@ -15,6 +15,7 @@ import Crashlytics
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
+    private var _operatorsTableViewController = OperatorsTableViewController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow()
@@ -22,8 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let splitViewController = UISplitViewController()
         splitViewController.delegate = self
         
-        let masterNav = UINavigationController(rootViewController: OperatorsTableViewController())
-        let detailNav = UINavigationController(rootViewController: OperatorViewController())
+        let masterNav = UINavigationController(rootViewController: _operatorsTableViewController)
+        let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: _operatorsTableViewController.selectedOperator))
         
         
         splitViewController.viewControllers = [masterNav, detailNav]
@@ -96,7 +97,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if let detail = primaryViewController.separateSecondaryViewControllerForSplitViewController(splitViewController) {
             return UINavigationController(rootViewController: detail)
         } else {
-            return nil
+            let op = _operatorsTableViewController.selectedOperator
+            return UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
         }
     }
 }

@@ -19,27 +19,35 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
     private var _disposeBag = DisposeBag()
     
-    var currentOperator = Operator.Delay
-    var sceneView: SceneView!
+    private let _sceneView: SceneView
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("unimplemented")
+    }
+    
+    init(rxOperator: Operator) {
+        _sceneView = SceneView(rxOperator: rxOperator, frame: CGRectZero)
+        super.init(nibName: nil, bundle: nil)
+        title = rxOperator.description
+    }
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
-        sceneView.editing = editing
+        _sceneView.editing = editing
         navigationItem.setHidesBackButton(editing, animated: animated)
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = currentOperator.description
         view.backgroundColor = .whiteColor()
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.rightBarButtonItem = editButtonItem()
-        setupSceneView()
-        _currentActivity = currentOperator.userActivity()
+        view.addSubview(_sceneView)
+        _currentActivity = _sceneView.rxOperator.userActivity()
        
-        let recognizers = [sceneView.sourceTimeline?.longPressGestureRecorgnizer,
-                           sceneView.secondSourceTimeline?.longPressGestureRecorgnizer]
+        let recognizers = [_sceneView.sourceTimeline?.longPressGestureRecorgnizer,
+                           _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer]
         
         for r in recognizers where r != nil {
             navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r!)
@@ -58,15 +66,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
+        _sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
     }
     
-    func setupSceneView() {
-        sceneView?.removeFromSuperview()
-        let sceneFrame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
-        sceneView = SceneView(rxOperator: currentOperator, frame: sceneFrame)
-        view.addSubview(sceneView)
-    }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
@@ -86,22 +88,23 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         var time = Int(timeline.bounds.size.width / 2.0)
         
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
-        
+       
+        let sceneView = _sceneView
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
-            timeline.addEventToTimeline(e, animator: self.sceneView.animator)
-            self.sceneView.resultTimeline.subject.onNext()
+            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (timeline == sceneView.sourceTimeline) ? .Circle : .Rect)
+            timeline.addEventToTimeline(e, animator: sceneView.animator)
+            sceneView.resultTimeline.subject.onNext()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
             time = timeline.maxEventTime()! > 850 ? timeline.maxEventTime()! + 30 : 850
             let e = completed(time)
-            timeline.addEventToTimeline(e, animator: self.sceneView.animator)
-            self.sceneView.resultTimeline.subject.onNext()
+            timeline.addEventToTimeline(e, animator: sceneView.animator)
+            sceneView.resultTimeline.subject.onNext()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
             let e = error(500)
-            timeline.addEventToTimeline(e, animator: self.sceneView.animator)
-            self.sceneView.resultTimeline.subject.onNext()
+            timeline.addEventToTimeline(e, animator: sceneView.animator)
+            sceneView.resultTimeline.subject.onNext()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
         
@@ -178,9 +181,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private func saveAction(newEventView: EventView, oldEventView: EventView) {
         if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: sceneView.animator)
+            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: _sceneView.animator)
             oldEventView.removeFromSuperview()
-            sceneView.resultTimeline.subject.onNext()
+            _sceneView.resultTimeline.subject.onNext()
         }
     }
     
