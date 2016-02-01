@@ -76,19 +76,13 @@ class SceneView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        
         let height: CGFloat = 60
-    
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(0, 80, bounds.width, height)
-            refreshSourceEventsCenters(sourceTimeline)
-            sourceTimeline.subject.onNext()
-        
+            
             if secondSourceTimeline != nil {
                 
                 secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
-                refreshSourceEventsCenters(secondSourceTimeline)
-                secondSourceTimeline.subject.onNext()
             
                 resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
             } else {
@@ -100,27 +94,6 @@ class SceneView: UIView {
         
         trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 50)
         resultTimeline.subject.onNext()
-    }
-    
-    func refreshSourceEventsCenters(timeline: SourceTimelineView) {
-        timeline.sourceEvents.forEach {
-            $0.center.x = timeline.xPositionByTime($0.recorded.time)
-            $0.center.y = timeline.bounds.height / 2.0
-            if let snap = $0.snap {
-                snap.snapPoint = CGPointMake(timeline.xPositionByTime($0.recorded.time), timeline.center.y)
-            }
-        }
-    }
-    
-    func updateSourceTimelines() {
-        if !rxOperator.withoutTimelines {
-            sourceTimeline.sourceEvents.forEach({ $0.removeBehavior })
-            sourceTimeline.rotateEventViews()
-            if secondSourceTimeline != nil {
-                secondSourceTimeline.sourceEvents.forEach({ $0.removeBehavior })
-                secondSourceTimeline.rotateEventViews()
-            }
-        }
     }
     
     func showTrashView() {

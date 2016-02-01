@@ -19,7 +19,7 @@ class SourceTimelineView: TimelineView {
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
     
-    private var _needRefreshEventViews: Bool = false
+    private var _needRefreshEventViews: Bool = true
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -51,6 +51,7 @@ class SourceTimelineView: TimelineView {
     }
     
     override func layoutSubviews() {
+        let oldTimeArrowFrame = timeArrow.frame
         super.layoutSubviews()
         
         addButton.center = CGPointMake(frame.size.width - 10.0, bounds.height / 2.0)
@@ -63,9 +64,27 @@ class SourceTimelineView: TimelineView {
             addButton.hidden = true
         }
         
+        let newTimeArrowFrame = timeArrow.frame
+        
+        if oldTimeArrowFrame != newTimeArrowFrame {
+            sourceEvents.forEach({ $0.removeBehavior })
+            sceneView.animator?.removeAllBehaviors()
+            _needRefreshEventViews = true
+        }
+        
         if _needRefreshEventViews {
             _needRefreshEventViews = false
-            sceneView.refreshSourceEventsCenters(self)
+            refreshSourceEventsCenters()
+        }
+    }
+    
+    func refreshSourceEventsCenters() {
+        sourceEvents.forEach {
+            $0.center.x = xPositionByTime($0.recorded.time)
+            $0.center.y = bounds.height / 2.0
+            if let snap = $0.snap {
+                snap.snapPoint = CGPointMake($0.center.x, center.y)
+            }
         }
     }
     
@@ -110,7 +129,6 @@ class SourceTimelineView: TimelineView {
             _panEventView = nil
             sceneView.hideTrashView()
             sceneView.resultTimeline.subject.onNext()
-            performSelector("update", withObject: nil, afterDelay: 1.5)
         default: break
         }
     }
@@ -192,7 +210,6 @@ class SourceTimelineView: TimelineView {
     
     override func setEditing() {
         super.setEditing()
-        _needRefreshEventViews = true
         if editing {
             addTapRecognizers()
             showAddButton()
@@ -217,9 +234,5 @@ class SourceTimelineView: TimelineView {
                 eventView.rotateToAngle(angs[index])
             }
         })
-    }
-    
-    func update() {
-        sceneView.updateSourceTimelines()
     }
 }
