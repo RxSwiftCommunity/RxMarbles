@@ -248,55 +248,6 @@ extension Operator {
 }
 
 extension Operator {
-    var code:[(pre: String, post: String)] {
-        switch self {
-        case Amb: return [(pre: "", post: ""), (pre:".amb(", post: ")")]
-        case CombineLatest:
-            return [
-                (pre: "Observable.combineLatest(", post: ""),
-                (pre: ",", post: ") { $0 + $1 }")
-            ]
-        case Concat:
-            return [
-                (pre: "[", post: ""),
-                (pre: ",", post: "].concat()"),
-            ]
-        case Debounce:
-            return [
-                (pre: "", post: ".debounce(100, scheduler: scheduler)"),
-            ]
-        case Delay:
-            return [
-                (pre: "", post: ".delaySubscription(150, scheduler: scheduler)"),
-            ]
-        case DistinctUntilChanged:
-            return [
-                (pre: "", post: ".distinctUntilChanged()")
-            ]
-        case ElementAt: return [(pre: "", post: ".elementAt(2)")]
-        case FlatMap:   return [(pre: "", post: ""), (pre: ".flatMap({", post: "})")]
-        case Filter:    return [(pre: "", post: ".filter { $0 > 10 } ")]
-        case IgnoreElements: return [(pre: "", post: ".ignoreElements()")]
-        case Map:
-            return [
-                (pre: "", post: ".map( { $0 * 10 } )"),
-            ]
-        case Retry:
-            return [
-                (pre: "", post: ".retry(2)"),
-            ]
-        case Scan:
-            return [
-                (pre: "", post: ".scan(0) { $0 + $1 } "),
-            ]
-        case Skip:      return [(pre: "", post: ".skip(2)")]
-        case Zip:        return [(pre: "Observable.zip(", post: ","), (pre: "", post: ") { $0 + $1 }")]
-        default: return []
-        }
-    }
-}
-
-extension Operator {
     func map(o: (first: TestableObservable<ColoredType>?, second: TestableObservable<ColoredType>?), scheduler: TestScheduler) -> Observable<ColoredType> {
         switch self {
         case Amb:                  return o.first!.amb(o.second!)
