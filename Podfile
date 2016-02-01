@@ -8,6 +8,8 @@ target 'RxMarbles' do
 pod 'RxSwift'
 pod 'RxCocoa'
 pod 'Device'
+pod 'Fabric'
+pod 'Crashlytics'
 
 end
 

@@ -8,6 +8,8 @@
 
 import UIKit
 import CoreSpotlight
+import Fabric
+import Crashlytics
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
@@ -32,6 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         NSOperationQueue.mainQueue().addOperationWithBlock {
             Operator.index()
         }
+        
+        Fabric.with([Crashlytics.self])
         return true
     }
 
