@@ -84,17 +84,20 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
         
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(random() % 10), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
+            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (timeline == self.sceneView.sourceTimeline) ? .Circle : .Rect)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator)
+            self.sceneView.resultTimeline.subject.onNext()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
             time = timeline.maxEventTime()! > 850 ? timeline.maxEventTime()! + 30 : 850
             let e = completed(time)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator)
+            self.sceneView.resultTimeline.subject.onNext()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
             let e = error(500)
             timeline.addEventToTimeline(e, animator: self.sceneView.animator)
+            self.sceneView.resultTimeline.subject.onNext()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
         
@@ -173,6 +176,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
             oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: sceneView.animator)
             oldEventView.removeFromSuperview()
+            sceneView.resultTimeline.subject.onNext()
         }
     }
     

@@ -87,7 +87,7 @@ class TimelineView: UIView {
             let current = events[index]
             let delta: Int = 19
             if ((current.time > prev.time - delta) && (current.time < prev.time + delta)) && current.value.isStopEvent == false {
-                angles.append(prevAngle + CGFloat(M_PI / 6.0))
+                angles.append(prevAngle + CGFloat(M_PI / 5.15))
             } else {
                 angles.append(0.0)
             }

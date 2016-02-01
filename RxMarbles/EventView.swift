@@ -65,6 +65,7 @@ class EventView: UIView {
                     if CGRectIntersectsRect(scene.bounds, self.frame) == false {
                         self.removeFromSuperview()
                         timeline?.sourceEvents.removeAtIndex(index)
+                        scene.resultTimeline.subject.onNext()
                     }
                 }
             }

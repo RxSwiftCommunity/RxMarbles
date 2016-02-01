@@ -112,6 +112,17 @@ class SceneView: UIView {
         }
     }
     
+    func updateSourceTimelines() {
+        if !rxOperator.withoutTimelines {
+            sourceTimeline.sourceEvents.forEach({ $0.removeBehavior })
+            sourceTimeline.rotateEventViews()
+            if secondSourceTimeline != nil {
+                secondSourceTimeline.sourceEvents.forEach({ $0.removeBehavior })
+                secondSourceTimeline.rotateEventViews()
+            }
+        }
+    }
+    
     func showTrashView() {
         addSubview(trashView)
         trashView.hidden = false
