@@ -250,77 +250,95 @@ extension Operator {
 extension Operator {
     func map(scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
-        case Amb:                  return aO!.amb(bO!)
-        case Buffer:               return aO!
-            .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
-            .map({ events in
-                let values = events.map({$0.value }).joinWithSeparator(", ")
-                return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
-            })
-        case CatchError:           return aO!.catchError({ error in
-            return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
-        })
-        case CombineLatest:        return Observable.combineLatest(aO!, bO!) {
-            a, b in
-            return ColoredType(value: a.value + b.value, color: a.color, shape: a.shape)
-        }
-        case Concat:               return [aO!, bO!].concat()
-        case Debounce:             return aO!.debounce(100, scheduler: scheduler)
-        case Delay:                return aO!.delaySubscription(150, scheduler: scheduler)
-        case DistinctUntilChanged: return aO!.distinctUntilChanged()
-        case ElementAt:            return aO!.elementAt(2)
-        case Empty:                return Observable.empty()
-        case Filter:               return aO!.filter {
-            guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
-            return a > 10
-        }
-        case FlatMap:              return aO!.flatMap { _ in bO! }
-        case FlatMapFirst:         return aO!.flatMapFirst { _ in bO! }
-        case FlatMapLatest:        return aO!.flatMapLatest { _ in bO! }
-        case IgnoreElements:       return aO!.ignoreElements()
-        case Just:                 return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
-        case Map:                  return aO!.map({ h in
-            guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
-            return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
-        })
-        case MapWithIndex:         return aO!.mapWithIndex({ (element, index) in
-            if index == 1 {
-                guard let a = Int(element.value) else { throw Error.CantParseStringToInt }
-                return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
-            } else {
-                return element
+        case Amb:
+            return aO!.amb(bO!)
+        case Buffer:
+            return aO!
+                .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
+                .map {
+                    let values = $0.map {$0.value } .joinWithSeparator(", ")
+                    return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
+                }
+        case CatchError:
+            return aO!.catchError { error in
+                return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
             }
-        })
-        case Merge:                return Observable.of(aO!, bO!).merge()
-        case Never:                return Observable.never()
+        case CombineLatest:
+            return Observable.combineLatest(aO!, bO!) {
+                return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
+            }
+        case Concat:
+            return [aO!, bO!].concat()
+        case Debounce:
+            return aO!.debounce(100, scheduler: scheduler)
+        case Delay:
+            return aO!.delaySubscription(150, scheduler: scheduler)
+        case DistinctUntilChanged:
+            return aO!.distinctUntilChanged()
+        case ElementAt:
+            return aO!.elementAt(2)
+        case Empty:
+            return Observable.empty()
+        case Filter:
+            return aO!.filter {
+                guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
+                return a > 10
+            }
+        case FlatMap:
+            return aO!.flatMap { _ in bO! }
+        case FlatMapFirst:
+            return aO!.flatMapFirst { _ in bO! }
+        case FlatMapLatest:
+            return aO!.flatMapLatest { _ in bO! }
+        case IgnoreElements:
+            return aO!.ignoreElements()
+        case Just:
+            return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
+        case Map:
+            return aO!.map { h in
+                guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
+                return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
+            }
+        case MapWithIndex:
+            return aO!.mapWithIndex { element, index in
+                if index == 1 {
+                    guard let a = Int(element.value) else { throw Error.CantParseStringToInt }
+                    return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
+                } else {
+                    return element
+                }
+            }
+        case Merge:
+            return Observable.of(aO!, bO!).merge()
+        case Never:
+            return Observable.never()
         case Reduce:
-            return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: aO!.recordedEvents.first?.value.element?.shape ?? .None), accumulator: { acc, e in
-                var res = acc
-                guard let a = Int(e.value), let b = Int(res.value) else { throw Error.CantParseStringToInt }
-                res.value = String(a + b)
-                res.color = e.color
-                res.shape = e.shape
-                return res
-        })
-        case Retry:                return aO!.retry(2)
-        case Sample:               return aO!.sample(bO!)
-        case Scan:                 return aO!.scan(ColoredType(value: String(0), color: Color.nextGreen, shape: aO!.recordedEvents.first?.value.element?.shape ?? .None), accumulator: { acc, e in
-            var res = acc
-            guard let a = Int(e.value),
-                  let b = Int(res.value) else { throw Error.CantParseStringToInt }
-            res.value = String(a + b)
-            res.color = e.color
-            res.shape = e.shape
-            return res
-        })
-        case Skip:                 return aO!.skip(2)
-        case StartWith:            return aO!.startWith(ColoredType(value: "2", color: Color.nextGreen, shape: .Circle))
-        case Take:                 return aO!.take(2)
-        case TakeLast:             return aO!.takeLast(2)
-        case Throw:                return Observable.error(Error.CantParseStringToInt)
-        case Zip:                  return Observable.zip(aO!, bO!) {
-            a, b in
-                return ColoredType(value: a.value + b.value, color: a.color, shape: b.shape)
+            return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .Circle)) {
+                guard let a = Int($0.value), let b = Int($1.value) else { throw Error.CantParseStringToInt }
+                return ColoredType(value: String(a + b), color: $1.color, shape: $1.shape)
+            }
+        case Retry:
+            return aO!.retry(2)
+        case Sample:
+            return aO!.sample(bO!)
+        case Scan:
+            return aO!.scan(ColoredType(value: "0", color: Color.nextGreen, shape: .Star)) { acc, e in
+                guard let a = Int(e.value), let b = Int(acc.value) else { throw Error.CantParseStringToInt }
+                return ColoredType(value: String(a + b), color: e.color, shape: e.shape)
+            }
+        case Skip:
+            return aO!.skip(2)
+        case StartWith:
+            return aO!.startWith(ColoredType(value: "2", color: Color.nextGreen, shape: .Circle))
+        case Take:
+            return aO!.take(2)
+        case TakeLast:
+            return aO!.takeLast(2)
+        case Throw:
+            return Observable.error(Error.CantParseStringToInt)
+        case Zip:
+            return Observable.zip(aO!, bO!) {
+                return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
             }
         }
     }
@@ -368,6 +386,11 @@ extension Operator {
     }
     
     var withoutTimelines: Bool {
-        return [Empty, Never, Throw, Just].contains(self)
+        switch self {
+        case .Empty, .Never, .Throw, .Just:
+            return true
+        default:
+            return false
+        }
     }
 }
