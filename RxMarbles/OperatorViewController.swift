@@ -17,6 +17,7 @@ struct Names {
 
 class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
+    private var _disposeBag = DisposeBag()
     
     var currentOperator = Operator.Delay
     var sceneView: SceneView!
@@ -44,12 +45,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r!)
         }
         
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "setEventView:", name: Names.setEventView, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "addEventToTimeline:", name: Names.addEvent, object: nil)
-    }
-    
-    deinit {
-        NSNotificationCenter.defaultCenter().removeObserver(self)
+        let notificationCenter = NSNotificationCenter.defaultCenter()
+        
+        notificationCenter.rx_notification(Names.setEventView).subscribeNext {
+            [unowned self] notification in self.setEventView(notification)
+        }.addDisposableTo(_disposeBag)
+        
+        notificationCenter.rx_notification(Names.addEvent).subscribeNext {
+            [unowned self] notification in self.addEventToTimeline(notification)
+        }.addDisposableTo(_disposeBag)
     }
     
     override func viewDidLayoutSubviews() {
