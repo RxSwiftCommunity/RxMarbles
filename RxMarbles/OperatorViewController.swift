@@ -94,14 +94,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         let shareActivity = UIActivityViewController(activityItems: [snapshot], applicationActivities: nil)
-        shareActivity.excludedActivityTypes = [UIActivityTypeMail,
+        shareActivity.excludedActivityTypes = [
+            UIActivityTypeMail,
             UIActivityTypeAssignToContact,
             UIActivityTypeCopyToPasteboard,
             UIActivityTypePrint,
-            UIActivityTypePostToWeibo,
             UIActivityTypeMessage,
             UIActivityTypeAirDrop,
-            UIActivityTypeSaveToCameraRoll]
+            UIActivityTypeSaveToCameraRoll
+        ]
         presentViewController(shareActivity, animated: true, completion: nil)
     }
     
