@@ -1,3 +1,4 @@
+
 //
 //  SceneView.swift
 //  RxMarbles
@@ -37,7 +38,7 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
             addSubview(resultTimeline)
         }
     }
-    var trashView = UIImageView(image: Image.trash)
+    var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
     var rxOperator: Operator
     var editing: Bool = false {
         didSet {
@@ -102,6 +103,7 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
         trashView.hidden = false
         trashView.transform = CGAffineTransformMakeScale(0.1, 0.1)
         trashView.alpha = 0.05
+        trashView.tintColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
         UIView.animateWithDuration(0.3) { _ in
             self.trashView.alpha = 0.2
             self.trashView.transform = CGAffineTransformMakeScale(1.5, 1.5)

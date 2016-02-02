@@ -13,6 +13,7 @@ import UIKit
 struct Image {
     static let timeLine = UIImage(named: "timeLine")!
     static let trash    = UIImage(named: "Trash")!
+    static let rubbish  = UIImage(named: "Rubbish")!
     
     static let nextCircle   = UIImage(named: "nextCircle")!
     static let nextTriangle = UIImage(named: "nextTriangle")!
