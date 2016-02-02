@@ -25,7 +25,7 @@ class EventView: UIView {
     var label = UILabel()
     
     init(recorded: RecordedType) {
-        super.init(frame: CGRectMake(0, 0, 38, 50))
+        super.init(frame: CGRectMake(0, 0, 42, 50))
        
         _imageView.contentMode = .Center
         label.textColor = Color.black
