@@ -43,7 +43,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         view.backgroundColor = .whiteColor()
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
-        navigationItem.rightBarButtonItem = editButtonItem()
+        navigationItem.rightBarButtonItems = [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)
         _currentActivity = _sceneView.rxOperator.userActivity()
@@ -84,6 +84,25 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         _currentActivity?.resignCurrent()
+    }
+    
+//    MARK: Snapshot
+    
+    func makeSnapshot() {
+        UIGraphicsBeginImageContext(_sceneView.frame.size)
+        _sceneView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        let snapshot = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        let shareActivity = UIActivityViewController(activityItems: [snapshot], applicationActivities: nil)
+        shareActivity.excludedActivityTypes = [UIActivityTypeMail,
+            UIActivityTypeAssignToContact,
+            UIActivityTypeCopyToPasteboard,
+            UIActivityTypePrint,
+            UIActivityTypePostToWeibo,
+            UIActivityTypeMessage,
+            UIActivityTypeAirDrop,
+            UIActivityTypeSaveToCameraRoll]
+        presentViewController(shareActivity, animated: true, completion: nil)
     }
     
 //    MARK: Alert controllers
