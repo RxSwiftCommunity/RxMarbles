@@ -36,6 +36,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         super.setEditing(editing, animated: animated)
         _sceneView.editing = editing
         navigationItem.setHidesBackButton(editing, animated: animated)
+        navigationItem.rightBarButtonItems = editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
     }
 
     override func viewDidLoad() {
