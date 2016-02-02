@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SceneView: UIView {
+class SceneView: UIView, UIDynamicAnimatorDelegate {
     var animator: UIDynamicAnimator?
     var sourceTimeline: SourceTimelineView! {
         didSet {
@@ -61,6 +61,7 @@ class SceneView: UIView {
         super.init(frame: frame)
         trashView.frame = CGRectMake(0, 0, 40, 40)
         animator = UIDynamicAnimator(referenceView: self)
+        animator?.delegate = self
         setTimelines()
     }
     
@@ -79,11 +80,9 @@ class SceneView: UIView {
         let height: CGFloat = 60
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
-            
             if secondSourceTimeline != nil {
                 
                 secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
-            
                 resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
             } else {
                 resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
@@ -112,5 +111,16 @@ class SceneView: UIView {
     
     func hideTrashView() {
         trashView.hideWithCompletion({ _ in self.trashView.removeFromSuperview() })
+    }
+    
+//    MARK: UIDynamicAnimatorDelegate methods
+    
+    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
+        if !rxOperator.withoutTimelines {
+            sourceTimeline.subject.onNext()
+            if rxOperator.multiTimelines {
+                secondSourceTimeline.subject.onNext()
+            }
+        }
     }
 }
