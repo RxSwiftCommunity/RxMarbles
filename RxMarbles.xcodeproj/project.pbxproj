@@ -15,7 +15,6 @@
 		0AC265931C3D2C24009E28FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265921C3D2C24009E28FD /* AppDelegate.swift */; };
 		0AC265951C3D2C24009E28FD /* OperatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265941C3D2C24009E28FD /* OperatorViewController.swift */; };
 		0AC2659A1C3D2C24009E28FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 0AC265991C3D2C24009E28FD /* Assets.xcassets */; };
-		0AC265A51C3D2D1B009E28FD /* SpriteKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AC265A41C3D2D1B009E28FD /* SpriteKit.framework */; };
 		0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FB1C3E96C2009E28FD /* Any+Equatable.swift */; };
 		0AC2660A1C3E96C2009E28FD /* ColdObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FC1C3E96C2009E28FD /* ColdObservable.swift */; };
 		0AC2660B1C3E96C2009E28FD /* Event+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FD1C3E96C2009E28FD /* Event+Equatable.swift */; };
@@ -89,7 +88,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0AC265A51C3D2D1B009E28FD /* SpriteKit.framework in Frameworks */,
 				B56EA8098BC0F10D42724B4F /* Pods_RxMarbles.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -506,7 +504,7 @@
 			baseConfigurationReference = E53F520ED8D12F16A6CA768B /* Pods-RxMarbles.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: OOO Transpribor (FD6ZML48V9)";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
