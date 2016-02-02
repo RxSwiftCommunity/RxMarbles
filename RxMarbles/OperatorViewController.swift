@@ -19,6 +19,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
     private var _disposeBag = DisposeBag()
     
+    private let _scrollView = UIScrollView()
     private let _sceneView: SceneView
     
     required init?(coder aDecoder: NSCoder) {
@@ -43,7 +44,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.rightBarButtonItem = editButtonItem()
-        view.addSubview(_sceneView)
+        view.addSubview(_scrollView)
+        _scrollView.addSubview(_sceneView)
         _currentActivity = _sceneView.rxOperator.userActivity()
        
         let recognizers = [_sceneView.sourceTimeline?.longPressGestureRecorgnizer,
@@ -66,7 +68,11 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        _sceneView.frame = CGRectMake(20, 0, view.bounds.size.width - 40, view.bounds.size.height)
+        var height: CGFloat = 70.0
+        _sceneView.subviews.forEach { height += $0.bounds.height }
+        _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, height)
+        _scrollView.frame = view.bounds
+        _scrollView.contentSize.height = _sceneView.bounds.height
     }
     
     

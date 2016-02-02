@@ -59,7 +59,7 @@ class SceneView: UIView {
     init(rxOperator: Operator, frame: CGRect) {
         self.rxOperator = rxOperator
         super.init(frame: frame)
-        trashView.frame = CGRectMake(0, 0, 60, 60)
+        trashView.frame = CGRectMake(0, 0, 40, 40)
         animator = UIDynamicAnimator(referenceView: self)
         setTimelines()
     }
@@ -78,7 +78,7 @@ class SceneView: UIView {
         super.layoutSubviews()
         let height: CGFloat = 60
         if !rxOperator.withoutTimelines {
-            sourceTimeline.frame = CGRectMake(0, 80, bounds.width, height)
+            sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
             
             if secondSourceTimeline != nil {
                 
@@ -89,10 +89,10 @@ class SceneView: UIView {
                 resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
             }
         } else {
-            resultTimeline.frame = CGRectMake(0, 80, bounds.width, height)
+            resultTimeline.frame = CGRectMake(0, 20, bounds.width, height)
         }
         
-        trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 50)
+        trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 25)
         resultTimeline.subject.onNext()
     }
     
