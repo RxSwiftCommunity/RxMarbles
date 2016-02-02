@@ -40,6 +40,17 @@ extension Operator {
                     completed(900)
                 ]
             )
+        case CatchError:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    error(400),
+                    completed(900)
+                ],
+                line2: []
+            )
         case CombineLatest:
             return InitialValues(
                 line1: [
@@ -56,6 +67,20 @@ extension Operator {
                     next(550, "c", Color.nextRandom, .Rect),
                     next(750, "d", Color.nextRandom, .Rect),
                     completed(900)
+                ]
+            )
+        case Concat:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(300, "2", Color.nextRandom, .Circle),
+                    next(600, "3", Color.nextRandom, .Circle),
+                    completed(650)
+                ],
+                line2: [
+                    next(100, "2", Color.nextRandom, .Rect),
+                    next(200, "2", Color.nextRandom, .Rect),
+                    completed(300)
                 ]
             )
         case DelaySubscription:
@@ -114,6 +139,61 @@ extension Operator {
                 line1: [],
                 line2: []
             )
+        case Filter:
+            return InitialValues(
+                line1: [
+                    next(100, "2", Color.nextRandom, .Circle),
+                    next(200, "30", Color.nextRandom, .Circle),
+                    next(300, "22", Color.nextRandom, .Circle),
+                    next(400, "5", Color.nextRandom, .Circle),
+                    next(500, "60", Color.nextRandom, .Circle),
+                    next(600, "1", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case FlatMap:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(500, "3", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    completed(300)
+                ]
+            )
+        case FlatMapFirst:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(500, "3", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    completed(300)
+                ]
+            )
+        case FlatMapLatest:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(500, "3", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    completed(300)
+                ]
+            )
         case IgnoreElements:
             return InitialValues(
                 line1: [
@@ -151,28 +231,73 @@ extension Operator {
                 ],
                 line2: []
             )
+        case MapWithIndex:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(400, "3", Color.nextRandom, .Circle),
+                    next(500, "4", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case Merge:
+            return InitialValues(
+                line1: [
+                    next(150, "20", Color.nextRandom, .Circle),
+                    next(300, "40", Color.nextRandom, .Circle),
+                    next(450, "60", Color.nextRandom, .Circle),
+                    next(600, "80", Color.nextRandom, .Circle),
+                    next(750, "100", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(550, "1", Color.nextRandom, .Circle),
+                    next(650, "2", Color.nextRandom, .Circle),
+                    completed(900)
+                ]
+            )
         case Never:
             return InitialValues(
                 line1: [],
                 line2: []
             )
-        case Filter:
+        case Reduce:
             return InitialValues(
                 line1: [
-                    next(100, "2", Color.nextRandom, .Circle),
-                    next(200, "30", Color.nextRandom, .Circle),
-                    next(300, "22", Color.nextRandom, .Circle),
-                    next(400, "5", Color.nextRandom, .Circle),
-                    next(500, "60", Color.nextRandom, .Circle),
-                    next(600, "1", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(700, "5", Color.nextRandom, .Circle),
                     completed(900)
                 ],
                 line2: []
             )
+        
         case Just:
             return InitialValues(
                 line1: [],
                 line2: []
+            )
+        case Sample:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(400, "3", Color.nextRandom, .Circle),
+                    next(550, "4", Color.nextRandom, .Circle),
+                    next(700, "5", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next( 50, "a", Color.nextRandom, .Rect),
+                    next(250, "b", Color.nextRandom, .Rect),
+                    next(350, "c", Color.nextRandom, .Rect),
+                    next(600, "d", Color.nextRandom, .Rect),
+                    completed(800)
+                ]
             )
         case Scan:
             return InitialValues(
@@ -193,6 +318,37 @@ extension Operator {
                     next(400, "2", Color.nextRandom, .Circle),
                     next(600, "3", Color.nextRandom, .Circle),
                     next(700, "4", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case StartWith:
+            return InitialValues(
+                line1: [
+                    next(300, "2", Color.nextRandom, .Circle),
+                    next(400, "3", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case Take:
+            return InitialValues(
+                line1: [
+                    next(300, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(700, "3", Color.nextRandom, .Circle),
+                    next(800, "4", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
+        case TakeLast:
+            return InitialValues(
+                line1: [
+                    next(300, "1", Color.nextRandom, .Circle),
+                    next(400, "2", Color.nextRandom, .Circle),
+                    next(700, "3", Color.nextRandom, .Circle),
+                    next(800, "4", Color.nextRandom, .Circle),
                     completed(900)
                 ],
                 line2: []
@@ -329,11 +485,11 @@ extension Operator {
         case Skip:
             return aO!.skip(2)
         case StartWith:
-            return aO!.startWith(ColoredType(value: "2", color: Color.nextGreen, shape: .Circle))
+            return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .Circle))
         case Take:
             return aO!.take(2)
         case TakeLast:
-            return aO!.takeLast(2)
+            return aO!.takeLast(1)
         case Throw:
             return Observable.error(Error.CantParseStringToInt)
         case Zip:

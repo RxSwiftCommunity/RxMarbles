@@ -39,7 +39,6 @@ enum Operator: String {
     case Zip
 }
 
-
 extension Operator: CustomStringConvertible {
     var description: String {
         return self.rawValue
