@@ -81,9 +81,10 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
         let height: CGFloat = 60
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
+            sourceTimeline.subject.onNext()
             if secondSourceTimeline != nil {
-                
                 secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
+                secondSourceTimeline.subject.onNext()
                 resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
             } else {
                 resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
