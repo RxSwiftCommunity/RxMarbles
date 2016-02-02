@@ -73,7 +73,6 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, height)
         _scrollView.frame = view.bounds
         _scrollView.contentSize.height = _sceneView.bounds.height
-        
     }
     
     

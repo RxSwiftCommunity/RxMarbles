@@ -92,7 +92,9 @@ class SceneView: UIView {
             resultTimeline.frame = CGRectMake(0, 20, bounds.width, height)
         }
         
-        trashView.center = CGPointMake(bounds.width / 2.0, bounds.height - 25)
+        var timelinesHeight: CGFloat = 0.0
+        subviews.forEach { timelinesHeight += $0.bounds.height }
+        trashView.center = CGPointMake(bounds.width / 2.0, timelinesHeight)
         resultTimeline.subject.onNext()
     }
     
