@@ -89,19 +89,17 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Snapshot
     
     func makeSnapshot() {
-        UIGraphicsBeginImageContext(_sceneView.frame.size)
-        _sceneView.layer.renderInContext(UIGraphicsGetCurrentContext()!)
+        UIGraphicsBeginImageContextWithOptions(_sceneView.bounds.size, true, UIScreen.mainScreen().scale)
+        let c = UIGraphicsGetCurrentContext()!
+        UIColor.whiteColor().setFill()
+        UIRectFill(_sceneView.bounds)
+        _sceneView.layer.renderInContext(c)
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         let shareActivity = UIActivityViewController(activityItems: [snapshot], applicationActivities: nil)
         shareActivity.excludedActivityTypes = [
-            UIActivityTypeMail,
             UIActivityTypeAssignToContact,
-            UIActivityTypeCopyToPasteboard,
             UIActivityTypePrint,
-            UIActivityTypeMessage,
-            UIActivityTypeAirDrop,
-            UIActivityTypeSaveToCameraRoll
         ]
         presentViewController(shareActivity, animated: true, completion: nil)
     }
