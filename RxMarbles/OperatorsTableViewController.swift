@@ -18,7 +18,7 @@ struct Section {
 class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
     private let _disposeBag = DisposeBag()
 
-    var selectedOperator: Operator  = Operator.DelaySubscription {
+    var selectedOperator: Operator = Operator.DelaySubscription {
         didSet {
             tableView.reloadData()
             let viewController = OperatorViewController(rxOperator: selectedOperator)
@@ -152,6 +152,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         }
         tableView.reloadData()
     }
+    
     
 }
 

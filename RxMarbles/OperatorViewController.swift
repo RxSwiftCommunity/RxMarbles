@@ -103,7 +103,10 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             UIActivityTypeAssignToContact,
             UIActivityTypePrint,
         ]
-        presentViewController(shareActivity, animated: true, completion: nil)
+        if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate,
+            let rootViewController = delegate.window?.rootViewController {
+            rootViewController.presentViewController(shareActivity, animated: true, completion: nil)
+        }
     }
     
 //    MARK: Alert controllers
@@ -227,5 +230,19 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         preview.recorded = RecordedType(time: time, event: event)
         preview.label.text = params.value
         preview.setColorOnPreview(params.color)
+    }
+    
+    override func previewActionItems() -> [UIPreviewActionItem] {
+        let shareAction = UIPreviewAction(title: "Share", style: .Default) { action, controller in
+            self.makeSnapshot()
+        }
+        return [shareAction]
+    }
+    
+}
+
+extension UINavigationController {
+    public override func previewActionItems() -> [UIPreviewActionItem] {
+        return viewControllers.last?.previewActionItems() ?? []
     }
 }
