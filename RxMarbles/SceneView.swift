@@ -93,16 +93,13 @@ class SceneView: UIView {
     override func layoutSubviews() {
         super.layoutSubviews()
         let height: CGFloat = 60
-        let labelHeight: CGFloat = 20
+        let labelHeight: CGFloat = 40
         
-        _rxOperatorLabel.frame = CGRectMake(0, 20, bounds.width, labelHeight)
+        _rxOperatorLabel.frame = CGRectMake(10, 20, bounds.width - 20, labelHeight)
         if !rxOperator.withoutTimelines {
-            sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
+            sourceTimeline.frame = CGRectMake(20, 20, bounds.width - 20, height)
             _rxOperatorLabel.frame.origin.y = sourceTimeline.frame.origin.y + height
-            sourceTimeline.subject.onNext()
-                sourceTimeline.frame.origin.x = 20
-                sourceTimeline.frame.size.width = bounds.width - 20.0
-                _aLabel?.frame = CGRectMake(0, sourceTimeline.frame.origin.y, 20, height)
+            _aLabel?.frame = CGRectMake(0, sourceTimeline.frame.origin.y, 20, height)
             
             if rxOperator.multiTimelines {
                 secondSourceTimeline.frame = CGRectMake(20, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width - 20.0, height)
@@ -111,7 +108,7 @@ class SceneView: UIView {
                 _rxOperatorLabel.frame.origin.y = secondSourceTimeline.frame.origin.y + height
             }
         }
-        resultTimeline.frame = CGRectMake(0, _rxOperatorLabel.frame.origin.y + labelHeight, bounds.width, height)
+        resultTimeline.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight, bounds.width - 20, height)
         
         let trashVerticalPosition = resultTimeline.frame.origin.y + resultTimeline.frame.height + 25
         trashView.center = CGPointMake(bounds.width / 2.0, trashVerticalPosition)
