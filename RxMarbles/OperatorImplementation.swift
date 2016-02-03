@@ -452,9 +452,9 @@ extension Operator {
         case Just:
             return "Observable.just()"
         case Map:
-            return ".map { $0 * 10 }"
+            return "a.map { $0 * 10 }"
         case MapWithIndex:
-            return ".mapWithIndex { e, i in i == 1 ? r * 10 : e }"
+            return "a.mapWithIndex { e, i in i == 1 ? r * 10 : e }"
         case Merge:
             return "Observable.of(a, b).merge()"
         case Never:
