@@ -11,6 +11,7 @@ import RxSwift
 import Device
 
 class TimelineView: UIView {
+    
     var sourceEvents = [EventView]()
     let timeArrow = UIImageView(image: Image.timeLine)
     var debounce: RxTimeInterval!
@@ -60,13 +61,13 @@ class TimelineView: UIView {
     
     func xPositionByTime(time: Int) -> CGFloat {
         let maxTime: CGFloat = 1000.0
-        let width = timeArrow.bounds.size.width - 30
+        let width = timeArrow.bounds.size.width - 25
         return (width / maxTime) * CGFloat(time)
     }
     
     func timeByXPosition(x: CGFloat) -> Int {
         let maxTime: CGFloat = 1000.0
-        let width = timeArrow.bounds.size.width - 30
+        let width = timeArrow.bounds.size.width - 25
         var time: Int = 0
         if x < 0 {
             time = 0

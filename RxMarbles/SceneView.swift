@@ -11,15 +11,14 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SceneView: UIView, UIDynamicAnimatorDelegate {
-    var animator: UIDynamicAnimator?
+class SceneView: UIView {
     var sourceTimeline: SourceTimelineView! {
         didSet {
             addSubview(sourceTimeline)
             
             let initial = rxOperator.initial
             for t in initial.line1 {
-                sourceTimeline.addEventToTimeline(t, animator: animator)
+                sourceTimeline.addEventToTimeline(t, animator: sourceTimeline.animator)
             }
         }
     }
@@ -29,7 +28,7 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
 
             let initial = rxOperator.initial
             for t in initial.line2 {
-                secondSourceTimeline.addEventToTimeline(t, animator: animator)
+                secondSourceTimeline.addEventToTimeline(t, animator: secondSourceTimeline.animator)
             }
         }
     }
@@ -41,6 +40,8 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
     var rxOperator: Operator
     private let _rxOperatorLabel = UILabel()
+    private var _aLabel: UILabel?
+    private var _bLabel: UILabel?
     var editing: Bool = false {
         didSet {
             resultTimeline.editing = editing
@@ -62,8 +63,6 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
         self.rxOperator = rxOperator
         super.init(frame: frame)
         trashView.frame = CGRectMake(0, 0, 40, 40)
-        animator = UIDynamicAnimator(referenceView: self)
-        animator?.delegate = self
         setTimelines()
     }
     
@@ -74,11 +73,19 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
         _rxOperatorLabel.textAlignment = .Center
         _rxOperatorLabel.textColor = .blackColor()
         
-        resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 40), rxOperator: rxOperator, sceneView: self)
+        resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
-            sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+            sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             if rxOperator.multiTimelines {
-                secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
+                _aLabel = UILabel()
+                _aLabel!.text = "a: "
+                _aLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
+                addSubview(_aLabel!)
+                _bLabel = UILabel()
+                _bLabel!.text = "b: "
+                _bLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
+                addSubview(_bLabel!)
+                secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             }
         }
     }
@@ -93,8 +100,12 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
             sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
             _rxOperatorLabel.frame.origin.y = sourceTimeline.frame.origin.y + height
             sourceTimeline.subject.onNext()
-            if secondSourceTimeline != nil {
-                secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
+            if rxOperator.multiTimelines {
+                sourceTimeline.frame.origin.x = 20
+                sourceTimeline.frame.size.width = bounds.width - 20.0
+                secondSourceTimeline.frame = CGRectMake(20, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width - 20.0, height)
+                _aLabel?.frame = CGRectMake(0, sourceTimeline.frame.origin.y, 20, height)
+                _bLabel?.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y, 20, height)
                 secondSourceTimeline.subject.onNext()
                 _rxOperatorLabel.frame.origin.y = secondSourceTimeline.frame.origin.y + height
             }
@@ -122,16 +133,5 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     
     func hideTrashView() {
         trashView.hideWithCompletion({ _ in self.trashView.removeFromSuperview() })
-    }
-    
-//    MARK: UIDynamicAnimatorDelegate methods
-    
-    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
-        if !rxOperator.withoutTimelines {
-            sourceTimeline.subject.onNext()
-            if rxOperator.multiTimelines {
-                secondSourceTimeline.subject.onNext()
-            }
-        }
     }
 }

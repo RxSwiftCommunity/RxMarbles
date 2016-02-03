@@ -10,12 +10,10 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SourceTimelineView: TimelineView {
-    
+class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
     var addButton = UIButton(type: .ContactAdd)
-    
     let longPressGestureRecorgnizer = UILongPressGestureRecognizer()
-    
+    var animator: UIDynamicAnimator?
     private var _panEventView: EventView?
     private var _ghostEventView: EventView?
     
@@ -30,6 +28,9 @@ class SourceTimelineView: TimelineView {
         userInteractionEnabled = true
         clipsToBounds = false
         sceneView = scene
+        
+        animator = UIDynamicAnimator(referenceView: self)
+        animator?.delegate = self
         
         longPressGestureRecorgnizer.minimumPressDuration = 0.0
         
@@ -68,7 +69,7 @@ class SourceTimelineView: TimelineView {
         
         if oldTimeArrowFrame != newTimeArrowFrame {
             sourceEvents.forEach({ $0.removeBehavior })
-            sceneView.animator?.removeAllBehaviors()
+            animator?.removeAllBehaviors()
             _needRefreshEventViews = true
         }
         
@@ -83,7 +84,7 @@ class SourceTimelineView: TimelineView {
             $0.center.x = xPositionByTime($0.recorded.time)
             $0.center.y = bounds.height / 2.0
             if let snap = $0.snap {
-                snap.snapPoint = CGPointMake($0.center.x, center.y)
+                snap.snapPoint = $0.center
             }
         }
     }
@@ -169,7 +170,7 @@ class SourceTimelineView: TimelineView {
             } else {
                 if let snap = panEventView.snap {
                     snap.snapPoint.x = xPositionByTime(time)
-                    snap.snapPoint.y = center.y
+                    snap.snapPoint.y = bounds.height / 2.0
                     animator.addBehavior(snap)
                 }
             }
@@ -234,5 +235,11 @@ class SourceTimelineView: TimelineView {
                 eventView.rotateToAngle(angs[index])
             }
         })
+    }
+
+//    MARK: UIDynamicAnimatorDelegate methods
+    
+    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
+        subject.onNext()
     }
 }
