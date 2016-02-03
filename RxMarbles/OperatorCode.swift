@@ -47,7 +47,7 @@ extension Operator {
         case Map:
             return "a.map { $0 * 10 }"
         case MapWithIndex:
-            return "a.mapWithIndex { e, i in i == 1 ? r * 10 : e }"
+            return "a.mapWithIndex { e, i in i == 1 ? e * 10 : e }"
         case Merge:
             return "Observable.of(a, b).merge()"
         case Never:
@@ -78,11 +78,22 @@ extension Operator {
     }
 }
 
-//NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"\\b(a|b)(c|d)\\b"
+let __methodRegex = try? NSRegularExpression(pattern: "\\.[^\\s\\(\\{]+", options: [])
+let __typeRegex = try? NSRegularExpression(pattern: "Observable", options: [])
+let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
+let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
-let __methodRegex = try? NSRegularExpression(pattern: "\\.[^\\s\\(\\{]+", options: .CaseInsensitive)
-let __typeRegex = try? NSRegularExpression(pattern: "Observable", options: .CaseInsensitive)
-let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: .CaseInsensitive)
+func __colorize(src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [String: AnyObject]) {
+    
+    let str = src.string as NSString
+    
+    let matches = regex.matchesInString(src.string, options: [], range: NSMakeRange(0, str.length))
+    
+    for m in matches {
+        let r = m.rangeAtIndex(rangeIndex)
+        src.setAttributes(attrs, range: r)
+    }
+}
 
 extension Operator {
     func higlightedCode() -> NSAttributedString {
@@ -91,36 +102,29 @@ extension Operator {
             NSFontAttributeName: font,
             NSForegroundColorAttributeName: Color.codeDefault
         ])
-        let str = src.string as NSString
         
-        let methods = __methodRegex!.matchesInString(src.string, options: [], range: NSMakeRange(0, str.length))
-        
-        for m in methods {
-            let r = m.range
-            src.setAttributes([
+        __colorize(src, regex: __methodRegex!, rangeIndex: 0, attrs: [
                 NSFontAttributeName: font,
                 NSForegroundColorAttributeName: Color.codeMethod
-            ], range: r)
-        }
-        
-        let numbers = __numberRegex!.matchesInString(src.string, options: [], range: NSMakeRange(0, str.length))
-        
-        for n in numbers {
-            let r = n.rangeAtIndex(1)
-            src.setAttributes([
+            ]
+        )
+        __colorize(src, regex: __numberRegex!, rangeIndex: 1, attrs: [
                 NSFontAttributeName: font,
                 NSForegroundColorAttributeName: Color.codeNumber
-            ], range: r)
-        }
+            ]
+        )
         
-        let types = __typeRegex!.matchesInString(src.string, options: [], range: NSMakeRange(0, str.length))
-        
-        for t in types {
-            src.setAttributes([
+        __colorize(src, regex: __typeRegex!, rangeIndex: 0, attrs: [
                 NSFontAttributeName: font,
                 NSForegroundColorAttributeName: Color.codeType
-            ], range: t.range)
-        }
+            ]
+        )
+        
+        __colorize(src, regex: __keywordRegex!, rangeIndex: 0, attrs: [
+                NSFontAttributeName: font,
+                NSForegroundColorAttributeName: Color.codeKeyword
+            ]
+        )
         
         return src
     }
