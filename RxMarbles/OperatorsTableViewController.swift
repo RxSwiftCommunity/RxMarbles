@@ -28,7 +28,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     
     private let _searchController = UISearchController(searchResultsController: nil)
     private var _filteredSections = [Section]()
-
+    
     private let _sections = [
         Section(
             name: "Transforming",
@@ -153,7 +153,9 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         tableView.reloadData()
     }
     
-    
+    func focusSearch() {
+        _searchController.searchBar.becomeFirstResponder()
+    }
 }
 
 extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
@@ -168,7 +170,6 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
         
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame
-        
         
         return detailController
     }

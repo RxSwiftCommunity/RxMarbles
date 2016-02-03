@@ -16,20 +16,21 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
 
     var window: UIWindow?
     private var _operatorsTableViewController = OperatorsTableViewController()
+    private let _splitViewController = UISplitViewController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow()
         
-        let splitViewController = UISplitViewController()
-        splitViewController.delegate = self
+        
+        _splitViewController.delegate = self
         
         let masterNav = UINavigationController(rootViewController: _operatorsTableViewController)
         let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: _operatorsTableViewController.selectedOperator))
         
         
-        splitViewController.viewControllers = [masterNav, detailNav]
+        _splitViewController.viewControllers = [masterNav, detailNav]
         
-        window?.rootViewController = splitViewController
+        window?.rootViewController = _splitViewController
         
         window?.makeKeyAndVisible()
         NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -99,6 +100,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         } else {
             let op = _operatorsTableViewController.selectedOperator
             return UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
+        }
+    }
+    
+    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        if let nav = _splitViewController.viewControllers.first as? UINavigationController {
+            nav.popToRootViewControllerAnimated(false)
+            
+            _operatorsTableViewController.focusSearch()
         }
     }
 }
