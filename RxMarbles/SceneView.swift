@@ -70,6 +70,7 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     private func setTimelines() {
         addSubview(_rxOperatorLabel)
         _rxOperatorLabel.text = rxOperator.code
+        _rxOperatorLabel.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
         _rxOperatorLabel.textAlignment = .Center
         _rxOperatorLabel.textColor = .blackColor()
         
