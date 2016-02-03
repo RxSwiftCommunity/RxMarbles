@@ -416,7 +416,6 @@ extension Operator {
     }
 }
 
-
 extension Operator {
     func map(scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
