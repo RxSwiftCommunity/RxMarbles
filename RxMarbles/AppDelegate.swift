@@ -107,6 +107,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         if let nav = _splitViewController.viewControllers.first as? UINavigationController {
             nav.popToRootViewControllerAnimated(false)
             
+            _operatorsTableViewController.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
+            
             _operatorsTableViewController.focusSearch()
         }
     }
