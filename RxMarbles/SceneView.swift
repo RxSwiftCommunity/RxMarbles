@@ -76,11 +76,11 @@ class SceneView: UIView {
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
             sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+            _aLabel = UILabel()
+            _aLabel!.text = "a: "
+            _aLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
+            addSubview(_aLabel!)
             if rxOperator.multiTimelines {
-                _aLabel = UILabel()
-                _aLabel!.text = "a: "
-                _aLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
-                addSubview(_aLabel!)
                 _bLabel = UILabel()
                 _bLabel!.text = "b: "
                 _bLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
@@ -100,11 +100,12 @@ class SceneView: UIView {
             sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
             _rxOperatorLabel.frame.origin.y = sourceTimeline.frame.origin.y + height
             sourceTimeline.subject.onNext()
-            if rxOperator.multiTimelines {
                 sourceTimeline.frame.origin.x = 20
                 sourceTimeline.frame.size.width = bounds.width - 20.0
-                secondSourceTimeline.frame = CGRectMake(20, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width - 20.0, height)
                 _aLabel?.frame = CGRectMake(0, sourceTimeline.frame.origin.y, 20, height)
+            
+            if rxOperator.multiTimelines {
+                secondSourceTimeline.frame = CGRectMake(20, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width - 20.0, height)
                 _bLabel?.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y, 20, height)
                 secondSourceTimeline.subject.onNext()
                 _rxOperatorLabel.frame.origin.y = secondSourceTimeline.frame.origin.y + height

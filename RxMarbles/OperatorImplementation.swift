@@ -422,25 +422,25 @@ extension Operator {
         case Amb:
             return "a.amb(b)"
         case Buffer:
-            return ".buffer(timeSpan: 150, count: 3, scheduler: scheduler)"
+            return "a.buffer(timeSpan: 150, count: 3, scheduler: s)"
         case CatchError:
-            return ".catchError(1)"
+            return "a.catchError(1)"
         case CombineLatest:
             return "Observable.combineLatest(a, b) { $0 + $1 }"
         case Concat:
             return "[a, b].concat()"
         case Debounce:
-            return ".debounce(100, scheduler: scheduler)"
+            return "a.debounce(100, scheduler: s)"
         case DelaySubscription:
-            return ".delaySubscription(150, scheduler: scheduler)"
+            return "a.delaySubscription(150, scheduler: s)"
         case DistinctUntilChanged:
-            return ".distinctUntilChanged()"
+            return "a.distinctUntilChanged()"
         case ElementAt:
-            return ".elementAt(2)"
+            return "a.elementAt(2)"
         case Empty:
             return "Observable.empty()"
         case Filter:
-            return ".filter( { $0 > 10 } )"
+            return "a.filter { $0 > 10 }"
         case FlatMap:
             return "a.flatMap(b)"
         case FlatMapFirst:
@@ -448,37 +448,37 @@ extension Operator {
         case FlatMapLatest:
             return "a.flatMapLatest(b)"
         case IgnoreElements:
-            return ".ignoreElements()"
+            return "a.ignoreElements()"
         case Just:
             return "Observable.just()"
         case Map:
-            return ".map( { $0 * 10 } )"
+            return ".map { $0 * 10 }"
         case MapWithIndex:
-            return ".mapWithIndex(1) { $0 * 10 }"
+            return ".mapWithIndex { e, i in i == 1 ? r * 10 : e }"
         case Merge:
             return "Observable.of(a, b).merge()"
         case Never:
             return "Observable.never()"
         case Reduce:
-            return ".reduce( { $0 + $1 } )"
+            return "a.reduce { $0 + $1 }"
         case Retry:
-            return ".retry(2)"
+            return "a.retry(2)"
         case Sample:
             return "a.sample(b)"
         case Scan:
-            return ".scan(0) { $0 + $1 }"
+            return "a.scan(0) { $0 + $1 }"
         case Skip:
-            return ".skip(2)"
+            return "a.skip(2)"
         case StartWith:
-            return ".startWith(1)"
+            return "a.startWith(1)"
         case Take:
-            return ".take(2)"
+            return "a.take(2)"
         case TakeLast:
-            return ".takeLast(1)"
+            return "a.takeLast(1)"
         case Throw:
             return "Observable.error()"
         case Window:
-            return ".window(timeSpan: 300, count: 2, scheduler: scheduler)"
+            return "a.window(timeSpan: 300, count: 2, scheduler: s)"
         case Zip:
             return "Observable.zip(a, b) { $0 + $1 }"
         }
