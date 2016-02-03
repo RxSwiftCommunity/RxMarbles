@@ -358,6 +358,19 @@ extension Operator {
                 line1: [],
                 line2: []
             )
+        case Window:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: []
+            )
         case Zip:
             return InitialValues(
                 line1: [
@@ -492,6 +505,9 @@ extension Operator {
             return aO!.takeLast(1)
         case Throw:
             return Observable.error(Error.CantParseStringToInt)
+        case Window:
+            let window = aO?.window(timeSpan: 300, count: 2, scheduler: scheduler)
+            return window!.merge()
         case Zip:
             return Observable.zip(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
@@ -536,7 +552,8 @@ extension Operator {
         .StartWith,
         .Take,
         .TakeLast,
-        .Throw:
+        .Throw,
+        .Window:
             return false
         }
     }

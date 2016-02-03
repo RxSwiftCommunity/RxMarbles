@@ -32,7 +32,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     private let _sections = [
         Section(
             name: "Transforming",
-            rows: [.DelaySubscription, .Map, .MapWithIndex, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]
+            rows: [.DelaySubscription, .Map, .MapWithIndex, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]//, .Window]
         ),
         Section(
             name: "Combining",

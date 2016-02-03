@@ -36,6 +36,7 @@ enum Operator: String {
     case Take
     case TakeLast
     case Throw
+    case Window
     case Zip
 }
 
