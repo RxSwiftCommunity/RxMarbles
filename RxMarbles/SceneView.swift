@@ -69,7 +69,7 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     
     private func setTimelines() {
         addSubview(_rxOperatorLabel)
-        _rxOperatorLabel.text = rxOperator.description
+        _rxOperatorLabel.text = rxOperator.code
         _rxOperatorLabel.textAlignment = .Center
         _rxOperatorLabel.textColor = .blackColor()
         

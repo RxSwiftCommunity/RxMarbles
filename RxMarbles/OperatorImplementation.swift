@@ -417,6 +417,75 @@ extension Operator {
 }
 
 extension Operator {
+    var code: String {
+        switch self {
+        case Amb:
+            return "a.amb(b)"
+        case Buffer:
+            return ".buffer(timeSpan: 150, count: 3, scheduler: scheduler)"
+        case CatchError:
+            return ".catchError(1)"
+        case CombineLatest:
+            return "Observable.combineLatest(a, b) { $0 + $1 }"
+        case Concat:
+            return "[a, b].concat()"
+        case Debounce:
+            return ".debounce(100, scheduler: scheduler)"
+        case DelaySubscription:
+            return ".delaySubscription(150, scheduler: scheduler)"
+        case DistinctUntilChanged:
+            return ".distinctUntilChanged()"
+        case ElementAt:
+            return ".elementAt(2)"
+        case Empty:
+            return "Observable.empty()"
+        case Filter:
+            return ".filter( { $0 > 10 } )"
+        case FlatMap:
+            return "a.flatMap(b)"
+        case FlatMapFirst:
+            return "a.flatMapFirst(b)"
+        case FlatMapLatest:
+            return "a.flatMapLatest(b)"
+        case IgnoreElements:
+            return ".ignoreElements()"
+        case Just:
+            return "Observable.just()"
+        case Map:
+            return ".map( { $0 * 10 } )"
+        case MapWithIndex:
+            return ".mapWithIndex(1) { $0 * 10 }"
+        case Merge:
+            return "Observable.of(a, b).merge()"
+        case Never:
+            return "Observable.never()"
+        case Reduce:
+            return ".reduce( { $0 + $1 } )"
+        case Retry:
+            return ".retry(2)"
+        case Sample:
+            return "a.sample(b)"
+        case Scan:
+            return ".scan(0) { $0 + $1 }"
+        case Skip:
+            return ".skip(2)"
+        case StartWith:
+            return ".startWith(1)"
+        case Take:
+            return ".take(2)"
+        case TakeLast:
+            return ".takeLast(1)"
+        case Throw:
+            return "Observable.error()"
+        case Window:
+            return ".window(timeSpan: 300, count: 2, scheduler: scheduler)"
+        case Zip:
+            return "Observable.zip(a, b) { $0 + $1 }"
+        }
+    }
+}
+
+extension Operator {
     func map(scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
         case Amb:
