@@ -107,14 +107,19 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Snapshot
     
     func makeSnapshot() {
-        let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.height)
+        let size = _scrollView.bounds.size
+        
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
         let c = UIGraphicsGetCurrentContext()!
+        
         UIColor.whiteColor().setFill()
         UIRectFill(_scrollView.bounds)
+        
         _scrollView.layer.renderInContext(c)
+        
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+        
         let shareActivity = UIActivityViewController(activityItems: [snapshot], applicationActivities: nil)
         shareActivity.excludedActivityTypes = [
             UIActivityTypeAssignToContact,
@@ -256,10 +261,4 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         return [shareAction]
     }
     
-}
-
-extension UINavigationController {
-    public override func previewActionItems() -> [UIPreviewActionItem] {
-        return viewControllers.last?.previewActionItems() ?? []
-    }
 }

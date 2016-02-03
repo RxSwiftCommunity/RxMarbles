@@ -169,15 +169,13 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame
         
-        let navController = UINavigationController(rootViewController: detailController)
-        return navController
+        
+        return detailController
     }
     
     /// Present the view controller for the "Pop" action.
     func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
         // Reuse the "Peek" view controller for presentation.
-        if let navController = viewControllerToCommit as? UINavigationController {
-            showDetailViewController(navController.viewControllers.first!, sender: self)
-        }
+        showDetailViewController(viewControllerToCommit, sender: self)
     }
 }
