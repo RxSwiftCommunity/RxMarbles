@@ -40,6 +40,7 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     }
     var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
     var rxOperator: Operator
+    private let _rxOperatorLabel = UILabel()
     var editing: Bool = false {
         didSet {
             resultTimeline.editing = editing
@@ -67,6 +68,11 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     }
     
     private func setTimelines() {
+        addSubview(_rxOperatorLabel)
+        _rxOperatorLabel.text = rxOperator.description
+        _rxOperatorLabel.textAlignment = .Center
+        _rxOperatorLabel.textColor = .blackColor()
+        
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 40), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
             sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 80), scene: self)
@@ -79,19 +85,20 @@ class SceneView: UIView, UIDynamicAnimatorDelegate {
     override func layoutSubviews() {
         super.layoutSubviews()
         let height: CGFloat = 60
+        let labelHeight: CGFloat = 20
+        
+        _rxOperatorLabel.frame = CGRectMake(0, 20, bounds.width, labelHeight)
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(0, 20, bounds.width, height)
+            _rxOperatorLabel.frame.origin.y = sourceTimeline.frame.origin.y + height
             sourceTimeline.subject.onNext()
             if secondSourceTimeline != nil {
                 secondSourceTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
                 secondSourceTimeline.subject.onNext()
-                resultTimeline.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y + secondSourceTimeline.frame.height, bounds.width, height)
-            } else {
-                resultTimeline.frame = CGRectMake(0, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width, height)
+                _rxOperatorLabel.frame.origin.y = secondSourceTimeline.frame.origin.y + height
             }
-        } else {
-            resultTimeline.frame = CGRectMake(0, 20, bounds.width, height)
         }
+        resultTimeline.frame = CGRectMake(0, _rxOperatorLabel.frame.origin.y + labelHeight, bounds.width, height)
         
         var timelinesHeight: CGFloat = 0.0
         subviews.forEach { timelinesHeight += $0.bounds.height }

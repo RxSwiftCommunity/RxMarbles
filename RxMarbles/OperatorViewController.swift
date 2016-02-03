@@ -69,7 +69,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        var height: CGFloat = 70.0
+        var height: CGFloat = 90.0
         _scrollView.frame = view.bounds
         _sceneView.subviews.forEach { height += $0.bounds.height }
         _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, height)
