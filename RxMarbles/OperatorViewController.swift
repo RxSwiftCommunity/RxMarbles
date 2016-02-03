@@ -36,7 +36,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         super.setEditing(editing, animated: animated)
         _sceneView.editing = editing
         navigationItem.setHidesBackButton(editing, animated: animated)
-        navigationItem.rightBarButtonItems = editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
+        navigationItem.rightBarButtonItems = rightButtonItems()
     }
 
     override func viewDidLoad() {
@@ -44,7 +44,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         view.backgroundColor = .whiteColor()
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
-        navigationItem.rightBarButtonItems = [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
+        navigationItem.rightBarButtonItems = rightButtonItems()
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)
         _currentActivity = _sceneView.rxOperator.userActivity()
@@ -93,6 +93,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     override func viewDidDisappear(animated: Bool) {
         super.viewDidDisappear(animated)
         _currentActivity?.resignCurrent()
+    }
+    
+//    MARK: Button Items
+    
+    private func rightButtonItems() -> [UIBarButtonItem] {
+        if _sceneView.rxOperator.withoutTimelines {
+            return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
+        }
+        return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
     }
     
 //    MARK: Snapshot
