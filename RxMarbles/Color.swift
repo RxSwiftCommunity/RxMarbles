@@ -49,4 +49,10 @@ struct Color {
         return allColors[random() % allColors.count]
     }
     
+    
+    static let codeDefault = Color.black
+    static let codeNumber  = UIColor(netHex: 0x1C00CF)
+    static let codeMethod  = UIColor(netHex: 0x26474B)
+    static let codeKeyword = UIColor(netHex: 0xAA0D91)
+    static let codeType    = UIColor(netHex: 0x3F6E74)
 }

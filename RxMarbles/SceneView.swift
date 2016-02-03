@@ -12,6 +12,12 @@ import RxSwift
 import RxCocoa
 
 class SceneView: UIView {
+    var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
+    var rxOperator: Operator
+    private let _rxOperatorLabel = UILabel()
+    private var _aLabel: UILabel?
+    private var _bLabel: UILabel?
+    
     var sourceTimeline: SourceTimelineView! {
         didSet {
             addSubview(sourceTimeline)
@@ -22,6 +28,7 @@ class SceneView: UIView {
             }
         }
     }
+    
     var secondSourceTimeline: SourceTimelineView! {
         didSet {
             addSubview(secondSourceTimeline)
@@ -32,25 +39,18 @@ class SceneView: UIView {
             }
         }
     }
+    
     var resultTimeline: ResultTimelineView! {
         didSet {
             addSubview(resultTimeline)
         }
     }
-    var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
-    var rxOperator: Operator
-    private let _rxOperatorLabel = UILabel()
-    private var _aLabel: UILabel?
-    private var _bLabel: UILabel?
+    
     var editing: Bool = false {
         didSet {
             resultTimeline.editing = editing
-            if !rxOperator.withoutTimelines {
-                sourceTimeline.editing = editing
-                if rxOperator.multiTimelines {
-                    secondSourceTimeline.editing = editing
-                }
-            }
+            sourceTimeline?.editing = editing
+            secondSourceTimeline?.editing = editing
             setNeedsLayout()
         }
     }
@@ -68,10 +68,10 @@ class SceneView: UIView {
     
     private func setTimelines() {
         addSubview(_rxOperatorLabel)
-        _rxOperatorLabel.text = rxOperator.code
-        _rxOperatorLabel.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
         _rxOperatorLabel.textAlignment = .Center
-        _rxOperatorLabel.textColor = .blackColor()
+        _rxOperatorLabel.minimumScaleFactor = 0.5
+        _rxOperatorLabel.adjustsFontSizeToFitWidth = true
+        _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
         
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
@@ -95,7 +95,7 @@ class SceneView: UIView {
         let height: CGFloat = 60
         let labelHeight: CGFloat = 40
         
-        _rxOperatorLabel.frame = CGRectMake(10, 20, bounds.width - 20, labelHeight)
+        _rxOperatorLabel.frame = CGRectMake(0, 20, bounds.width, labelHeight)
         if !rxOperator.withoutTimelines {
             sourceTimeline.frame = CGRectMake(20, 20, bounds.width - 20, height)
             _rxOperatorLabel.frame.origin.y = sourceTimeline.frame.origin.y + height
@@ -104,11 +104,10 @@ class SceneView: UIView {
             if rxOperator.multiTimelines {
                 secondSourceTimeline.frame = CGRectMake(20, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width - 20.0, height)
                 _bLabel?.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y, 20, height)
-                secondSourceTimeline.subject.onNext()
                 _rxOperatorLabel.frame.origin.y = secondSourceTimeline.frame.origin.y + height
             }
         }
-        resultTimeline.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight, bounds.width - 20, height)
+        resultTimeline.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight + 10, bounds.width - 20, height)
         
         let trashVerticalPosition = resultTimeline.frame.origin.y + resultTimeline.frame.height + 25
         trashView.center = CGPointMake(bounds.width / 2.0, trashVerticalPosition)
