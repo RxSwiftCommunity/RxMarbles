@@ -31,32 +31,32 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     
     private let _sections = [
         Section(
-            name: "Transforming",
-            rows: [.DelaySubscription, .Map, .MapWithIndex, .Scan, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Buffer]//, .Window]
-        ),
-        Section(
             name: "Combining",
             rows: [.CombineLatest, .Concat, .Merge, .StartWith, .Zip]
-        ),
-        Section(
-            name: "Filtering",
-            rows: [.DistinctUntilChanged, .ElementAt, .Filter, .Debounce, .IgnoreElements, .Sample, .Skip, .Take, .TakeLast]
-        ),
-        Section(
-            name: "Mathematical",
-            rows: [.Reduce]
         ),
         Section(
             name: "Conditional",
             rows: [.Amb]
         ),
         Section(
+            name: "Creating",
+            rows: [.Empty, .Just, .Never, .Throw]
+        ),
+        Section(
             name: "Error",
             rows: [.CatchError, .Retry]
         ),
         Section(
-            name: "Creating",
-            rows: [.Empty, .Never, .Throw, .Just]
+            name: "Filtering",
+            rows: [.Debounce, .DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Skip, .Take, .TakeLast]
+        ),
+        Section(
+            name: "Mathematical",
+            rows: [.Reduce]
+        ),
+        Section(
+            name: "Transforming",
+            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan]//, .Window]
         )
     ]
     
