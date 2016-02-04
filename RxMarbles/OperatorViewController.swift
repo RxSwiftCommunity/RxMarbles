@@ -75,7 +75,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         super.viewDidLayoutSubviews()
         _scrollView.frame = view.bounds
         
-        var height: CGFloat = 90.0
+        var height: CGFloat = 130.0
         height += _sceneView.resultTimeline.bounds.height
         if !_sceneView.rxOperator.withoutTimelines {
             height += _sceneView.sourceTimeline.bounds.height
@@ -117,15 +117,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Snapshot
     
     func makeSnapshot() {
-        let size = _scrollView.bounds.size
+        let size = _sceneView.bounds.size
         
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
         let c = UIGraphicsGetCurrentContext()!
         
         UIColor.whiteColor().setFill()
-        UIRectFill(_scrollView.bounds)
+        UIRectFill(_sceneView.bounds)
         
-        _scrollView.layer.renderInContext(c)
+        _sceneView.layer.renderInContext(c)
         
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
