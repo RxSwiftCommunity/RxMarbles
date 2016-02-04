@@ -291,6 +291,6 @@ extension OperatorViewController: UIViewControllerPreviewingDelegate {
     }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
-        showDetailViewController(viewControllerToCommit, sender: self)
+        presentViewController(viewControllerToCommit, animated: true, completion: nil)
     }
 }
