@@ -41,12 +41,13 @@ struct Color {
         return [
             Color.nextLightBlue, Color.nextDarkYellow, Color.nextGreen,
             Color.nextOrange, Color.nextBlue, Color.nextViolet, Color.nextLightBlue,
-            Color.nextLightGreen
+            Color.nextLightGreen, Color.nextLightGray
         ]
     }
     
     static var nextRandom: UIColor {
-        let allColors = nextAll
+        var allColors = nextAll
+        allColors.removeLast()
         return allColors[random() % allColors.count]
     }
     
