@@ -3,7 +3,7 @@
 //  RxMarbles
 //
 //  Created by Yury Korolev on 1/10/16.
-//  Copyright © 2016 Roman Tutubalin. All rights reserved.
+//  Copyright © 2016 AnjLab. All rights reserved.
 //
 
 enum Operator: String {

@@ -4,7 +4,7 @@
 //  RxMarbles
 //
 //  Created by Roman Tutubalin on 21.01.16.
-//  Copyright © 2016 Roman Tutubalin. All rights reserved.
+//  Copyright © 2016 AnjLab. All rights reserved.
 //
 
 import UIKit
