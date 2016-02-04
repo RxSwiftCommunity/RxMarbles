@@ -577,7 +577,7 @@ extension Operator {
         case Buffer:
             return NSURL(string: reactivex + "buffer.html")!
         case CatchError:
-            return NSURL(string: reactivex + "catcherror.html")!
+            return NSURL(string: reactivex + "catch.html")!
         case CombineLatest:
             return NSURL(string: reactivex + "combinelatest.html")!
         case Concat:
