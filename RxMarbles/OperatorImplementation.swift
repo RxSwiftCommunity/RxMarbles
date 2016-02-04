@@ -152,7 +152,7 @@ extension Operator {
                 ],
                 line2: []
             )
-        case FlatMap:
+        case FlatMap, FlatMapFirst, FlatMapLatest:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -161,36 +161,8 @@ extension Operator {
                     completed(900)
                 ],
                 line2: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    completed(300)
-                ]
-            )
-        case FlatMapFirst:
-            return InitialValues(
-                line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(500, "3", Color.nextRandom, .Circle),
-                    completed(900)
-                ],
-                line2: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    completed(300)
-                ]
-            )
-        case FlatMapLatest:
-            return InitialValues(
-                line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(500, "3", Color.nextRandom, .Circle),
-                    completed(900)
-                ],
-                line2: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextLightGray, .Rect),
+                    next(200, "2", Color.nextLightGray, .Rect),
                     completed(300)
                 ]
             )
@@ -454,11 +426,23 @@ extension Operator {
                 return a > 10
             }
         case FlatMap:
-            return aO!.flatMap { _ in bO! }
+            return aO!.flatMap { e in
+                bO!.map { event in
+                    event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
+                }
+            }
         case FlatMapFirst:
-            return aO!.flatMapFirst { _ in bO! }
+            return aO!.flatMapFirst { e in
+                bO!.map { event in
+                    event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
+                }
+            }
         case FlatMapLatest:
-            return aO!.flatMapLatest { _ in bO! }
+            return aO!.flatMapLatest { e in
+                bO!.map { event in
+                    event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
+                }
+            }
         case IgnoreElements:
             return aO!.ignoreElements()
         case Just:
