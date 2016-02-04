@@ -282,9 +282,12 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 extension OperatorViewController: UIViewControllerPreviewingDelegate {
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        let detailController = SFSafariViewController(URL: _sceneView.rxOperator.url)
-        previewingContext.sourceRect = _reactiveXButton.frame
-        return detailController
+        if CGRectContainsPoint(_reactiveXButton.frame, location) {
+            let detailController = SFSafariViewController(URL: _sceneView.rxOperator.url)
+            previewingContext.sourceRect = _reactiveXButton.frame
+            return detailController
+        }
+        return nil
     }
     
     func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
