@@ -515,7 +515,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "8f6f954c-a6ca-4994-965e-7c88bd18f43a";
+				PROVISIONING_PROFILE = "9cfef037-27fa-4209-9687-0eecf12fe481";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
