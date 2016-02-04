@@ -567,3 +567,73 @@ extension Operator {
         }
     }
 }
+
+extension Operator {
+    var url: NSURL {
+        let reactivex = "http://reactivex.io/documentation/operators/"
+        switch self {
+        case Amb:
+            return NSURL(string: reactivex + "amb.html")!
+        case Buffer:
+            return NSURL(string: reactivex + "buffer.html")!
+        case CatchError:
+            return NSURL(string: reactivex + "catcherror.html")!
+        case CombineLatest:
+            return NSURL(string: reactivex + "combinelatest.html")!
+        case Concat:
+            return NSURL(string: reactivex + "concat.html")!
+        case Debounce:
+            return NSURL(string: reactivex + "debounce.html")!
+        case DelaySubscription:
+            return NSURL(string: reactivex + "delay.html")!
+        case DistinctUntilChanged:
+            return NSURL(string: reactivex + "distinct.html")!
+        case ElementAt:
+            return NSURL(string: reactivex + "elementat.html")!
+        case Empty:
+            return NSURL(string: reactivex + "empty-never-throw.html")!
+        case Filter:
+            return NSURL(string: reactivex + "filter.html")!
+        case FlatMap:
+            return NSURL(string: reactivex + "flatmap.html")!
+        case FlatMapFirst:
+            return NSURL(string: reactivex + "flatmap.html")!
+        case FlatMapLatest:
+            return NSURL(string: reactivex + "flatmap.html")!
+        case IgnoreElements:
+            return NSURL(string: reactivex + "ignoreelements.html")!
+        case Just:
+            return NSURL(string: reactivex + "just.html")!
+        case Map:
+            return NSURL(string: reactivex + "map.html")!
+        case MapWithIndex:
+            return NSURL(string: reactivex + "map.html")!
+        case Merge:
+            return NSURL(string: reactivex + "merge.html")!
+        case Never:
+            return NSURL(string: reactivex + "empty-never-throw.html")!
+        case Reduce:
+            return NSURL(string: reactivex + "reduce.html")!
+        case Retry:
+            return NSURL(string: reactivex + "retry.html")!
+        case Sample:
+            return NSURL(string: reactivex + "sample.html")!
+        case Scan:
+            return NSURL(string: reactivex + "scan.html")!
+        case Skip:
+            return NSURL(string: reactivex + "skip.html")!
+        case StartWith:
+            return NSURL(string: reactivex + "startwith.html")!
+        case Take:
+            return NSURL(string: reactivex + "take.html")!
+        case TakeLast:
+            return NSURL(string: reactivex + "takelast.html")!
+        case Throw:
+            return NSURL(string: reactivex + "empty-never-throw.html")!
+        case Window:
+            return NSURL(string: reactivex + "window.html")!
+        case Zip:
+            return NSURL(string: reactivex + "zip.html")!
+        }
+    }
+}

@@ -21,6 +21,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private let _scrollView = UIScrollView()
     private let _sceneView: SceneView
+    private let _reactiveXButton = UIButton(type: .System)
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("unimplemented")
@@ -30,6 +31,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         _sceneView = SceneView(rxOperator: rxOperator, frame: CGRectZero)
         super.init(nibName: nil, bundle: nil)
         title = rxOperator.description
+        _reactiveXButton.setTitle("reactivex.io", forState: .Normal)
+        _reactiveXButton.addTarget(self, action: "openOperatorDocumentation", forControlEvents: .TouchUpInside)
     }
     
     override func setEditing(editing: Bool, animated: Bool) {
@@ -47,6 +50,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.rightBarButtonItems = rightButtonItems()
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)
+        _scrollView.addSubview(_reactiveXButton)
         _currentActivity = _sceneView.rxOperator.userActivity()
        
         let recognizers = [_sceneView.sourceTimeline?.longPressGestureRecorgnizer,
@@ -80,8 +84,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             }
         }
         _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, height)
-        
-        _scrollView.contentSize.height = _sceneView.bounds.height
+        _reactiveXButton.frame = CGRectMake(0, _sceneView.bounds.origin.y + _sceneView.bounds.height, _scrollView.bounds.width, 20)
+        _scrollView.contentSize.height = _sceneView.bounds.height + _reactiveXButton.bounds.height
     }
     
     
@@ -102,6 +106,12 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
         }
         return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
+    }
+    
+//    MARK: Navigation
+    
+    func openOperatorDocumentation() {
+        UIApplication.sharedApplication().openURL(_sceneView.rxOperator.url)
     }
     
 //    MARK: Snapshot
