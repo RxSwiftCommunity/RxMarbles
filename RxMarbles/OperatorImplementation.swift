@@ -590,28 +590,20 @@ extension Operator {
             return NSURL(string: reactivex + "distinct.html")!
         case ElementAt:
             return NSURL(string: reactivex + "elementat.html")!
-        case Empty:
+        case Empty, Never, Throw:
             return NSURL(string: reactivex + "empty-never-throw.html")!
         case Filter:
             return NSURL(string: reactivex + "filter.html")!
-        case FlatMap:
-            return NSURL(string: reactivex + "flatmap.html")!
-        case FlatMapFirst:
-            return NSURL(string: reactivex + "flatmap.html")!
-        case FlatMapLatest:
+        case FlatMap, FlatMapFirst, FlatMapLatest:
             return NSURL(string: reactivex + "flatmap.html")!
         case IgnoreElements:
             return NSURL(string: reactivex + "ignoreelements.html")!
         case Just:
             return NSURL(string: reactivex + "just.html")!
-        case Map:
-            return NSURL(string: reactivex + "map.html")!
-        case MapWithIndex:
+        case Map, MapWithIndex:
             return NSURL(string: reactivex + "map.html")!
         case Merge:
             return NSURL(string: reactivex + "merge.html")!
-        case Never:
-            return NSURL(string: reactivex + "empty-never-throw.html")!
         case Reduce:
             return NSURL(string: reactivex + "reduce.html")!
         case Retry:
@@ -628,8 +620,6 @@ extension Operator {
             return NSURL(string: reactivex + "take.html")!
         case TakeLast:
             return NSURL(string: reactivex + "takelast.html")!
-        case Throw:
-            return NSURL(string: reactivex + "empty-never-throw.html")!
         case Window:
             return NSURL(string: reactivex + "window.html")!
         case Zip:
