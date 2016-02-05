@@ -37,11 +37,12 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
         addGestureRecognizer(longPressGestureRecorgnizer)
         
         addButton.hidden = true
-        _ = longPressGestureRecorgnizer
+        longPressGestureRecorgnizer
             .rx_event
             .subscribeNext {
                 [unowned self] r in self._handleLongPressGestureRecognizer(r)
-        }
+            }
+            .addDisposableTo(disposeBag)
         
         subject
             .debounce(debounce, scheduler: MainScheduler.instance)

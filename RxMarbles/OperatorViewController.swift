@@ -272,6 +272,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         preview.setColorOnPreview(params.color)
     }
     
+//    MARK: Preview Actions
+    
     override func previewActionItems() -> [UIPreviewActionItem] {
         let shareAction = UIPreviewAction(title: "Share", style: .Default) { action, controller in
             self.makeSnapshot()
