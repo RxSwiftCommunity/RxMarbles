@@ -199,66 +199,67 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
                 preview.center = CGPointMake(100.0, 25.0)
                 contentViewController.view.addSubview(preview)
                 
-                let colors = Color.nextAll
-                let currentColor = eventView.recorded.value.element?.color
-                let colorsSegment = UISegmentedControl(items: colors.map { _ in "" } )
-                colorsSegment.tintColor = .clearColor()
-                colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
-                
-                let subviewsCount = colorsSegment.subviews.count
-                for i in 0..<subviewsCount {
-                    colorsSegment.subviews[i].backgroundColor = colors[i]
-                }
-                colorsSegment.selectedSegmentIndex = colors.indexOf({ $0 == currentColor! })!
-                
-                contentViewController.view.addSubview(colorsSegment)
+                let colorsSegmentedControl = contentViewColorsSegmentedControl(eventView)
+                contentViewController.view.addSubview(colorsSegmentedControl)
                 
                 settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
-                
                 settingsAlertController.addTextFieldWithConfigurationHandler({ (textField) -> Void in
                     if let text = eventView.recorded.value.element?.value {
                         textField.text = text
                     }
                 })
+                settingsAlertController.addAction(saveAction(preview, oldEventView: eventView))
                 
-                _ = Observable
-                    .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegment.rx_value, resultSelector: { text, segment in
+                Observable
+                    .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegmentedControl.rx_value, resultSelector: { text, segment in
                         return (text, segment)
                     })
                     .subscribeNext({ (text, segment) in
-                        self.updatePreviewEventView(preview, params: (color: colors[segment], value: text))
+                        self.updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
                     })
-                
-                let saveAction = UIAlertAction(title: "Save", style: .Default) { _ in
-                    self.saveAction(preview, oldEventView: eventView)
-                }
-                settingsAlertController.addAction(saveAction)
+                    .addDisposableTo(_disposeBag)
             } else {
                 settingsAlertController.message = "Delete event?"
             }
-            let deleteAction = UIAlertAction(title: "Delete", style: .Destructive) { _ in
-                self.deleteAction(eventView)
-            }
             let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
-            settingsAlertController.addAction(deleteAction)
+            settingsAlertController.addAction(deleteAction(eventView))
             settingsAlertController.addAction(cancelAction)
             presentViewController(settingsAlertController, animated: true, completion: nil)
         }
     }
     
-    private func saveAction(newEventView: EventView, oldEventView: EventView) {
-        if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
-            oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: oldEventView.timeLine?.animator)
-            oldEventView.removeFromSuperview()
-            _sceneView.resultTimeline.subject.onNext()
+    private func contentViewColorsSegmentedControl(eventView: EventView) -> UISegmentedControl {
+        let colors = Color.nextAll
+        let currentColor = eventView.recorded.value.element?.color
+        let colorsSegment = UISegmentedControl(items: colors.map { _ in "" } )
+        colorsSegment.tintColor = .clearColor()
+        colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
+        
+        let subviewsCount = colorsSegment.subviews.count
+        for i in 0..<subviewsCount {
+            colorsSegment.subviews[i].backgroundColor = colors[i]
+        }
+        colorsSegment.selectedSegmentIndex = colors.indexOf({ $0 == currentColor! })!
+        return colorsSegment
+    }
+    
+    private func saveAction(newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
+        return UIAlertAction(title: "Save", style: .Default) { _ in
+            if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
+                oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
+                oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: oldEventView.timeLine?.animator)
+                oldEventView.removeFromSuperview()
+                self._sceneView.resultTimeline.subject.onNext()
+            }
         }
     }
     
-    private func deleteAction(eventView: EventView) {
-        eventView.animator!.removeAllBehaviors()
-        eventView.animator!.addBehavior(eventView.gravity!)
-        eventView.animator!.addBehavior(eventView.removeBehavior!)
+    private func deleteAction(eventView: EventView) -> UIAlertAction {
+        return UIAlertAction(title: "Delete", style: .Destructive) { _ in
+            eventView.animator!.removeAllBehaviors()
+            eventView.animator!.addBehavior(eventView.gravity!)
+            eventView.animator!.addBehavior(eventView.removeBehavior!)
+        }
     }
     
     private func updatePreviewEventView(preview: EventView, params: (color: UIColor, value: String)) {
