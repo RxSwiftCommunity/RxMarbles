@@ -60,7 +60,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
         
         if addButton.superview != nil {
             addButton.hidden = false
-            timeArrow.frame = CGRectMake(timeArrow.frame.origin.x, timeArrow.frame.origin.y, timeArrow.frame.size.width - 23.0, timeArrow.frame.size.height)
+            timeArrow.frame.size.width -= 23
             timeArrow.center.y = bounds.height / 2.0
         } else {
             addButton.hidden = true

@@ -222,11 +222,11 @@
 			children = (
 				D25E7A4F1C41BD4800B08F70 /* Operator.swift */,
 				D2F561AE1C52B0DD0041C9A3 /* OperatorImplementation.swift */,
+				D28A68471C629073008A8C6F /* OperatorCode.swift */,
 				D2F561AA1C52B0510041C9A3 /* Indexing.swift */,
 				D2F561AC1C52B09B0041C9A3 /* Error.swift */,
 				D2F561B21C52B15B0041C9A3 /* ColoredType.swift */,
 				D2F561B41C52B2160041C9A3 /* EventShape.swift */,
-				D28A68471C629073008A8C6F /* OperatorCode.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
