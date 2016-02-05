@@ -21,8 +21,6 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     var selectedOperator: Operator = Operator.CombineLatest {
         didSet {
             tableView.reloadData()
-            let viewController = OperatorViewController(rxOperator: selectedOperator)
-            showDetailViewController(viewController, sender: nil)
         }
     }
     
@@ -75,7 +73,11 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         tableView
             .rx_itemSelected
             .map(_rowAtIndexPath)
-            .subscribeNext { op in self.selectedOperator = op }
+            .subscribeNext { op in
+                self.selectedOperator = op
+                let viewController = OperatorViewController(rxOperator: self.selectedOperator)
+                self.showDetailViewController(viewController, sender: nil)
+            }
             .addDisposableTo(_disposeBag)
         
         // Check for force touch feature, and add force touch/previewing capability.
@@ -164,9 +166,10 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
         // Obtain the index path and the cell that was pressed.
         guard let indexPath = tableView.indexPathForRowAtPoint(location),
                   cell = tableView.cellForRowAtIndexPath(indexPath) else { return nil }
+        selectedOperator = _rowAtIndexPath(indexPath)
         
         // Create a detail view controller and set its properties.
-        let detailController = OperatorViewController(rxOperator:_rowAtIndexPath(indexPath))
+        let detailController = OperatorViewController(rxOperator:selectedOperator)
         
         // Set the source rect to the cell frame, so surrounding elements are blurred.
         previewingContext.sourceRect = cell.frame
