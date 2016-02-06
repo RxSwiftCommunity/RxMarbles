@@ -82,7 +82,11 @@ extension Operator {
     }
     
     func searchableItem() -> CSSearchableItem {
-       let item = CSSearchableItem(uniqueIdentifier: rawValue, domainIdentifier: "operators", attributeSet: searchableAttributes())
+        let item = CSSearchableItem(
+            uniqueIdentifier: rawValue,
+            domainIdentifier: "operators",
+            attributeSet: searchableAttributes()
+        )
         return item
     }
     
@@ -93,7 +97,8 @@ extension Operator {
         
         let indexVersionKey = "indexVersion"
         
-        if let indexVersion = userDefaults.stringForKey(indexVersionKey) where indexVersion == IndexVersion {
+        if let indexVersion = userDefaults.stringForKey(indexVersionKey)
+            where indexVersion == IndexVersion {
             debugPrint("already indexed")
             return
         }
