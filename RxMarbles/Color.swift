@@ -24,6 +24,7 @@ extension UIColor {
 }
 
 struct Color {
+    
    
     static let nextLightBlue    = UIColor(netHex: 0x54C7FC)
     static let nextDarkYellow   = UIColor(netHex: 0xFFCD00)
