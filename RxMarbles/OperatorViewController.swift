@@ -125,15 +125,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Snapshot
     
     func makeSnapshot() {
-        let size = _sceneView.bounds.size
+        let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height)
         
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
         let c = UIGraphicsGetCurrentContext()!
         
         UIColor.whiteColor().setFill()
-        UIRectFill(_sceneView.bounds)
+        UIRectFill(CGRectMake(0, 0, size.width, size.height))
         
-        _sceneView.layer.renderInContext(c)
+        _scrollView.layer.renderInContext(c)
         
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
