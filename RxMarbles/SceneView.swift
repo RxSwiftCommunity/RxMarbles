@@ -81,7 +81,7 @@ class SceneView: UIView, UITextViewDelegate {
         rxOperatorText.scrollEnabled = false
         rxOperatorText.userInteractionEnabled = true
         rxOperatorText.dataDetectorTypes = UIDataDetectorTypes.Link
-        rxOperatorText.attributedText = rxOperator.text
+        rxOperatorText.attributedText = rxOperator.linkText
         
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
@@ -121,7 +121,12 @@ class SceneView: UIView, UITextViewDelegate {
         
         let size = rxOperatorText.text.boundingRectWithSize(CGSizeMake(bounds.width, 1000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: rxOperatorText.font!], context: nil).size
         rxOperatorText.frame = CGRectMake(0, resultTimeline.frame.origin.y + resultTimeline.frame.height + 10, bounds.width, size.height + 20)
-        trashView.center = rxOperatorText.center
+        
+        if UIApplication.sharedApplication().statusBarOrientation.isLandscape {
+            trashView.center = CGPointMake(rxOperatorText.center.x, UIScreen.mainScreen().bounds.height - 60)
+        } else {
+            trashView.center = rxOperatorText.center
+        }
         resultTimeline.subject.onNext()
     }
     

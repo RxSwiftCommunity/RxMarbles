@@ -617,7 +617,7 @@ extension Operator {
 }
 
 extension Operator {
-    var operatorText: String {
+    var text: String {
         switch self {
         case Amb:
             return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
@@ -684,8 +684,8 @@ extension Operator {
         }
     }
     
-    var text: NSMutableAttributedString {
-        let string = NSMutableAttributedString(string: operatorText)
+    var linkText: NSMutableAttributedString {
+        let string = NSMutableAttributedString(string: text)
         let link = NSMutableAttributedString(string: "Read more...")
         link.addAttribute(NSLinkAttributeName, value: url, range: NSMakeRange(0, link.length))
         string.appendAttributedString(NSAttributedString(string: " "))

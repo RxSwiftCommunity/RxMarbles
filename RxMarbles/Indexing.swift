@@ -61,7 +61,7 @@ extension Operator {
     func searchableAttributes() -> CSSearchableItemAttributeSet {
         let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
         attributes.title = description
-        attributes.contentDescription = operatorText
+        attributes.contentDescription = text
         attributes.keywords = Array<String>(keywords())
         attributes.identifier = rawValue
         attributes.relatedUniqueIdentifier = rawValue
