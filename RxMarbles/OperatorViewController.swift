@@ -14,6 +14,7 @@ import SafariServices
 struct Names {
     static let setEventView = "SetEventView"
     static let addEvent = "AddEvent"
+    static let openOperatorDescription = "OpenRxOperatorLink"
 }
 
 class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
@@ -22,7 +23,6 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private let _scrollView = UIScrollView()
     private let _sceneView: SceneView
-    private let _reactiveXButton = UIButton(type: .System)
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("unimplemented")
@@ -32,9 +32,6 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         _sceneView = SceneView(rxOperator: rxOperator, frame: CGRectZero)
         super.init(nibName: nil, bundle: nil)
         title = rxOperator.description
-        _reactiveXButton.frame = CGRectMake(0, 0, 100, 20)
-        _reactiveXButton.setTitle("reactivex.io", forState: .Normal)
-        _reactiveXButton.addTarget(self, action: "openOperatorDocumentation", forControlEvents: .TouchUpInside)
     }
     
     override func setEditing(editing: Bool, animated: Bool) {
@@ -52,7 +49,6 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.rightBarButtonItems = rightButtonItems()
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)
-        _scrollView.addSubview(_reactiveXButton)
         _currentActivity = _sceneView.rxOperator.userActivity()
        
         let recognizers = [_sceneView.sourceTimeline?.longPressGestureRecorgnizer,
@@ -72,16 +68,16 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             [unowned self] notification in self.addEventToTimeline(notification)
         }.addDisposableTo(_disposeBag)
         
-        if traitCollection.forceTouchCapability == .Available {
-            registerForPreviewingWithDelegate(self, sourceView: _scrollView)
-        }
+        notificationCenter.rx_notification(Names.openOperatorDescription).subscribeNext {
+            [unowned self] notification in self.openOperatorDocumentation(notification)
+        }.addDisposableTo(_disposeBag)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         _scrollView.frame = view.bounds
         
-        var height: CGFloat = 130.0
+        var height: CGFloat = 70.0
         height += _sceneView.resultTimeline.bounds.height
         if !_sceneView.rxOperator.withoutTimelines {
             height += _sceneView.sourceTimeline.bounds.height
@@ -91,8 +87,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         }
         height += _sceneView.rxOperatorText.bounds.height
         _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, height)
-        _reactiveXButton.center = CGPointMake(_scrollView.center.x, _sceneView.bounds.origin.y + _sceneView.bounds.height + 10)
-        _scrollView.contentSize.height = _sceneView.bounds.height + _reactiveXButton.bounds.height
+        _scrollView.contentSize.height = _sceneView.bounds.height
     }
     
     
@@ -117,7 +112,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
 //    MARK: Navigation
     
-    func openOperatorDocumentation() {
+    func openOperatorDocumentation(notification: NSNotification) {
         let safariViewController = SFSafariViewController(URL: _sceneView.rxOperator.url)
         presentViewController(safariViewController, animated: true, completion: nil)
     }
@@ -125,7 +120,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Snapshot
     
     func makeSnapshot() {
-        let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height)
+        let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height - _sceneView.rxOperatorText.bounds.height)
         
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
         let c = UIGraphicsGetCurrentContext()!
@@ -283,18 +278,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     }
 }
 
-extension OperatorViewController: UIViewControllerPreviewingDelegate {
-    
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-        if CGRectContainsPoint(_reactiveXButton.frame, location) {
-            let detailController = SFSafariViewController(URL: _sceneView.rxOperator.url)
-            previewingContext.sourceRect = _reactiveXButton.frame
-            return detailController
-        }
-        return nil
-    }
-    
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
-        presentViewController(viewControllerToCommit, animated: true, completion: nil)
-    }
-}
+//extension OperatorViewController: UIViewControllerPreviewingDelegate {
+//    
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+//        if CGRectContainsPoint(_sceneView.rxOperatorText.frame, location) {
+//            let detailController = SFSafariViewController(URL: _sceneView.rxOperator.url)
+//            previewingContext.sourceRect = _sceneView.rxOperatorText.frame
+//            return detailController
+//        }
+//        return nil
+//    }
+//    
+//    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+//        presentViewController(viewControllerToCommit, animated: true, completion: nil)
+//    }
+//}
