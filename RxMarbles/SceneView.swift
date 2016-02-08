@@ -14,6 +14,8 @@ import RxCocoa
 class SceneView: UIView {
     var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
     var rxOperator: Operator
+    let rxOperatorText = UILabel()
+    
     private let _rxOperatorLabel = UILabel()
     private var _aLabel: UILabel?
     private var _bLabel: UILabel?
@@ -73,6 +75,10 @@ class SceneView: UIView {
         _rxOperatorLabel.adjustsFontSizeToFitWidth = true
         _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
         
+        addSubview(rxOperatorText)
+        rxOperatorText.numberOfLines = 0
+        rxOperatorText.text = rxOperator.text
+        
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
             sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
@@ -111,6 +117,10 @@ class SceneView: UIView {
         
         let trashVerticalPosition = resultTimeline.frame.origin.y + resultTimeline.frame.height + 25
         trashView.center = CGPointMake(bounds.width / 2.0, trashVerticalPosition)
+        
+        let text: NSString = rxOperatorText.text! as NSString
+        let size = text.boundingRectWithSize(CGSizeMake(bounds.width, 1000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: rxOperatorText.font], context: nil).size
+        rxOperatorText.frame = CGRectMake(0, resultTimeline.frame.origin.y + resultTimeline.frame.height + 50, bounds.width, size.height)
         resultTimeline.subject.onNext()
     }
     

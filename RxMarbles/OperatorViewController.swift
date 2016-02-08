@@ -89,6 +89,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
                 height += _sceneView.secondSourceTimeline.bounds.height
             }
         }
+        height += _sceneView.rxOperatorText.bounds.height
         _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, height)
         _reactiveXButton.center = CGPointMake(_scrollView.center.x, _sceneView.bounds.origin.y + _sceneView.bounds.height + 10)
         _scrollView.contentSize.height = _sceneView.bounds.height + _reactiveXButton.bounds.height
