@@ -617,7 +617,7 @@ extension Operator {
 }
 
 extension Operator {
-    private var operatorText: String {
+    var operatorText: String {
         switch self {
         case Amb:
             return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
