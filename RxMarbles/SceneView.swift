@@ -77,6 +77,7 @@ class SceneView: UIView {
         
         addSubview(rxOperatorText)
         rxOperatorText.numberOfLines = 0
+        rxOperatorText.font = UIFont.monospacedDigitSystemFontOfSize(12, weight: UIFontWeightRegular)
         rxOperatorText.text = rxOperator.text
         
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
