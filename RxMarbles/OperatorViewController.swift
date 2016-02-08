@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 import SafariServices
+import Device
 
 struct Names {
     static let setEventView = "SetEventView"
@@ -105,9 +106,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private func rightButtonItems() -> [UIBarButtonItem] {
         if _sceneView.rxOperator.withoutTimelines {
-            return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
+            return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot:")]
         }
-        return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot")]
+        return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot:")]
     }
     
 //    MARK: Navigation
@@ -119,7 +120,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
 //    MARK: Snapshot
     
-    func makeSnapshot() {
+    func makeSnapshot(sender: AnyObject?) {
         let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height - _sceneView.rxOperatorText.bounds.height)
         
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
@@ -140,8 +141,14 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         ]
         if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate,
             let rootViewController = delegate.window?.rootViewController {
-            rootViewController.presentViewController(shareActivity, animated: true, completion: nil)
-        }
+                if Device.type() == .iPad || Device.type() == .Simulator {
+                    shareActivity.popoverPresentationController?.sourceView = view
+                    if let shareButtonItem = sender {
+                        shareActivity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
+                    }
+                }
+                rootViewController.presentViewController(shareActivity, animated: true, completion: nil)
+            }
     }
     
 //    MARK: Alert controllers
@@ -272,7 +279,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func previewActionItems() -> [UIPreviewActionItem] {
         let shareAction = UIPreviewAction(title: "Share", style: .Default) { action, controller in
-            self.makeSnapshot()
+            self.makeSnapshot(nil)
         }
         return [shareAction]
     }
