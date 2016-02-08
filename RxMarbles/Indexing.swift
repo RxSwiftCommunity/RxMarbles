@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import CoreSpotlight
 
-let IndexVersion = "v1"
+let IndexVersion = "v2"
 
 enum UserActivityType: String {
     case OperatorView
@@ -61,7 +61,7 @@ extension Operator {
     func searchableAttributes() -> CSSearchableItemAttributeSet {
         let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
         attributes.title = description
-        attributes.contentDescription = "RxSwift \(self) operator diagram"
+        attributes.contentDescription = text
         attributes.keywords = Array<String>(keywords())
         attributes.identifier = rawValue
         attributes.relatedUniqueIdentifier = rawValue
