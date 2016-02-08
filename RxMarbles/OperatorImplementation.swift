@@ -617,70 +617,80 @@ extension Operator {
 }
 
 extension Operator {
-    var text: String {
+    private var operatorText: String {
         switch self {
         case Amb:
             return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
         case Buffer:
-            return "Buffer periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time."
+            return "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time."
         case CatchError:
-            return "CatchError recover from an onError notification by continuing the sequence without error."
+            return "Recover from an onError notification by continuing the sequence without error."
         case CombineLatest:
-            return "CombineLatest when an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function."
+            return "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function."
         case Concat:
-            return "Concat emit the emissions from two or more Observables without interleaving them."
+            return "Emit the emissions from two or more Observables without interleaving them."
         case Debounce:
-            return "Debounce only emit an item from an Observable if a particular timespan has passed without it emitting another item."
+            return "Only emit an item from an Observable if a particular timespan has passed without it emitting another item."
         case DelaySubscription:
-            return "DelaySubscription shift the emissions from an Observable forward in time by a particular amount."
+            return "Shift the emissions from an Observable forward in time by a particular amount."
         case DistinctUntilChanged:
-            return "DistinctUntilChanged suppress duplicate items emitted by an Observable."
+            return "Suppress duplicate items emitted by an Observable."
         case ElementAt:
-            return "ElementAt emit only item n emitted by an Observable."
+            return "Emit only item n emitted by an Observable."
         case Empty:
-            return "Empty create an Observable that emits no items but terminates normally."
+            return "Create an Observable that emits no items but terminates normally."
         case Filter:
-            return "Filter emit only those items from an Observable that pass a predicate test."
+            return "Emit only those items from an Observable that pass a predicate test."
         case FlatMap:
-            return "FlatMap transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
+            return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
         case FlatMapFirst:
-            return "FlatMapFirst transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
+            return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
         case FlatMapLatest:
-            return "FlatMapLatest transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
+            return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
         case IgnoreElements:
-            return "IgnoreElements do not emit any items from an Observable but mirror its termination notification."
+            return "Do not emit any items from an Observable but mirror its termination notification."
         case Just:
-            return "Just create an Observable that emits a particular item."
+            return "Create an Observable that emits a particular item."
         case Map:
-            return "Map transform the items emitted by an Observable by applying a function to each item."
+            return "Transform the items emitted by an Observable by applying a function to each item."
         case MapWithIndex:
-            return "MapWithIndex transform the items emitted by an Observable by applying a function to each item."
+            return "Transform the items emitted by an Observable by applying a function to each item."
         case Merge:
-            return "Merge combine multiple Observables into one by merging their emissions."
+            return "Combine multiple Observables into one by merging their emissions."
         case Never:
-            return "Never create an Observable that emits no items and does not terminate."
+            return "Create an Observable that emits no items and does not terminate."
         case Reduce:
-            return "Reduce apply a function to each item emitted by an Observable, sequentially, and emit the final value."
+            return "Apply a function to each item emitted by an Observable, sequentially, and emit the final value."
         case Retry:
-            return "Retry if a source Observable emits an error, resubscribe to it in the hopes that it will complete without error."
+            return "If a source Observable emits an error, resubscribe to it in the hopes that it will complete without error."
         case Sample:
-            return "Sample emit the most recent items emitted by an Observable within periodic time intervals."
+            return "Emit the most recent items emitted by an Observable within periodic time intervals."
         case Scan:
-            return "Scan apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
+            return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
         case Skip:
-            return "Skip suppress the first n items emitted by an Observable."
+            return "Suppress the first n items emitted by an Observable."
         case StartWith:
-            return "StartWith emit a specified sequence of items before beginning to emit the items from the source Observable."
+            return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
         case Take:
-            return "Take emit only the first n items emitted by an Observable."
+            return "Emit only the first n items emitted by an Observable."
         case TakeLast:
-            return "TakeLast emit only the final n items emitted by an Observable."
+            return "Emit only the final n items emitted by an Observable."
         case Throw:
-            return "Throw create an Observable that emits no items and terminates with an error."
+            return "Create an Observable that emits no items and terminates with an error."
         case Window:
-            return "Window periodically subdivide items from an Observable into Observable windows and emit these windows rather than emitting the items one at a time."
+            return "Periodically subdivide items from an Observable into Observable windows and emit these windows rather than emitting the items one at a time."
         case Zip:
-            return "Zip combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function."
+            return "Combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function."
         }
+    }
+    
+    var text: NSMutableAttributedString {
+        let string = NSMutableAttributedString(string: operatorText)
+        let link = NSMutableAttributedString(string: "Read more...")
+        link.addAttribute(NSLinkAttributeName, value: url, range: NSMakeRange(0, link.length))
+        string.appendAttributedString(NSAttributedString(string: " "))
+        string.appendAttributedString(link)
+        string.addAttribute(NSFontAttributeName, value: UIFont(name: "Menlo-Regular", size: 16)!, range: NSMakeRange(0, string.length))
+        return string
     }
 }

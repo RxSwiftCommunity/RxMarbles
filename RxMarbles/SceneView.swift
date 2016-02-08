@@ -11,9 +11,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SceneView: UIView {
+class SceneView: UIView, UITextViewDelegate {
     var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
     var rxOperator: Operator
+    let rxOperatorText = UITextView()
+    
     private let _rxOperatorLabel = UILabel()
     private var _aLabel: UILabel?
     private var _bLabel: UILabel?
@@ -73,6 +75,14 @@ class SceneView: UIView {
         _rxOperatorLabel.adjustsFontSizeToFitWidth = true
         _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
         
+        addSubview(rxOperatorText)
+        rxOperatorText.delegate = self
+        rxOperatorText.editable = false
+        rxOperatorText.scrollEnabled = false
+        rxOperatorText.userInteractionEnabled = true
+        rxOperatorText.dataDetectorTypes = UIDataDetectorTypes.Link
+        rxOperatorText.attributedText = rxOperator.text
+        
         resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
             sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
@@ -109,8 +119,9 @@ class SceneView: UIView {
         }
         resultTimeline.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight + 10, bounds.width - 20, height)
         
-        let trashVerticalPosition = resultTimeline.frame.origin.y + resultTimeline.frame.height + 25
-        trashView.center = CGPointMake(bounds.width / 2.0, trashVerticalPosition)
+        let size = rxOperatorText.text.boundingRectWithSize(CGSizeMake(bounds.width, 1000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: rxOperatorText.font!], context: nil).size
+        rxOperatorText.frame = CGRectMake(0, resultTimeline.frame.origin.y + resultTimeline.frame.height + 10, bounds.width, size.height + 20)
+        trashView.center = rxOperatorText.center
         resultTimeline.subject.onNext()
     }
     
@@ -121,6 +132,7 @@ class SceneView: UIView {
         trashView.alpha = 0.05
         trashView.tintColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
         UIView.animateWithDuration(0.3) { _ in
+            self.rxOperatorText.alpha = 0.04
             self.trashView.alpha = 0.2
             self.trashView.transform = CGAffineTransformMakeScale(1.5, 1.5)
             self.trashView.transform = CGAffineTransformMakeScale(1.0, 1.0)
@@ -128,6 +140,18 @@ class SceneView: UIView {
     }
     
     func hideTrashView() {
-        trashView.hideWithCompletion({ _ in self.trashView.removeFromSuperview() })
+        trashView.hideWithCompletion({ _ in
+            UIView.animateWithDuration(0.3) { _ in
+                self.rxOperatorText.alpha = 1.0
+            }
+            self.trashView.removeFromSuperview()
+        })
+    }
+    
+//    MARK: UITextViewDelegate methods
+    
+    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+        NSNotificationCenter.defaultCenter().postNotificationName(Names.openOperatorDescription, object: nil)
+        return false
     }
 }
