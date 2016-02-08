@@ -277,19 +277,3 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         return [shareAction]
     }
 }
-
-//extension OperatorViewController: UIViewControllerPreviewingDelegate {
-//    
-//    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
-//        if CGRectContainsPoint(_sceneView.rxOperatorText.frame, location) {
-//            let detailController = SFSafariViewController(URL: _sceneView.rxOperator.url)
-//            previewingContext.sourceRect = _sceneView.rxOperatorText.frame
-//            return detailController
-//        }
-//        return nil
-//    }
-//    
-//    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
-//        presentViewController(viewControllerToCommit, animated: true, completion: nil)
-//    }
-//}

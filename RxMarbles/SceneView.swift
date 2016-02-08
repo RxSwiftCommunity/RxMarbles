@@ -10,6 +10,7 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import Device
 
 class SceneView: UIView, UITextViewDelegate {
     var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
@@ -122,7 +123,7 @@ class SceneView: UIView, UITextViewDelegate {
         let size = rxOperatorText.text.boundingRectWithSize(CGSizeMake(bounds.width, 1000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: rxOperatorText.font!], context: nil).size
         rxOperatorText.frame = CGRectMake(0, resultTimeline.frame.origin.y + resultTimeline.frame.height + 10, bounds.width, size.height + 20)
         
-        if UIApplication.sharedApplication().statusBarOrientation.isLandscape {
+        if UIApplication.sharedApplication().statusBarOrientation.isLandscape && Device.isSmallerThanScreenSize(.Screen4_7Inch) {
             trashView.center = CGPointMake(rxOperatorText.center.x, UIScreen.mainScreen().bounds.height - 60)
         } else {
             trashView.center = rxOperatorText.center
