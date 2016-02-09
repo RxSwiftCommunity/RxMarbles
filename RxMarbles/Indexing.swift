@@ -60,7 +60,7 @@ extension Operator {
         activity.keywords = _keywords()
         activity.eligibleForSearch = true
         activity.eligibleForPublicIndexing = true
-        activity.userInfo = ["operator": self.rawValue]
+        activity.userInfo = ["operator": rawValue]
         
         
         activity.contentAttributeSet = _searchableAttributes()
@@ -73,22 +73,23 @@ extension Operator {
     
     private func _searchableAttributes() -> CSSearchableItemAttributeSet {
         let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
+        
         attributes.title = description
         attributes.contentDescription = text
         attributes.keywords = Array<String>(_keywords())
         attributes.identifier = rawValue
         attributes.relatedUniqueIdentifier = rawValue
+        
         return attributes
     }
     
     
     private func _searchableItem() -> CSSearchableItem {
-        let item = CSSearchableItem(
+        return CSSearchableItem(
             uniqueIdentifier: rawValue,
             domainIdentifier: "operators",
             attributeSet: _searchableAttributes()
         )
-        return item
     }
     
     static func index() {
