@@ -21,7 +21,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         window = UIWindow()
         
-        
         _splitViewController.delegate = self
         
         let masterNav = UINavigationController(rootViewController: _operatorsTableViewController)
@@ -41,29 +40,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return true
     }
 
-    // MARK: UserActivity
-    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
-     
-        var operatorRawValue = Operator.CombineLatest.rawValue
-        // NSUserActivity
-        if let _ = UserActivityType(rawValue: userActivity.activityType),
-            let opRawValue = userActivity.userInfo?["operator"] as? String {
-            operatorRawValue = opRawValue
-        // Spotlite index
-        } else if userActivity.activityType == CSSearchableItemActionType,
-            let opRawValue = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
-            operatorRawValue = opRawValue
-        }
-        if let op = Operator(rawValue: operatorRawValue),
-            let splitViewController = window?.rootViewController as? UISplitViewController,
-            let masterNav = splitViewController.viewControllers.first as? UINavigationController,
-            let operatorsController = masterNav.viewControllers.first as? OperatorsTableViewController {
-                operatorsController.selectedOperator = op
-                return true
-        }
-        return false
-    }
-    
     // MARK: UISplitViewControllerDelegate
     func splitViewController(splitViewController: UISplitViewController, showDetailViewController vc: UIViewController, sender: AnyObject?) -> Bool {
       
@@ -102,7 +78,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             return UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
         }
     }
-    
+   
+    // MARK: Shortcuts
     func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
         if let nav = _splitViewController.viewControllers.first as? UINavigationController {
             nav.popToRootViewControllerAnimated(false)
@@ -112,5 +89,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             _operatorsTableViewController.focusSearch()
         }
     }
+    
+    // MARK: UserActivity
+    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
+     
+        var operatorRawValue = Operator.CombineLatest.rawValue
+        
+        // NSUserActivity
+        if let _ = UserActivityType(rawValue: userActivity.activityType),
+            let opRawValue = userActivity.userInfo?["operator"] as? String {
+            operatorRawValue = opRawValue
+        // Spotlite index
+        } else if userActivity.activityType == CSSearchableItemActionType,
+            let opRawValue = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
+            operatorRawValue = opRawValue
+        }
+        if  let op = Operator(rawValue: operatorRawValue),
+            let nav = _splitViewController.viewControllers.first as? UINavigationController {
+            nav.popToRootViewControllerAnimated(false)
+            _operatorsTableViewController.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
+            _operatorsTableViewController.openOperator(op)
+        }
+        
+        return false
+    }
+    
 }
 

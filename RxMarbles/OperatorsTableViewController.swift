@@ -73,10 +73,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         tableView
             .rx_itemSelected
             .map(_rowAtIndexPath)
-            .subscribeNext { op in
-                self.selectedOperator = op
-                let viewController = OperatorViewController(rxOperator: self.selectedOperator)
-                self.showDetailViewController(viewController, sender: nil)
+            .subscribeNext { [unowned self] op in self.openOperator(op)
             }
             .addDisposableTo(_disposeBag)
         
@@ -92,6 +89,12 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
             */
             registerForPreviewingWithDelegate(self, sourceView: view)
         }
+    }
+    
+    func openOperator(op: Operator) {
+        selectedOperator = op
+        let viewController = OperatorViewController(rxOperator: selectedOperator)
+        showDetailViewController(viewController, sender: nil)
     }
 
     // MARK: - Table view data source
