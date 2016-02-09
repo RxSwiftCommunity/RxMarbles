@@ -8,7 +8,7 @@
 
 import UIKit
 
-var __coloredImages = [String: UIImage]()
+private var __coloredImages = [String: UIImage]()
 
 enum EventShape: String {
     case Circle
@@ -51,11 +51,11 @@ enum EventShape: String {
         
         UIRectFillUsingBlendMode(r, CGBlendMode.Color)
         
-        let res = UIGraphicsGetImageFromCurrentImageContext()
+        let res = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
         
-        __coloredImages[key] = res!
+        __coloredImages[key] = res
         return res
     }
 }
