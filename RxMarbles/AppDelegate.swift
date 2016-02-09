@@ -15,10 +15,13 @@ import Crashlytics
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
-    private var _operatorsTableViewController = OperatorsTableViewController()
+    
+    private let _operatorsTableViewController = OperatorsTableViewController()
     private let _splitViewController = UISplitViewController()
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+        Fabric.with([Crashlytics.self])
+        
         window = UIWindow()
         
         _splitViewController.delegate = self
@@ -26,17 +29,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let masterNav = UINavigationController(rootViewController: _operatorsTableViewController)
         let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: _operatorsTableViewController.selectedOperator))
         
-        
         _splitViewController.viewControllers = [masterNav, detailNav]
         
         window?.rootViewController = _splitViewController
         
         window?.makeKeyAndVisible()
-        NSOperationQueue.mainQueue().addOperationWithBlock {
-            Operator.index()
-        }
+        NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
         
-        Fabric.with([Crashlytics.self])
         return true
     }
 
