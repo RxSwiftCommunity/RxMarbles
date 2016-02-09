@@ -31,7 +31,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     init(rxOperator: Operator) {
         _sceneView = SceneView(rxOperator: rxOperator, frame: CGRectZero)
+        
         super.init(nibName: nil, bundle: nil)
+        
         title = rxOperator.description
     }
     
@@ -39,38 +41,44 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         super.setEditing(editing, animated: animated)
         _sceneView.editing = editing
         navigationItem.setHidesBackButton(editing, animated: animated)
-        navigationItem.rightBarButtonItems = rightButtonItems()
+        navigationItem.rightBarButtonItems = _rightButtonItems()
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .whiteColor()
+        
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
-        navigationItem.rightBarButtonItems = rightButtonItems()
+        navigationItem.rightBarButtonItems = _rightButtonItems()
+        
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)
+        
         _currentActivity = _sceneView.rxOperator.userActivity()
        
-        let recognizers = [_sceneView.sourceTimeline?.longPressGestureRecorgnizer,
-                           _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer]
+        let recognizers = [
+            _sceneView.sourceTimeline?.longPressGestureRecorgnizer,
+            _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer
+        ].flatMap({ $0 })
         
-        for r in recognizers where r != nil {
-            navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r!)
+        for r in recognizers {
+            navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r)
         }
         
         let notificationCenter = NSNotificationCenter.defaultCenter()
         
         notificationCenter.rx_notification(Names.setEventView).subscribeNext {
-            [unowned self] notification in self.setEventView(notification)
+            [unowned self] notification in self._setEventView(notification)
         }.addDisposableTo(_disposeBag)
         
         notificationCenter.rx_notification(Names.addEvent).subscribeNext {
-            [unowned self] notification in self.addEventToTimeline(notification)
+            [unowned self] notification in self._addEventToTimeline(notification)
         }.addDisposableTo(_disposeBag)
         
         notificationCenter.rx_notification(Names.openOperatorDescription).subscribeNext {
-            [unowned self] notification in self.openOperatorDocumentation(notification)
+            [unowned self] notification in self._openOperatorDocumentation(notification)
         }.addDisposableTo(_disposeBag)
     }
     
@@ -104,16 +112,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
 //    MARK: Button Items
     
-    private func rightButtonItems() -> [UIBarButtonItem] {
+    private func _rightButtonItems() -> [UIBarButtonItem] {
+        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_makeSnapshot:")
+        
         if _sceneView.rxOperator.withoutTimelines {
-            return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_makeSnapshot:")]
+            return [shareButtonItem]
         }
-        return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_makeSnapshot:")]
+        return editing ? [editButtonItem()] : [editButtonItem(), shareButtonItem]
     }
     
 //    MARK: Navigation
     
-    func openOperatorDocumentation(notification: NSNotification) {
+    private func _openOperatorDocumentation(notification: NSNotification) {
         let safariViewController = SFSafariViewController(URL: _sceneView.rxOperator.url)
         presentViewController(safariViewController, animated: true, completion: nil)
     }
@@ -153,9 +163,12 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
 //    MARK: Alert controllers
     
-    func addEventToTimeline(notification: NSNotification) {
-        let sender = notification.object as! UIButton
-        guard let timeline = sender.superview as? SourceTimelineView else { return }
+    private func _addEventToTimeline(notification: NSNotification) {
+        guard
+            let sender = notification.object as? UIButton,
+            let timeline = sender.superview as? SourceTimelineView
+        else { return }
+        
         var time = Int(timeline.bounds.size.width / 2.0)
         
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
@@ -181,17 +194,19 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         elementSelector.addAction(nextAction)
         let sourceEvents: [EventView] = timeline.sourceEvents
-        if sourceEvents.indexOf({ $0.isCompleted == true }) == nil {
+        if sourceEvents.indexOf({ $0.isCompleted }) == nil {
             elementSelector.addAction(completedAction)
         }
         elementSelector.addAction(errorAction)
         elementSelector.addAction(cancelAction)
+        
         elementSelector.popoverPresentationController?.sourceRect = sender.frame
         elementSelector.popoverPresentationController?.sourceView = sender.superview
+        
         presentViewController(elementSelector, animated: true) { () -> Void in }
     }
 
-    func setEventView(notification: NSNotification) {
+    private func _setEventView(notification: NSNotification) {
         guard let eventView = notification.object as? EventView else { return }
         
         let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
@@ -279,7 +294,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Preview Actions
     
     override func previewActionItems() -> [UIPreviewActionItem] {
-        let shareAction = UIPreviewAction(title: "Share", style: .Default) { action, controller in
+        let shareAction = UIPreviewAction(title: "Share", style: .Default) { _, _ in
             self._makeSnapshot(nil)
         }
         return [shareAction]
