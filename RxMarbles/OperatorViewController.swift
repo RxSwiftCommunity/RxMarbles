@@ -39,25 +39,20 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func setEditing(editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
+        
         _sceneView.editing = editing
+        
         navigationItem.setHidesBackButton(editing, animated: animated)
         navigationItem.rightBarButtonItems = _rightButtonItems()
     }
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        view.backgroundColor = .whiteColor()
+    
+    override func didMoveToParentViewController(parent: UIViewController?) {
+        super.didMoveToParentViewController(parent)
         
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.rightBarButtonItems = _rightButtonItems()
         
-        view.addSubview(_scrollView)
-        _scrollView.addSubview(_sceneView)
-        
-        _currentActivity = _sceneView.rxOperator.userActivity()
-       
         let recognizers = [
             _sceneView.sourceTimeline?.longPressGestureRecorgnizer,
             _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer
@@ -66,6 +61,17 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         for r in recognizers {
             navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r)
         }
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        view.backgroundColor = .whiteColor()
+        
+        view.addSubview(_scrollView)
+        _scrollView.addSubview(_sceneView)
+        
+        _currentActivity = _sceneView.rxOperator.userActivity()
         
         let notificationCenter = NSNotificationCenter.defaultCenter()
         
