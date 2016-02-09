@@ -106,9 +106,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private func rightButtonItems() -> [UIBarButtonItem] {
         if _sceneView.rxOperator.withoutTimelines {
-            return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot:")]
+            return [UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_makeSnapshot:")]
         }
-        return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "makeSnapshot:")]
+        return editing ? [editButtonItem()] : [editButtonItem(), UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_makeSnapshot:")]
     }
     
 //    MARK: Navigation
@@ -120,7 +120,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
 //    MARK: Snapshot
     
-    func makeSnapshot(sender: AnyObject?) {
+    private dynamic func _makeSnapshot(sender: AnyObject?) {
         let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height - _sceneView.rxOperatorText.bounds.height)
         
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
@@ -204,7 +204,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             preview.center = CGPointMake(100.0, 25.0)
             contentViewController.view.addSubview(preview)
             
-            let colorsSegmentedControl = contentViewColorsSegmentedControl(eventView)
+            let colorsSegmentedControl = _contentViewColorsSegmentedControl(eventView)
             contentViewController.view.addSubview(colorsSegmentedControl)
             
             settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
@@ -213,14 +213,14 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
                     textField.text = text
                 }
             }
-            settingsAlertController.addAction(saveAction(preview, oldEventView: eventView))
+            settingsAlertController.addAction(_saveAction(preview, oldEventView: eventView))
             
             Observable
                 .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegmentedControl.rx_value, resultSelector: { text, segment in
                     return (text, segment)
                 })
                 .subscribeNext({ text, segment in
-                    self.updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
+                    self._updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
                 })
                 .addDisposableTo(_disposeBag)
         } else {
@@ -228,27 +228,25 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         }
         
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
-        settingsAlertController.addAction(deleteAction(eventView))
+        settingsAlertController.addAction(_deleteAction(eventView))
         settingsAlertController.addAction(cancelAction)
         presentViewController(settingsAlertController, animated: true, completion: nil)
     }
     
-    private func contentViewColorsSegmentedControl(eventView: EventView) -> UISegmentedControl {
+    private func _contentViewColorsSegmentedControl(eventView: EventView) -> UISegmentedControl {
         let colors = Color.nextAll
         let currentColor = eventView.recorded.value.element?.color
         let colorsSegment = UISegmentedControl(items: colors.map { _ in "" } )
         colorsSegment.tintColor = .clearColor()
         colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
         
-        let subviewsCount = colorsSegment.subviews.count
-        for i in 0..<subviewsCount {
-            colorsSegment.subviews[i].backgroundColor = colors[i]
-        }
-        colorsSegment.selectedSegmentIndex = colors.indexOf({ $0 == currentColor! })!
+        zip(colorsSegment.subviews, colors).forEach { v, color in v.backgroundColor = color }
+        
+        colorsSegment.selectedSegmentIndex = colors.indexOf(currentColor!)!
         return colorsSegment
     }
     
-    private func saveAction(newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
+    private func _saveAction(newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Save", style: .Default) { _ in
             guard let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView)
             else { return }
@@ -260,7 +258,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         }
     }
     
-    private func deleteAction(eventView: EventView) -> UIAlertAction {
+    private func _deleteAction(eventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Delete", style: .Destructive) { _ in
             eventView.animator!.removeAllBehaviors()
             eventView.animator!.addBehavior(eventView.gravity!)
@@ -268,7 +266,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         }
     }
     
-    private func updatePreviewEventView(preview: EventView, params: (color: UIColor, value: String)) {
+    private func _updatePreviewEventView(preview: EventView, params: (color: UIColor, value: String)) {
         let time = preview.recorded.time
         let shape = preview.recorded.value.element?.shape
         let event = Event.Next(ColoredType(value: params.value, color: params.color, shape: shape!))
@@ -282,7 +280,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func previewActionItems() -> [UIPreviewActionItem] {
         let shareAction = UIPreviewAction(title: "Share", style: .Default) { action, controller in
-            self.makeSnapshot(nil)
+            self._makeSnapshot(nil)
         }
         return [shareAction]
     }
