@@ -78,12 +78,12 @@ extension Operator {
     }
 }
 
-let __methodRegex = try? NSRegularExpression(pattern: "\\.[^\\s\\(\\{]+", options: [])
-let __typeRegex = try? NSRegularExpression(pattern: "Observable", options: [])
-let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
-let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
+private let __methodRegex = try? NSRegularExpression(pattern: "\\.[^\\s\\(\\{]+", options: [])
+private let __typeRegex = try? NSRegularExpression(pattern: "Observable", options: [])
+private let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
+private let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
-func __colorize(src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [String: AnyObject]) {
+private func __colorize(src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [String: AnyObject]) {
     
     let str = src.string as NSString
     

@@ -167,7 +167,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             sceneView.resultTimeline.subject.onNext()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
-            time = timeline.maxEventTime()! > 850 ? timeline.maxEventTime()! + 30 : 850
+            time = timeline.maxEventTime() > 850 ? timeline.maxEventTime() + 30 : 850
             let e = completed(time)
             timeline.addEventToTimeline(e, animator: timeline.animator)
             sceneView.resultTimeline.subject.onNext()
@@ -192,43 +192,45 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     }
 
     func setEventView(notification: NSNotification) {
+        guard let eventView = notification.object as? EventView else { return }
+        
         let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
-        if let eventView = notification.object as? EventView {
-            if eventView.isNext {
-                let contentViewController = UIViewController()
-                contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
-                
-                let preview = EventView(recorded: eventView.recorded)
-                preview.center = CGPointMake(100.0, 25.0)
-                contentViewController.view.addSubview(preview)
-                
-                let colorsSegmentedControl = contentViewColorsSegmentedControl(eventView)
-                contentViewController.view.addSubview(colorsSegmentedControl)
-                
-                settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
-                settingsAlertController.addTextFieldWithConfigurationHandler({ (textField) -> Void in
-                    if let text = eventView.recorded.value.element?.value {
-                        textField.text = text
-                    }
-                })
-                settingsAlertController.addAction(saveAction(preview, oldEventView: eventView))
-                
-                Observable
-                    .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegmentedControl.rx_value, resultSelector: { text, segment in
-                        return (text, segment)
-                    })
-                    .subscribeNext({ (text, segment) in
-                        self.updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
-                    })
-                    .addDisposableTo(_disposeBag)
-            } else {
-                settingsAlertController.message = "Delete event?"
+        
+        if eventView.isNext {
+            let contentViewController = UIViewController()
+            contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
+            
+            let preview = EventView(recorded: eventView.recorded)
+            preview.center = CGPointMake(100.0, 25.0)
+            contentViewController.view.addSubview(preview)
+            
+            let colorsSegmentedControl = contentViewColorsSegmentedControl(eventView)
+            contentViewController.view.addSubview(colorsSegmentedControl)
+            
+            settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
+            settingsAlertController.addTextFieldWithConfigurationHandler { textField in
+                if let text = eventView.recorded.value.element?.value {
+                    textField.text = text
+                }
             }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
-            settingsAlertController.addAction(deleteAction(eventView))
-            settingsAlertController.addAction(cancelAction)
-            presentViewController(settingsAlertController, animated: true, completion: nil)
+            settingsAlertController.addAction(saveAction(preview, oldEventView: eventView))
+            
+            Observable
+                .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegmentedControl.rx_value, resultSelector: { text, segment in
+                    return (text, segment)
+                })
+                .subscribeNext({ text, segment in
+                    self.updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
+                })
+                .addDisposableTo(_disposeBag)
+        } else {
+            settingsAlertController.message = "Delete event?"
         }
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
+        settingsAlertController.addAction(deleteAction(eventView))
+        settingsAlertController.addAction(cancelAction)
+        presentViewController(settingsAlertController, animated: true, completion: nil)
     }
     
     private func contentViewColorsSegmentedControl(eventView: EventView) -> UISegmentedControl {
@@ -248,12 +250,13 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private func saveAction(newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Save", style: .Default) { _ in
-            if let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView) {
-                oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-                oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: oldEventView.timeLine?.animator)
-                oldEventView.removeFromSuperview()
-                self._sceneView.resultTimeline.subject.onNext()
-            }
+            guard let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView)
+            else { return }
+            
+            oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
+            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: oldEventView.timeLine?.animator)
+            oldEventView.removeFromSuperview()
+            self._sceneView.resultTimeline.subject.onNext()
         }
     }
     

@@ -10,7 +10,7 @@ import Foundation
 import RxSwift
 import CoreSpotlight
 
-let IndexVersion = "v2"
+private let IndexVersion = "v2"
 
 enum UserActivityType: String {
     case OperatorView
@@ -54,38 +54,39 @@ extension Operator {
 }
 
 extension Operator {
-    func keywords() -> Set<String> {
-        return ["Rx", "Reactive", "Operator", "Marbles", description]
-    }
-    
-    func searchableAttributes() -> CSSearchableItemAttributeSet {
-        let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
-        attributes.title = description
-        attributes.contentDescription = text
-        attributes.keywords = Array<String>(keywords())
-        attributes.identifier = rawValue
-        attributes.relatedUniqueIdentifier = rawValue
-        return attributes
-    }
-    
     func userActivity() -> NSUserActivity {
         let activity = NSUserActivity(activityType: UserActivityType.OperatorView.rawValue)
         activity.title = description
-        activity.keywords = keywords()
+        activity.keywords = _keywords()
         activity.eligibleForSearch = true
         activity.eligibleForPublicIndexing = true
         activity.userInfo = ["operator": self.rawValue]
         
         
-        activity.contentAttributeSet = searchableAttributes()
+        activity.contentAttributeSet = _searchableAttributes()
         return activity
     }
     
-    func searchableItem() -> CSSearchableItem {
+    private func _keywords() -> Set<String> {
+        return ["Rx", "Reactive", "Operator", "Marbles", description]
+    }
+    
+    private func _searchableAttributes() -> CSSearchableItemAttributeSet {
+        let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
+        attributes.title = description
+        attributes.contentDescription = text
+        attributes.keywords = Array<String>(_keywords())
+        attributes.identifier = rawValue
+        attributes.relatedUniqueIdentifier = rawValue
+        return attributes
+    }
+    
+    
+    private func _searchableItem() -> CSSearchableItem {
         let item = CSSearchableItem(
             uniqueIdentifier: rawValue,
             domainIdentifier: "operators",
-            attributeSet: searchableAttributes()
+            attributeSet: _searchableAttributes()
         )
         return item
     }
@@ -99,23 +100,19 @@ extension Operator {
         
         if let indexVersion = userDefaults.stringForKey(indexVersionKey)
             where indexVersion == IndexVersion {
-            debugPrint("already indexed")
-            return
+            return debugPrint("already indexed")
         }
         
         let index = CSSearchableIndex.defaultSearchableIndex()
-        let items = Operator.all.map { $0.searchableItem() }
+        let items = Operator.all.map { $0._searchableItem() }
         index.deleteAllSearchableItemsWithCompletionHandler { error in
             if let e = error {
-                debugPrint(e)
-                return
+                return debugPrint(e)
             }
             
             index.indexSearchableItems(items, completionHandler: { error in
                 if let e = error {
-                    debugPrint("failed to index items")
-                    debugPrint(e)
-                    return
+                    return debugPrint("failed to index items \(e)")
                 }
                 
                 userDefaults.setObject(IndexVersion, forKey: indexVersionKey)

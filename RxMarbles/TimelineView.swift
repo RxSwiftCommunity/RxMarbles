@@ -52,11 +52,10 @@ class TimelineView: UIView {
         timeArrow.center.y = bounds.height / 2.0
     }
     
-    func maxEventTime() -> Int? {
-        let max = sourceEvents
+    func maxEventTime() -> Int {
+        return sourceEvents
             .map({ $0.recorded.time })
-            .maxElement()
-        return max != nil ? max : 0
+            .maxElement() ?? 0
     }
     
     func xPositionByTime(time: Int) -> CGFloat {
