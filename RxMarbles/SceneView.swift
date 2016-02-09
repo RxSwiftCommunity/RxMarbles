@@ -146,12 +146,12 @@ class SceneView: UIView, UITextViewDelegate {
     }
     
     func hideTrashView() {
-        trashView.hideWithCompletion({ _ in
+        Animation.hideWithCompletion(trashView) { _ in
             UIView.animateWithDuration(0.3) { _ in
                 self.rxOperatorText.alpha = 1.0
             }
             self.trashView.removeFromSuperview()
-        })
+        }
     }
     
 //    MARK: UITextViewDelegate methods

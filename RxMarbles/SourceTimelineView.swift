@@ -147,12 +147,10 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
     
      func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
         if onDeleteZone(recognizer) == true {
-            ghostEventView.shake()
-            sceneView.trashView.shake()
+            [ghostEventView, sceneView].forEach(Animation.shake)
             sceneView.trashView.alpha = 0.5
         } else {
-            ghostEventView.stopShakeAnimation()
-            sceneView.trashView.stopShakeAnimation()
+            [ghostEventView, sceneView].forEach(Animation.stopShake)
             sceneView.trashView.alpha = 0.2
         }
         ghostEventView.setGhostColorOnDeleteZone(onDeleteZone(recognizer))
@@ -163,11 +161,11 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
             let time = timeByXPosition(recognizer.locationInView(self).x)
             
             if onDeleteZone(recognizer) == true {
-                panEventView.hideWithCompletion({ _ in
+                Animation.hideWithCompletion(panEventView) { _ in
                     if let index = self.sourceEvents.indexOf(panEventView) {
                         self.sourceEvents.removeAtIndex(index)
                     }
-                })
+                }
             } else {
                 if let snap = panEventView.snap {
                     snap.snapPoint.x = xPositionByTime(time)
@@ -207,7 +205,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
     }
     
     func allEventViewsAnimation() {
-        sourceEvents.forEach { $0.scaleAnimation() }
+        sourceEvents.forEach(Animation.scale)
     }
     
     override func setEditing() {
@@ -233,7 +231,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
         let angs = angles(sortedEventsRecorded)
         sortedEvents.forEach({ eventView in
             if let index = sortedEvents.indexOf({ $0 == eventView }) {
-                eventView.rotateToAngle(angs[index])
+                Animation.rotate(eventView, toAngle: angs[index])
             }
         })
     }

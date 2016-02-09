@@ -86,11 +86,11 @@ class ResultTimelineView: TimelineView {
                         let eventView = reuseEventView(index, recorded: event)
                         eventView.refreshColorAndValue()
                         newSourceEvents.append(eventView)
-                        eventView.rotateToAngle(angle)
+                        Animation.rotate(eventView, toAngle: angle)
                     } else {
                         let eventView = newEventView(RecordedType(time: event.time, event: event.value))
                         newSourceEvents.append(eventView)
-                        eventView.rotateToAngle(angle)
+                        Animation.rotate(eventView, toAngle: angle)
                     }
                 case .Completed:
                     if let index = sourceEvents.indexOf({ $0.isCompleted }) {
@@ -134,7 +134,7 @@ class ResultTimelineView: TimelineView {
             self.alpha = self.editing ? 0.5 : 1.0
         }
         if !editing {
-            sourceEvents.forEach({ $0.scaleAnimation() })
+            sourceEvents.forEach(Animation.scale)
         }
     }
 }
