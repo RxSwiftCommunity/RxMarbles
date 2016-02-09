@@ -53,14 +53,14 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.rightBarButtonItems = _rightButtonItems()
         
-        let recognizers = [
+        let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer
+        
+        [
             _sceneView.sourceTimeline?.longPressGestureRecorgnizer,
             _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer
-        ].flatMap({ $0 })
-        
-        for r in recognizers {
-            navigationController?.interactivePopGestureRecognizer?.requireGestureRecognizerToFail(r)
-        }
+        ]
+        .flatMap({ $0 })
+        .forEach({ popGestureRecognizer?.requireGestureRecognizerToFail($0) })
     }
 
     override func viewDidLoad() {
