@@ -10,6 +10,7 @@ pod 'RxCocoa'
 pod 'Device'
 pod 'Fabric'
 pod 'Crashlytics'
+pod 'RazzleDazzle'
 
 end
 

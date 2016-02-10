@@ -14,6 +14,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>RazzleDazzle.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>RxCocoa.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -27,7 +32,7 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>2160E6400B45E26DD27FAE35886D773F</key>
+		<key>0C6651AEA7333FCCB168EEDA6CD8377E</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -37,12 +42,17 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>867C313FDBAB5D850E62D76A949D840F</key>
+		<key>9FD71E49D01BF292AF737708A4141CD9</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>BA2F3A65C5D7FC161DDECD1B36DEEA9C</key>
+		<key>AA205EC2AEA8E1B24CC0DDA3ED6ACC60</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>D27E04537E142CAD9570B010D6D1B78C</key>
 		<dict>
 			<key>primary</key>
 			<true/>

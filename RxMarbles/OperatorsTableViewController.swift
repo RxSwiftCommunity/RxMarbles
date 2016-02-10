@@ -61,6 +61,8 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .Plain, target: self, action: "openHelpView")
+        
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
         definesPresentationContext = true
@@ -95,6 +97,11 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         selectedOperator = op
         let viewController = OperatorViewController(rxOperator: selectedOperator)
         showDetailViewController(viewController, sender: nil)
+    }
+    
+    func openHelpView() {
+        let helpController = HelpViewController()
+        presentViewController(helpController, animated: true, completion: nil)
     }
 
     // MARK: - Table view data source
