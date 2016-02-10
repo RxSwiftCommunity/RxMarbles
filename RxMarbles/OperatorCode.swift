@@ -67,7 +67,7 @@ extension Operator {
         case Take:
             return "a.take(2)"
         case TakeLast:
-            return "a.takeLast(1)"
+            return "a.takeLast(2)"
         case Throw:
             return "Observable.error()"
         case Window:

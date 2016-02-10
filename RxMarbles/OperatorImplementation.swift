@@ -486,7 +486,7 @@ extension Operator {
         case Take:
             return aO!.take(2)
         case TakeLast:
-            return aO!.takeLast(1)
+            return aO!.takeLast(2)
         case Throw:
             return Observable.error(Error.CantParseStringToInt)
         case Window:
