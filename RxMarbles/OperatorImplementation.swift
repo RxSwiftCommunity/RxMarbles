@@ -555,58 +555,22 @@ extension Operator {
 extension Operator {
     var urlString: String {
         switch self {
-        case Amb:
-            return "amb.html"
-        case Buffer:
-            return "buffer.html"
         case CatchError:
             return "catch.html"
-        case CombineLatest:
-            return "combinelatest.html"
-        case Concat:
-            return "concat.html"
-        case Debounce:
-            return "debounce.html"
         case DelaySubscription:
             return "delay.html"
         case DistinctUntilChanged:
             return "distinct.html"
-        case ElementAt:
-            return "elementat.html"
         case Empty, Never, Throw:
             return "empty-never-throw.html"
-        case Filter:
-            return "filter.html"
         case FlatMap, FlatMapFirst, FlatMapLatest:
             return "flatmap.html"
         case IgnoreElements:
             return "ignoreelements.html"
-        case Just:
-            return "just.html"
         case Map, MapWithIndex:
             return "map.html"
-        case Merge:
-            return "merge.html"
-        case Reduce:
-            return "reduce.html"
-        case Retry:
-            return "retry.html"
-        case Sample:
-            return "sample.html"
-        case Scan:
-            return "scan.html"
-        case Skip:
-            return "skip.html"
-        case StartWith:
-            return "startwith.html"
-        case Take:
-            return "take.html"
-        case TakeLast:
-            return "takelast.html"
-        case Window:
-            return "window.html"
-        case Zip:
-            return "zip.html"
+        default:
+            return "\(rawValue.lowercaseString).html"
         }
     }
     
