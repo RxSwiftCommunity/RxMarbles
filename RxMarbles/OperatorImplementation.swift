@@ -649,12 +649,11 @@ extension Operator {
     }
     
     var linkText: NSMutableAttributedString {
-        let string = NSMutableAttributedString(string: text)
-        let link = NSMutableAttributedString(string: "Read more...")
-        link.addAttribute(NSLinkAttributeName, value: url, range: NSMakeRange(0, link.length))
-        string.appendAttributedString(NSAttributedString(string: " "))
-        string.appendAttributedString(link)
-        string.addAttribute(NSFontAttributeName, value: UIFont(name: "Menlo-Regular", size: 16)!, range: NSMakeRange(0, string.length))
-        return string
+        let res = NSMutableAttributedString(string: text)
+        let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSLinkAttributeName: url])
+        res.appendAttributedString(NSAttributedString(string: " "))
+        res.appendAttributedString(link)
+        res.addAttribute(NSFontAttributeName, value: UIFont(name: "Menlo-Regular", size: 16)!, range: NSMakeRange(0, res.length))
+        return res
     }
 }
