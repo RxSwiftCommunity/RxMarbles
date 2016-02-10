@@ -54,6 +54,7 @@ class SceneView: UIView, UITextViewDelegate {
             resultTimeline.editing = editing
             sourceTimeline?.editing = editing
             secondSourceTimeline?.editing = editing
+            dimRxOperatorText(editing)
             setNeedsLayout()
         }
     }
@@ -151,6 +152,13 @@ class SceneView: UIView, UITextViewDelegate {
                 self.rxOperatorText.alpha = 1.0
             }
             self.trashView.removeFromSuperview()
+        }
+    }
+    
+    func dimRxOperatorText(editing: Bool) {
+        rxOperatorText.selectable = !editing
+        UIView.animateWithDuration(0.3) {
+            self.rxOperatorText.alpha = editing ? 0.2 : 1.0
         }
     }
     
