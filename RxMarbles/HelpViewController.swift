@@ -31,6 +31,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
         configureNextButton()
         configureCompletedButton()
         configureResultTimeline()
+        
+        configureFirstEventView()
     }
     
     private func configureLogoImageView() {
@@ -82,6 +84,15 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addConstraint(NSLayoutConstraint(item: resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: nextButton, attribute: .Top, multiplier: 1, constant: 0))
         scrollView.addConstraint(NSLayoutConstraint(item: resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 0.9, constant: 0))
         keepView(resultTimeline, onPages: [0, 1, 2])
+    }
+    
+    private func configureFirstEventView() {
+        contentView.addSubview(firstEventView)
+        
+        contentView.addConstraint(NSLayoutConstraint(item: firstEventView, attribute: .CenterY, relatedBy: .Equal, toItem: resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
+//        scrollView.addConstraint(NSLayoutConstraint(item: firstEventView, attribute: .Leading, relatedBy: .Equal, toItem: scrollView, attribute: .Leading, multiplier: 1, constant: 30))
+        
+        keepView(firstEventView, onPages: [0, 1, 2])
     }
     
     override func numberOfPages() -> Int {
