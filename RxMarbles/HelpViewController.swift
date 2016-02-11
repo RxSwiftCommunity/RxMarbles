@@ -90,40 +90,38 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureSearchNextButton() {
-        _configureNextButton(_searchNextButton, onPage: 0)
+        _configureButton(_searchNextButton, onPage: 0)
         _searchNextButton.addTarget(self, action: "addSearchNext", forControlEvents: .TouchUpInside)
     }
     
     private func _configureEditingNextButton() {
-        _configureNextButton(_editingNextButton, onPage: 1)
+        _configureButton(_editingNextButton, onPage: 1)
         _editingNextButton.addTarget(self, action: "addEditingNext", forControlEvents: .TouchUpInside)
     }
     
     private func _configureRxSwiftNextButton() {
-        _configureNextButton(_rxSwiftNextButton, onPage: 2)
+        _configureButton(_rxSwiftNextButton, onPage: 2)
         _rxSwiftNextButton.addTarget(self, action: "addRxSwiftNext", forControlEvents: .TouchUpInside)
     }
     
     private func _configureAnjlabNextButton() {
-        _configureNextButton(_anjlabNextButton, onPage: 3)
+        _configureButton(_anjlabNextButton, onPage: 3)
         _anjlabNextButton.addTarget(self, action: "addAnjlabNext", forControlEvents: .TouchUpInside)
     }
     
-    private func _configureNextButton(next: UIButton, onPage page: CGFloat) {
+    private func _configureCompletedButton() {
+        _configureButton(_completedButton, onPage: 4)
+        _completedButton.setTitle("Completed", forState: .Normal)
+        _completedButton.addTarget(self, action: "addCompleted", forControlEvents: .TouchUpInside)
+    }
+    
+    private func _configureButton(next: UIButton, onPage page: CGFloat) {
         next.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
         next.setTitle("onNext(   )", forState: .Normal)
         contentView.addSubview(next)
-        contentView.addConstraint(NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
+        let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
+        contentView.addConstraint(vertical)
         keepView(next, onPage: page)
-    }
-    
-    private func _configureCompletedButton() {
-        _completedButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
-        _completedButton.setTitle("Completed", forState: .Normal)
-        _completedButton.addTarget(self, action: "addCompleted", forControlEvents: .TouchUpInside)
-        contentView.addSubview(_completedButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
-        keepView(_completedButton, onPage: 4)
     }
     
     private func _configureButtons() {
@@ -136,7 +134,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureResultTimeline() {
         contentView.addSubview(_resultTimeline)
-        contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: _searchNextButton, attribute: .Top, multiplier: 1, constant: -30))
+        contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -80))
         scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
         keepView(_resultTimeline, onPages: [0, 1, 2, 3, 4, 5])
     }
@@ -164,9 +162,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_editingEventView, onPages: [1, 2, 3, 4, 5])
         
         _configureEventViewAnimations((1, 2), xOffset: -25, horizontal: horizontal, vertical: vertical)
-        
-        let showAnimation = HideAnimation(view: _editingEventView, showAt: 0.99)
-        animator.addAnimation(showAnimation)
     }
     
     private func _configureRxSwiftEventView() {
@@ -174,19 +169,13 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_rxSwiftEventView, onPages: [2, 3, 4, 5])
         
         _configureEventViewAnimations((2, 3), xOffset: 25, horizontal: horizontal, vertical: vertical)
-        
-        let showAnimation = HideAnimation(view: _rxSwiftEventView, showAt: 1.99)
-        animator.addAnimation(showAnimation)
     }
     
     private func _configureAnjlabEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_anjlabEventView)
-        keepView(_anjlabEventView, onPages: [2, 3, 4, 5])
+        keepView(_anjlabEventView, onPages: [3, 4, 5])
         
         _configureEventViewAnimations((3, 4), xOffset: 75, horizontal: horizontal, vertical: vertical)
-        
-        let showAnimation = HideAnimation(view: _anjlabEventView, showAt: 2.99)
-        animator.addAnimation(showAnimation)
     }
     
     private func _configureCompletedEventView() {
@@ -194,9 +183,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_completedEventView, onPages: [4, 5])
         
         _configureEventViewAnimations((4, 5), xOffset: 125, horizontal: horizontal, vertical: vertical)
-        
-        let showAnimation = HideAnimation(view: _completedEventView, showAt: 4.1)
-        animator.addAnimation(showAnimation)
     }
     
     private func _configureEventViews() {
