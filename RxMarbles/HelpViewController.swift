@@ -56,12 +56,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         _configureResultTimeline()
         
-        _configureSharingEventView()
-        _configureSearchEventView()
-        _configureEditingEventView()
-        _configureRxSwiftEventView()
-        _configureAnjlabEventView()
-        _configureCompletedEventView()
+        _configureEventViews()
         
         _configurePoweredByRxLabel()
         _configureAddStarButton()
@@ -146,7 +141,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private func _configureResultTimeline() {
         contentView.addSubview(_resultTimeline)
         contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: _searchNextButton, attribute: .Top, multiplier: 1, constant: -30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 0.9, constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
         keepView(_resultTimeline, onPages: [0, 1, 2, 3, 4, 5])
     }
     
@@ -165,87 +160,56 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let (vertical, horizontal) = _configureEventViewConstraints(_searchEventView)
         keepView(_searchEventView, onPages: [0, 1, 2, 3, 4, 5])
         
-        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[0] = 48
-        verticalConstraintAnimation[1] = 0
-        animator.addAnimation(verticalConstraintAnimation)
-        
-        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horisontalConstraintAnimation[0] = 25
-        horisontalConstraintAnimation[1] = -75
-        animator.addAnimation(horisontalConstraintAnimation)
+        _configureEventViewAnimations((0, 1), xOffset: -75, horizontal: horizontal, vertical: vertical)
     }
     
     private func _configureEditingEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_editingEventView)
         keepView(_editingEventView, onPages: [1, 2, 3, 4, 5])
         
+        _configureEventViewAnimations((1, 2), xOffset: -25, horizontal: horizontal, vertical: vertical)
+        
         let showAnimation = HideAnimation(view: _editingEventView, showAt: 0.99)
         animator.addAnimation(showAnimation)
-        
-        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[1] = 48
-        verticalConstraintAnimation[2] = 0
-        animator.addAnimation(verticalConstraintAnimation)
-        
-        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horisontalConstraintAnimation[1] = 25
-        horisontalConstraintAnimation[2] = -25
-        animator.addAnimation(horisontalConstraintAnimation)
     }
     
     private func _configureRxSwiftEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_rxSwiftEventView)
         keepView(_rxSwiftEventView, onPages: [2, 3, 4, 5])
         
+        _configureEventViewAnimations((2, 3), xOffset: 25, horizontal: horizontal, vertical: vertical)
+        
         let showAnimation = HideAnimation(view: _rxSwiftEventView, showAt: 1.99)
         animator.addAnimation(showAnimation)
-        
-        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[2] = 48
-        verticalConstraintAnimation[3] = 0
-        animator.addAnimation(verticalConstraintAnimation)
-        
-        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horisontalConstraintAnimation[2] = 25
-        horisontalConstraintAnimation[3] = 25
-        animator.addAnimation(horisontalConstraintAnimation)
     }
     
     private func _configureAnjlabEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_anjlabEventView)
         keepView(_anjlabEventView, onPages: [2, 3, 4, 5])
         
+        _configureEventViewAnimations((3, 4), xOffset: 75, horizontal: horizontal, vertical: vertical)
+        
         let showAnimation = HideAnimation(view: _anjlabEventView, showAt: 2.99)
         animator.addAnimation(showAnimation)
-        
-        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[3] = 48
-        verticalConstraintAnimation[4] = 0
-        animator.addAnimation(verticalConstraintAnimation)
-        
-        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horisontalConstraintAnimation[3] = 25
-        horisontalConstraintAnimation[4] = 75
-        animator.addAnimation(horisontalConstraintAnimation)
     }
     
     private func _configureCompletedEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_completedEventView)
         keepView(_completedEventView, onPages: [4, 5])
         
-        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[4] = 48
-        verticalConstraintAnimation[5] = 0
-        animator.addAnimation(verticalConstraintAnimation)
-        
-        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horisontalConstraintAnimation[4] = 0
-        horisontalConstraintAnimation[5] = 125
-        animator.addAnimation(horisontalConstraintAnimation)
+        _configureEventViewAnimations((4, 5), xOffset: 125, horizontal: horizontal, vertical: vertical)
         
         let showAnimation = HideAnimation(view: _completedEventView, showAt: 4.1)
         animator.addAnimation(showAnimation)
+    }
+    
+    private func _configureEventViews() {
+        _configureSharingEventView()
+        _configureSearchEventView()
+        _configureEditingEventView()
+        _configureRxSwiftEventView()
+        _configureAnjlabEventView()
+        _configureCompletedEventView()
     }
     
     private func _configureEventViewConstraints(eventView: EventView) -> (NSLayoutConstraint, NSLayoutConstraint) {
@@ -257,6 +221,18 @@ class HelpViewController: AnimatedPagingScrollViewController {
         eventView.addConstraint(NSLayoutConstraint(item: eventView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
         eventView.addConstraint(NSLayoutConstraint(item: eventView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
         return (verticalConstraint, horizontalConstraint)
+    }
+    
+    private func _configureEventViewAnimations(pages: (first:CGFloat, second: CGFloat), xOffset: CGFloat, horizontal: NSLayoutConstraint, vertical: NSLayoutConstraint) {
+        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
+        verticalConstraintAnimation[pages.first] = 48
+        verticalConstraintAnimation[pages.second] = 0
+        animator.addAnimation(verticalConstraintAnimation)
+        
+        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
+        horisontalConstraintAnimation[pages.first] = 25
+        horisontalConstraintAnimation[pages.second] = xOffset
+        animator.addAnimation(horisontalConstraintAnimation)
     }
     
     
