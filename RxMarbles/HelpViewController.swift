@@ -8,13 +8,19 @@
 
 import UIKit
 import RazzleDazzle
+import SafariServices
+
+struct Link {
+    static let anjlab = "http://anjlab.com/en"
+    static let rxswift = "https://github.com/ReactiveX/RxSwift"
+}
 
 class HelpViewController: AnimatedPagingScrollViewController {
     
     private let _logoImageView = UIImageView(image: UIImage(named: "IntroLogo"))
     private let _resultTimeline = UIImageView(image: Image.timeLine)
-    private let _firstEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "", color: Color.nextGreen, shape: EventShape.Circle))))
-    private let _secondEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "", color: Color.nextBlue, shape: EventShape.Circle))))
+    private let _firstEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Sharing", color: Color.nextGreen, shape: EventShape.Circle))))
+    private let _secondEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: EventShape.Circle))))
     private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
     private let _nextButton = UIButton(type: .Custom)
     private let _completedButton = UIButton(type: .Custom)
@@ -68,17 +74,18 @@ class HelpViewController: AnimatedPagingScrollViewController {
         imageView.backgroundColor = .lightGrayColor()
         contentView.addSubview(imageView)
         contentView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
-        imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 100))
-        imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 100))
+        imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
+        imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
         keepView(imageView, onPage: page)
     }
     
     private func _configureNextButton() {
         _nextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
-        _nextButton.setTitle("onNext()", forState: .Normal)
+        _nextButton.setTitle("onNext(   )", forState: .Normal)
         _nextButton.setTitleColor(.blackColor(), forState: .Normal)
+        _nextButton.addTarget(self, action: "addNext", forControlEvents: .TouchUpInside)
         contentView.addSubview(_nextButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _nextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
+        contentView.addConstraint(NSLayoutConstraint(item: _nextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
         keepView(_nextButton, onPage: 0)
     }
     
@@ -86,8 +93,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _completedButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
         _completedButton.setTitle("Completed", forState: .Normal)
         _completedButton.setTitleColor(.blackColor(), forState: .Normal)
+        _completedButton.addTarget(self, action: "addCompleted", forControlEvents: .TouchUpInside)
         contentView.addSubview(_completedButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
+        contentView.addConstraint(NSLayoutConstraint(item: _completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
         keepView(_completedButton, onPage: 1)
     }
     
@@ -103,6 +111,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         contentView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
         scrollView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .Right, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: -100))
+        _firstEventView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
+        _firstEventView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
         
         keepView(_firstEventView, onPages: [0, 1, 2])
     }
@@ -112,8 +122,11 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         let verticalConstraint = NSLayoutConstraint(item: _secondEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0)
         contentView.addConstraint(verticalConstraint)
-        let horisontalConstraint = NSLayoutConstraint(item: _secondEventView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 50)
+        let horisontalConstraint = NSLayoutConstraint(item: _secondEventView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 25)
         scrollView.addConstraint(horisontalConstraint)
+        
+        _secondEventView.addConstraint(NSLayoutConstraint(item: _secondEventView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
+        _secondEventView.addConstraint(NSLayoutConstraint(item: _secondEventView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
         keepView(_secondEventView, onPages: [0, 1, 2])
         
         let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
@@ -122,7 +135,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         animator.addAnimation(verticalConstraintAnimation)
         
         let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horisontalConstraint)
-        horisontalConstraintAnimation[0] = 50
+        horisontalConstraintAnimation[0] = 25
         horisontalConstraintAnimation[1] = 0
         animator.addAnimation(horisontalConstraintAnimation)
     }
@@ -164,6 +177,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _addStarButton.setTitle("Add Star", forState: .Normal)
         _addStarButton.setTitleColor(.blackColor(), forState: .Normal)
         _addStarButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 12)
+        _addStarButton.addTarget(self, action: "openRxSwiftOnGithub", forControlEvents: .TouchUpInside)
         contentView.addSubview(_addStarButton)
         contentView.addConstraint(NSLayoutConstraint(item: _addStarButton, attribute: .Top, relatedBy: .Equal, toItem: _poweredByRxLabel, attribute: .Bottom, multiplier: 1, constant: 30))
         keepView(_addStarButton, onPage: 3)
@@ -173,6 +187,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _anjLabButton.setTitle("AnjLab", forState: .Normal)
         _anjLabButton.setTitleColor(.blackColor(), forState: .Normal)
         _anjLabButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 20)
+        _anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
         contentView.addSubview(_anjLabButton)
         contentView.addConstraint(NSLayoutConstraint(item: _anjLabButton, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
         keepView(_anjLabButton, onPage: 4)
@@ -180,6 +195,35 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     override func numberOfPages() -> Int {
         return 5
+    }
+    
+//    MARK: Navigation
+    
+    func addNext() {
+        UIView.animateWithDuration(0.3) {
+            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 1, 0)
+        }
+    }
+    
+    func addCompleted() {
+        UIView.animateWithDuration(0.3) {
+            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 2, 0)
+        }
+    }
+    
+    func openRxSwiftOnGithub() {
+        let url = NSURL(string: Link.rxswift)
+        openURLinSafariViewController(url!)
+    }
+    
+    func openAnjLab() {
+        let url = NSURL(string: Link.anjlab)
+        openURLinSafariViewController(url!)
+    }
+    
+    private func openURLinSafariViewController(url: NSURL) {
+        let safariViewController = SFSafariViewController(URL: url)
+        presentViewController(safariViewController, animated: true, completion: nil)
     }
     
 //    MARK: UIInterfaceOrientationMask Portrait only
