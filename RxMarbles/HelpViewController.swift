@@ -11,50 +11,52 @@ import RazzleDazzle
 
 class HelpViewController: AnimatedPagingScrollViewController {
     
-    private let logoImageView = UIImageView(image: UIImage(named: "IntroLogo"))
-    private let resultTimeline = UIImageView(image: Image.timeLine)
-    private let firstEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "", color: Color.nextGreen, shape: EventShape.Circle))))
-    private let secondEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "", color: Color.nextBlue, shape: EventShape.Circle))))
-    private let completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
-    private let nextButton = UIButton(type: .Custom)
-    private let completedButton = UIButton(type: .Custom)
-    private let firstHelpImage = UIImageView()
-    private let secondHelpImage = UIImageView()
-    private let thirdHelpImage = UIImageView()
+    private let _logoImageView = UIImageView(image: UIImage(named: "IntroLogo"))
+    private let _resultTimeline = UIImageView(image: Image.timeLine)
+    private let _firstEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "", color: Color.nextGreen, shape: EventShape.Circle))))
+    private let _secondEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "", color: Color.nextBlue, shape: EventShape.Circle))))
+    private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
+    private let _nextButton = UIButton(type: .Custom)
+    private let _completedButton = UIButton(type: .Custom)
+    private let _firstHelpImage = UIImageView()
+    private let _secondHelpImage = UIImageView()
+    private let _thirdHelpImage = UIImageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
         
-        configureLogoImageView()
-        configureImageViews()
-        configureNextButton()
-        configureCompletedButton()
-        configureResultTimeline()
+        _configureLogoImageView()
+        _configureImageViews()
+        _configureNextButton()
+        _configureCompletedButton()
+        _configureResultTimeline()
         
-        configureFirstEventView()
+        _configureFirstEventView()
+        _configureSecondEventView()
+        _configureCompletedEventView()
     }
     
-    private func configureLogoImageView() {
-        contentView.addSubview(logoImageView)
-        let verticalConstraint = NSLayoutConstraint(item: logoImageView, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: -100)
+    private func _configureLogoImageView() {
+        contentView.addSubview(_logoImageView)
+        let verticalConstraint = NSLayoutConstraint(item: _logoImageView, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: -100)
         contentView.addConstraint(verticalConstraint)
-        keepView(logoImageView, onPages: [0, 1, 2, 3, 4])
+        keepView(_logoImageView, onPages: [0, 1, 2, 3, 4])
         
         let verticalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
         verticalAnimation[0] = 30
         animator.addAnimation(verticalAnimation)
     }
     
-    private func configureImageViews() {
-        configureImageViewsConstraints(firstHelpImage, page: 0)
+    private func _configureImageViews() {
+        _configureImageViewsConstraints(_firstHelpImage, page: 0)
         
-        configureImageViewsConstraints(secondHelpImage, page: 1)
+        _configureImageViewsConstraints(_secondHelpImage, page: 1)
         
-        configureImageViewsConstraints(thirdHelpImage, page: 2)
+        _configureImageViewsConstraints(_thirdHelpImage, page: 2)
     }
     
-    private func configureImageViewsConstraints(imageView: UIImageView, page: CGFloat) {
+    private func _configureImageViewsConstraints(imageView: UIImageView, page: CGFloat) {
         imageView.backgroundColor = .lightGrayColor()
         contentView.addSubview(imageView)
         contentView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
@@ -63,36 +65,63 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(imageView, onPage: page)
     }
     
-    private func configureNextButton() {
-        nextButton.setTitle("onNext()", forState: .Normal)
-        nextButton.setTitleColor(.blackColor(), forState: .Normal)
-        contentView.addSubview(nextButton)
-        contentView.addConstraint(NSLayoutConstraint(item: nextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
-        keepView(nextButton, onPage: 0)
+    private func _configureNextButton() {
+        _nextButton.setTitle("onNext()", forState: .Normal)
+        _nextButton.setTitleColor(.blackColor(), forState: .Normal)
+        contentView.addSubview(_nextButton)
+        contentView.addConstraint(NSLayoutConstraint(item: _nextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
+        keepView(_nextButton, onPage: 0)
     }
     
-    private func configureCompletedButton() {
-        completedButton.setTitle("Completed", forState: .Normal)
-        completedButton.setTitleColor(.blackColor(), forState: .Normal)
-        contentView.addSubview(completedButton)
-        contentView.addConstraint(NSLayoutConstraint(item: completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
-        keepView(completedButton, onPage: 1)
+    private func _configureCompletedButton() {
+        _completedButton.setTitle("Completed", forState: .Normal)
+        _completedButton.setTitleColor(.blackColor(), forState: .Normal)
+        contentView.addSubview(_completedButton)
+        contentView.addConstraint(NSLayoutConstraint(item: _completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: 0))
+        keepView(_completedButton, onPage: 1)
     }
     
-    private func configureResultTimeline() {
-        contentView.addSubview(resultTimeline)
-        contentView.addConstraint(NSLayoutConstraint(item: resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: nextButton, attribute: .Top, multiplier: 1, constant: 0))
-        scrollView.addConstraint(NSLayoutConstraint(item: resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 0.9, constant: 0))
-        keepView(resultTimeline, onPages: [0, 1, 2])
+    private func _configureResultTimeline() {
+        contentView.addSubview(_resultTimeline)
+        contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: _nextButton, attribute: .Top, multiplier: 1, constant: -30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: scrollView, attribute: .Width, multiplier: 0.9, constant: 0))
+        keepView(_resultTimeline, onPages: [0, 1, 2])
     }
     
-    private func configureFirstEventView() {
-        contentView.addSubview(firstEventView)
+    private func _configureFirstEventView() {
+        contentView.addSubview(_firstEventView)
         
-        contentView.addConstraint(NSLayoutConstraint(item: firstEventView, attribute: .CenterY, relatedBy: .Equal, toItem: resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
-//        scrollView.addConstraint(NSLayoutConstraint(item: firstEventView, attribute: .Leading, relatedBy: .Equal, toItem: scrollView, attribute: .Leading, multiplier: 1, constant: 30))
+        contentView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
         
-        keepView(firstEventView, onPages: [0, 1, 2])
+        keepView(_firstEventView, onPages: [0, 1, 2])
+    }
+    
+    private func _configureSecondEventView() {
+        contentView.addSubview(_secondEventView)
+        
+        let verticalConstraint = NSLayoutConstraint(item: _secondEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0)
+        contentView.addConstraint(verticalConstraint)
+        
+        keepView(_secondEventView, onPages: [0, 1, 2])
+        
+        let constraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
+        constraintAnimation[0] = 50
+        constraintAnimation[1] = 0
+        animator.addAnimation(constraintAnimation)
+    }
+    
+    private func _configureCompletedEventView() {
+        contentView.addSubview(_completedEventView)
+        
+        let verticalConstraint = NSLayoutConstraint(item: _completedEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0)
+        contentView.addConstraint(verticalConstraint)
+        
+        keepView(_completedEventView, onPages: [1, 2])
+        
+        let constraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
+        constraintAnimation[1] = 50
+        constraintAnimation[2] = 0
+        animator.addAnimation(constraintAnimation)
     }
     
     override func numberOfPages() -> Int {
