@@ -21,6 +21,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _firstHelpImage = UIImageView()
     private let _secondHelpImage = UIImageView()
     private let _thirdHelpImage = UIImageView()
+    
+    private let _poweredByRxLabel = UILabel()
+    private let _addStarButton = UIButton(type: .Custom)
+    private let _anjLabButton = UIButton(type: .Custom)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,6 +39,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _configureFirstEventView()
         _configureSecondEventView()
         _configureCompletedEventView()
+        
+        _configurePoweredByRxLabel()
+        _configureAddStarButton()
+        _configureAnjLabButton()
     }
     
     private func _configureLogoImageView() {
@@ -66,6 +74,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureNextButton() {
+        _nextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
         _nextButton.setTitle("onNext()", forState: .Normal)
         _nextButton.setTitleColor(.blackColor(), forState: .Normal)
         contentView.addSubview(_nextButton)
@@ -74,6 +83,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureCompletedButton() {
+        _completedButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
         _completedButton.setTitle("Completed", forState: .Normal)
         _completedButton.setTitleColor(.blackColor(), forState: .Normal)
         contentView.addSubview(_completedButton)
@@ -107,7 +117,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_secondEventView, onPages: [0, 1, 2])
         
         let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
-        verticalConstraintAnimation[0] = 52
+        verticalConstraintAnimation[0] = 48
         verticalConstraintAnimation[1] = 0
         animator.addAnimation(verticalConstraintAnimation)
         
@@ -127,7 +137,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_completedEventView, onPages: [1, 2])
         
         let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
-        verticalConstraintAnimation[1] = 52
+        verticalConstraintAnimation[1] = 48
         verticalConstraintAnimation[2] = 0
         animator.addAnimation(verticalConstraintAnimation)
         
@@ -138,6 +148,34 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         let showAnimation = HideAnimation(view: _completedEventView, showAt: 0.99)
         animator.addAnimation(showAnimation)
+    }
+    
+    private func _configurePoweredByRxLabel() {
+        _poweredByRxLabel.text = "Powered by RxSwift"
+        _poweredByRxLabel.textColor = .blackColor()
+        _poweredByRxLabel.textAlignment = .Center
+        _poweredByRxLabel.font = UIFont(name: "Menlo-Regular", size: 16)
+        contentView.addSubview(_poweredByRxLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: _poweredByRxLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
+        keepView(_poweredByRxLabel, onPage: 3)
+    }
+    
+    private func _configureAddStarButton() {
+        _addStarButton.setTitle("Add Star", forState: .Normal)
+        _addStarButton.setTitleColor(.blackColor(), forState: .Normal)
+        _addStarButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 12)
+        contentView.addSubview(_addStarButton)
+        contentView.addConstraint(NSLayoutConstraint(item: _addStarButton, attribute: .Top, relatedBy: .Equal, toItem: _poweredByRxLabel, attribute: .Bottom, multiplier: 1, constant: 30))
+        keepView(_addStarButton, onPage: 3)
+    }
+    
+    private func _configureAnjLabButton() {
+        _anjLabButton.setTitle("AnjLab", forState: .Normal)
+        _anjLabButton.setTitleColor(.blackColor(), forState: .Normal)
+        _anjLabButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 20)
+        contentView.addSubview(_anjLabButton)
+        contentView.addConstraint(NSLayoutConstraint(item: _anjLabButton, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
+        keepView(_anjLabButton, onPage: 4)
     }
     
     override func numberOfPages() -> Int {
