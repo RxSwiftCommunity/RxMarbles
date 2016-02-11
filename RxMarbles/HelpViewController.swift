@@ -48,11 +48,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _configureLogoImageView()
         _configureImageViews()
         
-        _configureSearchNextButton()
-        _configureEditingNextButton()
-        _configureRxSwiftNextButton()
-        _configureAnjlabNextButton()
-        _configureCompletedButton()
+        _configureButtons()
         
         _configureResultTimeline()
         
@@ -94,39 +90,31 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureSearchNextButton() {
-        _searchNextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
-        _searchNextButton.setTitle("onNext(   )", forState: .Normal)
+        _configureNextButton(_searchNextButton, onPage: 0)
         _searchNextButton.addTarget(self, action: "addSearchNext", forControlEvents: .TouchUpInside)
-        contentView.addSubview(_searchNextButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _searchNextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
-        keepView(_searchNextButton, onPage: 0)
     }
     
     private func _configureEditingNextButton() {
-        _editingNextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
-        _editingNextButton.setTitle("onNext(   )", forState: .Normal)
+        _configureNextButton(_editingNextButton, onPage: 1)
         _editingNextButton.addTarget(self, action: "addEditingNext", forControlEvents: .TouchUpInside)
-        contentView.addSubview(_editingNextButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _editingNextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
-        keepView(_editingNextButton, onPage: 1)
     }
     
     private func _configureRxSwiftNextButton() {
-        _rxSwiftNextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
-        _rxSwiftNextButton.setTitle("onNext(   )", forState: .Normal)
+        _configureNextButton(_rxSwiftNextButton, onPage: 2)
         _rxSwiftNextButton.addTarget(self, action: "addRxSwiftNext", forControlEvents: .TouchUpInside)
-        contentView.addSubview(_rxSwiftNextButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _rxSwiftNextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
-        keepView(_rxSwiftNextButton, onPage: 2)
     }
     
     private func _configureAnjlabNextButton() {
-        _anjlabNextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
-        _anjlabNextButton.setTitle("onNext(   )", forState: .Normal)
+        _configureNextButton(_anjlabNextButton, onPage: 3)
         _anjlabNextButton.addTarget(self, action: "addAnjlabNext", forControlEvents: .TouchUpInside)
-        contentView.addSubview(_anjlabNextButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _anjlabNextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
-        keepView(_anjlabNextButton, onPage: 3)
+    }
+    
+    private func _configureNextButton(next: UIButton, onPage page: CGFloat) {
+        next.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
+        next.setTitle("onNext(   )", forState: .Normal)
+        contentView.addSubview(next)
+        contentView.addConstraint(NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
+        keepView(next, onPage: page)
     }
     
     private func _configureCompletedButton() {
@@ -136,6 +124,14 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addSubview(_completedButton)
         contentView.addConstraint(NSLayoutConstraint(item: _completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
         keepView(_completedButton, onPage: 4)
+    }
+    
+    private func _configureButtons() {
+        _configureSearchNextButton()
+        _configureEditingNextButton()
+        _configureRxSwiftNextButton()
+        _configureAnjlabNextButton()
+        _configureCompletedButton()
     }
     
     private func _configureResultTimeline() {
