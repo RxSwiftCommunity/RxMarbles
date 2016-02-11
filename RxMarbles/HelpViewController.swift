@@ -92,6 +92,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addSubview(_firstEventView)
         
         contentView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
+        scrollView.addConstraint(NSLayoutConstraint(item: _firstEventView, attribute: .Right, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: -100))
         
         keepView(_firstEventView, onPages: [0, 1, 2])
     }
@@ -101,13 +102,19 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         let verticalConstraint = NSLayoutConstraint(item: _secondEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0)
         contentView.addConstraint(verticalConstraint)
-        
+        let horisontalConstraint = NSLayoutConstraint(item: _secondEventView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 50)
+        scrollView.addConstraint(horisontalConstraint)
         keepView(_secondEventView, onPages: [0, 1, 2])
         
-        let constraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
-        constraintAnimation[0] = 50
-        constraintAnimation[1] = 0
-        animator.addAnimation(constraintAnimation)
+        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
+        verticalConstraintAnimation[0] = 52
+        verticalConstraintAnimation[1] = 0
+        animator.addAnimation(verticalConstraintAnimation)
+        
+        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horisontalConstraint)
+        horisontalConstraintAnimation[0] = 50
+        horisontalConstraintAnimation[1] = 0
+        animator.addAnimation(horisontalConstraintAnimation)
     }
     
     private func _configureCompletedEventView() {
@@ -115,13 +122,22 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         let verticalConstraint = NSLayoutConstraint(item: _completedEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0)
         contentView.addConstraint(verticalConstraint)
-        
+        let horisontalConstraint = NSLayoutConstraint(item: _completedEventView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 50)
+        scrollView.addConstraint(horisontalConstraint)
         keepView(_completedEventView, onPages: [1, 2])
         
-        let constraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
-        constraintAnimation[1] = 50
-        constraintAnimation[2] = 0
-        animator.addAnimation(constraintAnimation)
+        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
+        verticalConstraintAnimation[1] = 52
+        verticalConstraintAnimation[2] = 0
+        animator.addAnimation(verticalConstraintAnimation)
+        
+        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horisontalConstraint)
+        horisontalConstraintAnimation[1] = 50
+        horisontalConstraintAnimation[2] = 100
+        animator.addAnimation(horisontalConstraintAnimation)
+        
+        let showAnimation = HideAnimation(view: _completedEventView, showAt: 0.99)
+        animator.addAnimation(showAnimation)
     }
     
     override func numberOfPages() -> Int {
