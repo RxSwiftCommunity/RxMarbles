@@ -22,15 +22,15 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _firstEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Sharing", color: Color.nextGreen, shape: EventShape.Circle))))
     private let _secondEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: EventShape.Circle))))
     private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
-    private let _nextButton = UIButton(type: .Custom)
-    private let _completedButton = UIButton(type: .Custom)
+    private let _nextButton = UIButton(type: .System)
+    private let _completedButton = UIButton(type: .System)
     private let _firstHelpImage = UIImageView()
     private let _secondHelpImage = UIImageView()
     private let _thirdHelpImage = UIImageView()
     
     private let _poweredByRxLabel = UILabel()
-    private let _addStarButton = UIButton(type: .Custom)
-    private let _anjLabButton = UIButton(type: .Custom)
+    private let _addStarButton = UIButton(type: .System)
+    private let _anjLabButton = UIButton(type: .System)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,7 +82,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private func _configureNextButton() {
         _nextButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
         _nextButton.setTitle("onNext(   )", forState: .Normal)
-        _nextButton.setTitleColor(.blackColor(), forState: .Normal)
         _nextButton.addTarget(self, action: "addNext", forControlEvents: .TouchUpInside)
         contentView.addSubview(_nextButton)
         contentView.addConstraint(NSLayoutConstraint(item: _nextButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
@@ -92,7 +91,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private func _configureCompletedButton() {
         _completedButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
         _completedButton.setTitle("Completed", forState: .Normal)
-        _completedButton.setTitleColor(.blackColor(), forState: .Normal)
         _completedButton.addTarget(self, action: "addCompleted", forControlEvents: .TouchUpInside)
         contentView.addSubview(_completedButton)
         contentView.addConstraint(NSLayoutConstraint(item: _completedButton, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20))
@@ -175,7 +173,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureAddStarButton() {
         _addStarButton.setTitle("Add Star", forState: .Normal)
-        _addStarButton.setTitleColor(.blackColor(), forState: .Normal)
         _addStarButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 12)
         _addStarButton.addTarget(self, action: "openRxSwiftOnGithub", forControlEvents: .TouchUpInside)
         contentView.addSubview(_addStarButton)
@@ -185,7 +182,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureAnjLabButton() {
         _anjLabButton.setTitle("AnjLab", forState: .Normal)
-        _anjLabButton.setTitleColor(.blackColor(), forState: .Normal)
         _anjLabButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 20)
         _anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
         contentView.addSubview(_anjLabButton)
