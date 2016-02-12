@@ -153,6 +153,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _sharingEventView.addConstraint(NSLayoutConstraint(item: _sharingEventView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
         
         keepView(_sharingEventView, onPages: [0, 1, 2, 3, 4, 5])
+        
+        _configureEventViewTapRecognizer(_sharingEventView)
     }
     
     private func _configureSearchEventView() {
@@ -160,6 +162,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_searchEventView, onPages: [0, 1, 2, 3, 4, 5])
         
         _configureEventViewAnimations(0, xOffset: -75, horizontal: horizontal, vertical: vertical)
+        _configureEventViewTapRecognizer(_searchEventView)
     }
     
     private func _configureEditingEventView() {
@@ -167,6 +170,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_editingEventView, onPages: [1, 2, 3, 4, 5])
         
         _configureEventViewAnimations(1, xOffset: -25, horizontal: horizontal, vertical: vertical)
+        _configureEventViewTapRecognizer(_editingEventView)
     }
     
     private func _configureRxSwiftEventView() {
@@ -174,6 +178,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_rxSwiftEventView, onPages: [2, 3, 4, 5])
         
         _configureEventViewAnimations(2, xOffset: 25, horizontal: horizontal, vertical: vertical)
+        _configureEventViewTapRecognizer(_rxSwiftEventView)
     }
     
     private func _configureAnjlabEventView() {
@@ -181,6 +186,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_anjlabEventView, onPages: [3, 4, 5])
         
         _configureEventViewAnimations(3, xOffset: 75, horizontal: horizontal, vertical: vertical)
+        _configureEventViewTapRecognizer(_anjlabEventView)
     }
     
     private func _configureCompletedEventView() {
@@ -226,6 +232,11 @@ class HelpViewController: AnimatedPagingScrollViewController {
         animator.addAnimation(horizontalConstraintAnimation)
     }
     
+    private func _configureEventViewTapRecognizer(eventView: EventView) {
+        let tap = UITapGestureRecognizer()
+        tap.addTarget(self, action: "eventViewTap:")
+        eventView.addGestureRecognizer(tap)
+    }
     
     private func _configurePoweredByRxLabel() {
         _poweredByRxLabel.text = "Powered by RxSwift"
@@ -244,6 +255,15 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addSubview(_addStarButton)
         contentView.addConstraint(NSLayoutConstraint(item: _addStarButton, attribute: .Top, relatedBy: .Equal, toItem: _poweredByRxLabel, attribute: .Bottom, multiplier: 1, constant: 30))
         keepView(_addStarButton, onPage: 3)
+        
+        let showAnimations = HideAnimation(view: _addStarButton, showAt: 2.8)
+        animator.addAnimation(showAnimations)
+        
+        let alphaAnimations = AlphaAnimation(view: _addStarButton)
+        alphaAnimations[2.8] = 0.0
+        alphaAnimations[3.0] = 1.0
+        alphaAnimations[3.2] = 0.0
+        animator.addAnimation(alphaAnimations)
     }
     
     private func _configureAnjLabButton() {
@@ -260,6 +280,29 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
 //    MARK: Navigation
+    
+    func eventViewTap(r: UITapGestureRecognizer) {
+        switch r.view as! EventView {
+        case _sharingEventView:
+            addSharingNext()
+        case _searchEventView:
+            addSearchNext()
+        case _editingEventView:
+            addEditingNext()
+        case _rxSwiftEventView:
+            addRxSwiftNext()
+        case _anjlabEventView:
+            addAnjlabNext()
+        default:
+            break
+        }
+    }
+    
+    func addSharingNext() {
+        UIView.animateWithDuration(0.3) {
+            self.scrollView.contentOffset = CGPointMake(0, 0)
+        }
+    }
     
     func addSearchNext() {
         UIView.animateWithDuration(0.3) {
