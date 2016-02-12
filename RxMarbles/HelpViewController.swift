@@ -121,7 +121,12 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addSubview(next)
         let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
         contentView.addConstraint(vertical)
-        keepView(next, onPage: page)
+        keepView(next, onPages: [page, page + 1])
+        
+        let outOfScreenAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
+        outOfScreenAnimation[page] = -20
+        outOfScreenAnimation[page + 1] = 100
+        animator.addAnimation(outOfScreenAnimation)
     }
     
     private func _configureButtons() {
@@ -154,35 +159,37 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let (vertical, horizontal) = _configureEventViewConstraints(_searchEventView)
         keepView(_searchEventView, onPages: [0, 1, 2, 3, 4, 5])
         
-        _configureEventViewAnimations((0, 1), xOffset: -75, horizontal: horizontal, vertical: vertical)
+        _configureEventViewAnimations(0, xOffset: -75, horizontal: horizontal, vertical: vertical)
     }
     
     private func _configureEditingEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_editingEventView)
         keepView(_editingEventView, onPages: [1, 2, 3, 4, 5])
         
-        _configureEventViewAnimations((1, 2), xOffset: -25, horizontal: horizontal, vertical: vertical)
+        _configureEventViewAnimations(1, xOffset: -25, horizontal: horizontal, vertical: vertical)
     }
     
     private func _configureRxSwiftEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_rxSwiftEventView)
         keepView(_rxSwiftEventView, onPages: [2, 3, 4, 5])
         
-        _configureEventViewAnimations((2, 3), xOffset: 25, horizontal: horizontal, vertical: vertical)
+        _configureEventViewAnimations(2, xOffset: 25, horizontal: horizontal, vertical: vertical)
     }
     
     private func _configureAnjlabEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_anjlabEventView)
         keepView(_anjlabEventView, onPages: [3, 4, 5])
         
-        _configureEventViewAnimations((3, 4), xOffset: 75, horizontal: horizontal, vertical: vertical)
+        _configureEventViewAnimations(3, xOffset: 75, horizontal: horizontal, vertical: vertical)
     }
     
     private func _configureCompletedEventView() {
         let (vertical, horizontal) = _configureEventViewConstraints(_completedEventView)
         keepView(_completedEventView, onPages: [4, 5])
         
-        _configureEventViewAnimations((4, 5), xOffset: 125, horizontal: horizontal, vertical: vertical)
+        _configureEventViewAnimations(4, xOffset: 125, horizontal: horizontal, vertical: vertical)
+        let showAnimation = HideAnimation(view: _completedEventView, showAt: 4.1)
+        animator.addAnimation(showAnimation)
     }
     
     private func _configureEventViews() {
@@ -205,16 +212,18 @@ class HelpViewController: AnimatedPagingScrollViewController {
         return (verticalConstraint, horizontalConstraint)
     }
     
-    private func _configureEventViewAnimations(pages: (first:CGFloat, second: CGFloat), xOffset: CGFloat, horizontal: NSLayoutConstraint, vertical: NSLayoutConstraint) {
+    private func _configureEventViewAnimations(page: CGFloat, xOffset: CGFloat, horizontal: NSLayoutConstraint, vertical: NSLayoutConstraint) {
+        
         let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[pages.first] = 48
-        verticalConstraintAnimation[pages.second] = 0
+        verticalConstraintAnimation[page] = 48
+        verticalConstraintAnimation[page + 1] = 0
         animator.addAnimation(verticalConstraintAnimation)
         
-        let horisontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horisontalConstraintAnimation[pages.first] = 25
-        horisontalConstraintAnimation[pages.second] = xOffset
-        animator.addAnimation(horisontalConstraintAnimation)
+        let horizontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
+        horizontalConstraintAnimation[page - 1] = pageWidth + 25
+        horizontalConstraintAnimation[page] = 25
+        horizontalConstraintAnimation[page + 1] = xOffset
+        animator.addAnimation(horizontalConstraintAnimation)
     }
     
     
