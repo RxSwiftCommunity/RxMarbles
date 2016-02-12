@@ -244,6 +244,15 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addSubview(_addStarButton)
         contentView.addConstraint(NSLayoutConstraint(item: _addStarButton, attribute: .Top, relatedBy: .Equal, toItem: _poweredByRxLabel, attribute: .Bottom, multiplier: 1, constant: 30))
         keepView(_addStarButton, onPage: 3)
+        
+        let showAnimations = HideAnimation(view: _addStarButton, showAt: 2.8)
+        animator.addAnimation(showAnimations)
+        
+        let alphaAnimations = AlphaAnimation(view: _addStarButton)
+        alphaAnimations[2.8] = 0.0
+        alphaAnimations[3.0] = 1.0
+        alphaAnimations[3.2] = 0.0
+        animator.addAnimation(alphaAnimations)
     }
     
     private func _configureAnjLabButton() {
