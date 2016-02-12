@@ -111,7 +111,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureCompletedButton() {
         _configureButton(_completedButton, onPage: 4)
-        _completedButton.setTitle("Completed", forState: .Normal)
+        _completedButton.setTitle("onCompleted()", forState: .Normal)
         _completedButton.addTarget(self, action: "addCompleted", forControlEvents: .TouchUpInside)
     }
     
@@ -142,6 +142,14 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -80))
         scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
         keepView(_resultTimeline, onPages: [0, 1, 2, 3, 4, 5])
+        
+//        let arrowTapArea = UIView()
+//        arrowTapArea.backgroundColor = .blueColor()
+//        contentView.addSubview(arrowTapArea)
+//        contentView.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
+//        scrollView.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 140))
+//        arrowTapArea.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 10))
+//        arrowTapArea.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 10))
     }
     
     private func _configureSharingEventView() {
@@ -226,7 +234,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
         animator.addAnimation(verticalConstraintAnimation)
         
         let horizontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horizontalConstraintAnimation[page - 1] = pageWidth + 25
+        if page > 0 {
+            horizontalConstraintAnimation[page - 1] = pageWidth + 25
+        }
         horizontalConstraintAnimation[page] = 25
         horizontalConstraintAnimation[page + 1] = xOffset
         animator.addAnimation(horizontalConstraintAnimation)
