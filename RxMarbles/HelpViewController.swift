@@ -299,38 +299,32 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     func addSharingNext() {
-        UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(0, 0)
-        }
+        _setOffsetAnimated(0)
     }
     
     func addSearchNext() {
-        UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 1, 0)
-        }
+        _setOffsetAnimated(1)
     }
     
     func addEditingNext() {
-        UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 2, 0)
-        }
+        _setOffsetAnimated(2)
     }
     
     func addRxSwiftNext() {
-        UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 3, 0)
-        }
+        _setOffsetAnimated(3)
     }
     
     func addAnjlabNext() {
-        UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 4, 0)
-        }
+        _setOffsetAnimated(4)
     }
     
     func addCompleted() {
+        _setOffsetAnimated(5)
+    }
+    
+    func _setOffsetAnimated(offset: CGFloat) {
         UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(self.pageWidth * 5, 0)
+            self.scrollView.contentOffset = CGPointMake(self.pageWidth * offset, 0)
         }
     }
     
@@ -356,6 +350,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+        return .Portrait
     }
 }
