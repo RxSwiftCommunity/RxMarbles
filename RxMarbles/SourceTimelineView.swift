@@ -147,10 +147,10 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
     
      func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
         if onDeleteZone(recognizer) == true {
-            [ghostEventView, sceneView].forEach(Animation.shake)
+            [ghostEventView, sceneView.trashView].forEach(Animation.shake)
             sceneView.trashView.alpha = 0.5
         } else {
-            [ghostEventView, sceneView].forEach(Animation.stopShake)
+            [ghostEventView, sceneView.trashView].forEach(Animation.stopShake)
             sceneView.trashView.alpha = 0.2
         }
         ghostEventView.setGhostColorOnDeleteZone(onDeleteZone(recognizer))
