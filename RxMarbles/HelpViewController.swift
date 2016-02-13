@@ -19,8 +19,19 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     let helpMode: Bool = false
     
-    private let _logoImageView = UIImageView(image: UIImage(named: "IntroLogo"))
+    private let _logoImageView = UIImageView(image: Image.helpLogo)
     private let _resultTimeline = UIImageView(image: Image.timeLine)
+    
+    private let _evernote     = UIImageView(image: Image.evernote)
+    private let _facebook     = UIImageView(image: Image.facebook)
+    private let _hanghout     = UIImageView(image: Image.hanghout)
+    private let _mail         = UIImageView(image: Image.mail)
+    private let _messenger    = UIImageView(image: Image.messenger)
+    private let _skype        = UIImageView(image: Image.skype)
+    private let _slack        = UIImageView(image: Image.slack)
+    private let _trello       = UIImageView(image: Image.trello)
+    private let _twitter      = UIImageView(image: Image.twitter)
+    private let _viber        = UIImageView(image: Image.viber)
     
     private let _sharingEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Sharing", color: Color.nextGreen, shape: EventShape.Circle))))
     private let _searchEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Search", color: Color.nextBlue, shape: EventShape.Circle))))
@@ -35,9 +46,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _anjlabNextButton = UIButton(type: .System)
     private let _completedButton = UIButton(type: .System)
     
-    private let _firstHelpImage = UIImageView()
-    private let _secondHelpImage = UIImageView()
-    private let _thirdHelpImage = UIImageView()
+    private let _firstHelpView = UIView()
+    private let _secondHelpView = UIView()
+    private let _thirdHelpView = UIView()
     
     private let _poweredByRxLabel = UILabel()
     private let _addStarButton = UIButton(type: .System)
@@ -56,8 +67,11 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         _configureEventViews()
         
+        _configureShareIcons()
+        
         _configurePoweredByRxLabel()
         _configureAddStarButton()
+        
         _configureAnjLabButton()
     }
     
@@ -75,15 +89,14 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureImageViews() {
-        _configureImageViewsConstraints(_firstHelpImage, page: 0)
+        _configureImageViewsConstraints(_firstHelpView, page: 0)
         
-        _configureImageViewsConstraints(_secondHelpImage, page: 1)
+        _configureImageViewsConstraints(_secondHelpView, page: 1)
         
-        _configureImageViewsConstraints(_thirdHelpImage, page: 2)
+        _configureImageViewsConstraints(_thirdHelpView, page: 2)
     }
     
-    private func _configureImageViewsConstraints(imageView: UIImageView, page: CGFloat) {
-        imageView.backgroundColor = .lightGrayColor()
+    private func _configureImageViewsConstraints(imageView: UIView, page: CGFloat) {
         contentView.addSubview(imageView)
         contentView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
         imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
@@ -207,6 +220,57 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _configureRxSwiftEventView()
         _configureAnjlabEventView()
         _configureCompletedEventView()
+    }
+    
+    private func _configureShareIcons() {
+        let shareLogos = [
+            _evernote,
+            _facebook,
+            _hanghout,
+            _mail,
+            _messenger,
+            _skype,
+            _slack,
+            _trello,
+            _twitter,
+            _viber
+        ]
+        
+        shareLogos.forEach {
+            contentView.addSubview($0)
+            keepView($0, onPage: 2)
+            
+            let scaleAnimation = ScaleAnimation(view: $0)
+            scaleAnimation[1.1] = 0.1
+            scaleAnimation[2] = 1.0
+            scaleAnimation[2.9] = 0.1
+            animator.addAnimation(scaleAnimation)
+            
+            let rotateAnimation = RotationAnimation(view: $0)
+            rotateAnimation[1.1] = -3600.0
+            rotateAnimation[2] = 0.0
+            rotateAnimation[2.9] = 3600.0
+            animator.addAnimation(rotateAnimation)
+        }
+        
+        contentView.addConstraint(NSLayoutConstraint(item: _facebook, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _facebook, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
+        contentView.addConstraint(NSLayoutConstraint(item: _twitter, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _twitter, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
+        contentView.addConstraint(NSLayoutConstraint(item: _trello, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
+        contentView.addConstraint(NSLayoutConstraint(item: _slack, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _slack, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
+        contentView.addConstraint(NSLayoutConstraint(item: _mail, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _mail, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
+        contentView.addConstraint(NSLayoutConstraint(item: _messenger, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _messenger, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
+        contentView.addConstraint(NSLayoutConstraint(item: _viber, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _viber, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
+        contentView.addConstraint(NSLayoutConstraint(item: _skype, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
+        contentView.addConstraint(NSLayoutConstraint(item: _hanghout, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _hanghout, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
+        contentView.addConstraint(NSLayoutConstraint(item: _evernote, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _evernote, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
     }
     
     private func _configureEventViewConstraints(eventView: EventView) -> (NSLayoutConstraint, NSLayoutConstraint) {

@@ -22,4 +22,17 @@ struct Image {
     
     static let complete     = UIImage(named: "complete")!
     static let error        = UIImage(named: "error")!
+    
+    static let helpLogo    = UIImage(named: "helpLogo")!
+    
+    static let evernote     = UIImage(named: "evernote")!
+    static let facebook     = UIImage(named: "facebook")!
+    static let hanghout     = UIImage(named: "hanghout")!
+    static let mail         = UIImage(named: "mail")!
+    static let messenger    = UIImage(named: "messenger")!
+    static let skype        = UIImage(named: "skype")!
+    static let slack        = UIImage(named: "slack")!
+    static let trello       = UIImage(named: "trello")!
+    static let twitter      = UIImage(named: "twitter")!
+    static let viber        = UIImage(named: "viber")!
 }
