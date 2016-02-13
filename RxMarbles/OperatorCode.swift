@@ -103,7 +103,7 @@ extension Operator {
         case Timeout:
             return "a.timeout(200, scheduler: s)"
         case Timer:
-            return "Observable.timer(100, scheduler: s)"
+            return "Observable.timer(500, scheduler: s)"
         case ToArray:
             return "a.toArray()"
         case WithLatestFrom:

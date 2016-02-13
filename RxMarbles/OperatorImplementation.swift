@@ -51,6 +51,18 @@ extension Operator {
                 ],
                 line2: []
             )
+        case CatchErrorJustReturn:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    error(400),
+                    completed(900)
+                ],
+                line2: []
+            )
         case CombineLatest:
             return InitialValues(
                 line1: [
@@ -294,6 +306,24 @@ extension Operator {
                 ],
                 line2: []
             )
+        case SkipUntil, TakeUntil:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle),
+                    next(500, "5", Color.nextRandom, .Circle),
+                    next(600, "6", Color.nextRandom, .Circle),
+                    next(700, "7", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
+                line2: [
+                    next(350, "a", Color.nextRandom, .Rect),
+                    next(650, "b", Color.nextRandom, .Rect),
+                    completed(900)
+                ]
+            )
         case StartWith:
             return InitialValues(
                 line1: [
@@ -328,6 +358,18 @@ extension Operator {
         case Throw:
             return InitialValues(
                 line1: [],
+                line2: []
+            )
+        case Timeout:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(550, "4", Color.nextRandom, .Circle),
+                    next(650, "5", Color.nextRandom, .Circle),
+                    completed(900)
+                ],
                 line2: []
             )
         case Zip:
