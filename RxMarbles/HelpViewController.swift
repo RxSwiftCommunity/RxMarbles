@@ -118,7 +118,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureButton(next: UIButton, onPage page: CGFloat) {
-        next.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 14)
+        next.titleLabel?.font = Font.code(14)
         next.setTitle("onNext(   )", forState: .Normal)
         contentView.addSubview(next)
         let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
@@ -246,7 +246,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _poweredByRxLabel.text = "Powered by RxSwift"
         _poweredByRxLabel.textColor = .blackColor()
         _poweredByRxLabel.textAlignment = .Center
-        _poweredByRxLabel.font = UIFont(name: "Menlo-Regular", size: 16)
+        _poweredByRxLabel.font = Font.code(16)
         contentView.addSubview(_poweredByRxLabel)
         contentView.addConstraint(NSLayoutConstraint(item: _poweredByRxLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
         keepView(_poweredByRxLabel, onPage: 3)
@@ -254,7 +254,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureAddStarButton() {
         _addStarButton.setTitle("Add Star", forState: .Normal)
-        _addStarButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 12)
+        _addStarButton.titleLabel?.font = Font.code(12)
         _addStarButton.addTarget(self, action: "openRxSwiftOnGithub", forControlEvents: .TouchUpInside)
         contentView.addSubview(_addStarButton)
         contentView.addConstraint(NSLayoutConstraint(item: _addStarButton, attribute: .Top, relatedBy: .Equal, toItem: _poweredByRxLabel, attribute: .Bottom, multiplier: 1, constant: 30))
@@ -272,7 +272,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureAnjLabButton() {
         _anjLabButton.setTitle("AnjLab", forState: .Normal)
-        _anjLabButton.titleLabel?.font = UIFont(name: "Menlo-Regular", size: 20)
+        _anjLabButton.titleLabel?.font = Font.code(20)
         _anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
         contentView.addSubview(_anjLabButton)
         contentView.addConstraint(NSLayoutConstraint(item: _anjLabButton, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
