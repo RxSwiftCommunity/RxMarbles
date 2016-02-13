@@ -441,7 +441,7 @@ extension Operator {
             }
         case Concat:
             return [aO!, bO!].concat()
-        case Debounce:
+        case Debounce, Throttle:
             return aO!.debounce(100, scheduler: scheduler)
         case DelaySubscription:
             return aO!.delaySubscription(150, scheduler: scheduler)
@@ -548,14 +548,12 @@ extension Operator {
             return aO!.takeWhile { e in Int(e.value) < 4 }
         case TakeWhileWithIndex:
             return aO!.takeWhileWithIndex { e, i in i < 4 }
-        case Throttle:
-            return aO!.throttle(500, scheduler: scheduler)
         case Throw:
             return Observable.error(Error.CantParseStringToInt)
         case Timeout:
             return aO!.timeout(200, scheduler: scheduler)
         case Timer:
-            return Observable<Int64>.timer(500, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextRandom, shape: .Circle) }
+            return Observable<Int64>.timer(500, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .Circle) }
         case ToArray:
             return aO!
                 .toArray()
@@ -788,7 +786,7 @@ extension Operator {
         let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSLinkAttributeName: url])
         res.appendAttributedString(NSAttributedString(string: " "))
         res.appendAttributedString(link)
-        res.addAttribute(NSFontAttributeName, value: UIFont(name: "Menlo-Regular", size: 16)!, range: NSMakeRange(0, res.length))
+        res.addAttribute(NSFontAttributeName, value: Font.code(16), range: NSMakeRange(0, res.length))
         return res
     }
 }

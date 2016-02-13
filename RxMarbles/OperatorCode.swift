@@ -45,7 +45,7 @@ extension Operator {
         case IgnoreElements:
             return "a.ignoreElements()"
         case Interval:
-            return "Observable.interval(100, scheduler: s)"
+            return "Observable.interval<Int64>(100, scheduler: s).map { $0 }"
         case Just:
             return "Observable.just()"
         case Map:
@@ -61,7 +61,7 @@ extension Operator {
         case Reduce:
             return "a.reduce { $0 + $1 }"
         case RepeatElement:
-            return "Observable.repeatElement()"
+            return "Observable.repeatElement(1)"
         case Retry:
             return "a.retry(2)"
         case Sample:
@@ -77,7 +77,7 @@ extension Operator {
         case SkipUntil:
             return "a.skipUntil(b)"
         case SkipWhile:
-            return "a.skipWhile { e < 4 }"
+            return "a.skipWhile { $0 < 4 }"
         case SkipWhileWithIndex:
             return "a.skipWhileWithIndex { e, i in i < 4 }"
         case StartWith:
@@ -93,17 +93,17 @@ extension Operator {
         case TakeUntil:
             return "a.takeUntil(b)"
         case TakeWhile:
-            return "a.takeWhile { e < 4 }"
+            return "a.takeWhile { $0 < 4 }"
         case TakeWhileWithIndex:
             return "a.takeWhileWithIndex { e, i in i < 4 }"
         case Throttle:
-            return "a.throttle(500, scheduler: scheduler)"
+            return "a.throttle(100, scheduler: s)"
         case Throw:
             return "Observable.error()"
         case Timeout:
             return "a.timeout(200, scheduler: s)"
         case Timer:
-            return "Observable.timer(500, scheduler: s)"
+            return "Observable<Int64>.timer(500, scheduler: s).map { $0 }"
         case ToArray:
             return "a.toArray()"
         case WithLatestFrom:
@@ -115,7 +115,7 @@ extension Operator {
 }
 
 private let __methodRegex = try? NSRegularExpression(pattern: "\\.[^\\s\\(\\{]+", options: [])
-private let __typeRegex = try? NSRegularExpression(pattern: "Observable", options: [])
+private let __typeRegex = try? NSRegularExpression(pattern: "(Observable)|(Int64)", options: [])
 private let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
 private let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
@@ -133,7 +133,7 @@ private func __colorize(src: NSMutableAttributedString, regex: NSRegularExpressi
 
 extension Operator {
     func higlightedCode() -> NSAttributedString {
-        let font = UIFont(name: "Menlo-Regular", size: 18)!
+        let font = Font.code(18)
         let src = NSMutableAttributedString(string: code, attributes: [
             NSFontAttributeName: font,
             NSForegroundColorAttributeName: Color.codeDefault
