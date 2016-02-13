@@ -482,6 +482,8 @@ extension Operator {
             return aO!.single()
         case Skip:
             return aO!.skip(2)
+        case SkipDuration:
+            return aO!.skip(400, scheduler: scheduler)
         case SkipUntil:
             return aO!.skipUntil(bO!)
         case SkipWhile:
@@ -494,6 +496,8 @@ extension Operator {
             return Observable.of(aO!, bO!).switchLatest()
         case Take:
             return aO!.take(2)
+        case TakeDuration:
+            return aO!.take(400, scheduler: scheduler)
         case TakeLast:
             return aO!.takeLast(2)
         case TakeUntil:
@@ -569,10 +573,12 @@ extension Operator {
         .Scan,
         .Single,
         .Skip,
+        .SkipDuration,
         .SkipWhile,
         .SkipWhileWithIndex,
         .StartWith,
         .Take,
+        .TakeDuration,
         .TakeLast,
         .TakeWhile,
         .TakeWhileWithIndex,
@@ -618,10 +624,14 @@ extension Operator {
             return "repeat.html"
         case Single:
             return "first.html"
+        case SkipDuration:
+            return "skip.html"
         case SkipWhileWithIndex:
             return "skipwhile.html"
         case SwitchLatest:
             return "switch.html"
+        case TakeDuration:
+            return "take.html"
         case TakeWhileWithIndex:
             return "takewhile.html"
         case Throttle:
@@ -700,7 +710,7 @@ extension Operator {
             return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
         case Single:
             return "Emit only the first item (or the first item that meets some condition) emitted by an Observable."
-        case Skip:
+        case Skip, SkipDuration:
             return "Suppress the first n items emitted by an Observable."
         case SkipUntil:
             return "Discard items emitted by an Observable until a second Observable emits an item."
@@ -710,7 +720,7 @@ extension Operator {
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
         case SwitchLatest:
             return "Convert an Observable that emits Observables into a single Observable that emits the items emitted by the most-recently-emitted of those Observables."
-        case Take:
+        case Take, TakeDuration:
             return "Emit only the first n items emitted by an Observable."
         case TakeLast:
             return "Emit only the final n items emitted by an Observable."

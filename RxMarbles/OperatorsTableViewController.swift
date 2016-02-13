@@ -46,7 +46,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Filtering",
-            rows: [.Debounce, .DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Single, .Skip, .Take, .TakeLast, .Throttle]
+            rows: [.Debounce, .DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Single, .Skip, .SkipDuration, .Take, .TakeDuration, .TakeLast, .Throttle]
         ),
         Section(
             name: "Mathematical",
@@ -54,7 +54,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Transforming",
-            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan, .ToArray]//, .Window]
+            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan, .ToArray]
         ),
         Section(
             name: "Utility",

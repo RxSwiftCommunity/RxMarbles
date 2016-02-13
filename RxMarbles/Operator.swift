@@ -38,12 +38,14 @@ enum Operator: String {
     case Scan
     case Single
     case Skip
+    case SkipDuration
     case SkipUntil
     case SkipWhile
     case SkipWhileWithIndex
     case StartWith
     case SwitchLatest
     case Take
+    case TakeDuration
     case TakeLast
     case TakeUntil
     case TakeWhile

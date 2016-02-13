@@ -72,6 +72,8 @@ extension Operator {
             return "a.single()"
         case Skip:
             return "a.skip(2)"
+        case SkipDuration:
+            return "a.skip(400, scheduler: scheduler)"
         case SkipUntil:
             return "a.skipUntil(b)"
         case SkipWhile:
@@ -84,6 +86,8 @@ extension Operator {
             return "Observable.of(a).switchLatest()"
         case Take:
             return "a.take(2)"
+        case TakeDuration:
+            return "a.take(400, scheduler: scheduler)"
         case TakeLast:
             return "a.takeLast(2)"
         case TakeUntil:
