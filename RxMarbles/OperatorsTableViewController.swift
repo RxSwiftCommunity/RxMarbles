@@ -30,23 +30,23 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     private let _sections = [
         Section(
             name: "Combining",
-            rows: [.CombineLatest, .Concat, .Merge, .StartWith, .Zip]
+            rows: [.CombineLatest, .Concat, .Merge, .StartWith, .SwitchLatest, .WithLatestFrom, .Zip]
         ),
         Section(
             name: "Conditional",
-            rows: [.Amb]
+            rows: [.Amb, .SkipUntil, .SkipWhile, .SkipWhileWithIndex, .TakeUntil, .TakeWhile, .TakeWhileWithIndex]
         ),
         Section(
             name: "Creating",
-            rows: [.Empty, .Just, .Never, .Throw]
+            rows: [.Empty, .Interval, .Just, .Never, .Of, .RepeatElement, .Throw, .Timer]
         ),
         Section(
             name: "Error",
-            rows: [.CatchError, .Retry]
+            rows: [.CatchError, .CatchErrorJustReturn, .Retry]
         ),
         Section(
             name: "Filtering",
-            rows: [.Debounce, .DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Skip, .Take, .TakeLast]
+            rows: [.Debounce, .DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Single, .Skip, .Take, .TakeLast, .Throttle]
         ),
         Section(
             name: "Mathematical",
@@ -54,7 +54,11 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Transforming",
-            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan]//, .Window]
+            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan, .ToArray]//, .Window]
+        ),
+        Section(
+            name: "Utility",
+            rows: [.Timeout]
         )
     ]
     

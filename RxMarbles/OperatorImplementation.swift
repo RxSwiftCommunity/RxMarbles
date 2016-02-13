@@ -330,19 +330,6 @@ extension Operator {
                 line1: [],
                 line2: []
             )
-        case Window:
-            return InitialValues(
-                line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Circle),
-                    completed(900)
-                ],
-                line2: []
-            )
         case Zip:
             return InitialValues(
                 line1: [
@@ -404,6 +391,8 @@ extension Operator {
             return aO!.catchError { error in
                 return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
             }
+        case CatchErrorJustReturn:
+            return aO!.catchErrorJustReturn(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         case CombineLatest:
             return Observable.combineLatest(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
@@ -443,8 +432,14 @@ extension Operator {
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
+//        case FlatMapWithIndex:
+//            return aO!.flatMapWithIndex { e, i  in
+//                
+//            }
         case IgnoreElements:
             return aO!.ignoreElements()
+        case Interval:
+            return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .Circle) }
         case Just:
             return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
         case Map:
@@ -465,11 +460,15 @@ extension Operator {
             return Observable.of(aO!, bO!).merge()
         case Never:
             return Observable.never()
+        case Of:
+            return Observable.of(ColoredType(value: "1", color: Color.nextRandom, shape: .Star))
         case Reduce:
             return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .Circle)) {
                 guard let a = Int($0.value), let b = Int($1.value) else { throw Error.CantParseStringToInt }
                 return ColoredType(value: String(a + b), color: $1.color, shape: $1.shape)
             }
+        case RepeatElement:
+            return Observable<Int64>.interval(150, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextGreen, shape: .Star)}
         case Retry:
             return aO!.retry(2)
         case Sample:
@@ -479,19 +478,47 @@ extension Operator {
                 guard let a = Int(e.value), let b = Int(acc.value) else { throw Error.CantParseStringToInt }
                 return ColoredType(value: String(a + b), color: e.color, shape: e.shape)
             }
+        case Single:
+            return aO!.single()
         case Skip:
             return aO!.skip(2)
+        case SkipUntil:
+            return aO!.skipUntil(bO!)
+        case SkipWhile:
+            return aO!.skipWhile { e in Int(e.value) < 4 }
+        case SkipWhileWithIndex:
+            return aO!.skipWhileWithIndex { e, i in i < 4 }
         case StartWith:
             return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .Circle))
+        case SwitchLatest:
+            return Observable.of(aO!, bO!).switchLatest()
         case Take:
             return aO!.take(2)
         case TakeLast:
             return aO!.takeLast(2)
+        case TakeUntil:
+            return aO!.takeUntil(bO!)
+        case TakeWhile:
+            return aO!.takeWhile { e in Int(e.value) < 4 }
+        case TakeWhileWithIndex:
+            return aO!.takeWhileWithIndex { e, i in i < 4 }
+        case Throttle:
+            return aO!.throttle(500, scheduler: scheduler)
         case Throw:
             return Observable.error(Error.CantParseStringToInt)
-        case Window:
-            let window = aO?.window(timeSpan: 300, count: 2, scheduler: scheduler)
-            return window!.merge()
+        case Timeout:
+            return aO!.timeout(200, scheduler: scheduler)
+        case Timer:
+            return Observable<Int64>.timer(500, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextRandom, shape: .Circle) }
+        case ToArray:
+            return aO!
+                .toArray()
+                .map {
+                let values = $0.map {$0.value } .joinWithSeparator(", ")
+                return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Rect)
+            }
+        case WithLatestFrom:
+            return aO!.withLatestFrom(bO!)
         case Zip:
             return Observable.zip(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
@@ -512,12 +539,17 @@ extension Operator {
         .FlatMapLatest,
         .Merge,
         .Sample,
+        .SkipUntil,
+        .SwitchLatest,
+        .TakeUntil,
+        .WithLatestFrom,
         .Zip:
             return true
             
         case
         .Buffer,
         .CatchError,
+        .CatchErrorJustReturn,
         .Debounce,
         .DelaySubscription,
         .DistinctUntilChanged,
@@ -525,26 +557,37 @@ extension Operator {
         .Empty,
         .Filter,
         .IgnoreElements,
+        .Interval,
         .Just,
         .Map,
         .MapWithIndex,
         .Never,
+        .Of,
         .Reduce,
+        .RepeatElement,
         .Retry,
         .Scan,
+        .Single,
         .Skip,
+        .SkipWhile,
+        .SkipWhileWithIndex,
         .StartWith,
         .Take,
         .TakeLast,
+        .TakeWhile,
+        .TakeWhileWithIndex,
+        .Throttle,
         .Throw,
-        .Window:
+        .Timeout,
+        .Timer,
+        .ToArray:
             return false
         }
     }
     
     var withoutTimelines: Bool {
         switch self {
-        case .Empty, .Never, .Throw, .Just:
+        case .Empty, .Interval, .Just, .Never, .Of, .RepeatElement, .Throw, .Timer:
             return true
         default:
             return false
@@ -555,7 +598,7 @@ extension Operator {
 extension Operator {
     var urlString: String {
         switch self {
-        case CatchError:
+        case CatchError, CatchErrorJustReturn:
             return "catch.html"
         case DelaySubscription:
             return "delay.html"
@@ -569,6 +612,24 @@ extension Operator {
             return "ignoreelements.html"
         case Map, MapWithIndex:
             return "map.html"
+        case Of:
+            return "from.html"
+        case RepeatElement:
+            return "repeat.html"
+        case Single:
+            return "first.html"
+        case SkipWhileWithIndex:
+            return "skipwhile.html"
+        case SwitchLatest:
+            return "switch.html"
+        case TakeWhileWithIndex:
+            return "takewhile.html"
+        case Throttle:
+            return "debounce.html"
+        case ToArray:
+            return "to.html"
+        case WithLatestFrom:
+            return "combinelatest.html"
         default:
             return "\(rawValue.lowercaseString).html"
         }
@@ -587,13 +648,13 @@ extension Operator {
             return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
         case Buffer:
             return "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time."
-        case CatchError:
+        case CatchError, CatchErrorJustReturn:
             return "Recover from an onError notification by continuing the sequence without error."
-        case CombineLatest:
+        case CombineLatest, WithLatestFrom:
             return "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function."
         case Concat:
             return "Emit the emissions from two or more Observables without interleaving them."
-        case Debounce:
+        case Debounce, Throttle:
             return "Only emit an item from an Observable if a particular timespan has passed without it emitting another item."
         case DelaySubscription:
             return "Shift the emissions from an Observable forward in time by a particular amount."
@@ -613,6 +674,8 @@ extension Operator {
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
         case IgnoreElements:
             return "Do not emit any items from an Observable but mirror its termination notification."
+        case Interval:
+            return "Create an Observable that emits a sequence of integers spaced by a given time interval."
         case Just:
             return "Create an Observable that emits a particular item."
         case Map:
@@ -623,26 +686,46 @@ extension Operator {
             return "Combine multiple Observables into one by merging their emissions."
         case Never:
             return "Create an Observable that emits no items and does not terminate."
+        case Of:
+            return "Convert various other objects and data types into Observables."
         case Reduce:
             return "Apply a function to each item emitted by an Observable, sequentially, and emit the final value."
+        case RepeatElement:
+            return "Create an Observable that emits a particular item multiple times."
         case Retry:
             return "If a source Observable emits an error, resubscribe to it in the hopes that it will complete without error."
         case Sample:
             return "Emit the most recent items emitted by an Observable within periodic time intervals."
         case Scan:
             return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
+        case Single:
+            return "Emit only the first item (or the first item that meets some condition) emitted by an Observable."
         case Skip:
             return "Suppress the first n items emitted by an Observable."
+        case SkipUntil:
+            return "Discard items emitted by an Observable until a second Observable emits an item."
+        case SkipWhile, SkipWhileWithIndex:
+            return "Discard items emitted by an Observable until a specified condition becomes false."
         case StartWith:
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
+        case SwitchLatest:
+            return "Convert an Observable that emits Observables into a single Observable that emits the items emitted by the most-recently-emitted of those Observables."
         case Take:
             return "Emit only the first n items emitted by an Observable."
         case TakeLast:
             return "Emit only the final n items emitted by an Observable."
+        case TakeUntil:
+            return "Discard any items emitted by an Observable after a second Observable emits an item or terminates."
+        case TakeWhile, TakeWhileWithIndex:
+            return "Mirror items emitted by an Observable until a specified condition becomes false."
         case Throw:
             return "Create an Observable that emits no items and terminates with an error."
-        case Window:
-            return "Periodically subdivide items from an Observable into Observable windows and emit these windows rather than emitting the items one at a time."
+        case Timeout:
+            return "Mirror the source Observable, but issue an error notification if a particular period of time elapses without any emitted items."
+        case Timer:
+            return "Create an Observable that emits a particular item after a given delay."
+        case ToArray:
+            return "Convert an Observable into another object or data structure."
         case Zip:
             return "Combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function."
         }

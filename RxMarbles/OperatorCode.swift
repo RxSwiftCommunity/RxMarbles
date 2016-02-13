@@ -18,6 +18,8 @@ extension Operator {
             return "a.buffer(timeSpan: 150, count: 3, scheduler: s)"
         case CatchError:
             return "a.catchError(1)"
+        case CatchErrorJustReturn:
+            return "a.catchErrorJustReturn(1)"
         case CombineLatest:
             return "Observable.combineLatest(a, b) { $0 + $1 }"
         case Concat:
@@ -42,6 +44,8 @@ extension Operator {
             return "a.flatMapLatest(b)"
         case IgnoreElements:
             return "a.ignoreElements()"
+        case Interval:
+            return "Observable.interval(100, scheduler: s)"
         case Just:
             return "Observable.just()"
         case Map:
@@ -52,26 +56,54 @@ extension Operator {
             return "Observable.of(a, b).merge()"
         case Never:
             return "Observable.never()"
+        case Of:
+            return "Observable.of()"
         case Reduce:
             return "a.reduce { $0 + $1 }"
+        case RepeatElement:
+            return "Observable.repeatElement()"
         case Retry:
             return "a.retry(2)"
         case Sample:
             return "a.sample(b)"
         case Scan:
             return "a.scan(0) { $0 + $1 }"
+        case Single:
+            return "a.single()"
         case Skip:
             return "a.skip(2)"
+        case SkipUntil:
+            return "a.skipUntil(b)"
+        case SkipWhile:
+            return "a.skipWhile { e < 4 }"
+        case SkipWhileWithIndex:
+            return "a.skipWhileWithIndex { e, i in i < 4 }"
         case StartWith:
             return "a.startWith(1)"
+        case SwitchLatest:
+            return "Observable.of(a).switchLatest()"
         case Take:
             return "a.take(2)"
         case TakeLast:
             return "a.takeLast(2)"
+        case TakeUntil:
+            return "a.takeUntil(b)"
+        case TakeWhile:
+            return "a.takeWhile { e < 4 }"
+        case TakeWhileWithIndex:
+            return "a.takeWhileWithIndex { e, i in i < 4 }"
+        case Throttle:
+            return "a.throttle(500, scheduler: scheduler)"
         case Throw:
             return "Observable.error()"
-        case Window:
-            return "a.window(timeSpan: 300, count: 2, scheduler: s)"
+        case Timeout:
+            return "a.timeout(200, scheduler: s)"
+        case Timer:
+            return "Observable.timer(100, scheduler: s)"
+        case ToArray:
+            return "a.toArray()"
+        case WithLatestFrom:
+            return "a.withLatestFrom(b)"
         case Zip:
             return "Observable.zip(a, b) { $0 + $1 }"
         }

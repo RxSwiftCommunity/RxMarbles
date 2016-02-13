@@ -17,6 +17,8 @@ struct Link {
 
 class HelpViewController: AnimatedPagingScrollViewController {
     
+    let helpMode: Bool = false
+    
     private let _logoImageView = UIImageView(image: UIImage(named: "IntroLogo"))
     private let _resultTimeline = UIImageView(image: Image.timeLine)
     
@@ -142,14 +144,6 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -80))
         scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
         keepView(_resultTimeline, onPages: [0, 1, 2, 3, 4, 5])
-        
-//        let arrowTapArea = UIView()
-//        arrowTapArea.backgroundColor = .blueColor()
-//        contentView.addSubview(arrowTapArea)
-//        contentView.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
-//        scrollView.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 140))
-//        arrowTapArea.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 10))
-//        arrowTapArea.addConstraint(NSLayoutConstraint(item: arrowTapArea, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 10))
     }
     
     private func _configureSharingEventView() {

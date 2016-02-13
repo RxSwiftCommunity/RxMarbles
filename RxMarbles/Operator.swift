@@ -10,6 +10,7 @@ enum Operator: String {
     case Amb
     case Buffer
     case CatchError
+    case CatchErrorJustReturn
     case CombineLatest
     case Concat
     case Debounce
@@ -21,22 +22,38 @@ enum Operator: String {
     case FlatMap
     case FlatMapFirst
     case FlatMapLatest
+//    case FlatMapWithIndex
     case IgnoreElements
+    case Interval
     case Just
     case Map
     case MapWithIndex
     case Merge
     case Never
+    case Of
     case Reduce
+    case RepeatElement
     case Retry
     case Sample
     case Scan
+    case Single
     case Skip
+    case SkipUntil
+    case SkipWhile
+    case SkipWhileWithIndex
     case StartWith
+    case SwitchLatest
     case Take
     case TakeLast
+    case TakeUntil
+    case TakeWhile
+    case TakeWhileWithIndex
+    case Throttle
     case Throw
-    case Window
+    case Timeout
+    case Timer
+    case ToArray
+    case WithLatestFrom
     case Zip
 }
 
