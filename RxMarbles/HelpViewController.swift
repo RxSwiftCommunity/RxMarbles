@@ -51,6 +51,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _secondHelpView = UIView()
     private let _thirdHelpView  = UIView()
     
+    private let _navBarShareImageView = UIImageView(image: Image.navBarShare)
+    private let _shareDiagramsLabel = UILabel()
+    
     private let _poweredByRxLabel   = UILabel()
     private let _addStarButton      = UIButton(type: .System)
     
@@ -77,10 +80,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         _configureEventViews()
         
-        _configureShareIcons()
-        
         _configurePoweredByRxLabel()
         _configureAddStarButton()
+        
+        _configureSharePage()
         
         _configureAnjLabPage()
     }
@@ -379,6 +382,19 @@ class HelpViewController: AnimatedPagingScrollViewController {
         alphaAnimations[3.0] = 1.0
         alphaAnimations[3.2] = 0.0
         animator.addAnimation(alphaAnimations)
+    }
+    
+    private func _configureSharePage() {
+        _configureShareIcons()
+        
+        contentView.addSubview(_navBarShareImageView)
+        contentView.addConstraint(NSLayoutConstraint(item: _navBarShareImageView, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 10))
+        keepView(_navBarShareImageView, onPage: 2)
+        
+        _shareDiagramsLabel.text = "Share you diagrams"
+        contentView.addSubview(_shareDiagramsLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: _shareDiagramsLabel, attribute: .Top, relatedBy: .Equal, toItem: _navBarShareImageView, attribute: .Bottom, multiplier: 1, constant: 30))
+        keepView(_shareDiagramsLabel, onPage: 2)
     }
     
     private func _configureAnjLabPage() {
