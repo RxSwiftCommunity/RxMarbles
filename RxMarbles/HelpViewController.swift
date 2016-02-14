@@ -382,23 +382,27 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureAnjLabPage() {
-        let horizontal = NSLayoutConstraint(item: _logoImageView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: -50)
-        contentView.addConstraint(horizontal)
-        let horizontalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horizontalAnimation[0] = 0
-        horizontalAnimation[4] = 0
-        horizontalAnimation[5] = -50
-        animator.addAnimation(horizontalAnimation)
+        _rxMarblesLabel.text = "RxMarbles"
+        _rxMarblesLabel.font = UIFont(name: "Menlo-Regular", size: 25)
+        contentView.addSubview(_rxMarblesLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: _rxMarblesLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -50))
+        keepView(_rxMarblesLabel, onPage: 4)
+        
+        _versionLabel.text = "v1.0.0"
+        contentView.addSubview(_versionLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: _versionLabel, attribute: .Top, relatedBy: .Equal, toItem: _rxMarblesLabel, attribute: .Bottom, multiplier: 1, constant: 0))
+        keepView(_versionLabel, onPage: 4)
+        
+        _developedByLabel.text = "developed by"
+        contentView.addSubview(_developedByLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: _developedByLabel, attribute: .Top, relatedBy: .Equal, toItem: _versionLabel, attribute: .Bottom, multiplier: 1, constant: 30))
+        keepView(_developedByLabel, onPage: 4)
         
         _anjLabButton.setImage(Image.anjlab, forState: .Normal)
         _anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
         contentView.addSubview(_anjLabButton)
-        contentView.addConstraint(NSLayoutConstraint(item: _anjLabButton, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
+        contentView.addConstraint(NSLayoutConstraint(item: _anjLabButton, attribute: .Top, relatedBy: .Equal, toItem: _developedByLabel, attribute: .Bottom, multiplier: 1, constant: 30))
         keepView(_anjLabButton, onPage: 4)
-        
-        contentView.addSubview(_rxMarblesLabel)
-        contentView.addSubview(_versionLabel)
-        contentView.addSubview(_developedByLabel)
     }
     
     override func numberOfPages() -> Int {
