@@ -19,7 +19,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     let helpMode: Bool = false
     
-    private let _logoImageView = UIImageView(image: Image.helpLogo)
+    private let _logoImageView  = UIImageView(image: Image.helpLogo)
+    private let _reactiveXLogo  = UIImageView(image: Image.rxLogo)
     private let _resultTimeline = UIImageView(image: Image.timeLine)
     
     private let _evernote     = UIImageView(image: Image.evernote)
@@ -33,32 +34,41 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _twitter      = UIImageView(image: Image.twitter)
     private let _viber        = UIImageView(image: Image.viber)
     
-    private let _sharingEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Sharing", color: Color.nextGreen, shape: EventShape.Circle))))
-    private let _searchEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Search", color: Color.nextBlue, shape: EventShape.Circle))))
-    private let _editingEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Editing", color: Color.nextOrange, shape: EventShape.Circle))))
-    private let _rxSwiftEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "RxSwift", color: Color.nextDarkYellow, shape: EventShape.Star))))
-    private let _anjlabEventView = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "AnjLab", color: Color.nextViolet, shape: EventShape.Star))))
+    private let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: EventShape.Circle))))
+    private let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: EventShape.Circle))))
+    private let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: EventShape.Circle))))
+    private let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "RxSwift", color: Color.nextBlue, shape: EventShape.Star))))
+    private let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "AnjLab", color: Color.nextBlue, shape: EventShape.Star))))
     private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
     
-    private let _searchNextButton = UIButton(type: .System)
-    private let _editingNextButton = UIButton(type: .System)
-    private let _rxSwiftNextButton = UIButton(type: .System)
-    private let _anjlabNextButton = UIButton(type: .System)
-    private let _completedButton = UIButton(type: .System)
+    private let _searchNextButton   = UIButton(type: .System)
+    private let _editingNextButton  = UIButton(type: .System)
+    private let _rxSwiftNextButton  = UIButton(type: .System)
+    private let _anjlabNextButton   = UIButton(type: .System)
+    private let _completedButton    = UIButton(type: .System)
     
-    private let _firstHelpView = UIView()
+    private let _firstHelpView  = UIView()
     private let _secondHelpView = UIView()
-    private let _thirdHelpView = UIView()
+    private let _thirdHelpView  = UIView()
     
-    private let _poweredByRxLabel = UILabel()
-    private let _addStarButton = UIButton(type: .System)
-    private let _anjLabButton = UIButton(type: .System)
+    private let _poweredByRxLabel   = UILabel()
+    private let _addStarButton      = UIButton(type: .System)
+    
+    private let _anjLabButton       = UIButton(type: .Custom)
+    private let _rxMarblesLabel     = UILabel()
+    private let _versionLabel       = UILabel()
+    private let _developedByLabel   = UILabel()
+    
+    private let _closeButton = UIButton(type: .Custom)
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
         
         _configureLogoImageView()
+        _configureReactiveXLogo()
+        _configureCloseButton()
+        
         _configureImageViews()
         
         _configureButtons()
@@ -72,20 +82,57 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _configurePoweredByRxLabel()
         _configureAddStarButton()
         
-        _configureAnjLabButton()
+        _configureAnjLabPage()
     }
     
     private func _configureLogoImageView() {
         contentView.addSubview(_logoImageView)
-        let verticalConstraint = NSLayoutConstraint(item: _logoImageView, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: -100)
-        contentView.addConstraint(verticalConstraint)
+        let vertical = NSLayoutConstraint(item: _logoImageView, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 100)
+        contentView.addConstraint(vertical)
         keepView(_logoImageView, onPages: [0, 1, 2, 3, 4, 5])
         
-        let verticalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: verticalConstraint)
-        verticalAnimation[0] = 30
-        verticalAnimation[4] = 30
+        let verticalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
+        verticalAnimation[0] = 100
+        verticalAnimation[2.5] = 100
+        verticalAnimation[2.6] = 90
+        verticalAnimation[2.7] = 120
+        verticalAnimation[2.8] = 80
+        verticalAnimation[2.9] = 110
+        verticalAnimation[3]   = 100
+        verticalAnimation[3.1] = 90
+        verticalAnimation[3.2] = 120
+        verticalAnimation[3.3] = 85
+        verticalAnimation[3.4] = 110
+        verticalAnimation[3.5] = 100
+        verticalAnimation[4] = 100
         verticalAnimation[5] = scrollView.frame.height / 2 - _logoImageView.frame.height / 2
         animator.addAnimation(verticalAnimation)
+    }
+    
+    private func _configureReactiveXLogo() {
+        contentView.addSubview(_reactiveXLogo)
+        let horizontal = NSLayoutConstraint(item: _reactiveXLogo, attribute: .CenterX, relatedBy: .Equal, toItem: _logoImageView, attribute: .CenterX, multiplier: 1, constant: 0)
+        contentView.addConstraint(horizontal)
+        let vertical = NSLayoutConstraint(item: _reactiveXLogo, attribute: .CenterY, relatedBy: .Equal, toItem: _logoImageView, attribute: .CenterY, multiplier: 1, constant: 0)
+        contentView.addConstraint(vertical)
+        
+        let alphaAnimation = AlphaAnimation(view: _reactiveXLogo)
+        alphaAnimation[0] = 0.0
+        alphaAnimation[2.5] = 0.0
+        alphaAnimation[3] = 1.0
+        alphaAnimation[3.5] = 0.0
+        animator.addAnimation(alphaAnimation)
+        
+        keepView(_reactiveXLogo, onPage: 3)
+    }
+    
+    private func _configureCloseButton() {
+        contentView.addSubview(_closeButton)
+        _closeButton.setBackgroundImage(Image.cross, forState: .Normal)
+        _closeButton.addTarget(self, action: "close", forControlEvents: .TouchUpInside)
+        contentView.addConstraint(NSLayoutConstraint(item: _closeButton, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 30))
+        scrollView.addConstraint(NSLayoutConstraint(item: _closeButton, attribute: .CenterX, relatedBy: .Equal, toItem: _logoImageView, attribute: .CenterX, multiplier: 1, constant: 150))
+        keepView(_closeButton, onPages: [0, 1, 2, 3, 4, 5])
     }
     
     private func _configureImageViews() {
@@ -334,13 +381,24 @@ class HelpViewController: AnimatedPagingScrollViewController {
         animator.addAnimation(alphaAnimations)
     }
     
-    private func _configureAnjLabButton() {
-        _anjLabButton.setTitle("AnjLab", forState: .Normal)
-        _anjLabButton.titleLabel?.font = Font.code(20)
+    private func _configureAnjLabPage() {
+        let horizontal = NSLayoutConstraint(item: _logoImageView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: -50)
+        contentView.addConstraint(horizontal)
+        let horizontalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
+        horizontalAnimation[0] = 0
+        horizontalAnimation[4] = 0
+        horizontalAnimation[5] = -50
+        animator.addAnimation(horizontalAnimation)
+        
+        _anjLabButton.setImage(Image.anjlab, forState: .Normal)
         _anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
         contentView.addSubview(_anjLabButton)
         contentView.addConstraint(NSLayoutConstraint(item: _anjLabButton, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
         keepView(_anjLabButton, onPage: 4)
+        
+        contentView.addSubview(_rxMarblesLabel)
+        contentView.addSubview(_versionLabel)
+        contentView.addSubview(_developedByLabel)
     }
     
     override func numberOfPages() -> Int {
@@ -409,6 +467,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private func openURLinSafariViewController(url: NSURL) {
         let safariViewController = SFSafariViewController(URL: url)
         presentViewController(safariViewController, animated: true, completion: nil)
+    }
+    
+    func close() {
+        dismissViewControllerAnimated(true, completion: nil)
     }
     
 //    MARK: UIInterfaceOrientationMask Portrait only

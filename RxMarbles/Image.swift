@@ -23,7 +23,8 @@ struct Image {
     static let complete     = UIImage(named: "complete")!
     static let error        = UIImage(named: "error")!
     
-    static let helpLogo    = UIImage(named: "helpLogo")!
+    static let helpLogo     = UIImage(named: "helpLogo")!
+    static let rxLogo       = UIImage(named: "reactivex")!
     
     static let evernote     = UIImage(named: "evernote")!
     static let facebook     = UIImage(named: "facebook")!
@@ -35,4 +36,8 @@ struct Image {
     static let trello       = UIImage(named: "trello")!
     static let twitter      = UIImage(named: "twitter")!
     static let viber        = UIImage(named: "viber")!
+    
+    static let cross        = UIImage(named: "cross")!
+    
+    static let anjlab       = UIImage(named: "anjlab")!
 }
