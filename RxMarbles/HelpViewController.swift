@@ -469,9 +469,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     func _setOffsetAnimated(offset: CGFloat) {
-        UIView.animateWithDuration(0.3) {
-            self.scrollView.contentOffset = CGPointMake(self.pageWidth * offset, 0)
-        }
+        scrollView.setContentOffset(CGPointMake(self.pageWidth * offset, 0), animated: true)
     }
     
     func openRxSwiftOnGithub() {
