@@ -37,8 +37,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: EventShape.Circle))))
     private let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: EventShape.Circle))))
     private let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: EventShape.Circle))))
-    private let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "RxSwift", color: Color.nextBlue, shape: EventShape.Star))))
-    private let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "AnjLab", color: Color.nextBlue, shape: EventShape.Star))))
+    private let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: EventShape.Star))))
+    private let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: EventShape.Star))))
     private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
     
     private let _searchNextButton   = UIButton(type: .System)
@@ -52,6 +52,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _thirdHelpView  = UIView()
     
     private let _navBarShareImageView = UIImageView(image: Image.navBarShare)
+    private let _navBarExperimentImageView = UIImageView(image: Image.navBarExperiment)
     private let _shareDiagramsLabel = UILabel()
     
     private let _poweredByRxLabel   = UILabel()
@@ -63,6 +64,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private let _developedByLabel   = UILabel()
     
     private let _closeButton = UIButton(type: .Custom)
+    
+    private let _upArrow = UIImageView(image: Image.upArrow)
+    private let _downArrow = UIImageView(image: Image.downArrow)
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -82,6 +86,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
         
         _configurePoweredByRxLabel()
         _configureAddStarButton()
+        
+        _configureExperimentPage()
         
         _configureSharePage()
         
@@ -107,7 +113,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         verticalAnimation[3.3] = 85
         verticalAnimation[3.4] = 110
         verticalAnimation[3.5] = 100
-        verticalAnimation[4] = 100
+        verticalAnimation[4] = 200
         verticalAnimation[5] = scrollView.frame.height / 2 - _logoImageView.frame.height / 2
         animator.addAnimation(verticalAnimation)
     }
@@ -384,6 +390,31 @@ class HelpViewController: AnimatedPagingScrollViewController {
         animator.addAnimation(alphaAnimations)
     }
     
+    private func _configureExperimentPage() {
+        contentView.addSubview(_navBarExperimentImageView)
+        contentView.addConstraint(NSLayoutConstraint(item: _navBarExperimentImageView, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 10))
+        keepView(_navBarExperimentImageView, onPage: 1)
+        
+        contentView.addSubview(_upArrow)
+        let upVertical = NSLayoutConstraint(item: _upArrow, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 60)
+        contentView.addConstraint(upVertical)
+        let upHorizontal = NSLayoutConstraint(item: _upArrow, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: pageWidth * 1 + 110)
+        scrollView.addConstraint(upHorizontal)
+        keepView(_upArrow, onPages: [1, 2])
+        
+        let upArrowMoveAnimation = ConstraintConstantAnimation(superview: contentView, constraint: upHorizontal)
+        upArrowMoveAnimation[1] = pageWidth * 1 + 110
+        upArrowMoveAnimation[2] = pageWidth * 2 + 80
+        animator.addAnimation(upArrowMoveAnimation)
+        
+        contentView.addSubview(_downArrow)
+        let downVertical = NSLayoutConstraint(item: _downArrow, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 113)
+        contentView.addConstraint(downVertical)
+        let downHorizontal = NSLayoutConstraint(item: _downArrow, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: pageWidth * 1 + 110)
+        scrollView.addConstraint(downHorizontal)
+        keepView(_downArrow, onPage: 1)
+    }
+    
     private func _configureSharePage() {
         _configureShareIcons()
         
@@ -392,8 +423,11 @@ class HelpViewController: AnimatedPagingScrollViewController {
         keepView(_navBarShareImageView, onPage: 2)
         
         _shareDiagramsLabel.text = "Share you diagrams"
+        _shareDiagramsLabel.font = Font.text(13)
         contentView.addSubview(_shareDiagramsLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: _shareDiagramsLabel, attribute: .Top, relatedBy: .Equal, toItem: _navBarShareImageView, attribute: .Bottom, multiplier: 1, constant: 30))
+        contentView.addConstraint(NSLayoutConstraint(item: _shareDiagramsLabel, attribute: .Top, relatedBy: .Equal, toItem: _navBarShareImageView, attribute: .Bottom, multiplier: 1, constant: 43))
+        let shareLabelHorizontal = NSLayoutConstraint(item: _shareDiagramsLabel, attribute: .CenterX, relatedBy: .Equal, toItem: _navBarShareImageView, attribute: .CenterX, multiplier: 1, constant: -15)
+        scrollView.addConstraint(shareLabelHorizontal)
         keepView(_shareDiagramsLabel, onPage: 2)
     }
     
@@ -401,7 +435,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         _rxMarblesLabel.text = "RxMarbles"
         _rxMarblesLabel.font = UIFont(name: "Menlo-Regular", size: 25)
         contentView.addSubview(_rxMarblesLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: _rxMarblesLabel, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -50))
+        contentView.addConstraint(NSLayoutConstraint(item: _rxMarblesLabel, attribute: .CenterY, relatedBy: .Equal, toItem: _logoImageView, attribute: .CenterY, multiplier: 1, constant: -10))
         keepView(_rxMarblesLabel, onPage: 4)
         
         _versionLabel.text = "v1.0.0"

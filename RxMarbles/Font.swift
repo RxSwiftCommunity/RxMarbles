@@ -13,4 +13,8 @@ struct Font {
     static func code(size: CGFloat) -> UIFont {
         return UIFont(name: "Menlo-Regular", size: size)!
     }
+    
+    static func text(size: CGFloat) -> UIFont {
+        return UIFont.systemFontOfSize(size)
+    }
 }

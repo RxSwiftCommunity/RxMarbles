@@ -41,5 +41,9 @@ struct Image {
     
     static let anjlab       = UIImage(named: "anjlab")!
     
-    static let navBarShare  = UIImage(named: "navBarShare")!
+    static let navBarShare      = UIImage(named: "navBarShare")!
+    static let navBarExperiment = UIImage(named: "navBarExperiment")!
+    
+    static let upArrow      = UIImage(named: "upArrow")!
+    static let downArrow    = UIImage(named: "downArrow")!
 }
