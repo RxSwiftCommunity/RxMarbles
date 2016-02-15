@@ -14,7 +14,7 @@
             buildForArchiving = "YES">
             <BuildableReference
                BuildableIdentifier = 'primary'
-               BlueprintIdentifier = '0F41CB0E11FB3AE7D98D3D08'
+               BlueprintIdentifier = 'FE6B5D50874CB00C797B5A5C'
                BlueprintName = 'Pods-RxMarbles'
                ReferencedContainer = 'container:Pods.xcodeproj'
                BuildableName = 'Pods_RxMarbles.framework'>
