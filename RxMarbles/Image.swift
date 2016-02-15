@@ -36,13 +36,15 @@ struct Image {
     static let trello       = UIImage(named: "trello")!
     static let twitter      = UIImage(named: "twitter")!
     static let viber        = UIImage(named: "viber")!
+    static let github       = UIImage(named: "github")!
     
     static let cross        = UIImage(named: "cross")!
     
     static let anjlab       = UIImage(named: "anjlab")!
     
-    static let navBarShare      = UIImage(named: "navBarShare")!
-    static let navBarExperiment = UIImage(named: "navBarExperiment")!
+    static let navBarShare          = UIImage(named: "navBarShare")!
+    static let navBarExperiment     = UIImage(named: "navBarExperiment")!
+    static let timelineExperiment   = UIImage(named: "timelineExperiment")!
     
     static let upArrow      = UIImage(named: "upArrow")!
     static let downArrow    = UIImage(named: "downArrow")!
