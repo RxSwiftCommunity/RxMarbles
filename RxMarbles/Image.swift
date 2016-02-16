@@ -49,3 +49,9 @@ struct Image {
     static let upArrow      = UIImage(named: "upArrow")!
     static let downArrow    = UIImage(named: "downArrow")!
 }
+
+extension UIImage {
+    func imageView() -> UIImageView {
+        return UIImageView(image: self)
+    }
+}
