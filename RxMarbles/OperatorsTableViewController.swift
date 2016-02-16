@@ -104,7 +104,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     }
     
     func openHelpView() {
-        let helpController = HelpViewController()
+        let helpController = CloudTestController()
         presentViewController(helpController, animated: true, completion: nil)
     }
 

@@ -786,7 +786,7 @@ extension Operator {
         let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSLinkAttributeName: url])
         res.appendAttributedString(NSAttributedString(string: " "))
         res.appendAttributedString(link)
-        res.addAttribute(NSFontAttributeName, value: Font.code(16), range: NSMakeRange(0, res.length))
+        res.addAttribute(NSFontAttributeName, value: Font.code(.MonoRegular, size: 16), range: NSMakeRange(0, res.length))
         return res
     }
 }

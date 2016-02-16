@@ -133,7 +133,7 @@ private func __colorize(src: NSMutableAttributedString, regex: NSRegularExpressi
 
 extension Operator {
     func higlightedCode() -> NSAttributedString {
-        let font = Font.code(18)
+        let font = Font.code(.MonoRegular, size:18)
         let src = NSMutableAttributedString(string: code, attributes: [
             NSFontAttributeName: font,
             NSForegroundColorAttributeName: Color.codeDefault

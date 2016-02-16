@@ -9,9 +9,16 @@
 import Foundation
 import UIKit
 
+enum FontFace: String {
+    case MonoRegular    = "Menlo-Regular"
+    case MonoItalic     = "Menlo-Italic"
+    case MonoBold       = "Menlo-Bold"
+    case MonoBoldItalic = "Menlo-BoldItalic"
+}
+
 struct Font {
-    static func code(size: CGFloat) -> UIFont {
-        return UIFont(name: "Menlo-Regular", size: size)!
+    static func code(face:FontFace, size: CGFloat) -> UIFont {
+        return UIFont(name: face.rawValue, size: size)!
     }
     
     static func text(size: CGFloat) -> UIFont {

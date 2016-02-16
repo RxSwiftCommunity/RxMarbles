@@ -35,6 +35,7 @@
 		D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */; };
 		D28A68481C629073008A8C6F /* OperatorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28A68471C629073008A8C6F /* OperatorCode.swift */; };
 		D29878861C6FC79100AA73E8 /* Font.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29878851C6FC79100AA73E8 /* Font.swift */; };
+		D29878881C725FCF00AA73E8 /* CloudTestController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D29878871C725FCF00AA73E8 /* CloudTestController.swift */; };
 		D2F561A51C52AAEE0041C9A3 /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F561A41C52AAEE0041C9A3 /* Color.swift */; };
 		D2F561A71C52AEF30041C9A3 /* Animation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F561A61C52AEF30041C9A3 /* Animation.swift */; };
 		D2F561AB1C52B0510041C9A3 /* Indexing.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2F561AA1C52B0510041C9A3 /* Indexing.swift */; };
@@ -77,6 +78,7 @@
 		D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D28A68471C629073008A8C6F /* OperatorCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorCode.swift; sourceTree = "<group>"; };
 		D29878851C6FC79100AA73E8 /* Font.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Font.swift; sourceTree = "<group>"; };
+		D29878871C725FCF00AA73E8 /* CloudTestController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CloudTestController.swift; sourceTree = "<group>"; };
 		D2F561A41C52AAEE0041C9A3 /* Color.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		D2F561A61C52AEF30041C9A3 /* Animation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Animation.swift; sourceTree = "<group>"; };
 		D2F561AA1C52B0510041C9A3 /* Indexing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Indexing.swift; sourceTree = "<group>"; };
@@ -107,6 +109,7 @@
 				0AC265941C3D2C24009E28FD /* OperatorViewController.swift */,
 				0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */,
 				0A3F63E11C6B43030099C9E8 /* HelpViewController.swift */,
+				D29878871C725FCF00AA73E8 /* CloudTestController.swift */,
 			);
 			name = ViewControllers;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */,
 				0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */,
 				D28A68481C629073008A8C6F /* OperatorCode.swift in Sources */,
+				D29878881C725FCF00AA73E8 /* CloudTestController.swift in Sources */,
 				0AC266131C3E96C2009E28FD /* TestableObservable.swift in Sources */,
 				0AC2660C1C3E96C2009E28FD /* HotObservable.swift in Sources */,
 				0AC265931C3D2C24009E28FD /* AppDelegate.swift in Sources */,

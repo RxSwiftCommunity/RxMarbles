@@ -189,7 +189,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureButton(next: UIButton, onPage page: CGFloat) {
-        next.titleLabel?.font = Font.code(14)
+        next.titleLabel?.font = Font.code(.MonoRegular, size: 14)
         next.setTitle("onNext(   )", forState: .Normal)
         contentView.addSubview(next)
         let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
