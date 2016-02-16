@@ -23,17 +23,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private let _reactiveXLogo  = UIImageView(image: Image.rxLogo)
     private let _resultTimeline = UIImageView(image: Image.timeLine)
     
-    private let _evernote     = UIImageView(image: Image.evernote)
-    private let _facebook     = UIImageView(image: Image.facebook)
-    private let _hanghout     = UIImageView(image: Image.hanghout)
-    private let _mail         = UIImageView(image: Image.mail)
-    private let _messenger    = UIImageView(image: Image.messenger)
-    private let _skype        = UIImageView(image: Image.skype)
-    private let _slack        = UIImageView(image: Image.slack)
-    private let _trello       = UIImageView(image: Image.trello)
-    private let _twitter      = UIImageView(image: Image.twitter)
-    private let _viber        = UIImageView(image: Image.viber)
-    
     private let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: EventShape.Circle))))
     private let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: EventShape.Circle))))
     private let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: EventShape.Circle))))
@@ -50,9 +39,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private let _firstHelpView  = UIView()
     private let _secondHelpView = UIView()
     private let _thirdHelpView  = UIView()
-    
-    private let _navBarShareImageView = UIImageView(image: Image.navBarShare)
-    private let _shareDiagramsLabel = UILabel()
     
     private let _closeButton = UIButton(type: .Custom)
     
@@ -288,17 +274,28 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureShareIcons() {
+        let evernote     = UIImageView(image: Image.evernote)
+        let facebook     = UIImageView(image: Image.facebook)
+        let hanghout     = UIImageView(image: Image.hanghout)
+        let mail         = UIImageView(image: Image.mail)
+        let messenger    = UIImageView(image: Image.messenger)
+        let skype        = UIImageView(image: Image.skype)
+        let slack        = UIImageView(image: Image.slack)
+        let trello       = UIImageView(image: Image.trello)
+        let twitter      = UIImageView(image: Image.twitter)
+        let viber        = UIImageView(image: Image.viber)
+        
         let shareLogos = [
-            _evernote,
-            _facebook,
-            _hanghout,
-            _mail,
-            _messenger,
-            _skype,
-            _slack,
-            _trello,
-            _twitter,
-            _viber
+            evernote,
+            facebook,
+            hanghout,
+            mail,
+            messenger,
+            skype,
+            slack,
+            trello,
+            twitter,
+            viber
         ]
         
         shareLogos.forEach {
@@ -318,24 +315,24 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             animator.addAnimation(rotateAnimation)
         }
         
-        contentView.addConstraint(NSLayoutConstraint(item: _facebook, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _facebook, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
-        contentView.addConstraint(NSLayoutConstraint(item: _twitter, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _twitter, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
-        contentView.addConstraint(NSLayoutConstraint(item: _trello, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
-        contentView.addConstraint(NSLayoutConstraint(item: _slack, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _slack, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
-        contentView.addConstraint(NSLayoutConstraint(item: _mail, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: -30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _mail, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
-        contentView.addConstraint(NSLayoutConstraint(item: _messenger, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _messenger, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
-        contentView.addConstraint(NSLayoutConstraint(item: _viber, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _viber, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
-        contentView.addConstraint(NSLayoutConstraint(item: _skype, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
-        contentView.addConstraint(NSLayoutConstraint(item: _hanghout, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _hanghout, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
-        contentView.addConstraint(NSLayoutConstraint(item: _evernote, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 30))
-        scrollView.addConstraint(NSLayoutConstraint(item: _evernote, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
+        contentView.addConstraint(NSLayoutConstraint(item: facebook, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
+        scrollView.addConstraint(NSLayoutConstraint(item: facebook, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
+        contentView.addConstraint(NSLayoutConstraint(item: twitter, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
+        scrollView.addConstraint(NSLayoutConstraint(item: twitter, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
+        contentView.addConstraint(NSLayoutConstraint(item: trello, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
+        contentView.addConstraint(NSLayoutConstraint(item: slack, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
+        scrollView.addConstraint(NSLayoutConstraint(item: slack, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
+        contentView.addConstraint(NSLayoutConstraint(item: mail, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
+        scrollView.addConstraint(NSLayoutConstraint(item: mail, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
+        contentView.addConstraint(NSLayoutConstraint(item: messenger, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
+        scrollView.addConstraint(NSLayoutConstraint(item: messenger, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
+        contentView.addConstraint(NSLayoutConstraint(item: viber, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
+        scrollView.addConstraint(NSLayoutConstraint(item: viber, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
+        contentView.addConstraint(NSLayoutConstraint(item: skype, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
+        contentView.addConstraint(NSLayoutConstraint(item: hanghout, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
+        scrollView.addConstraint(NSLayoutConstraint(item: hanghout, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
+        contentView.addConstraint(NSLayoutConstraint(item: evernote, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
+        scrollView.addConstraint(NSLayoutConstraint(item: evernote, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
     }
     
     private func _configureEventViewConstraints(eventView: EventView) -> (NSLayoutConstraint, NSLayoutConstraint) {
@@ -379,23 +376,23 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let experimentLabel = UILabel()
         
         contentView.addSubview(navBar)
-        contentView.addConstraint(NSLayoutConstraint(item: navBar, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 10))
+        contentView.addConstraint(NSLayoutConstraint(item: navBar, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 30))
         keepView(navBar, onPage: 1)
         
         editLabel.text = "Add new,\nchange colors and values in edit mode"
         editLabel.numberOfLines = 2
         editLabel.font = Font.text(13)
         contentView.addSubview(editLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: editLabel, attribute: .Top, relatedBy: .Equal, toItem: navBar, attribute: .Bottom, multiplier: 1, constant: 28))
+        contentView.addConstraint(NSLayoutConstraint(item: editLabel, attribute: .Top, relatedBy: .Equal, toItem: navBar, attribute: .Bottom, multiplier: 1, constant: 40))
         scrollView.addConstraint(NSLayoutConstraint(item: editLabel, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: pageWidth * 1 - 25))
         keepView(editLabel, onPage: 1)
         
         contentView.addSubview(timeline)
-        contentView.addConstraint(NSLayoutConstraint(item: timeline, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 170))
+        contentView.addConstraint(NSLayoutConstraint(item: timeline, attribute: .Top, relatedBy: .Equal, toItem: navBar, attribute: .Bottom, multiplier: 1, constant: 130))
         keepView(timeline, onPage: 1)
         
         contentView.addSubview(_upArrow)
-        let upVertical = NSLayoutConstraint(item: _upArrow, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 60)
+        let upVertical = NSLayoutConstraint(item: _upArrow, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 84)
         contentView.addConstraint(upVertical)
         let upHorizontal = NSLayoutConstraint(item: _upArrow, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: pageWidth * 1 + 110)
         scrollView.addConstraint(upHorizontal)
@@ -407,7 +404,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         animator.addAnimation(upArrowMoveAnimation)
         
         contentView.addSubview(_downArrow)
-        let downVertical = NSLayoutConstraint(item: _downArrow, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 113)
+        let downVertical = NSLayoutConstraint(item: _downArrow, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 150)
         contentView.addConstraint(downVertical)
         let downHorizontal = NSLayoutConstraint(item: _downArrow, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: pageWidth * 1 + 110)
         scrollView.addConstraint(downHorizontal)
@@ -416,30 +413,39 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         timelineLabel.text = "move events around"
         timelineLabel.font = Font.text(13)
         contentView.addSubview(timelineLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: timelineLabel, attribute: .Top, relatedBy: .Equal, toItem: timeline, attribute: .Bottom, multiplier: 1, constant: 10))
+        contentView.addConstraint(NSLayoutConstraint(item: timelineLabel, attribute: .Top, relatedBy: .Equal, toItem: timeline, attribute: .Bottom, multiplier: 1, constant: 20))
         keepView(timelineLabel, onPage: 1)
         
         experimentLabel.text = "Edit. Learn. Experiment."
         experimentLabel.font = Font.text(14)
         contentView.addSubview(experimentLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: experimentLabel, attribute: .Top, relatedBy: .Equal, toItem: timelineLabel, attribute: .Bottom, multiplier: 1, constant: 50))
+        contentView.addConstraint(NSLayoutConstraint(item: experimentLabel, attribute: .Top, relatedBy: .Equal, toItem: navBar, attribute: .Bottom, multiplier: 1, constant: 303))
         keepView(experimentLabel, onPage: 1)
     }
     
     private func _configureSharePage() {
-        _configureShareIcons()
+        let navBar = UIImageView(image: Image.navBarShare)
+        let shareLabel = UILabel()
+        let spreadTheWordLabel = UILabel()
+        contentView.addSubview(navBar)
+        contentView.addConstraint(NSLayoutConstraint(item: navBar, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 30))
+        keepView(navBar, onPage: 2)
         
-        contentView.addSubview(_navBarShareImageView)
-        contentView.addConstraint(NSLayoutConstraint(item: _navBarShareImageView, attribute: .Top, relatedBy: .Equal, toItem: _logoImageView, attribute: .Bottom, multiplier: 1, constant: 10))
-        keepView(_navBarShareImageView, onPage: 2)
-        
-        _shareDiagramsLabel.text = "Share you diagrams"
-        _shareDiagramsLabel.font = Font.text(13)
-        contentView.addSubview(_shareDiagramsLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: _shareDiagramsLabel, attribute: .Top, relatedBy: .Equal, toItem: _navBarShareImageView, attribute: .Bottom, multiplier: 1, constant: 43))
-        let shareLabelHorizontal = NSLayoutConstraint(item: _shareDiagramsLabel, attribute: .CenterX, relatedBy: .Equal, toItem: _navBarShareImageView, attribute: .CenterX, multiplier: 1, constant: -15)
+        shareLabel.text = "Share you diagrams"
+        shareLabel.font = Font.text(13)
+        contentView.addSubview(shareLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: shareLabel, attribute: .Top, relatedBy: .Equal, toItem: navBar, attribute: .Bottom, multiplier: 1, constant: 50))
+        let shareLabelHorizontal = NSLayoutConstraint(item: shareLabel, attribute: .CenterX, relatedBy: .Equal, toItem: navBar, attribute: .CenterX, multiplier: 1, constant: -15)
         scrollView.addConstraint(shareLabelHorizontal)
-        keepView(_shareDiagramsLabel, onPage: 2)
+        keepView(shareLabel, onPage: 2)
+        
+        spreadTheWordLabel.text = "Spread the word"
+        spreadTheWordLabel.font = Font.text(14)
+        contentView.addSubview(spreadTheWordLabel)
+        contentView.addConstraint(NSLayoutConstraint(item: spreadTheWordLabel, attribute: .Top, relatedBy: .Equal, toItem: navBar, attribute: .Bottom, multiplier: 1, constant: 303))
+        keepView(spreadTheWordLabel, onPage: 2)
+        
+        _configureShareIcons()
     }
     
     private func _configureRxPage() {

@@ -34,27 +34,66 @@ extension MutableCollectionType where Index == Int {
 
 class CloudTestController: UIViewController {
     
-    let _label = UILabel()
+    let _bottomLabel = UILabel()
+    let _middleLabel = UILabel()
+    let _topLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.whiteColor()
         
-        view.addSubview(_label)
+        view.addSubview(_bottomLabel)
+        
+        let (bottom, mid, top) = _operatorsCloud()
     
-        _label.numberOfLines = 0
-        _label.attributedText = _operatorsCloud()
+        _bottomLabel.numberOfLines = 0
+        _bottomLabel.attributedText = bottom
+        
+        view.addSubview(_middleLabel)
+        
+        _middleLabel.numberOfLines = 0
+        _middleLabel.attributedText = mid
+        
+        view.addSubview(_topLabel)
+        
+        _topLabel.numberOfLines = 0
+        _topLabel.attributedText = top
+
+        _addMotionEffectToView(_bottomLabel, relatitivity: (vertical: (min: -10, max: 10), horizontal: (min: -10, max: 10)))
+        _addMotionEffectToView(_middleLabel, relatitivity: (vertical: (min: 10, max: -10), horizontal: (min: 10, max: -10)))
+        _addMotionEffectToView(_topLabel, relatitivity: (vertical: (min: -10, max: -10), horizontal: (min: -10, max: -10)))
+    }
+    
+    private func _addMotionEffectToView(view: UIView, relatitivity: (vertical: (min: AnyObject, max: AnyObject), horizontal: (min: AnyObject, max: AnyObject))) {
+        let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
+            type: .TiltAlongVerticalAxis)
+        verticalMotionEffect.minimumRelativeValue = relatitivity.vertical.min
+        verticalMotionEffect.maximumRelativeValue = relatitivity.vertical.max
+        
+        let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
+            type: .TiltAlongHorizontalAxis)
+        horizontalMotionEffect.minimumRelativeValue = relatitivity.horizontal.min
+        horizontalMotionEffect.maximumRelativeValue = relatitivity.horizontal.max
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
+        
+        view.addMotionEffect(group)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        _label.frame = view.bounds
+        _bottomLabel.frame = view.bounds
+        _middleLabel.frame = view.bounds
+        _topLabel.frame = view.bounds
     }
     
-    func _operatorsCloud() -> NSAttributedString {
-        let res = NSMutableAttributedString()
+    func _operatorsCloud() -> (bottom: NSMutableAttributedString, mid: NSMutableAttributedString, top: NSMutableAttributedString) {
+        let bottom = NSMutableAttributedString()
+        let mid = NSMutableAttributedString()
+        let top = NSMutableAttributedString()
         let p = NSMutableParagraphStyle()
         p.lineBreakMode = .ByWordWrapping
         p.lineSpacing = 9.2
@@ -65,55 +104,73 @@ class CloudTestController: UIViewController {
         var i = 0
         
         for op in allOperators[0...23] {
-            let rnd = random() % 3
+            let levelRnd = random() % 2
             
-            switch rnd {
+            let operatorString = _attributedOperatorString(op, p: p)
+            let alphaString = NSMutableAttributedString(attributedString: operatorString)
+            alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
+            switch levelRnd {
             case 0:
-                res.appendAttributedString(
-                    NSAttributedString(string: op.rawValue, attributes: [
-                        NSFontAttributeName: Font.code(.MonoBoldItalic, size: 15),
-                        NSParagraphStyleAttributeName: p
-                        ])
-                )
+                bottom.appendAttributedString(operatorString)
+                mid.appendAttributedString(alphaString)
+                top.appendAttributedString(alphaString)
             case 1:
-                res.appendAttributedString(
-                    NSAttributedString(string: op.rawValue, attributes: [
-                        NSFontAttributeName: Font.code(.MonoBold, size: 13),
-                        NSParagraphStyleAttributeName: p
-                    ])
-                )
+                bottom.appendAttributedString(alphaString)
+                mid.appendAttributedString(operatorString)
+                top.appendAttributedString(alphaString)
             case 2:
-                res.appendAttributedString(
-                    NSAttributedString(string: op.rawValue, attributes: [
-                        NSFontAttributeName: Font.code(.MonoRegular, size: 13),
-                        NSParagraphStyleAttributeName: p
-                        ])
-                )
-            case 3:
-                res.appendAttributedString(
-                    NSAttributedString(string: op.rawValue, attributes: [
-                        NSFontAttributeName: Font.code(.MonoItalic, size: 12),
-                        NSParagraphStyleAttributeName: p
-                        ])
-                )
+                bottom.appendAttributedString(alphaString)
+                mid.appendAttributedString(alphaString)
+                top.appendAttributedString(operatorString)
             default:
-                res.appendAttributedString(
-                    NSAttributedString(string: op.rawValue, attributes: [
-                        NSFontAttributeName: Font.code(.MonoRegular, size: 11),
-                        NSParagraphStyleAttributeName: p
-                        ])
-                )
+                break
             }
             
             if i == 0 {
-                res.appendAttributedString(NSAttributedString(string: "\n"))
+                bottom.appendAttributedString(NSAttributedString(string: "\n"))
+                mid.appendAttributedString(NSAttributedString(string: "\n"))
+                top.appendAttributedString(NSAttributedString(string: "\n"))
             } else {
-                res.appendAttributedString(NSAttributedString(string: " "))
+                bottom.appendAttributedString(NSAttributedString(string: " "))
+                mid.appendAttributedString(NSAttributedString(string: " "))
+                top.appendAttributedString(NSAttributedString(string: " "))
             }
             
             i += 1
         }
         
-        return res
+        return (bottom: bottom, mid: mid, top: top)
+    }
+    
+    private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle) -> NSMutableAttributedString {
+        let rnd = random() % 3
+        
+        switch rnd {
+        case 0:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoBoldItalic, size: 15),
+                NSParagraphStyleAttributeName: p
+                ])
+        case 1:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoBold, size: 13),
+                NSParagraphStyleAttributeName: p
+                ])
+        case 2:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoRegular, size: 13),
+                NSParagraphStyleAttributeName: p
+                ])
+        case 3:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoItalic, size: 12),
+                NSParagraphStyleAttributeName: p
+                ])
+        default:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoRegular, size: 11),
+                NSParagraphStyleAttributeName: p
+                ])
+        }
     }
 }
