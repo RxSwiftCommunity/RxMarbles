@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import RxSwift
 import RazzleDazzle
 import SafariServices
 
@@ -15,6 +16,7 @@ struct Link {
     static let rxSwift = NSURL(string: "https://github.com/ReactiveX/RxSwift")!
     static let erikMeijerTwitter = NSURL(string: "https://twitter.com/headinthebox")!
     static let kZaherTwitter = NSURL(string: "https://twitter.com/KrunoslavZaher")!
+    static let reactiveX = NSURL(string: "http://reactivex.io")!
 }
 
 extension CollectionType {
@@ -43,6 +45,8 @@ extension MutableCollectionType where Index == Int {
 class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
     
     var helpMode: Bool = true
+    
+    let _disposeBag = DisposeBag()
     
     private let _logoImageView  = Image.helpLogo.imageView()
     private let _reactiveXLogo  = Image.rxLogo.imageView()
@@ -655,7 +659,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX])
 
         githubButton.setImage(Image.github, forState: .Normal)
-        githubButton.addTarget(self, action: "openRxSwiftOnGithub", forControlEvents: .TouchUpInside)
+        
+        githubButton.rx_tap.subscribeNext { [unowned self] _ in self._openURLinSafariViewController(Link.rxSwift) }
+        .addDisposableTo(_disposeBag)
+        
         githubButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(githubButton)
         let githubButtonLeading = githubButton.leadingAnchor.constraintEqualToAnchor(rxSwiftLabel.trailingAnchor, constant: 10)
@@ -681,7 +688,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         text.appendAttributedString(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [NSFontAttributeName : Font.text(14)]))
         let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes:
             [
-                NSLinkAttributeName             : NSURL(string: "http://reactivex.io")!,
+                NSLinkAttributeName             : Link.reactiveX,
                 NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
             ]
         )
@@ -746,7 +753,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         keepView(developedByLabel, onPage: 4)
 
         anjLabButton.setImage(Image.anjlab, forState: .Normal)
-        anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
+        
+        anjLabButton.rx_tap.subscribeNext { [unowned self] _ in self._openURLinSafariViewController(Link.anjlab) }
+        .addDisposableTo(_disposeBag)
+        
         anjLabButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(anjLabButton)
         let anjLabButtonTop = anjLabButton.topAnchor.constraintEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
@@ -789,14 +799,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     func _setOffsetAnimated(offset: CGFloat) {
         scrollView.setContentOffset(CGPointMake(self.pageWidth * offset, 0), animated: true)
-    }
-    
-    func openRxSwiftOnGithub() {
-        _openURLinSafariViewController(Link.rxSwift)
-    }
-    
-    func openAnjLab() {
-        _openURLinSafariViewController(Link.anjlab)
     }
     
     private func _openURLinSafariViewController(url: NSURL) {
