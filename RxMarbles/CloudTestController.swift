@@ -46,25 +46,25 @@ class CloudTestController: UIViewController {
         
         view.addSubview(_monoBoldItalicLabel)
         
-        let (mBoldItalic, mBold, mRegular, mItalic) = _operatorsCloud()
+        let attributedStrings = _operatorsCloud()
     
         _monoBoldItalicLabel.numberOfLines = 0
-        _monoBoldItalicLabel.attributedText = mBoldItalic
+        _monoBoldItalicLabel.attributedText = attributedStrings[0]
         
         view.addSubview(_monoBoldLabel)
         
         _monoBoldLabel.numberOfLines = 0
-        _monoBoldLabel.attributedText = mBold
+        _monoBoldLabel.attributedText = attributedStrings[1]
         
         view.addSubview(_monoRegularLabel)
         
         _monoRegularLabel.numberOfLines = 0
-        _monoRegularLabel.attributedText = mRegular
+        _monoRegularLabel.attributedText = attributedStrings[2]
         
         view.addSubview(_monoItalicLabel)
         
         _monoItalicLabel.numberOfLines = 0
-        _monoItalicLabel.attributedText = mItalic
+        _monoItalicLabel.attributedText = attributedStrings[3]
 
         _addMotionEffectToView(_monoBoldItalicLabel, relativity: (vertical: (min: -10, max: 10), horizontal: (min: -10, max: 10)))
         _addMotionEffectToView(_monoBoldLabel, relativity: (vertical: (min: 10, max: -10), horizontal: (min: 10, max: -10)))
@@ -95,13 +95,14 @@ class CloudTestController: UIViewController {
         _monoBoldItalicLabel.frame = view.bounds
         _monoBoldLabel.frame = view.bounds
         _monoRegularLabel.frame = view.bounds
+        _monoItalicLabel.frame = view.bounds
     }
     
-    func _operatorsCloud() -> (mBoldItalic: NSMutableAttributedString, mBold: NSMutableAttributedString, mRegular: NSMutableAttributedString, mItalic: NSMutableAttributedString) {
-        let monoBoldItalicString = NSMutableAttributedString()
-        let monoBoldString = NSMutableAttributedString()
-        let monoRegularString = NSMutableAttributedString()
-        let monoItalicString = NSMutableAttributedString()
+    func _operatorsCloud() -> [NSMutableAttributedString] {
+        var strings: [NSMutableAttributedString] = []
+        for _ in 0..<4 {
+            strings.append(NSMutableAttributedString())
+        }
         let p = NSMutableParagraphStyle()
         p.lineBreakMode = .ByWordWrapping
         p.lineSpacing = 9.2
@@ -111,7 +112,7 @@ class CloudTestController: UIViewController {
         
         var i = 0
         
-        for op in allOperators[0...23] {
+        for op in allOperators[0...30] {
             let rnd = random() % 3
             
             let operatorString = _attributedOperatorString(op, p: p, rnd: rnd)
@@ -119,45 +120,45 @@ class CloudTestController: UIViewController {
             alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
             switch rnd {
             case 0:
-                monoBoldItalicString.appendAttributedString(operatorString)
-                monoBoldString.appendAttributedString(alphaString)
-                monoRegularString.appendAttributedString(alphaString)
-                monoItalicString.appendAttributedString(alphaString)
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 0 ? operatorString : alphaString)
+                }
             case 1:
-                monoBoldItalicString.appendAttributedString(alphaString)
-                monoBoldString.appendAttributedString(operatorString)
-                monoRegularString.appendAttributedString(alphaString)
-                monoItalicString.appendAttributedString(alphaString)
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 1 ? operatorString : alphaString)
+                }
             case 2:
-                monoBoldItalicString.appendAttributedString(alphaString)
-                monoBoldString.appendAttributedString(alphaString)
-                monoRegularString.appendAttributedString(operatorString)
-                monoItalicString.appendAttributedString(alphaString)
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 2 ? operatorString : alphaString)
+                }
             case 3:
-                monoBoldItalicString.appendAttributedString(alphaString)
-                monoBoldString.appendAttributedString(alphaString)
-                monoRegularString.appendAttributedString(alphaString)
-                monoItalicString.appendAttributedString(operatorString)
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 3 ? operatorString : alphaString)
+                }
             default:
                 break
             }
             
             if i == 0 {
-                monoBoldItalicString.appendAttributedString(NSAttributedString(string: "\n"))
-                monoBoldString.appendAttributedString(NSAttributedString(string: "\n"))
-                monoRegularString.appendAttributedString(NSAttributedString(string: "\n"))
-                monoItalicString.appendAttributedString(NSAttributedString(string: "\n"))
+                strings.forEach {
+                    $0.appendAttributedString(NSAttributedString(string: "\n"))
+                }
             } else {
-                monoBoldItalicString.appendAttributedString(NSAttributedString(string: " "))
-                monoBoldString.appendAttributedString(NSAttributedString(string: " "))
-                monoRegularString.appendAttributedString(NSAttributedString(string: " "))
-                monoItalicString.appendAttributedString(NSAttributedString(string: " "))
+                strings.forEach {
+                    $0.appendAttributedString(NSAttributedString(string: " "))
+                }
             }
             
             i += 1
+            
+            if i == 30 {
+                strings.forEach {
+                    $0.appendAttributedString(NSAttributedString(string: "\n"))
+                }
+            }
         }
         
-        return (mBoldItalic: monoBoldItalicString, mBold: monoBoldString, mRegular: monoRegularString, mItalic: monoItalicString)
+        return strings
     }
     
     private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
