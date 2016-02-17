@@ -44,18 +44,19 @@ extension MutableCollectionType where Index == Int {
 
 class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
     
-    var helpMode: Bool = true
-    
-    let _disposeBag = DisposeBag()
+    private let _disposeBag = DisposeBag()
     
     private let _logoImageView  = Image.helpLogo.imageView()
     private let _reactiveXLogo  = Image.rxLogo.imageView()
     private let _resultTimeline = Image.timeLine.imageView()
     
     private let _closeButton = UIButton(type: .Custom)
+    
+    var helpMode = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .whiteColor()
         
         _configureLogoImageView()
@@ -82,7 +83,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let scale = CGFloat(0.81666)
         
-        _logoImageView.transform = CGAffineTransformScale(_logoImageView.transform, scale, scale)
+        _logoImageView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
        
         let centerY = _logoImageView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: -200)
         
@@ -91,6 +92,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addConstraints([centerY, centerX])
         
         let yAnimation = ConstraintConstantAnimation(superview: view, constraint: centerY)
+        animator.addAnimation(yAnimation)
         
         yAnimation[0] = -200
         if helpMode {
@@ -102,22 +104,22 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             yAnimation[3] = 0
         }
         
-        animator.addAnimation(yAnimation)
        
         let xAnimation = ConstraintConstantAnimation(superview: view, constraint: centerX)
+        animator.addAnimation(xAnimation)
         
         xAnimation[3] = 0
         xAnimation[4] = -60
         xAnimation[5] = 0
         
-        animator.addAnimation(xAnimation)
         
         let scaleAnimation = ScaleAnimation(view: _logoImageView)
+        animator.addAnimation(scaleAnimation)
+        
         scaleAnimation[0] = scale
         scaleAnimation[3] = scale
         scaleAnimation[4] = 1.0
         scaleAnimation[5] = scale
-        animator.addAnimation(scaleAnimation)
     }
     
     private func _configureReactiveXLogo() {
@@ -134,11 +136,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         if helpMode {
             let alphaAnimation = AlphaAnimation(view: _reactiveXLogo)
+            animator.addAnimation(alphaAnimation)
+            
             alphaAnimation[0] = 0.0
             alphaAnimation[2.5] = 0.0
             alphaAnimation[3] = 1.0
             alphaAnimation[3.5] = 0.0
-            animator.addAnimation(alphaAnimation)
         }
     }
     
@@ -146,9 +149,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         _closeButton.setImage(Image.cross, forState: .Normal)
         _closeButton.contentMode = .Center
         
-        _ = _closeButton.rx_tap.subscribeNext({ [unowned self] in
+        _closeButton.rx_tap.subscribeNext { [unowned self] in
             self.dismissViewControllerAnimated(true, completion: nil)
-        })
+        }
+        .addDisposableTo(_disposeBag)
         
         view.addSubview(_closeButton)
         _closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -163,14 +167,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureButtons() {
-        let experimentNextButton   = UIButton(type: .System)
-        let shareNextButton  = UIButton(type: .System)
-        let rxNextButton  = UIButton(type: .System)
-        let aboutNextButton   = UIButton(type: .System)
-        let completedButton    = UIButton(type: .System)
+        let experimentNextButton = UIButton(type: .System)
+        let shareNextButton      = UIButton(type: .System)
+        let rxNextButton         = UIButton(type: .System)
+        let aboutNextButton      = UIButton(type: .System)
+        let completedButton      = UIButton(type: .System)
         
         _configureButton(experimentNextButton, onPage: 0, action: "experimentTransition")
         _configureButton(shareNextButton, onPage: 1, action: "shareTransition")
+        
         if helpMode {
             _configureButton(rxNextButton, onPage: 2, action: "rxTransition")
             _configureButton(aboutNextButton, onPage: 3, action: "aboutTransition")
@@ -189,13 +194,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addSubview(next)
         keepView(next, onPages: [page, page + 1])
         
-        let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
+        let vertical = next.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor, constant: -20)
+        
         contentView.addConstraint(vertical)
         
         let outOfScreenAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
+        animator.addAnimation(outOfScreenAnimation)
+        
         outOfScreenAnimation[page] = -20
         outOfScreenAnimation[page + 1] = 100
-        animator.addAnimation(outOfScreenAnimation)
     }
     
     private func _configureResultTimeline() {
@@ -353,7 +360,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addMotionEffect(group)
     }
     
-    private func _operatorsCloud() -> [NSMutableAttributedString] {
+    private func _operatorsCloud() -> [NSAttributedString] {
         var strings: [NSMutableAttributedString] = []
         for _ in 0..<4 {
             strings.append(NSMutableAttributedString())
@@ -450,9 +457,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private func _configureExperimentPage() {
         let navBar = Image.navBarExperiment.imageView()
         let timeline = Image.timelineExperiment.imageView()
+        
         let editLabel = UILabel()
         let timelineLabel = UILabel()
         let experimentLabel = UILabel()
+        
         let up   = Image.upArrow.imageView()
         let down = Image.downArrow.imageView()
         
