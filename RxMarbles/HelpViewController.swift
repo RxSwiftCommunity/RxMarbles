@@ -575,6 +575,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         ]
         .map { $0.imageView() }
         
+        
         shareLogos.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview($0)
@@ -596,6 +597,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             let icon = shareLogos[i]
             let iconTop = icon.topAnchor.constraintEqualToAnchor(container.topAnchor, constant: i < 5 ? 0 : 50)
             let iconLeading = icon.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor, constant: 34 + 50.0 * CGFloat(i < 5 ? i : i - 5))
+            
             container.addConstraints([iconTop, iconLeading])
         }
     }
