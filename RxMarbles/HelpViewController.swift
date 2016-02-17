@@ -11,8 +11,10 @@ import RazzleDazzle
 import SafariServices
 
 struct Link {
-    static let anjlab = "http://anjlab.com/en"
-    static let rxswift = "https://github.com/ReactiveX/RxSwift"
+    static let anjlab = NSURL(string: "http://anjlab.com/en")!
+    static let rxSwift = NSURL(string: "https://github.com/ReactiveX/RxSwift")!
+    static let erikMeijerTwitter = NSURL(string: "https://twitter.com/headinthebox")!
+    static let kZaherTwitter = NSURL(string: "https://twitter.com/KrunoslavZaher")!
 }
 
 extension CollectionType {
@@ -546,29 +548,19 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureShareIcons(container: UIView) {
-        let evernote     = Image.evernote.imageView()
-        let facebook     = Image.facebook.imageView()
-        let hanghout     = Image.hanghout.imageView()
-        let mail         = Image.mail.imageView()
-        let messenger    = Image.messenger.imageView()
-        let skype        = Image.skype.imageView()
-        let slack        = Image.slack.imageView()
-        let trello       = Image.trello.imageView()
-        let twitter      = Image.twitter.imageView()
-        let viber        = Image.viber.imageView()
-        
         let shareLogos = [
-            facebook,
-            twitter,
-            trello,
-            slack,
-            mail,
-            messenger,
-            viber,
-            skype,
-            hanghout,
-            evernote
+            Image.facebook,
+            Image.twitter,
+            Image.trello,
+            Image.slack,
+            Image.mail,
+            Image.messenger,
+            Image.viber,
+            Image.skype,
+            Image.hanghout,
+            Image.evernote
         ]
+        .map { $0.imageView() }
         
         shareLogos.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
@@ -597,10 +589,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _configureRxPage() {
         let manyLikeLabel = UILabel()
+        
         let erikMeijerTwitter = Image.twitter.imageView()
         let erikMeijerTextView = UITextView()
+        
         let krunoslavZaherTwitter = Image.twitter.imageView()
         let krunoslavZaherTextView = UITextView()
+        
         let rxSwiftLabel = UILabel()
         let githubButton = UIButton(type: .Custom)
         let alasLabel = UILabel()
@@ -643,6 +638,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         krunoslavZaherTextView.scrollEnabled = false
         krunoslavZaherTextView.dataDetectorTypes = UIDataDetectorTypes.Link
         krunoslavZaherTextView.textAlignment = .Center
+        
         contentView.addSubview(krunoslavZaherTextView)
         let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor, constant: 10)
         let krunoslavZaherTextViewWidht = krunoslavZaherTextView.widthAnchor.constraintEqualToConstant(250)
@@ -677,7 +673,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let text = NSMutableAttributedString(string: "Erik ", attributes: [NSFontAttributeName : Font.text(14)])
         let twitter = NSMutableAttributedString(string: "@headinthebox", attributes:
             [
-                NSLinkAttributeName             : NSURL(string: "https://twitter.com/headinthebox")!,
+                NSLinkAttributeName             : Link.erikMeijerTwitter,
                 NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
             ]
         )
@@ -697,7 +693,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [NSFontAttributeName : Font.text(14)])
         let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes:
             [
-                NSLinkAttributeName             : NSURL(string: "https://twitter.com/KrunoslavZaher")!,
+                NSLinkAttributeName             : Link.kZaherTwitter,
                 NSForegroundColorAttributeName  : UIColor.blackColor(),
                 NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
             ]
@@ -706,7 +702,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         text.appendAttributedString(NSAttributedString(string: " Zaher\nfor ", attributes: [NSFontAttributeName : Font.text(14)]))
         let reactivex = NSMutableAttributedString(string: "RxSwift", attributes:
             [
-                NSLinkAttributeName             : Link.rxswift,
+                NSLinkAttributeName             : Link.rxSwift,
                 NSForegroundColorAttributeName  : UIColor.blackColor(),
                 NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
             ]
@@ -796,13 +792,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     func openRxSwiftOnGithub() {
-        let url = NSURL(string: Link.rxswift)
-        _openURLinSafariViewController(url!)
+        _openURLinSafariViewController(Link.rxSwift)
     }
     
     func openAnjLab() {
-        let url = NSURL(string: Link.anjlab)
-        _openURLinSafariViewController(url!)
+        _openURLinSafariViewController(Link.anjlab)
     }
     
     private func _openURLinSafariViewController(url: NSURL) {
