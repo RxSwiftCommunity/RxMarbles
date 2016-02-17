@@ -62,7 +62,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         _configureExperimentPage()
         _configureSharePage()
         _configureRxPage()
-//        _configureAboutPage()
+        _configureAboutPage()
         
         _configureCloseButton()
     }
@@ -698,35 +698,38 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         rxMarblesLabel.text = "RxMarbles"
         rxMarblesLabel.font = Font.text(25)
+        rxMarblesLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(rxMarblesLabel)
         let rxMarblesLabelTop = rxMarblesLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 248)
-        contentView.addConstraint(rxMarblesLabelTop)
-        let rxHorizontal = NSLayoutConstraint(item: rxMarblesLabel, attribute: .Leading, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: pageWidth * 4 - 10)
-        scrollView.addConstraint(rxHorizontal)
-        rxMarblesLabel.addConstraint(NSLayoutConstraint(item: rxMarblesLabel, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 200))
-        keepView(rxMarblesLabel, onPage: 4)
+        let rxMarblesLabelLeading = rxMarblesLabel.leadingAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: pageWidth)
+        contentView.addConstraints([rxMarblesLabelTop, rxMarblesLabelLeading])
         
-        let rxHorizontalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: rxHorizontal)
-        rxHorizontalAnimation[4] = pageWidth * 4 - 10
-        rxHorizontalAnimation[4.9] = pageWidth * 5 + 300
-        animator.addAnimation(rxHorizontalAnimation)
+        let rxMarblesLabelLeadingAnimation = ConstraintConstantAnimation(superview: contentView, constraint: rxMarblesLabelLeading)
+        rxMarblesLabelLeadingAnimation[3.5] = pageWidth
+        rxMarblesLabelLeadingAnimation[4]   = -20
+        rxMarblesLabelLeadingAnimation[5]   = pageWidth
+        animator.addAnimation(rxMarblesLabelLeadingAnimation)
         
         versionLabel.text = "v1.0.0"
+        versionLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(versionLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .Top, relatedBy: .Equal, toItem: rxMarblesLabel, attribute: .Bottom, multiplier: 1, constant: 0))
-        contentView.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .Leading, relatedBy: .Equal, toItem: rxMarblesLabel, attribute: .Leading, multiplier: 1, constant: 0))
-        versionLabel.addConstraint(NSLayoutConstraint(item: versionLabel, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 100))
-        keepView(versionLabel, onPage: 4)
-        
+        let versionLabelTop = versionLabel.topAnchor.constraintEqualToAnchor(rxMarblesLabel.bottomAnchor)
+        let versionLabelLeading = versionLabel.leadingAnchor.constraintEqualToAnchor(rxMarblesLabel.leadingAnchor)
+        contentView.addConstraints([versionLabelTop, versionLabelLeading])
+
         developedByLabel.text = "developed by"
+        developedByLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(developedByLabel)
-        contentView.addConstraint(NSLayoutConstraint(item: developedByLabel, attribute: .Top, relatedBy: .Equal, toItem: versionLabel, attribute: .Bottom, multiplier: 1, constant: 57))
+        let developedByLabelTop = developedByLabel.topAnchor.constraintEqualToAnchor(versionLabel.bottomAnchor, constant: 57)
+        contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
-        
+
         anjLabButton.setImage(Image.anjlab, forState: .Normal)
         anjLabButton.addTarget(self, action: "openAnjLab", forControlEvents: .TouchUpInside)
+        anjLabButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(anjLabButton)
-        contentView.addConstraint(NSLayoutConstraint(item: anjLabButton, attribute: .Top, relatedBy: .Equal, toItem: developedByLabel, attribute: .Bottom, multiplier: 1, constant: 32))
+        let anjLabButtonTop = anjLabButton.topAnchor.constraintEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
+        contentView.addConstraint(anjLabButtonTop)
         keepView(anjLabButton, onPage: 4)
     }
     
