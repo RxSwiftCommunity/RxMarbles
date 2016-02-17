@@ -40,7 +40,7 @@ extension MutableCollectionType where Index == Int {
 
 class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
     
-    let helpMode: Bool = false
+    var helpMode: Bool = true
     
     private let _logoImageView  = Image.helpLogo.imageView()
     private let _reactiveXLogo  = Image.rxLogo.imageView()
@@ -61,10 +61,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         _configureExplorePage()
         _configureExperimentPage()
         _configureSharePage()
-        _configureRxPage()
-        _configureAboutPage()
         
-        _configureCloseButton()
+        if helpMode {
+            _configureRxPage()
+            _configureAboutPage()
+            _configureCloseButton()
+        }
     }
     
     private func _configureLogoImageView() {
@@ -85,9 +87,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let yAnimation = ConstraintConstantAnimation(superview: view, constraint: centerY)
         
         yAnimation[0] = -200
-        yAnimation[3] = -200
-        yAnimation[4] = -60
-        yAnimation[5] = 0
+        if helpMode {
+            yAnimation[3] = -200
+            yAnimation[4] = -60
+            yAnimation[5] = 0
+        } else {
+            yAnimation[2] = -200
+            yAnimation[3] = 0
+        }
         
         animator.addAnimation(yAnimation)
        
@@ -119,13 +126,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         contentView.addConstraints([centerX, centerY])
         
-        let alphaAnimation = AlphaAnimation(view: _reactiveXLogo)
-        alphaAnimation[0] = 0.0
-        alphaAnimation[2.5] = 0.0
-        alphaAnimation[3] = 1.0
-        alphaAnimation[3.5] = 0.0
-        
-        animator.addAnimation(alphaAnimation)
+        if helpMode {
+            let alphaAnimation = AlphaAnimation(view: _reactiveXLogo)
+            alphaAnimation[0] = 0.0
+            alphaAnimation[2.5] = 0.0
+            alphaAnimation[3] = 1.0
+            alphaAnimation[3.5] = 0.0
+            animator.addAnimation(alphaAnimation)
+        }
     }
     
     private func _configureCloseButton() {
@@ -157,9 +165,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         _configureButton(experimentNextButton, onPage: 0, action: "experimentTransition")
         _configureButton(shareNextButton, onPage: 1, action: "shareTransition")
-        _configureButton(rxNextButton, onPage: 2, action: "rxTransition")
-        _configureButton(aboutNextButton, onPage: 3, action: "aboutTransition")
-        _configureButton(completedButton, onPage: 4, action: "completedTransition")
+        if helpMode {
+            _configureButton(rxNextButton, onPage: 2, action: "rxTransition")
+            _configureButton(aboutNextButton, onPage: 3, action: "aboutTransition")
+            _configureButton(completedButton, onPage: 4, action: "completedTransition")
+        } else {
+            _configureButton(completedButton, onPage: 2, action: "rxTransition")
+        }
+        
         completedButton.setTitle("onCompleted()", forState: .Normal)
     }
     
@@ -200,7 +213,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let about       = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: .Star))))
         let completed   = EventView(recorded: RecordedType(time: 0, event: .Completed))
         
-        let events = [ explore, experiment, share, rx, about, completed ]
+        let helpEvents = [ explore, experiment, share, rx, about, completed ]
+        let introEvents = [ explore, experiment, share, completed ]
+        let events = helpMode ? helpEvents : introEvents
         
         events.forEach {
             contentView.addSubview($0)
@@ -213,22 +228,32 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         _tapRecognizerWithAction(explore, action: "exploreTransition")
         _tapRecognizerWithAction(experiment, action: "experimentTransition")
         _tapRecognizerWithAction(share, action: "shareTransition")
-        _tapRecognizerWithAction(rx, action: "rxTransition")
-        _tapRecognizerWithAction(about, action: "aboutTransition")
-        _tapRecognizerWithAction(completed, action: "completedTransition")
+        if helpMode {
+            _tapRecognizerWithAction(rx, action: "rxTransition")
+            _tapRecognizerWithAction(about, action: "aboutTransition")
+            _tapRecognizerWithAction(completed, action: "completedTransition")
+        } else {
+            _tapRecognizerWithAction(completed, action: "rxTransition")
+        }
         
-        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: -140)
+        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -140 : -111)
         let exploreY = explore.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor)
         contentView.addConstraints([exploreX, exploreY])
         
-        _configureEventViewAnimations(experiment, page: 0, xOffset: nil)
-        _configureEventViewAnimations(share, page: 1, xOffset: nil)
-        _configureEventViewAnimations(rx, page: 2, xOffset: nil)
-        _configureEventViewAnimations(about, page: 3, xOffset: nil)
-        _configureEventViewAnimations(completed, page: 4, xOffset: 135)
+        if helpMode {
+            _configureEventViewAnimations(experiment, page: 0, xOffset: nil)
+            _configureEventViewAnimations(share, page: 1, xOffset: nil)
+            _configureEventViewAnimations(rx, page: 2, xOffset: nil)
+            _configureEventViewAnimations(about, page: 3, xOffset: nil)
+            _configureEventViewAnimations(completed, page: 4, xOffset: 135)
+        } else {
+            _configureEventViewAnimations(experiment, page: 0, xOffset: -37)
+            _configureEventViewAnimations(share, page: 1, xOffset: 37)
+            _configureEventViewAnimations(completed, page: 2, xOffset: 105)
+        }
         
         completed.hidden = true
-        let showCompletedAnimation = HideAnimation(view: completed, showAt: 4.1)
+        let showCompletedAnimation = HideAnimation(view: completed, showAt: helpMode ? 4.1 : 2.1)
         animator.addAnimation(showCompletedAnimation)
     }
     
@@ -734,7 +759,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     override func numberOfPages() -> Int {
-        return 6
+        if helpMode {
+            return 6
+        }
+        return 4
     }
     
 //    MARK: Navigation
@@ -784,6 +812,23 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     func close() {
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+//    MARK: UIScrollViewDelegate methods
+    
+    override func scrollViewDidScroll(scrollView: UIScrollView) {
+        super.scrollViewDidScroll(scrollView)
+        if scrollView.contentOffset.x == pageWidth * CGFloat(numberOfPages() - 1) {
+            if helpMode {
+                close()
+            } else {
+                UIView.animateWithDuration(0.6, animations: { () -> Void in
+                    self.view.alpha = 0.0
+                    }, completion: { _ in
+                        self.close()
+                })
+            }
+        }
     }
     
 //    MARK: UIInterfaceOrientationMask Portrait only

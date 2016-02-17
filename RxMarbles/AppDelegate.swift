@@ -32,11 +32,27 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         _splitViewController.viewControllers = [masterNav, detailNav]
         
         window?.rootViewController = _splitViewController
-        
         window?.makeKeyAndVisible()
         NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
         
+        let defaults = NSUserDefaults.standardUserDefaults()
+        if let showIntro = defaults.objectForKey("show_intro") {
+            if showIntro as! Bool == true {
+                _showHelpViewController(masterNav)
+            }
+        } else {
+            defaults.setValue(true, forKey: "show_intro")
+            _showHelpViewController(masterNav)
+        }
+        
         return true
+    }
+    
+    private func _showHelpViewController(parent: UIViewController) {
+        let helpViewController = HelpViewController()
+        helpViewController.helpMode = false
+        helpViewController.modalPresentationStyle = .OverCurrentContext
+        parent.presentViewController(helpViewController, animated: false, completion: nil)
     }
 
     // MARK: UISplitViewControllerDelegate

@@ -18,7 +18,7 @@
 			<key>Title</key>
 			<string>Show intro</string>
 			<key>Key</key>
-			<string>enabled_preference</string>
+			<string>show_intro</string>
 			<key>DefaultValue</key>
 			<true/>
 		</dict>
