@@ -15,6 +15,29 @@ struct Link {
     static let rxswift = "https://github.com/ReactiveX/RxSwift"
 }
 
+extension CollectionType {
+    /// Return a copy of `self` with its elements shuffled
+    func shuffle() -> [Generator.Element] {
+        var list = Array(self)
+        list.shuffleInPlace()
+        return list
+    }
+}
+
+extension MutableCollectionType where Index == Int {
+    /// Shuffle the elements of `self` in-place.
+    mutating func shuffleInPlace() {
+        // empty and single-element collections don't shuffle
+        if count < 2 { return }
+        
+        for i in 0..<count - 1 {
+            let j = Int(arc4random_uniform(UInt32(count - i))) + i
+            guard i != j else { continue }
+            swap(&self[i], &self[j])
+        }
+    }
+}
+
 class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
     
     let helpMode: Bool = false
@@ -55,6 +78,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
 //        _configureImageViews()
         _configureResultTimeline()
         _configureButtons()
+        
+        _configureExplorePage()
 
 //        _configureEventViews()
 //
@@ -380,6 +405,163 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let tap = UITapGestureRecognizer()
         tap.addTarget(self, action: "eventViewTap:")
         eventView.addGestureRecognizer(tap)
+    }
+    
+    private func _configureExplorePage() {
+        let cloudView = UIView()
+        cloudView.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(cloudView)
+        
+        let centerX = cloudView.centerXAnchor.constraintEqualToAnchor(scrollView.centerXAnchor)
+        let centerY = cloudView.centerYAnchor.constraintEqualToAnchor(scrollView.centerYAnchor)
+        let width   = cloudView.widthAnchor.constraintEqualToConstant(300)
+        let height  = cloudView.heightAnchor.constraintEqualToConstant(300)
+        
+        scrollView.addConstraints([centerX, centerY, width, height])
+        
+        let relativities = [
+            (vertical: (min: -10, max: 10), horizontal: (min: -10, max: 10)),
+            (vertical: (min: 10, max: -10), horizontal: (min: 10, max: -10)),
+            (vertical: (min: -10, max: -10), horizontal: (min: -10, max: -10)),
+            (vertical: (min: 10, max: 10), horizontal: (min: 10, max: 10))
+        ]
+        
+        var cloudLabels: [UILabel] = []
+        for i in 0..<4 {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.numberOfLines = 0
+            
+            cloudLabels.append(label)
+            cloudView.addSubview(label)
+            
+            let labelX  = label.centerXAnchor.constraintEqualToAnchor(cloudView.centerXAnchor)
+            let labelY  = label.centerYAnchor.constraintEqualToAnchor(cloudView.centerYAnchor)
+            let lWidth  = label.widthAnchor.constraintEqualToAnchor(cloudView.widthAnchor)
+            let lHeight = label.heightAnchor.constraintEqualToAnchor(cloudView.heightAnchor)
+            
+            cloudView.addConstraints([labelX, labelY, lWidth, lHeight])
+            
+            _addMotionEffectToView(label, relativity: relativities[i])
+        }
+        
+        let attributedStrings = _operatorsCloud()
+        
+        cloudLabels.forEach {
+            let index = cloudLabels.indexOf($0)
+            $0.attributedText = attributedStrings[index!]
+        }
+    }
+    
+    private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
+        let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
+            type: .TiltAlongVerticalAxis)
+        verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
+        verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
+        
+        let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
+            type: .TiltAlongHorizontalAxis)
+        horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
+        horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
+        
+        view.addMotionEffect(group)
+    }
+    
+    private func _operatorsCloud() -> [NSMutableAttributedString] {
+        var strings: [NSMutableAttributedString] = []
+        for _ in 0..<4 {
+            strings.append(NSMutableAttributedString())
+        }
+        let p = NSMutableParagraphStyle()
+        p.lineBreakMode = .ByWordWrapping
+        p.lineSpacing = 12
+        p.alignment = .Center
+        
+        let allOperators = Operator.all.shuffle()
+        
+        var i = 0
+        
+        for op in allOperators[0...30] {
+            let rnd = random() % 3
+            
+            let operatorString = _attributedOperatorString(op, p: p, rnd: rnd)
+            let alphaString = NSMutableAttributedString(attributedString: operatorString)
+            alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
+            switch rnd {
+            case 0:
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 0 ? operatorString : alphaString)
+                }
+            case 1:
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 1 ? operatorString : alphaString)
+                }
+            case 2:
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 2 ? operatorString : alphaString)
+                }
+            case 3:
+                strings.forEach {
+                    $0.appendAttributedString(strings.indexOf($0) == 3 ? operatorString : alphaString)
+                }
+            default:
+                break
+            }
+            
+            if i == 0 {
+                strings.forEach {
+                    $0.appendAttributedString(NSAttributedString(string: "\n"))
+                }
+            } else {
+                strings.forEach {
+                    $0.appendAttributedString(NSAttributedString(string: " "))
+                }
+            }
+            
+            i += 1
+            
+            if i == 30 {
+                strings.forEach {
+                    $0.appendAttributedString(NSAttributedString(string: "\n"))
+                }
+            }
+        }
+        
+        return strings
+    }
+    
+    private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
+        
+        switch rnd {
+        case 0:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoBoldItalic, size: 15),
+                NSParagraphStyleAttributeName: p
+                ])
+        case 1:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoBold, size: 13),
+                NSParagraphStyleAttributeName: p
+                ])
+        case 2:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoRegular, size: 13),
+                NSParagraphStyleAttributeName: p
+                ])
+        case 3:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoItalic, size: 12),
+                NSParagraphStyleAttributeName: p
+                ])
+        default:
+            return NSMutableAttributedString(string: op.rawValue, attributes: [
+                NSFontAttributeName: Font.code(.MonoRegular, size: 11),
+                NSParagraphStyleAttributeName: p
+                ])
+        }
     }
     
     private func _configureExperimentPage() {
