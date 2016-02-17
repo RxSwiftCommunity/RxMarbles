@@ -19,15 +19,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     let helpMode: Bool = false
     
-    private let _logoImageView  = UIImageView(image: Image.helpLogo)
-    private let _reactiveXLogo  = UIImageView(image: Image.rxLogo)
-    private let _resultTimeline = UIImageView(image: Image.timeLine)
+    private let _logoImageView  = Image.helpLogo.imageView()
+    private let _reactiveXLogo  = Image.rxLogo.imageView()
+    private let _resultTimeline = Image.timeLine.imageView()
     
-    private let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: EventShape.Circle))))
-    private let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: EventShape.Circle))))
-    private let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: EventShape.Circle))))
-    private let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: EventShape.Star))))
-    private let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: EventShape.Star))))
+    private let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: .Circle))))
+    private let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: .Circle))))
+    private let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: .Circle))))
+    private let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: .Star))))
+    private let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: .Star))))
     private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
     
     private let _searchNextButton   = UIButton(type: .System)
@@ -42,101 +42,116 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private let _closeButton = UIButton(type: .Custom)
     
-    private let _upArrow = UIImageView(image: Image.upArrow)
-    private let _downArrow = UIImageView(image: Image.downArrow)
+    private let _upArrow   = Image.upArrow.imageView()
+    private let _downArrow = Image.downArrow.imageView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
         
         _configureLogoImageView()
-        _configureCloseButton()
-        _configureImageViews()
+        _configureReactiveXLogo()
+        
+//        _configureImageViews()
         _configureResultTimeline()
         _configureButtons()
+
+//        _configureEventViews()
+//
+//        _configureExperimentPage()
+//        
+//        _configureSharePage()
+//        
+//        _configureRxPage()
+//        
+//        _configureAnjLabPage()
         
-        _configureEventViews()
-        
-        _configureExperimentPage()
-        
-        _configureSharePage()
-        
-        _configureRxPage()
-        
-        _configureAnjLabPage()
+        _configureCloseButton()
     }
     
     private func _configureLogoImageView() {
         contentView.addSubview(_logoImageView)
-        let vertical = NSLayoutConstraint(item: _logoImageView, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 76)
-        contentView.addConstraint(vertical)
-        let horizontal = NSLayoutConstraint(item: _logoImageView, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: 0)
-        scrollView.addConstraint(horizontal)
         
-        keepView(_logoImageView, onPages: [0, 1, 2, 3, 4, 5])
+        _logoImageView.translatesAutoresizingMaskIntoConstraints = false
         
-        let verticalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalAnimation[0] = 76
-        verticalAnimation[3] = 76
-        verticalAnimation[4] = 246
-        verticalAnimation[5] = scrollView.frame.height / 2 - _logoImageView.frame.height / 2
-        animator.addAnimation(verticalAnimation)
+        let scale = CGFloat(0.81666)
         
-        let horizontalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horizontalAnimation[0] = 0
-        horizontalAnimation[3] = pageWidth * 3
-        horizontalAnimation[4] = pageWidth * 4 - 50
-        horizontalAnimation[5] = pageWidth * 5
-        animator.addAnimation(horizontalAnimation)
+        _logoImageView.transform = CGAffineTransformScale(_logoImageView.transform, scale, scale)
+       
+        let centerY = _logoImageView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: -200)
+        
+        let centerX = _logoImageView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
+        
+        view.addConstraints([centerY, centerX])
+        
+        let yAnimation = ConstraintConstantAnimation(superview: view, constraint: centerY)
+        
+        yAnimation[0] = -200
+        yAnimation[4] = -200
+        yAnimation[5] = -60
+        
+        animator.addAnimation(yAnimation)
+       
+        let xAnimation = ConstraintConstantAnimation(superview: view, constraint: centerX)
+        
+        
+        xAnimation[4] = 0
+        xAnimation[5] = -60
+        
+        animator.addAnimation(xAnimation)
         
         let scaleAnimation = ScaleAnimation(view: _logoImageView)
-        scaleAnimation[0] = 0.81666
-        scaleAnimation[3] = 0.81666
+        scaleAnimation[0] = scale
+        scaleAnimation[3] = scale
         scaleAnimation[4] = 1.0
-        scaleAnimation[5] = 0.81666
+        scaleAnimation[5] = scale
         animator.addAnimation(scaleAnimation)
-        
-        _configureReactiveXLogo()
     }
     
     private func _configureReactiveXLogo() {
         contentView.addSubview(_reactiveXLogo)
-        let horizontal = NSLayoutConstraint(item: _reactiveXLogo, attribute: .CenterX, relatedBy: .Equal, toItem: _logoImageView, attribute: .CenterX, multiplier: 1, constant: 0)
-        contentView.addConstraint(horizontal)
-        let vertical = NSLayoutConstraint(item: _reactiveXLogo, attribute: .CenterY, relatedBy: .Equal, toItem: _logoImageView, attribute: .CenterY, multiplier: 1, constant: 0)
-        contentView.addConstraint(vertical)
+        _reactiveXLogo.translatesAutoresizingMaskIntoConstraints = false
+        
+        _reactiveXLogo.alpha = 0
+        
+        let centerX = _reactiveXLogo.centerXAnchor.constraintEqualToAnchor(_logoImageView.centerXAnchor)
+        
+        let centerY = _reactiveXLogo.centerYAnchor.constraintEqualToAnchor(_logoImageView.centerYAnchor)
+        
+        contentView.addConstraints([centerX, centerY])
         
         let alphaAnimation = AlphaAnimation(view: _reactiveXLogo)
         alphaAnimation[0] = 0.0
         alphaAnimation[2.5] = 0.0
         alphaAnimation[3] = 1.0
         alphaAnimation[3.5] = 0.0
-        animator.addAnimation(alphaAnimation)
         
-        keepView(_reactiveXLogo, onPage: 3)
+        animator.addAnimation(alphaAnimation)
     }
     
     private func _configureCloseButton() {
-        contentView.addSubview(_closeButton)
-        _closeButton.setBackgroundImage(Image.cross, forState: .Normal)
-        _closeButton.addTarget(self, action: "close", forControlEvents: .TouchUpInside)
-        contentView.addConstraint(NSLayoutConstraint(item: _closeButton, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 30))
-        let rightOffset = scrollView.bounds.width / 2 - 35
-        let horizontal = NSLayoutConstraint(item: _closeButton, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: rightOffset)
-        scrollView.addConstraint(horizontal)
-        keepView(_closeButton, onPages: [0, 1, 2, 3, 4, 5])
+        _closeButton.setImage(Image.cross, forState: .Normal)
+        _closeButton.contentMode = .Center
         
-        let horizontalAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        horizontalAnimation[0] = rightOffset
-        horizontalAnimation[5] = pageWidth * 5 + rightOffset
-        animator.addAnimation(horizontalAnimation)
+        _ = _closeButton.rx_tap.subscribeNext({ [unowned self] in
+            self.dismissViewControllerAnimated(true, completion: nil)
+        })
+        
+        view.addSubview(_closeButton)
+        _closeButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        let top = _closeButton.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 20)
+        let right = _closeButton.rightAnchor.constraintEqualToAnchor(view.rightAnchor, constant: -10)
+        
+        let width = _closeButton.widthAnchor.constraintEqualToConstant(40)
+        let height = _closeButton.heightAnchor.constraintEqualToConstant(40)
+       
+        view.addConstraints([top, right, width, height])
     }
     
     private func _configureImageViews() {
         _configureImageViewsConstraints(_firstHelpView, page: 0)
-        
         _configureImageViewsConstraints(_secondHelpView, page: 1)
-        
         _configureImageViewsConstraints(_thirdHelpView, page: 2)
     }
     
@@ -198,16 +213,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _configureResultTimeline() {
         contentView.addSubview(_resultTimeline)
-        contentView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -80))
-        let horizontal = NSLayoutConstraint(item: _resultTimeline, attribute: .CenterX, relatedBy: .Equal, toItem: scrollView, attribute: .CenterX, multiplier: 1, constant: 0)
-        scrollView.addConstraint(horizontal)
-        scrollView.addConstraint(NSLayoutConstraint(item: _resultTimeline, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
-        keepView(_resultTimeline, onPages: [0, 1, 2, 3, 4, 5])
+        _resultTimeline.translatesAutoresizingMaskIntoConstraints = false
         
-        let horizontalAnimation = ConstraintConstantAnimation(superview: _resultTimeline, constraint: horizontal)
-        horizontalAnimation[0] = 0
-        horizontalAnimation[5] = pageWidth * 5
-        animator.addAnimation(horizontalAnimation)
+        let centerY = _resultTimeline.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 180)
+        
+        let centerX = _resultTimeline.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
+        
+        let width = _resultTimeline.widthAnchor.constraintEqualToConstant(300)
+        
+        view.addConstraints([centerX, centerY, width])
     }
     
     private func _configureSharingEventView() {
