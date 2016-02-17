@@ -46,23 +46,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private let _reactiveXLogo  = Image.rxLogo.imageView()
     private let _resultTimeline = Image.timeLine.imageView()
     
-    private let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: .Circle))))
-    private let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: .Circle))))
-    private let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: .Circle))))
-    private let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: .Star))))
-    private let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: .Star))))
-    private let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
-    
-    private let _searchNextButton   = UIButton(type: .System)
-    private let _editingNextButton  = UIButton(type: .System)
-    private let _rxSwiftNextButton  = UIButton(type: .System)
-    private let _anjlabNextButton   = UIButton(type: .System)
-    private let _completedButton    = UIButton(type: .System)
-    
-    private let _firstHelpView  = UIView()
-    private let _secondHelpView = UIView()
-    private let _thirdHelpView  = UIView()
-    
     private let _closeButton = UIButton(type: .Custom)
     
     private let _upArrow   = Image.upArrow.imageView()
@@ -74,14 +57,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         _configureLogoImageView()
         _configureReactiveXLogo()
-        
-//        _configureImageViews()
         _configureResultTimeline()
         _configureButtons()
+        _configureEventViews()
         
         _configureExplorePage()
-
-//        _configureEventViews()
 //
 //        _configureExperimentPage()
 //        
@@ -174,66 +154,35 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addConstraints([top, right, width, height])
     }
     
-    private func _configureImageViews() {
-        _configureImageViewsConstraints(_firstHelpView, page: 0)
-        _configureImageViewsConstraints(_secondHelpView, page: 1)
-        _configureImageViewsConstraints(_thirdHelpView, page: 2)
+    private func _configureButtons() {
+        let experimentNextButton   = UIButton(type: .System)
+        let shareNextButton  = UIButton(type: .System)
+        let rxNextButton  = UIButton(type: .System)
+        let aboutNextButton   = UIButton(type: .System)
+        let completedButton    = UIButton(type: .System)
+        
+        _configureButton(experimentNextButton, onPage: 0, action: "experimentTransition")
+        _configureButton(shareNextButton, onPage: 1, action: "shareTransition")
+        _configureButton(rxNextButton, onPage: 2, action: "rxTransition")
+        _configureButton(aboutNextButton, onPage: 3, action: "aboutTransition")
+        _configureButton(completedButton, onPage: 4, action: "completedTransition")
+        completedButton.setTitle("onCompleted()", forState: .Normal)
     }
     
-    private func _configureImageViewsConstraints(imageView: UIView, page: CGFloat) {
-        contentView.addSubview(imageView)
-        contentView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .CenterY, relatedBy: .Equal, toItem: contentView, attribute: .CenterY, multiplier: 1, constant: 0))
-        imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
-        imageView.addConstraint(NSLayoutConstraint(item: imageView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 300))
-        keepView(imageView, onPage: page)
-    }
-    
-    private func _configureSearchNextButton() {
-        _configureButton(_searchNextButton, onPage: 0)
-        _searchNextButton.addTarget(self, action: "addSearchNext", forControlEvents: .TouchUpInside)
-    }
-    
-    private func _configureEditingNextButton() {
-        _configureButton(_editingNextButton, onPage: 1)
-        _editingNextButton.addTarget(self, action: "addEditingNext", forControlEvents: .TouchUpInside)
-    }
-    
-    private func _configureRxSwiftNextButton() {
-        _configureButton(_rxSwiftNextButton, onPage: 2)
-        _rxSwiftNextButton.addTarget(self, action: "addRxSwiftNext", forControlEvents: .TouchUpInside)
-    }
-    
-    private func _configureAnjlabNextButton() {
-        _configureButton(_anjlabNextButton, onPage: 3)
-        _anjlabNextButton.addTarget(self, action: "addAnjlabNext", forControlEvents: .TouchUpInside)
-    }
-    
-    private func _configureCompletedButton() {
-        _configureButton(_completedButton, onPage: 4)
-        _completedButton.setTitle("onCompleted()", forState: .Normal)
-        _completedButton.addTarget(self, action: "addCompleted", forControlEvents: .TouchUpInside)
-    }
-    
-    private func _configureButton(next: UIButton, onPage page: CGFloat) {
+    private func _configureButton(next: UIButton, onPage page: CGFloat, action: Selector) {
         next.titleLabel?.font = Font.code(.MonoRegular, size: 14)
         next.setTitle("onNext(   )", forState: .Normal)
+        next.addTarget(self, action: action, forControlEvents: .TouchUpInside)
         contentView.addSubview(next)
+        keepView(next, onPages: [page, page + 1])
+        
         let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
         contentView.addConstraint(vertical)
-        keepView(next, onPages: [page, page + 1])
         
         let outOfScreenAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
         outOfScreenAnimation[page] = -20
         outOfScreenAnimation[page + 1] = 100
         animator.addAnimation(outOfScreenAnimation)
-    }
-    
-    private func _configureButtons() {
-        _configureSearchNextButton()
-        _configureEditingNextButton()
-        _configureRxSwiftNextButton()
-        _configureAnjlabNextButton()
-        _configureCompletedButton()
     }
     
     private func _configureResultTimeline() {
@@ -249,67 +198,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addConstraints([centerX, centerY, width])
     }
     
-    private func _configureSharingEventView() {
-        contentView.addSubview(_sharingEventView)
-        
-        contentView.addConstraint(NSLayoutConstraint(item: _sharingEventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0))
-        scrollView.addConstraint(NSLayoutConstraint(item: _sharingEventView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: -125))
-        _sharingEventView.addConstraint(NSLayoutConstraint(item: _sharingEventView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
-        _sharingEventView.addConstraint(NSLayoutConstraint(item: _sharingEventView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
-        
-        keepView(_sharingEventView, onPages: [0, 1, 2, 3, 4, 5])
-        
-        _configureEventViewTapRecognizer(_sharingEventView)
-    }
-    
-    private func _configureSearchEventView() {
-        let (vertical, horizontal) = _configureEventViewConstraints(_searchEventView)
-        keepView(_searchEventView, onPages: [0, 1, 2, 3, 4, 5])
-        
-        _configureEventViewAnimations(0, xOffset: -75, horizontal: horizontal, vertical: vertical)
-        _configureEventViewTapRecognizer(_searchEventView)
-    }
-    
-    private func _configureEditingEventView() {
-        let (vertical, horizontal) = _configureEventViewConstraints(_editingEventView)
-        keepView(_editingEventView, onPages: [1, 2, 3, 4, 5])
-        
-        _configureEventViewAnimations(1, xOffset: -25, horizontal: horizontal, vertical: vertical)
-        _configureEventViewTapRecognizer(_editingEventView)
-    }
-    
-    private func _configureRxSwiftEventView() {
-        let (vertical, horizontal) = _configureEventViewConstraints(_rxSwiftEventView)
-        keepView(_rxSwiftEventView, onPages: [2, 3, 4, 5])
-        
-        _configureEventViewAnimations(2, xOffset: 25, horizontal: horizontal, vertical: vertical)
-        _configureEventViewTapRecognizer(_rxSwiftEventView)
-    }
-    
-    private func _configureAnjlabEventView() {
-        let (vertical, horizontal) = _configureEventViewConstraints(_anjlabEventView)
-        keepView(_anjlabEventView, onPages: [3, 4, 5])
-        
-        _configureEventViewAnimations(3, xOffset: 75, horizontal: horizontal, vertical: vertical)
-        _configureEventViewTapRecognizer(_anjlabEventView)
-    }
-    
-    private func _configureCompletedEventView() {
-        let (vertical, horizontal) = _configureEventViewConstraints(_completedEventView)
-        keepView(_completedEventView, onPages: [4, 5])
-        
-        _configureEventViewAnimations(4, xOffset: 125, horizontal: horizontal, vertical: vertical)
-        let showAnimation = HideAnimation(view: _completedEventView, showAt: 4.1)
-        animator.addAnimation(showAnimation)
-    }
-    
     private func _configureEventViews() {
-        _configureSharingEventView()
-        _configureSearchEventView()
-        _configureEditingEventView()
-        _configureRxSwiftEventView()
-        _configureAnjlabEventView()
-        _configureCompletedEventView()
+//        let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: .Circle))))
+//        let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: .Circle))))
+//        let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: .Circle))))
+//        let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: .Star))))
+//        let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: .Star))))
+//        let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
     }
     
     private func _configureShareIcons() {
@@ -353,25 +248,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             rotateAnimation[2.9] = 3600.0
             animator.addAnimation(rotateAnimation)
         }
-        
-        contentView.addConstraint(NSLayoutConstraint(item: facebook, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
-        scrollView.addConstraint(NSLayoutConstraint(item: facebook, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
-        contentView.addConstraint(NSLayoutConstraint(item: twitter, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
-        scrollView.addConstraint(NSLayoutConstraint(item: twitter, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
-        contentView.addConstraint(NSLayoutConstraint(item: trello, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
-        contentView.addConstraint(NSLayoutConstraint(item: slack, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
-        scrollView.addConstraint(NSLayoutConstraint(item: slack, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
-        contentView.addConstraint(NSLayoutConstraint(item: mail, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 318))
-        scrollView.addConstraint(NSLayoutConstraint(item: mail, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
-        contentView.addConstraint(NSLayoutConstraint(item: messenger, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
-        scrollView.addConstraint(NSLayoutConstraint(item: messenger, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -100))
-        contentView.addConstraint(NSLayoutConstraint(item: viber, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
-        scrollView.addConstraint(NSLayoutConstraint(item: viber, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: -50))
-        contentView.addConstraint(NSLayoutConstraint(item: skype, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
-        contentView.addConstraint(NSLayoutConstraint(item: hanghout, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
-        scrollView.addConstraint(NSLayoutConstraint(item: hanghout, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 50))
-        contentView.addConstraint(NSLayoutConstraint(item: evernote, attribute: .Top, relatedBy: .Equal, toItem: contentView, attribute: .Top, multiplier: 1, constant: 379))
-        scrollView.addConstraint(NSLayoutConstraint(item: evernote, attribute: .CenterX, relatedBy: .Equal, toItem: _thirdHelpView, attribute: .CenterX, multiplier: 1, constant: 100))
     }
     
     private func _configureEventViewConstraints(eventView: EventView) -> (NSLayoutConstraint, NSLayoutConstraint) {
@@ -801,44 +677,27 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
 //    MARK: Navigation
     
-    func eventViewTap(r: UITapGestureRecognizer) {
-        switch r.view as! EventView {
-        case _sharingEventView:
-            addSharingNext()
-        case _searchEventView:
-            addSearchNext()
-        case _editingEventView:
-            addEditingNext()
-        case _rxSwiftEventView:
-            addRxSwiftNext()
-        case _anjlabEventView:
-            addAnjlabNext()
-        default:
-            break
-        }
-    }
-    
-    func addSharingNext() {
+    func exploreTransition() {
         _setOffsetAnimated(0)
     }
     
-    func addSearchNext() {
+    func experimentTransition() {
         _setOffsetAnimated(1)
     }
     
-    func addEditingNext() {
+    func shareTransition() {
         _setOffsetAnimated(2)
     }
     
-    func addRxSwiftNext() {
+    func rxTransition() {
         _setOffsetAnimated(3)
     }
     
-    func addAnjlabNext() {
+    func aboutTransition() {
         _setOffsetAnimated(4)
     }
     
-    func addCompleted() {
+    func completedTransition() {
         _setOffsetAnimated(5)
     }
     
