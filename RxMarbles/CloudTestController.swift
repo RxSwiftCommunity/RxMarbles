@@ -34,47 +34,54 @@ extension MutableCollectionType where Index == Int {
 
 class CloudTestController: UIViewController {
     
-    let _bottomLabel = UILabel()
-    let _middleLabel = UILabel()
-    let _topLabel = UILabel()
+    let _monoBoldItalicLabel = UILabel()
+    let _monoBoldLabel = UILabel()
+    let _monoRegularLabel = UILabel()
+    let _monoItalicLabel = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.whiteColor()
         
-        view.addSubview(_bottomLabel)
+        view.addSubview(_monoBoldItalicLabel)
         
-        let (bottom, mid, top) = _operatorsCloud()
+        let (mBoldItalic, mBold, mRegular, mItalic) = _operatorsCloud()
     
-        _bottomLabel.numberOfLines = 0
-        _bottomLabel.attributedText = bottom
+        _monoBoldItalicLabel.numberOfLines = 0
+        _monoBoldItalicLabel.attributedText = mBoldItalic
         
-        view.addSubview(_middleLabel)
+        view.addSubview(_monoBoldLabel)
         
-        _middleLabel.numberOfLines = 0
-        _middleLabel.attributedText = mid
+        _monoBoldLabel.numberOfLines = 0
+        _monoBoldLabel.attributedText = mBold
         
-        view.addSubview(_topLabel)
+        view.addSubview(_monoRegularLabel)
         
-        _topLabel.numberOfLines = 0
-        _topLabel.attributedText = top
+        _monoRegularLabel.numberOfLines = 0
+        _monoRegularLabel.attributedText = mRegular
+        
+        view.addSubview(_monoItalicLabel)
+        
+        _monoItalicLabel.numberOfLines = 0
+        _monoItalicLabel.attributedText = mItalic
 
-        _addMotionEffectToView(_bottomLabel, relatitivity: (vertical: (min: -10, max: 10), horizontal: (min: -10, max: 10)))
-        _addMotionEffectToView(_middleLabel, relatitivity: (vertical: (min: 10, max: -10), horizontal: (min: 10, max: -10)))
-        _addMotionEffectToView(_topLabel, relatitivity: (vertical: (min: -10, max: -10), horizontal: (min: -10, max: -10)))
+        _addMotionEffectToView(_monoBoldItalicLabel, relativity: (vertical: (min: -10, max: 10), horizontal: (min: -10, max: 10)))
+        _addMotionEffectToView(_monoBoldLabel, relativity: (vertical: (min: 10, max: -10), horizontal: (min: 10, max: -10)))
+        _addMotionEffectToView(_monoRegularLabel, relativity: (vertical: (min: -10, max: -10), horizontal: (min: -10, max: -10)))
+        _addMotionEffectToView(_monoItalicLabel, relativity: (vertical: (min: 10, max: 10), horizontal: (min: 10, max: 10)))
     }
     
-    private func _addMotionEffectToView(view: UIView, relatitivity: (vertical: (min: AnyObject, max: AnyObject), horizontal: (min: AnyObject, max: AnyObject))) {
+    private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: AnyObject, max: AnyObject), horizontal: (min: AnyObject, max: AnyObject))) {
         let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
             type: .TiltAlongVerticalAxis)
-        verticalMotionEffect.minimumRelativeValue = relatitivity.vertical.min
-        verticalMotionEffect.maximumRelativeValue = relatitivity.vertical.max
+        verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
+        verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
         
         let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
             type: .TiltAlongHorizontalAxis)
-        horizontalMotionEffect.minimumRelativeValue = relatitivity.horizontal.min
-        horizontalMotionEffect.maximumRelativeValue = relatitivity.horizontal.max
+        horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
+        horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
         
         let group = UIMotionEffectGroup()
         group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
@@ -85,15 +92,16 @@ class CloudTestController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         
-        _bottomLabel.frame = view.bounds
-        _middleLabel.frame = view.bounds
-        _topLabel.frame = view.bounds
+        _monoBoldItalicLabel.frame = view.bounds
+        _monoBoldLabel.frame = view.bounds
+        _monoRegularLabel.frame = view.bounds
     }
     
-    func _operatorsCloud() -> (bottom: NSMutableAttributedString, mid: NSMutableAttributedString, top: NSMutableAttributedString) {
-        let bottom = NSMutableAttributedString()
-        let mid = NSMutableAttributedString()
-        let top = NSMutableAttributedString()
+    func _operatorsCloud() -> (mBoldItalic: NSMutableAttributedString, mBold: NSMutableAttributedString, mRegular: NSMutableAttributedString, mItalic: NSMutableAttributedString) {
+        let monoBoldItalicString = NSMutableAttributedString()
+        let monoBoldString = NSMutableAttributedString()
+        let monoRegularString = NSMutableAttributedString()
+        let monoItalicString = NSMutableAttributedString()
         let p = NSMutableParagraphStyle()
         p.lineBreakMode = .ByWordWrapping
         p.lineSpacing = 9.2
@@ -104,47 +112,56 @@ class CloudTestController: UIViewController {
         var i = 0
         
         for op in allOperators[0...23] {
-            let levelRnd = random() % 2
+            let rnd = random() % 3
             
-            let operatorString = _attributedOperatorString(op, p: p)
+            let operatorString = _attributedOperatorString(op, p: p, rnd: rnd)
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
             alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
-            switch levelRnd {
+            switch rnd {
             case 0:
-                bottom.appendAttributedString(operatorString)
-                mid.appendAttributedString(alphaString)
-                top.appendAttributedString(alphaString)
+                monoBoldItalicString.appendAttributedString(operatorString)
+                monoBoldString.appendAttributedString(alphaString)
+                monoRegularString.appendAttributedString(alphaString)
+                monoItalicString.appendAttributedString(alphaString)
             case 1:
-                bottom.appendAttributedString(alphaString)
-                mid.appendAttributedString(operatorString)
-                top.appendAttributedString(alphaString)
+                monoBoldItalicString.appendAttributedString(alphaString)
+                monoBoldString.appendAttributedString(operatorString)
+                monoRegularString.appendAttributedString(alphaString)
+                monoItalicString.appendAttributedString(alphaString)
             case 2:
-                bottom.appendAttributedString(alphaString)
-                mid.appendAttributedString(alphaString)
-                top.appendAttributedString(operatorString)
+                monoBoldItalicString.appendAttributedString(alphaString)
+                monoBoldString.appendAttributedString(alphaString)
+                monoRegularString.appendAttributedString(operatorString)
+                monoItalicString.appendAttributedString(alphaString)
+            case 3:
+                monoBoldItalicString.appendAttributedString(alphaString)
+                monoBoldString.appendAttributedString(alphaString)
+                monoRegularString.appendAttributedString(alphaString)
+                monoItalicString.appendAttributedString(operatorString)
             default:
                 break
             }
             
             if i == 0 {
-                bottom.appendAttributedString(NSAttributedString(string: "\n"))
-                mid.appendAttributedString(NSAttributedString(string: "\n"))
-                top.appendAttributedString(NSAttributedString(string: "\n"))
+                monoBoldItalicString.appendAttributedString(NSAttributedString(string: "\n"))
+                monoBoldString.appendAttributedString(NSAttributedString(string: "\n"))
+                monoRegularString.appendAttributedString(NSAttributedString(string: "\n"))
+                monoItalicString.appendAttributedString(NSAttributedString(string: "\n"))
             } else {
-                bottom.appendAttributedString(NSAttributedString(string: " "))
-                mid.appendAttributedString(NSAttributedString(string: " "))
-                top.appendAttributedString(NSAttributedString(string: " "))
+                monoBoldItalicString.appendAttributedString(NSAttributedString(string: " "))
+                monoBoldString.appendAttributedString(NSAttributedString(string: " "))
+                monoRegularString.appendAttributedString(NSAttributedString(string: " "))
+                monoItalicString.appendAttributedString(NSAttributedString(string: " "))
             }
             
             i += 1
         }
         
-        return (bottom: bottom, mid: mid, top: top)
+        return (mBoldItalic: monoBoldItalicString, mBold: monoBoldString, mRegular: monoRegularString, mItalic: monoItalicString)
     }
     
-    private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle) -> NSMutableAttributedString {
-        let rnd = random() % 3
-        
+    private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
+
         switch rnd {
         case 0:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
