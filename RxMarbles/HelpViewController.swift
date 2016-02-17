@@ -189,7 +189,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addSubview(_resultTimeline)
         _resultTimeline.translatesAutoresizingMaskIntoConstraints = false
         
-        let centerY = _resultTimeline.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: 180)
+        let centerY = _resultTimeline.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -80)
         
         let centerX = _resultTimeline.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
         
@@ -199,12 +199,69 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureEventViews() {
-//        let _sharingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: .Circle))))
-//        let _searchEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: .Circle))))
-//        let _editingEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: .Circle))))
-//        let _rxSwiftEventView   = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: .Star))))
-//        let _anjlabEventView    = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: .Star))))
-//        let _completedEventView = EventView(recorded: RecordedType(time: 0, event: .Completed))
+        let explore     = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Explore", color: Color.nextBlue, shape: .Circle))))
+        let experiment  = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Experiment", color: Color.nextBlue, shape: .Circle))))
+        let share       = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Share", color: Color.nextBlue, shape: .Circle))))
+        let rx          = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "Rx", color: Color.nextBlue, shape: .Star))))
+        let about       = EventView(recorded: RecordedType(time: 0, event: .Next(ColoredType(value: "About", color: Color.nextBlue, shape: .Star))))
+        let completed   = EventView(recorded: RecordedType(time: 0, event: .Completed))
+        
+        let events = [ explore, experiment, share, rx, about, completed ]
+        
+        events.forEach {
+            contentView.addSubview($0)
+            $0.translatesAutoresizingMaskIntoConstraints = false
+            let height  = $0.heightAnchor.constraintEqualToConstant(50)
+            contentView.addConstraint(height)
+        }
+        
+        _tapRecognizerWithAction(explore, action: "exploreTransition")
+        _tapRecognizerWithAction(experiment, action: "experimentTransition")
+        _tapRecognizerWithAction(share, action: "shareTransition")
+        _tapRecognizerWithAction(rx, action: "rxTransition")
+        _tapRecognizerWithAction(about, action: "aboutTransition")
+        _tapRecognizerWithAction(completed, action: "completedTransition")
+        
+        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: -140)
+        let exploreY = explore.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor)
+        contentView.addConstraints([exploreX, exploreY])
+        
+        _configureEventViewAnimations(experiment, page: 0, xOffset: nil)
+        _configureEventViewAnimations(share, page: 1, xOffset: nil)
+        _configureEventViewAnimations(rx, page: 2, xOffset: nil)
+        _configureEventViewAnimations(about, page: 3, xOffset: nil)
+        _configureEventViewAnimations(completed, page: 4, xOffset: 135)
+        
+        completed.hidden = true
+        let showCompletedAnimation = HideAnimation(view: completed, showAt: 4.1)
+        animator.addAnimation(showCompletedAnimation)
+    }
+    
+    private func _configureEventViewAnimations(eventView: EventView, page: CGFloat, xOffset: CGFloat?) {
+        let x = eventView.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: pageWidth + 25)
+        let y = eventView.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor, constant: 48)
+        contentView.addConstraints([x, y])
+        let xAnimation = ConstraintConstantAnimation(superview: contentView, constraint: x)
+        if page > 0 {
+            xAnimation[page - 1] = pageWidth * page + 25
+        }
+        xAnimation[page] = 25
+        if let offset = xOffset {
+            xAnimation[page + 1] = offset
+        } else {
+            xAnimation[page + 1] = -85 + page * 65
+        }
+        animator.addAnimation(xAnimation)
+        let yAnimation = ConstraintConstantAnimation(superview: contentView, constraint: y)
+        yAnimation[page] = 48
+        yAnimation[page + 1] = 0
+        animator.addAnimation(yAnimation)
+    }
+    
+    private func _tapRecognizerWithAction(eventView: EventView, action: Selector) {
+        let tap = UITapGestureRecognizer()
+        tap.addTarget(self, action: action)
+        eventView.addGestureRecognizer(tap)
     }
     
     private func _configureShareIcons() {
@@ -248,39 +305,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             rotateAnimation[2.9] = 3600.0
             animator.addAnimation(rotateAnimation)
         }
-    }
-    
-    private func _configureEventViewConstraints(eventView: EventView) -> (NSLayoutConstraint, NSLayoutConstraint) {
-        contentView.addSubview(eventView)
-        let verticalConstraint = NSLayoutConstraint(item: eventView, attribute: .CenterY, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterY, multiplier: 1, constant: 0)
-        contentView.addConstraint(verticalConstraint)
-        let horizontalConstraint = NSLayoutConstraint(item: eventView, attribute: .CenterX, relatedBy: .Equal, toItem: _resultTimeline, attribute: .CenterX, multiplier: 1, constant: 25)
-        scrollView.addConstraint(horizontalConstraint)
-        eventView.addConstraint(NSLayoutConstraint(item: eventView, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
-        eventView.addConstraint(NSLayoutConstraint(item: eventView, attribute: .Height, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 1, constant: 50))
-        return (verticalConstraint, horizontalConstraint)
-    }
-    
-    private func _configureEventViewAnimations(page: CGFloat, xOffset: CGFloat, horizontal: NSLayoutConstraint, vertical: NSLayoutConstraint) {
-        
-        let verticalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        verticalConstraintAnimation[page] = 48
-        verticalConstraintAnimation[page + 1] = 0
-        animator.addAnimation(verticalConstraintAnimation)
-        
-        let horizontalConstraintAnimation = ConstraintConstantAnimation(superview: contentView, constraint: horizontal)
-        if page > 0 {
-            horizontalConstraintAnimation[page - 1] = pageWidth + 25
-        }
-        horizontalConstraintAnimation[page] = 25
-        horizontalConstraintAnimation[page + 1] = xOffset
-        animator.addAnimation(horizontalConstraintAnimation)
-    }
-    
-    private func _configureEventViewTapRecognizer(eventView: EventView) {
-        let tap = UITapGestureRecognizer()
-        tap.addTarget(self, action: "eventViewTap:")
-        eventView.addGestureRecognizer(tap)
     }
     
     private func _configureExplorePage() {
