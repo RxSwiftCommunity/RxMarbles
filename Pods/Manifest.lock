@@ -1,7 +1,7 @@
 PODS:
   - Crashlytics (3.7.0):
     - Fabric (~> 1.6.3)
-  - Device (0.0.6)
+  - Device (0.0.7)
   - Fabric (1.6.6)
   - RazzleDazzle (0.1.2)
   - RxCocoa (2.2.0):
@@ -18,7 +18,7 @@ DEPENDENCIES:
 
 SPEC CHECKSUMS:
   Crashlytics: c3a2333dea9e2733d2777f730910321fc9e25c0d
-  Device: 2b48a78b55e5631a8b1006b325dfefc32f6b8690
+  Device: a476728f5aee9abf5b9573e3fa8c77de030d0b12
   Fabric: 1abc1e59f11fa39ede6f690ef7309d8563e3ec59
   RazzleDazzle: f3b6ec5595e57366192010e5ca7ffbb207639cee
   RxCocoa: 42efb7a7145a8d1d5878e94ce48a580d29e0c796
