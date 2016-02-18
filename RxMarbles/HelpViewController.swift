@@ -816,7 +816,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         super.scrollViewDidScroll(scrollView)
         if scrollView.contentOffset.x == pageWidth * CGFloat(numberOfPages() - 1) {
             if helpMode {
-                close()
+                let sec = 0.5
+                let delay = sec * Double(NSEC_PER_SEC)
+                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                    self.close()
+                })
             } else {
                 UIView.animateWithDuration(0.6, animations: { () -> Void in
                     self.view.alpha = 0.0
