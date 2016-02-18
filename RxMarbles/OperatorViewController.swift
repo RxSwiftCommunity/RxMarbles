@@ -123,7 +123,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Button Items
     
     private func _rightButtonItems() -> [UIBarButtonItem] {
-        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_makeSnapshot:")
+        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_share:")
         
         if _sceneView.rxOperator.withoutTimelines {
             return [shareButtonItem]
@@ -140,7 +140,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
 //    MARK: Snapshot
     
-    private dynamic func _makeSnapshot(sender: AnyObject?) {
+    private func _makeSnapshot() -> UIImage {
         let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height - _sceneView.rxOperatorText.bounds.height)
         
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
@@ -153,21 +153,26 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
+        return snapshot
+    }
+    
+    private dynamic func _share(sender: AnyObject?) {
+       
+        let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
         
-        let shareActivity = UIActivityViewController(activityItems: [snapshot], applicationActivities: nil)
-        shareActivity.excludedActivityTypes = [
+        activity.excludedActivityTypes = [
             UIActivityTypeAssignToContact,
             UIActivityTypePrint,
         ]
         if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate,
             let rootViewController = delegate.window?.rootViewController {
                 if Device.type() == .iPad || Device.type() == .Simulator {
-                    shareActivity.popoverPresentationController?.sourceView = view
+                    activity.popoverPresentationController?.sourceView = view
                     if let shareButtonItem = sender {
-                        shareActivity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
+                        activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
                     }
                 }
-                rootViewController.presentViewController(shareActivity, animated: true, completion: nil)
+                rootViewController.presentViewController(activity, animated: true, completion: nil)
             }
     }
     
@@ -305,7 +310,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     override func previewActionItems() -> [UIPreviewActionItem] {
         let shareAction = UIPreviewAction(title: "Share", style: .Default) { _, _ in
-            self._makeSnapshot(nil)
+            self._share(nil)
         }
         return [shareAction]
     }
