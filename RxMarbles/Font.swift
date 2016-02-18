@@ -10,10 +10,12 @@ import Foundation
 import UIKit
 
 enum FontFace: String {
-    case MonoRegular    = "Menlo-Regular"
-    case MonoItalic     = "Menlo-Italic"
-    case MonoBold       = "Menlo-Bold"
-    case MonoBoldItalic = "Menlo-BoldItalic"
+    case MonoRegular        = "Menlo-Regular"
+    case MonoItalic         = "Menlo-Italic"
+    case MonoBold           = "Menlo-Bold"
+    case MonoBoldItalic     = "Menlo-BoldItalic"
+    //to do: Monaco for iOS (sketch)?
+    case MalayalamSangamMN  = "MalayalamSangamMN"
 }
 
 struct Font {

@@ -611,7 +611,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let alasLabel = UILabel()
         
         manyLikeLabel.text = "Many ❤️👍🍻👋 to"
-        manyLikeLabel.font = Font.text(18)
+        manyLikeLabel.font = Font.code(.MalayalamSangamMN, size: 18)
         manyLikeLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(manyLikeLabel)
         let manyLikeLabelTop = manyLikeLabel.topAnchor.constraintEqualToAnchor(container.topAnchor)
@@ -635,17 +635,19 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         erikMeijerTextView.textAlignment = .Center
         erikMeijerTextView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(erikMeijerTextView)
-        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 10)
+        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 10)
+        let erikMeijerTextViewGreaterTop = erikMeijerTextView.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 0)
         let erikMeijerTextViewCenterX = erikMeijerTextView.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
-        container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewCenterX])
+        container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewGreaterTop, erikMeijerTextViewCenterX])
         
         krunoslavZaherTwitter.alpha = 0.3
         krunoslavZaherTwitter.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(krunoslavZaherTwitter)
         let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor, constant: 35)
+        let krunoslavZaherTwitterGreaterTop = krunoslavZaherTwitter.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor)
         let krunoslavZaherTwitterHeight = krunoslavZaherTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
         let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor, constant: 15)
-        container.addConstraints([krunoslavZaherTwitterTop, krunoslavZaherTwitterHeight, krunoslavZaherTwitterCenterX])
+        container.addConstraints([krunoslavZaherTwitterTop, krunoslavZaherTwitterGreaterTop, krunoslavZaherTwitterHeight, krunoslavZaherTwitterCenterX])
         
         krunoslavZaherTextView.attributedText = _krunoslavZaherText()
         krunoslavZaherTextView.delegate = self
@@ -662,9 +664,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         alasLabel.text = "¯\\_(ツ)_/¯"
         alasLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(alasLabel)
-        let alasLabelTop = alasLabel.bottomAnchor.constraintEqualToAnchor(container.bottomAnchor)
+        let alasLabelBottom = alasLabel.bottomAnchor.constraintLessThanOrEqualToAnchor(container.bottomAnchor)
         let alasLabelCenterX = alasLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
-        container.addConstraints([alasLabelTop, alasLabelCenterX])
+        container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
         rxSwiftLabel.text = "⭐ RxSwift on"
         rxSwiftLabel.font = Font.text(14)
@@ -763,7 +765,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         developedByLabel.text = "developed by"
         developedByLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(developedByLabel)
-        let developedByLabelTop = developedByLabel.topAnchor.constraintEqualToAnchor(versionLabel.bottomAnchor, constant: 57)
+        let developedByLabelTop = developedByLabel.topAnchor.constraintLessThanOrEqualToAnchor(versionLabel.bottomAnchor, constant: 57)
         contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
 
@@ -774,8 +776,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         anjLabButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(anjLabButton)
-        let anjLabButtonTop = anjLabButton.topAnchor.constraintEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
-        contentView.addConstraint(anjLabButtonTop)
+        let anjLabButtonTop = anjLabButton.topAnchor.constraintLessThanOrEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
+        let anjLabButtonBottom = anjLabButton.bottomAnchor.constraintLessThanOrEqualToAnchor(_resultTimeline.topAnchor, constant: -30)
+        contentView.addConstraints([anjLabButtonTop, anjLabButtonBottom])
         keepView(anjLabButton, onPage: 4)
         
         let ellipse1 = Image.ellipse1.imageView()
