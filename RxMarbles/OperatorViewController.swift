@@ -15,7 +15,7 @@ import Device
 struct Names {
     static let setEventView = "SetEventView"
     static let addEvent = "AddEvent"
-    static let openOperatorDescription = "OpenRxOperatorLink"
+    static let openOperatorDescription = "OpenOperatorDescription"
 }
 
 class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
@@ -53,14 +53,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.rightBarButtonItems = _rightButtonItems()
         
-        let popGestureRecognizer = navigationController?.interactivePopGestureRecognizer
+        guard
+            let requireRecognizerToFail = navigationController?
+                .interactivePopGestureRecognizer?
+                .requireGestureRecognizerToFail
+        else { return }
         
         [
             _sceneView.sourceTimeline?.longPressGestureRecorgnizer,
             _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer
         ]
-        .flatMap({ $0 })
-        .forEach({ popGestureRecognizer?.requireGestureRecognizerToFail($0) })
+        .flatMap { $0 }
+        .forEach(requireRecognizerToFail)
     }
 
     override func viewDidLoad() {
@@ -73,18 +77,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         _currentActivity = _sceneView.rxOperator.userActivity()
         
-        let notificationCenter = NSNotificationCenter.defaultCenter()
+        let nc = NSNotificationCenter.defaultCenter()
         
-        notificationCenter.rx_notification(Names.setEventView).subscribeNext {
-            [unowned self] notification in self._setEventView(notification)
+        nc.rx_notification(Names.setEventView).subscribeNext {
+            [unowned self] in self._setEventView($0)
         }.addDisposableTo(_disposeBag)
         
-        notificationCenter.rx_notification(Names.addEvent).subscribeNext {
-            [unowned self] notification in self._addEventToTimeline(notification)
+        nc.rx_notification(Names.addEvent).subscribeNext {
+            [unowned self] in self._addEventToTimeline($0)
         }.addDisposableTo(_disposeBag)
         
-        notificationCenter.rx_notification(Names.openOperatorDescription).subscribeNext {
-            [unowned self] notification in self._openOperatorDocumentation(notification)
+        nc.rx_notification(Names.openOperatorDescription).subscribeNext {
+            [unowned self] in self._openOperatorDocumentation($0)
         }.addDisposableTo(_disposeBag)
     }
     
@@ -209,7 +213,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         elementSelector.popoverPresentationController?.sourceRect = sender.frame
         elementSelector.popoverPresentationController?.sourceView = sender.superview
         
-        presentViewController(elementSelector, animated: true) { () -> Void in }
+        presentViewController(elementSelector, animated: true, completion: nil)
     }
 
     private func _setEventView(notification: NSNotification) {
