@@ -38,10 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let defaults = NSUserDefaults.standardUserDefaults()
         if let showIntro = defaults.objectForKey("show_intro") {
             if showIntro as! Bool == true {
+                defaults.setValue(false, forKey: "show_intro")
                 _showHelpViewController(masterNav)
             }
         } else {
-            defaults.setValue(true, forKey: "show_intro")
+            defaults.setValue(false, forKey: "show_intro")
             _showHelpViewController(masterNav)
         }
         
@@ -51,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     private func _showHelpViewController(parent: UIViewController) {
         let helpViewController = HelpViewController()
         helpViewController.helpMode = false
-        helpViewController.modalPresentationStyle = .OverCurrentContext
+        helpViewController.modalPresentationStyle = .OverFullScreen
         parent.presentViewController(helpViewController, animated: false, completion: nil)
     }
 

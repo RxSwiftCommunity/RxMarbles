@@ -44,19 +44,18 @@ extension MutableCollectionType where Index == Int {
 
 class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
     
-    private let _disposeBag = DisposeBag()
+    var helpMode: Bool = true
+    
+    let _disposeBag = DisposeBag()
     
     private let _logoImageView  = Image.helpLogo.imageView()
     private let _reactiveXLogo  = Image.rxLogo.imageView()
     private let _resultTimeline = Image.timeLine.imageView()
     
     private let _closeButton = UIButton(type: .Custom)
-    
-    var helpMode = true
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = .whiteColor()
         
         _configureLogoImageView()
@@ -83,7 +82,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let scale = CGFloat(0.81666)
         
-        _logoImageView.transform = CGAffineTransformScale(CGAffineTransformIdentity, scale, scale)
+        _logoImageView.transform = CGAffineTransformScale(_logoImageView.transform, scale, scale)
        
         let centerY = _logoImageView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: -200)
         
@@ -92,7 +91,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addConstraints([centerY, centerX])
         
         let yAnimation = ConstraintConstantAnimation(superview: view, constraint: centerY)
-        animator.addAnimation(yAnimation)
         
         yAnimation[0] = -200
         if helpMode {
@@ -100,26 +98,26 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             yAnimation[4] = -60
             yAnimation[5] = 0
         } else {
-            yAnimation[2] = -200
+            yAnimation[2.4] = -200
             yAnimation[3] = 0
         }
         
+        animator.addAnimation(yAnimation)
        
         let xAnimation = ConstraintConstantAnimation(superview: view, constraint: centerX)
-        animator.addAnimation(xAnimation)
         
         xAnimation[3] = 0
         xAnimation[4] = -60
         xAnimation[5] = 0
         
+        animator.addAnimation(xAnimation)
         
         let scaleAnimation = ScaleAnimation(view: _logoImageView)
-        animator.addAnimation(scaleAnimation)
-        
         scaleAnimation[0] = scale
-        scaleAnimation[3] = scale
+        scaleAnimation[3.5] = scale
         scaleAnimation[4] = 1.0
         scaleAnimation[5] = scale
+        animator.addAnimation(scaleAnimation)
     }
     
     private func _configureReactiveXLogo() {
@@ -136,12 +134,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         if helpMode {
             let alphaAnimation = AlphaAnimation(view: _reactiveXLogo)
-            animator.addAnimation(alphaAnimation)
-            
             alphaAnimation[0] = 0.0
             alphaAnimation[2.5] = 0.0
             alphaAnimation[3] = 1.0
             alphaAnimation[3.5] = 0.0
+            animator.addAnimation(alphaAnimation)
         }
     }
     
@@ -149,10 +146,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         _closeButton.setImage(Image.cross, forState: .Normal)
         _closeButton.contentMode = .Center
         
-        _closeButton.rx_tap.subscribeNext { [unowned self] in
+        _ = _closeButton.rx_tap.subscribeNext({ [unowned self] in
             self.dismissViewControllerAnimated(true, completion: nil)
-        }
-        .addDisposableTo(_disposeBag)
+        })
         
         view.addSubview(_closeButton)
         _closeButton.translatesAutoresizingMaskIntoConstraints = false
@@ -166,16 +162,35 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addConstraints([top, right, width, height])
     }
     
+    private func _configureResultTimeline() {
+        contentView.addSubview(_resultTimeline)
+        _resultTimeline.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerY = _resultTimeline.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -80)
+        
+        let centerX = _resultTimeline.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
+        
+        let width = _resultTimeline.widthAnchor.constraintEqualToConstant(300)
+        
+        let height = _resultTimeline.heightAnchor.constraintEqualToConstant(8)
+        
+        view.addConstraints([centerX, centerY, width, height])
+    }
+    
     private func _configureButtons() {
-        let experimentNextButton = UIButton(type: .System)
-        let shareNextButton      = UIButton(type: .System)
-        let rxNextButton         = UIButton(type: .System)
-        let aboutNextButton      = UIButton(type: .System)
-        let completedButton      = UIButton(type: .System)
+        let experimentNextButton   = UIButton(type: .System)
+        let shareNextButton  = UIButton(type: .System)
+        let rxNextButton  = UIButton(type: .System)
+        let aboutNextButton   = UIButton(type: .System)
+        let completedButton    = UIButton(type: .System)
+        
+        shareNextButton.hidden = true
+        rxNextButton.hidden = true
+        aboutNextButton.hidden = true
+        completedButton.hidden = true
         
         _configureButton(experimentNextButton, onPage: 0, action: "experimentTransition")
         _configureButton(shareNextButton, onPage: 1, action: "shareTransition")
-        
         if helpMode {
             _configureButton(rxNextButton, onPage: 2, action: "rxTransition")
             _configureButton(aboutNextButton, onPage: 3, action: "aboutTransition")
@@ -191,31 +206,27 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         next.titleLabel?.font = Font.code(.MonoRegular, size: 14)
         next.setTitle("onNext(   )", forState: .Normal)
         next.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        next.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(next)
-        keepView(next, onPages: [page, page + 1])
         
-        let vertical = next.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor, constant: -20)
+        let nextCenterX = next.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor)
+        let nextBottom = next.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor, constant: -20)
+        contentView.addConstraints([nextCenterX, nextBottom])
         
-        contentView.addConstraint(vertical)
+        let nextCenterXAnimation = ConstraintConstantAnimation(superview: contentView, constraint: nextCenterX)
+        if page > 0 {
+            nextCenterXAnimation[page - 1] = pageWidth
+        }
+        nextCenterXAnimation[page] = 0
+        animator.addAnimation(nextCenterXAnimation)
         
-        let outOfScreenAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        animator.addAnimation(outOfScreenAnimation)
+        let nextBottomAnimation = ConstraintConstantAnimation(superview: contentView, constraint: nextBottom)
+        nextBottomAnimation[page] = -20
+        nextBottomAnimation[page + 1] = 100
+        animator.addAnimation(nextBottomAnimation)
         
-        outOfScreenAnimation[page] = -20
-        outOfScreenAnimation[page + 1] = 100
-    }
-    
-    private func _configureResultTimeline() {
-        contentView.addSubview(_resultTimeline)
-        _resultTimeline.translatesAutoresizingMaskIntoConstraints = false
-        
-        let centerY = _resultTimeline.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -80)
-        
-        let centerX = _resultTimeline.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
-        
-        let width = _resultTimeline.widthAnchor.constraintEqualToConstant(300)
-        
-        view.addConstraints([centerX, centerY, width])
+        let nextShowAnimation = HideAnimation(view: next, showAt: page - 1)
+        animator.addAnimation(nextShowAnimation)
     }
     
     private func _configureEventViews() {
@@ -249,16 +260,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             _tapRecognizerWithAction(completed, action: "rxTransition")
         }
         
-        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -140 : -111)
+        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -130 : -111)
         let exploreY = explore.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor)
         contentView.addConstraints([exploreX, exploreY])
         
         if helpMode {
-            _configureEventViewAnimations(experiment, page: 0, xOffset: nil)
-            _configureEventViewAnimations(share, page: 1, xOffset: nil)
-            _configureEventViewAnimations(rx, page: 2, xOffset: nil)
-            _configureEventViewAnimations(about, page: 3, xOffset: nil)
-            _configureEventViewAnimations(completed, page: 4, xOffset: 135)
+            _configureEventViewAnimations(experiment, page: 0, xOffset: -75)
+            _configureEventViewAnimations(share, page: 1, xOffset: -20)
+            _configureEventViewAnimations(rx, page: 2, xOffset: 35)
+            _configureEventViewAnimations(about, page: 3, xOffset: 85)
+            _configureEventViewAnimations(completed, page: 4, xOffset: 125)
         } else {
             _configureEventViewAnimations(experiment, page: 0, xOffset: -37)
             _configureEventViewAnimations(share, page: 1, xOffset: 37)
@@ -266,24 +277,20 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
         
         completed.hidden = true
-        let showCompletedAnimation = HideAnimation(view: completed, showAt: helpMode ? 4.1 : 2.1)
+        let showCompletedAnimation = HideAnimation(view: completed, showAt: helpMode ? 4.05 : 2.05)
         animator.addAnimation(showCompletedAnimation)
     }
     
-    private func _configureEventViewAnimations(eventView: EventView, page: CGFloat, xOffset: CGFloat?) {
-        let x = eventView.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: pageWidth + 25)
+    private func _configureEventViewAnimations(eventView: EventView, page: CGFloat, xOffset: CGFloat) {
+        let x = eventView.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: page == 0 ? 25 : pageWidth + 25)
         let y = eventView.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor, constant: 48)
         contentView.addConstraints([x, y])
         let xAnimation = ConstraintConstantAnimation(superview: contentView, constraint: x)
         if page > 0 {
-            xAnimation[page - 1] = pageWidth * page + 25
+            xAnimation[page - 1] = pageWidth + 25
         }
-        xAnimation[page] = 25
-        if let offset = xOffset {
-            xAnimation[page + 1] = offset
-        } else {
-            xAnimation[page + 1] = -85 + page * 65
-        }
+        xAnimation[page] = eventView.isCompleted ? 42 : 25
+        xAnimation[page + 1] = xOffset
         animator.addAnimation(xAnimation)
         let yAnimation = ConstraintConstantAnimation(superview: contentView, constraint: y)
         yAnimation[page] = 48
@@ -343,24 +350,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
     }
     
-    private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
-        let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
-            type: .TiltAlongVerticalAxis)
-        verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
-        verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
-        
-        let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
-            type: .TiltAlongHorizontalAxis)
-        horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
-        horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
-        
-        view.addMotionEffect(group)
-    }
-    
-    private func _operatorsCloud() -> [NSAttributedString] {
+    private func _operatorsCloud() -> [NSMutableAttributedString] {
         var strings: [NSMutableAttributedString] = []
         for _ in 0..<4 {
             strings.append(NSMutableAttributedString())
@@ -457,18 +447,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private func _configureExperimentPage() {
         let navBar = Image.navBarExperiment.imageView()
         let timeline = Image.timelineExperiment.imageView()
-        
         let editLabel = UILabel()
         let timelineLabel = UILabel()
         let experimentLabel = UILabel()
-        
         let up   = Image.upArrow.imageView()
         let down = Image.downArrow.imageView()
         
         contentView.addSubview(navBar)
         
         navBar.translatesAutoresizingMaskIntoConstraints = false
-        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(_logoImageView.bottomAnchor, constant: 30)
+        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -160)
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
         
@@ -529,7 +517,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         contentView.addSubview(navBar)
         navBar.translatesAutoresizingMaskIntoConstraints = false
-        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(_logoImageView.bottomAnchor, constant: 30)
+        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -160)
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 2)
         
@@ -575,7 +563,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         ]
         .map { $0.imageView() }
         
-        
         shareLogos.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview($0)
@@ -597,12 +584,20 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             let icon = shareLogos[i]
             let iconTop = icon.topAnchor.constraintEqualToAnchor(container.topAnchor, constant: i < 5 ? 0 : 50)
             let iconLeading = icon.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor, constant: 34 + 50.0 * CGFloat(i < 5 ? i : i - 5))
-            
             container.addConstraints([iconTop, iconLeading])
         }
     }
     
     private func _configureRxPage() {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(container)
+        keepView(container, onPage: 3)
+        let containerTop = container.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -150)
+        let containerBottom = container.bottomAnchor.constraintEqualToAnchor(_resultTimeline.topAnchor, constant: -40)
+        let containerWidth = container.widthAnchor.constraintEqualToConstant(300)
+        contentView.addConstraints([containerTop, containerBottom, containerWidth])
+        
         let manyLikeLabel = UILabel()
         
         let erikMeijerTwitter = Image.twitter.imageView()
@@ -616,75 +611,80 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let alasLabel = UILabel()
         
         manyLikeLabel.text = "Many ❤️👍🍻👋 to"
-        manyLikeLabel.font = Font.text(18)
-        contentView.addSubview(manyLikeLabel)
-        let manyLikeLabelTop = manyLikeLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 180)
-        contentView.addConstraint(manyLikeLabelTop)
-        keepView(manyLikeLabel, onPage: 3)
+        manyLikeLabel.font = Font.code(.MalayalamSangamMN, size: 18)
+        manyLikeLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(manyLikeLabel)
+        let manyLikeLabelTop = manyLikeLabel.topAnchor.constraintEqualToAnchor(container.topAnchor)
+        let manyLikeLabelCenterX = manyLikeLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
+        container.addConstraints([manyLikeLabelTop, manyLikeLabelCenterX])
         
         erikMeijerTwitter.alpha = 0.3
-        contentView.addSubview(erikMeijerTwitter)
-        let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraintEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 40)
-        contentView.addConstraint(erikMeijerTwitterTop)
-        keepView(erikMeijerTwitter, onPage: 3)
-
+        erikMeijerTwitter.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(erikMeijerTwitter)
+        let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraintLessThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 40)
+        let erikMeijerTwitterGreaterTop = erikMeijerTwitter.topAnchor.constraintGreaterThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 10)
+        let erikMeijerTwitterHeight = erikMeijerTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
+        let erikMeijerTwitterCenterX = erikMeijerTwitter.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -10)
+        container.addConstraints([erikMeijerTwitterTop, erikMeijerTwitterGreaterTop, erikMeijerTwitterHeight, erikMeijerTwitterCenterX])
+        
         erikMeijerTextView.attributedText = _erikMeijerText()
         erikMeijerTextView.delegate = self
         erikMeijerTextView.editable = false
         erikMeijerTextView.scrollEnabled = false
         erikMeijerTextView.dataDetectorTypes = UIDataDetectorTypes.Link
         erikMeijerTextView.textAlignment = .Center
-        contentView.addSubview(erikMeijerTextView)
-        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 10)
-        let erikMeijerTextViewWidht = erikMeijerTextView.widthAnchor.constraintEqualToConstant(250)
-        let erikMeijerTextViewHeight = erikMeijerTextView.heightAnchor.constraintEqualToConstant(50)
-        contentView.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewWidht, erikMeijerTextViewHeight])
-        keepView(erikMeijerTextView, onPage: 3)
-
+        erikMeijerTextView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(erikMeijerTextView)
+        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 10)
+        let erikMeijerTextViewGreaterTop = erikMeijerTextView.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 0)
+        let erikMeijerTextViewCenterX = erikMeijerTextView.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
+        container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewGreaterTop, erikMeijerTextViewCenterX])
+        
         krunoslavZaherTwitter.alpha = 0.3
-        contentView.addSubview(krunoslavZaherTwitter)
-        let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraintEqualToAnchor(erikMeijerTextView.bottomAnchor, constant: 35)
-        contentView.addConstraint(krunoslavZaherTwitterTop)
-        keepView(krunoslavZaherTwitter, onPage: 3)
-
+        krunoslavZaherTwitter.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(krunoslavZaherTwitter)
+        let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor, constant: 35)
+        let krunoslavZaherTwitterGreaterTop = krunoslavZaherTwitter.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor)
+        let krunoslavZaherTwitterHeight = krunoslavZaherTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
+        let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor, constant: 15)
+        container.addConstraints([krunoslavZaherTwitterTop, krunoslavZaherTwitterGreaterTop, krunoslavZaherTwitterHeight, krunoslavZaherTwitterCenterX])
+        
         krunoslavZaherTextView.attributedText = _krunoslavZaherText()
         krunoslavZaherTextView.delegate = self
         krunoslavZaherTextView.editable = false
         krunoslavZaherTextView.scrollEnabled = false
         krunoslavZaherTextView.dataDetectorTypes = UIDataDetectorTypes.Link
         krunoslavZaherTextView.textAlignment = .Center
-        
-        contentView.addSubview(krunoslavZaherTextView)
+        krunoslavZaherTextView.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(krunoslavZaherTextView)
         let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor, constant: 10)
-        let krunoslavZaherTextViewWidht = krunoslavZaherTextView.widthAnchor.constraintEqualToConstant(250)
-        let krunoslavZaherTextViewHeight = krunoslavZaherTextView.heightAnchor.constraintEqualToConstant(50)
-        contentView.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewWidht, krunoslavZaherTextViewHeight])
-        keepView(krunoslavZaherTextView, onPage: 3)
-
+        let krunoslavZaherTextViewCenterX = krunoslavZaherTextView.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor)
+        container.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewCenterX])
+        
+        alasLabel.text = "¯\\_(ツ)_/¯"
+        alasLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(alasLabel)
+        let alasLabelBottom = alasLabel.bottomAnchor.constraintLessThanOrEqualToAnchor(container.bottomAnchor)
+        let alasLabelCenterX = alasLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
+        container.addConstraints([alasLabelBottom, alasLabelCenterX])
+        
         rxSwiftLabel.text = "⭐ RxSwift on"
         rxSwiftLabel.font = Font.text(14)
         rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(rxSwiftLabel)
-        let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraintEqualToAnchor(krunoslavZaherTextView.bottomAnchor, constant: 40)
-        let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraintEqualToAnchor(manyLikeLabel.centerXAnchor, constant: -25)
-        contentView.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX])
-
+        container.addSubview(rxSwiftLabel)
+        let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraintLessThanOrEqualToAnchor(krunoslavZaherTextView.bottomAnchor, constant: 40)
+        let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraintEqualToAnchor(alasLabel.topAnchor, constant: -10)
+        let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -25)
+        container.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX, rxSwiftLabelBottom])
+        
         githubButton.setImage(Image.github, forState: .Normal)
-        
         githubButton.rx_tap.subscribeNext { [unowned self] _ in self._openURLinSafariViewController(Link.rxSwift) }
-        .addDisposableTo(_disposeBag)
-        
+            .addDisposableTo(_disposeBag)
         githubButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(githubButton)
+        container.addSubview(githubButton)
         let githubButtonLeading = githubButton.leadingAnchor.constraintEqualToAnchor(rxSwiftLabel.trailingAnchor, constant: 10)
         let githubButtonCenterY = githubButton.centerYAnchor.constraintEqualToAnchor(rxSwiftLabel.centerYAnchor)
-        contentView.addConstraints([githubButtonLeading, githubButtonCenterY])
-
-        alasLabel.text = "¯\\_(ツ)_/¯"
-        contentView.addSubview(alasLabel)
-        let alasLabelTop = alasLabel.topAnchor.constraintEqualToAnchor(rxSwiftLabel.bottomAnchor, constant: 10)
-        contentView.addConstraint(alasLabelTop)
-        keepView(alasLabel, onPage: 3)
+        container.addConstraints([githubButtonLeading, githubButtonCenterY])
     }
     
     private func _erikMeijerText() -> NSMutableAttributedString {
@@ -704,6 +704,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             ]
         )
         text.appendAttributedString(reactivex)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineSpacing = 10
+        text.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
@@ -726,6 +729,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             ]
         )
         text.appendAttributedString(reactivex)
+        let paragraph = NSMutableParagraphStyle()
+        paragraph.lineSpacing = 10
+        text.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
@@ -739,9 +745,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxMarblesLabel.font = Font.text(25)
         rxMarblesLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(rxMarblesLabel)
-        let rxMarblesLabelTop = rxMarblesLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 248)
+        let rxMarblesLabelCenterY = rxMarblesLabel.centerYAnchor.constraintEqualToAnchor(_logoImageView.centerYAnchor, constant: -12)
         let rxMarblesLabelLeading = rxMarblesLabel.leadingAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: pageWidth)
-        contentView.addConstraints([rxMarblesLabelTop, rxMarblesLabelLeading])
+        contentView.addConstraints([rxMarblesLabelCenterY, rxMarblesLabelLeading])
         
         let rxMarblesLabelLeadingAnimation = ConstraintConstantAnimation(superview: contentView, constraint: rxMarblesLabelLeading)
         rxMarblesLabelLeadingAnimation[3.5] = pageWidth
@@ -759,7 +765,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         developedByLabel.text = "developed by"
         developedByLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(developedByLabel)
-        let developedByLabelTop = developedByLabel.topAnchor.constraintEqualToAnchor(versionLabel.bottomAnchor, constant: 57)
+        let developedByLabelTop = developedByLabel.topAnchor.constraintLessThanOrEqualToAnchor(versionLabel.bottomAnchor, constant: 57)
         contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
 
@@ -770,9 +776,26 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         anjLabButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(anjLabButton)
-        let anjLabButtonTop = anjLabButton.topAnchor.constraintEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
-        contentView.addConstraint(anjLabButtonTop)
+        let anjLabButtonTop = anjLabButton.topAnchor.constraintLessThanOrEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
+        let anjLabButtonBottom = anjLabButton.bottomAnchor.constraintLessThanOrEqualToAnchor(_resultTimeline.topAnchor, constant: -30)
+        contentView.addConstraints([anjLabButtonTop, anjLabButtonBottom])
         keepView(anjLabButton, onPage: 4)
+        
+        let ellipse1 = Image.ellipse1.imageView()
+        ellipse1.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(ellipse1)
+        let ellipse1CenterX = ellipse1.centerXAnchor.constraintEqualToAnchor(anjLabButton.centerXAnchor)
+        let ellipse1CenterY = ellipse1.centerYAnchor.constraintEqualToAnchor(anjLabButton.centerYAnchor)
+        contentView.addConstraints([ellipse1CenterX, ellipse1CenterY])
+        _addMotionEffectToView(ellipse1, relativity: (vertical: (min: -5, max: 5), horizontal: (min: -5, max: 5)))
+        
+        let ellipse2 = Image.ellipse2.imageView()
+        ellipse2.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(ellipse2)
+        let ellipse2CenterX = ellipse2.centerXAnchor.constraintEqualToAnchor(anjLabButton.centerXAnchor)
+        let ellipse2CenterY = ellipse2.centerYAnchor.constraintEqualToAnchor(anjLabButton.centerYAnchor)
+        contentView.addConstraints([ellipse2CenterX, ellipse2CenterY])
+        _addMotionEffectToView(ellipse2, relativity: (vertical: (min: -5, max: 5), horizontal: (min: -5, max: 5)))
     }
     
     override func numberOfPages() -> Int {
@@ -826,10 +849,17 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         super.scrollViewDidScroll(scrollView)
         if scrollView.contentOffset.x == pageWidth * CGFloat(numberOfPages() - 1) {
+            view.userInteractionEnabled = false
             if helpMode {
-                close()
+//                MARK: Delay before dismiss
+                let sec = 0.3
+                let delay = sec * Double(NSEC_PER_SEC)
+                let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
+                dispatch_after(dispatchTime, dispatch_get_main_queue(), {
+                    self.close()
+                })
             } else {
-                UIView.animateWithDuration(0.6, animations: { () -> Void in
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
                     self.view.alpha = 0.0
                     }, completion: { _ in
                         self.close()
@@ -852,5 +882,24 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
         return true
+    }
+    
+//    MARK: Helpers
+    
+    private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
+        let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
+            type: .TiltAlongVerticalAxis)
+        verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
+        verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
+        
+        let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
+            type: .TiltAlongHorizontalAxis)
+        horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
+        horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
+        
+        view.addMotionEffect(group)
     }
 }
