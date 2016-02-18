@@ -657,7 +657,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         krunoslavZaherTextView.textAlignment = .Center
         krunoslavZaherTextView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(krunoslavZaherTextView)
-        let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintLessThanOrEqualToAnchor(krunoslavZaherTwitter.bottomAnchor, constant: 10)
+        let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor, constant: 10)
         let krunoslavZaherTextViewCenterX = krunoslavZaherTextView.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor)
         container.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewCenterX])
         
