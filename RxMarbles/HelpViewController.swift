@@ -260,13 +260,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             _tapRecognizerWithAction(completed, action: "rxTransition")
         }
         
-        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -140 : -111)
+        let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -130 : -111)
         let exploreY = explore.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor)
         contentView.addConstraints([exploreX, exploreY])
         
         if helpMode {
-            _configureEventViewAnimations(experiment, page: 0, xOffset: nil)
-            _configureEventViewAnimations(share, page: 1, xOffset: nil)
+            _configureEventViewAnimations(experiment, page: 0, xOffset: -75)
+            _configureEventViewAnimations(share, page: 1, xOffset: -20)
             _configureEventViewAnimations(rx, page: 2, xOffset: 35)
             _configureEventViewAnimations(about, page: 3, xOffset: 85)
             _configureEventViewAnimations(completed, page: 4, xOffset: 125)
