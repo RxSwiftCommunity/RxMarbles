@@ -33,18 +33,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         window?.rootViewController = _splitViewController
         window?.makeKeyAndVisible()
-        NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
-        
+       
+        let showIntroKey = "show_intro"
         let defaults = NSUserDefaults.standardUserDefaults()
-        if let showIntro = defaults.objectForKey("show_intro") {
-            if showIntro as! Bool == true {
-                defaults.setValue(false, forKey: "show_intro")
-                _showHelpViewController(masterNav)
-            }
-        } else {
-            defaults.setValue(false, forKey: "show_intro")
+       
+        if defaults.objectForKey(showIntroKey)?.boolValue == true {
             _showHelpViewController(masterNav)
         }
+        
+        defaults.setObject(false, forKey: showIntroKey)
+        defaults.synchronize()
+        
+        NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
         
         return true
     }
