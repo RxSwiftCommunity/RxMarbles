@@ -41,6 +41,8 @@ struct Image {
     static let cross        = UIImage(named: "cross")!
     
     static let anjlab       = UIImage(named: "anjlab")!
+    static let ellipse1     = UIImage(named: "anjlab_ellipse1")!
+    static let ellipse2     = UIImage(named: "anjlab_ellipse2")!
     
     static let navBarShare          = UIImage(named: "navBarShare")!
     static let navBarExperiment     = UIImage(named: "navBarExperiment")!

@@ -354,23 +354,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
     }
     
-    private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
-        let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
-            type: .TiltAlongVerticalAxis)
-        verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
-        verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
-        
-        let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
-            type: .TiltAlongHorizontalAxis)
-        horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
-        horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
-        
-        let group = UIMotionEffectGroup()
-        group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
-        
-        view.addMotionEffect(group)
-    }
-    
     private func _operatorsCloud() -> [NSMutableAttributedString] {
         var strings: [NSMutableAttributedString] = []
         for _ in 0..<4 {
@@ -798,6 +781,22 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let anjLabButtonTop = anjLabButton.topAnchor.constraintEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
         contentView.addConstraint(anjLabButtonTop)
         keepView(anjLabButton, onPage: 4)
+        
+        let ellipse1 = Image.ellipse1.imageView()
+        ellipse1.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(ellipse1)
+        let ellipse1CenterX = ellipse1.centerXAnchor.constraintEqualToAnchor(anjLabButton.centerXAnchor)
+        let ellipse1CenterY = ellipse1.centerYAnchor.constraintEqualToAnchor(anjLabButton.centerYAnchor)
+        contentView.addConstraints([ellipse1CenterX, ellipse1CenterY])
+        _addMotionEffectToView(ellipse1, relativity: (vertical: (min: -5, max: 5), horizontal: (min: -5, max: 5)))
+        
+        let ellipse2 = Image.ellipse2.imageView()
+        ellipse2.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(ellipse2)
+        let ellipse2CenterX = ellipse2.centerXAnchor.constraintEqualToAnchor(anjLabButton.centerXAnchor)
+        let ellipse2CenterY = ellipse2.centerYAnchor.constraintEqualToAnchor(anjLabButton.centerYAnchor)
+        contentView.addConstraints([ellipse2CenterX, ellipse2CenterY])
+        _addMotionEffectToView(ellipse2, relativity: (vertical: (min: -5, max: 5), horizontal: (min: -5, max: 5)))
     }
     
     override func numberOfPages() -> Int {
@@ -854,14 +853,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             view.userInteractionEnabled = false
             if helpMode {
 //                MARK: Delay before dismiss
-                let sec = 0.5
+                let sec = 0.3
                 let delay = sec * Double(NSEC_PER_SEC)
                 let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
                 dispatch_after(dispatchTime, dispatch_get_main_queue(), {
                     self.close()
                 })
             } else {
-                UIView.animateWithDuration(0.6, animations: { () -> Void in
+                UIView.animateWithDuration(0.3, animations: { () -> Void in
                     self.view.alpha = 0.0
                     }, completion: { _ in
                         self.close()
@@ -884,5 +883,24 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
         return true
+    }
+    
+//    MARK: Helpers
+    
+    private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
+        let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
+            type: .TiltAlongVerticalAxis)
+        verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
+        verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
+        
+        let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
+            type: .TiltAlongHorizontalAxis)
+        horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
+        horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
+        
+        let group = UIMotionEffectGroup()
+        group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
+        
+        view.addMotionEffect(group)
     }
 }

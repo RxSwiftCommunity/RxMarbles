@@ -38,10 +38,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let defaults = NSUserDefaults.standardUserDefaults()
         if let showIntro = defaults.objectForKey("show_intro") {
             if showIntro as! Bool == true {
+                defaults.setValue(false, forKey: "show_intro")
                 _showHelpViewController(masterNav)
             }
         } else {
-            defaults.setValue(true, forKey: "show_intro")
+            defaults.setValue(false, forKey: "show_intro")
             _showHelpViewController(masterNav)
         }
         
