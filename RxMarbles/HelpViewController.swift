@@ -249,9 +249,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         if helpMode {
             _configureEventViewAnimations(experiment, page: 0, xOffset: nil)
             _configureEventViewAnimations(share, page: 1, xOffset: nil)
-            _configureEventViewAnimations(rx, page: 2, xOffset: nil)
-            _configureEventViewAnimations(about, page: 3, xOffset: nil)
-            _configureEventViewAnimations(completed, page: 4, xOffset: 135)
+            _configureEventViewAnimations(rx, page: 2, xOffset: 35)
+            _configureEventViewAnimations(about, page: 3, xOffset: 85)
+            _configureEventViewAnimations(completed, page: 4, xOffset: 125)
         } else {
             _configureEventViewAnimations(experiment, page: 0, xOffset: -37)
             _configureEventViewAnimations(share, page: 1, xOffset: 37)
