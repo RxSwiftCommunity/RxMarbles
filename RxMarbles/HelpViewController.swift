@@ -269,7 +269,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraints([x, y])
         let xAnimation = ConstraintConstantAnimation(superview: contentView, constraint: x)
         if page > 0 {
-            xAnimation[page - 1] = pageWidth * page + 25
+            xAnimation[page - 1] = pageWidth + 25
         }
         xAnimation[page] = 25
         if let offset = xOffset {
@@ -816,6 +816,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         super.scrollViewDidScroll(scrollView)
         if scrollView.contentOffset.x == pageWidth * CGFloat(numberOfPages() - 1) {
             if helpMode {
+                self.view.userInteractionEnabled = false
                 let sec = 0.5
                 let delay = sec * Double(NSEC_PER_SEC)
                 let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
