@@ -162,12 +162,30 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addConstraints([top, right, width, height])
     }
     
+    private func _configureResultTimeline() {
+        contentView.addSubview(_resultTimeline)
+        _resultTimeline.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerY = _resultTimeline.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -80)
+        
+        let centerX = _resultTimeline.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
+        
+        let width = _resultTimeline.widthAnchor.constraintEqualToConstant(300)
+        
+        view.addConstraints([centerX, centerY, width])
+    }
+    
     private func _configureButtons() {
         let experimentNextButton   = UIButton(type: .System)
         let shareNextButton  = UIButton(type: .System)
         let rxNextButton  = UIButton(type: .System)
         let aboutNextButton   = UIButton(type: .System)
         let completedButton    = UIButton(type: .System)
+        
+        shareNextButton.hidden = true
+        rxNextButton.hidden = true
+        aboutNextButton.hidden = true
+        completedButton.hidden = true
         
         _configureButton(experimentNextButton, onPage: 0, action: "experimentTransition")
         _configureButton(shareNextButton, onPage: 1, action: "shareTransition")
@@ -186,29 +204,27 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         next.titleLabel?.font = Font.code(.MonoRegular, size: 14)
         next.setTitle("onNext(   )", forState: .Normal)
         next.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        next.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(next)
-        keepView(next, onPages: [page, page + 1])
         
-        let vertical = NSLayoutConstraint(item: next, attribute: .Bottom, relatedBy: .Equal, toItem: contentView, attribute: .Bottom, multiplier: 1, constant: -20)
-        contentView.addConstraint(vertical)
+        let nextCenterX = next.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor)
+        let nextBottom = next.bottomAnchor.constraintEqualToAnchor(contentView.bottomAnchor, constant: -20)
+        contentView.addConstraints([nextCenterX, nextBottom])
         
-        let outOfScreenAnimation = ConstraintConstantAnimation(superview: contentView, constraint: vertical)
-        outOfScreenAnimation[page] = -20
-        outOfScreenAnimation[page + 1] = 100
-        animator.addAnimation(outOfScreenAnimation)
-    }
-    
-    private func _configureResultTimeline() {
-        contentView.addSubview(_resultTimeline)
-        _resultTimeline.translatesAutoresizingMaskIntoConstraints = false
+        let nextCenterXAnimation = ConstraintConstantAnimation(superview: contentView, constraint: nextCenterX)
+        if page > 0 {
+            nextCenterXAnimation[page - 1] = pageWidth
+        }
+        nextCenterXAnimation[page] = 0
+        animator.addAnimation(nextCenterXAnimation)
         
-        let centerY = _resultTimeline.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: -80)
+        let nextBottomAnimation = ConstraintConstantAnimation(superview: contentView, constraint: nextBottom)
+        nextBottomAnimation[page] = -20
+        nextBottomAnimation[page + 1] = 100
+        animator.addAnimation(nextBottomAnimation)
         
-        let centerX = _resultTimeline.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
-        
-        let width = _resultTimeline.widthAnchor.constraintEqualToConstant(300)
-        
-        view.addConstraints([centerX, centerY, width])
+        let nextShowAnimation = HideAnimation(view: next, showAt: page - 1)
+        animator.addAnimation(nextShowAnimation)
     }
     
     private func _configureEventViews() {
@@ -259,7 +275,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
         
         completed.hidden = true
-        let showCompletedAnimation = HideAnimation(view: completed, showAt: helpMode ? 4.1 : 2.1)
+        let showCompletedAnimation = HideAnimation(view: completed, showAt: helpMode ? 4.05 : 2.05)
         animator.addAnimation(showCompletedAnimation)
     }
     
@@ -271,7 +287,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         if page > 0 {
             xAnimation[page - 1] = pageWidth + 25
         }
-        xAnimation[page] = 25
+        xAnimation[page] = eventView.isCompleted ? 42 : 25
         if let offset = xOffset {
             xAnimation[page + 1] = offset
         } else {
@@ -815,8 +831,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     override func scrollViewDidScroll(scrollView: UIScrollView) {
         super.scrollViewDidScroll(scrollView)
         if scrollView.contentOffset.x == pageWidth * CGFloat(numberOfPages() - 1) {
+            view.userInteractionEnabled = false
             if helpMode {
-                self.view.userInteractionEnabled = false
+//                MARK: Delay before dismiss
                 let sec = 0.5
                 let delay = sec * Double(NSEC_PER_SEC)
                 let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
