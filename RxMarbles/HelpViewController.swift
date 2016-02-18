@@ -281,7 +281,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         animator.addAnimation(showCompletedAnimation)
     }
     
-    private func _configureEventViewAnimations(eventView: EventView, page: CGFloat, xOffset: CGFloat?) {
+    private func _configureEventViewAnimations(eventView: EventView, page: CGFloat, xOffset: CGFloat) {
         let x = eventView.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: page == 0 ? 25 : pageWidth + 25)
         let y = eventView.centerYAnchor.constraintEqualToAnchor(_resultTimeline.centerYAnchor, constant: 48)
         contentView.addConstraints([x, y])
@@ -290,11 +290,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             xAnimation[page - 1] = pageWidth + 25
         }
         xAnimation[page] = eventView.isCompleted ? 42 : 25
-        if let offset = xOffset {
-            xAnimation[page + 1] = offset
-        } else {
-            xAnimation[page + 1] = -85 + page * 65
-        }
+        xAnimation[page + 1] = xOffset
         animator.addAnimation(xAnimation)
         let yAnimation = ConstraintConstantAnimation(superview: contentView, constraint: y)
         yAnimation[page] = 48

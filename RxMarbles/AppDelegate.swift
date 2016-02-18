@@ -52,7 +52,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     private func _showHelpViewController(parent: UIViewController) {
         let helpViewController = HelpViewController()
         helpViewController.helpMode = false
-        helpViewController.modalPresentationStyle = .OverCurrentContext
+        helpViewController.modalPresentationStyle = .OverFullScreen
         parent.presentViewController(helpViewController, animated: false, completion: nil)
     }
 
