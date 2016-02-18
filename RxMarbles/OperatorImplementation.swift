@@ -333,6 +333,20 @@ extension Operator {
                 ],
                 line2: []
             )
+        case SwitchLatest:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle)
+                ],
+                line2: [
+                    next(150, "1", Color.nextRandom, .Rect),
+                    next(250, "2", Color.nextRandom, .Rect),
+                    next(350, "3", Color.nextRandom, .Rect),
+                    next(450, "4", Color.nextRandom, .Rect)
+                ])
         case Take:
             return InitialValues(
                 line1: [
@@ -372,6 +386,20 @@ extension Operator {
                 ],
                 line2: []
             )
+        case WithLatestFrom:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .Circle),
+                    next(200, "2", Color.nextRandom, .Circle),
+                    next(300, "3", Color.nextRandom, .Circle),
+                    next(400, "4", Color.nextRandom, .Circle)
+                ],
+                line2: [
+                    next(150, "1", Color.nextRandom, .Rect),
+                    next(250, "2", Color.nextRandom, .Rect),
+                    next(350, "3", Color.nextRandom, .Rect),
+                    next(450, "4", Color.nextRandom, .Rect)
+                ])
         case Zip:
             return InitialValues(
                 line1: [
