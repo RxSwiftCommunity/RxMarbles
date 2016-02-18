@@ -98,7 +98,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             yAnimation[4] = -60
             yAnimation[5] = 0
         } else {
-            yAnimation[2] = -200
+            yAnimation[2.4] = -200
             yAnimation[3] = 0
         }
         
@@ -114,7 +114,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let scaleAnimation = ScaleAnimation(view: _logoImageView)
         scaleAnimation[0] = scale
-        scaleAnimation[3] = scale
+        scaleAnimation[3.5] = scale
         scaleAnimation[4] = 1.0
         scaleAnimation[5] = scale
         animator.addAnimation(scaleAnimation)
@@ -477,7 +477,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addSubview(navBar)
         
         navBar.translatesAutoresizingMaskIntoConstraints = false
-        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(_logoImageView.bottomAnchor, constant: 30)
+        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -160)
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
         
@@ -538,7 +538,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         contentView.addSubview(navBar)
         navBar.translatesAutoresizingMaskIntoConstraints = false
-        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(_logoImageView.bottomAnchor, constant: 30)
+        let navBarTop = navBar.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -160)
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 2)
         
@@ -645,7 +645,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraintLessThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 40)
         let erikMeijerTwitterGreaterTop = erikMeijerTwitter.topAnchor.constraintGreaterThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 10)
         let erikMeijerTwitterHeight = erikMeijerTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
-        let erikMeijerTwitterCenterX = erikMeijerTwitter.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
+        let erikMeijerTwitterCenterX = erikMeijerTwitter.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -10)
         container.addConstraints([erikMeijerTwitterTop, erikMeijerTwitterGreaterTop, erikMeijerTwitterHeight, erikMeijerTwitterCenterX])
         
         erikMeijerTextView.attributedText = _erikMeijerText()
@@ -665,7 +665,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         container.addSubview(krunoslavZaherTwitter)
         let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor, constant: 35)
         let krunoslavZaherTwitterHeight = krunoslavZaherTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
-        let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor)
+        let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor, constant: 15)
         container.addConstraints([krunoslavZaherTwitterTop, krunoslavZaherTwitterHeight, krunoslavZaherTwitterCenterX])
         
         krunoslavZaherTextView.attributedText = _krunoslavZaherText()
@@ -764,9 +764,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxMarblesLabel.font = Font.text(25)
         rxMarblesLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(rxMarblesLabel)
-        let rxMarblesLabelTop = rxMarblesLabel.topAnchor.constraintEqualToAnchor(contentView.topAnchor, constant: 248)
+        let rxMarblesLabelCenterY = rxMarblesLabel.centerYAnchor.constraintEqualToAnchor(_logoImageView.centerYAnchor, constant: -12)
         let rxMarblesLabelLeading = rxMarblesLabel.leadingAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: pageWidth)
-        contentView.addConstraints([rxMarblesLabelTop, rxMarblesLabelLeading])
+        contentView.addConstraints([rxMarblesLabelCenterY, rxMarblesLabelLeading])
         
         let rxMarblesLabelLeadingAnimation = ConstraintConstantAnimation(superview: contentView, constraint: rxMarblesLabelLeading)
         rxMarblesLabelLeadingAnimation[3.5] = pageWidth
