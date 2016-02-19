@@ -199,14 +199,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         aboutNextButton.hidden = true
         completedButton.hidden = true
         
-        _configureButton(experimentNextButton, onPage: 0, action: "experimentTransition")
-        _configureButton(shareNextButton, onPage: 1, action: "shareTransition")
+        _configureButton(experimentNextButton, onPage: 0, action: "_experimentTransition")
+        _configureButton(shareNextButton, onPage: 1, action: "_shareTransition")
         if helpMode {
-            _configureButton(rxNextButton, onPage: 2, action: "rxTransition")
-            _configureButton(aboutNextButton, onPage: 3, action: "aboutTransition")
-            _configureButton(completedButton, onPage: 4, action: "completedTransition")
+            _configureButton(rxNextButton, onPage: 2, action: "_rxTransition")
+            _configureButton(aboutNextButton, onPage: 3, action: "_aboutTransition")
+            _configureButton(completedButton, onPage: 4, action: "_completedTransition")
         } else {
-            _configureButton(completedButton, onPage: 2, action: "rxTransition")
+            _configureButton(completedButton, onPage: 2, action: "_rxTransition")
         }
         
         completedButton.setTitle("onCompleted()", forState: .Normal)
