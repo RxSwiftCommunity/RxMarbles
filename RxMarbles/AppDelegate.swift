@@ -45,13 +45,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         self.window?.makeKeyAndVisible()
         
-        _showHelpWindow()
-        
-//        if defaults.objectForKey(showIntroKey)?.boolValue == true {
-//            _showHelpWindow()
-//        } else {
-//            showMainWindow()
-//        }
+        if defaults.objectForKey(showIntroKey)?.boolValue == true {
+            _showHelpWindow()
+        } else {
+            showMainWindow()
+        }
         
         defaults.setObject(false, forKey: showIntroKey)
         defaults.synchronize()
