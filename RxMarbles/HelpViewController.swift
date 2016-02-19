@@ -365,7 +365,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             if i == 0 {
                 let alphaAnimation = AlphaAnimation(view: label)
                 alphaAnimation[0] = 1.0
-                alphaAnimation[0.6] = 0.0
+                alphaAnimation[0.2] = 0.0
                 animator.addAnimation(alphaAnimation)
             }
         }
@@ -576,12 +576,29 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addSubview(iconContainer)
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         let iconContainerTop = iconContainer.topAnchor.constraintEqualToAnchor(shareLabel.bottomAnchor, constant: 20)
+        let iconContainerCenterX = iconContainer.centerXAnchor.constraintEqualToAnchor(shareLabel.centerXAnchor)
         let iconContainerWidth = iconContainer.widthAnchor.constraintEqualToConstant(300)
         let iconContainerHeight = iconContainer.heightAnchor.constraintEqualToConstant(100)
-        contentView.addConstraints([iconContainerTop, iconContainerWidth, iconContainerHeight])
-        keepView(iconContainer, onPage: 2)
+        contentView.addConstraints([iconContainerTop, iconContainerCenterX, iconContainerWidth, iconContainerHeight])
         
         _configureShareIcons(iconContainer)
+        let rotation = RotationAnimation(view: iconContainer)
+        rotation[1] = -180
+        rotation[2] = 0
+        rotation[2.4] = 180
+        animator.addAnimation(rotation)
+        
+        let iconContainerTopAnimation = ConstraintConstantAnimation(superview: contentView, constraint: iconContainerTop)
+        iconContainerTopAnimation[1] = -200
+        iconContainerTopAnimation[2] = 20
+        iconContainerTopAnimation[2.4] = -200
+        animator.addAnimation(iconContainerTopAnimation)
+        
+        let iconContainerCenterXAnimation = ConstraintConstantAnimation(superview: contentView, constraint: iconContainerCenterX)
+        iconContainerCenterXAnimation[1] = -pageWidth
+        iconContainerCenterXAnimation[2] = 0
+        iconContainerCenterXAnimation[2.4] = pageWidth * 0.5
+        animator.addAnimation(iconContainerCenterXAnimation)
     }
     
     private func _configureShareIcons(container: UIView) {
@@ -604,16 +621,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             container.addSubview($0)
             
             let scaleAnimation = ScaleAnimation(view: $0)
-            scaleAnimation[1.1] = 0.1
+            scaleAnimation[1] = 0.01
             scaleAnimation[2] = 1.0
-            scaleAnimation[2.9] = 0.1
+            scaleAnimation[2.4] = 0.01
             animator.addAnimation(scaleAnimation)
             
-            let rotateAnimation = RotationAnimation(view: $0)
-            rotateAnimation[1.1] = -3600.0
-            rotateAnimation[2] = 0.0
-            rotateAnimation[2.9] = 3600.0
-            animator.addAnimation(rotateAnimation)
+            let alphaAnimation = AlphaAnimation(view: $0)
+            alphaAnimation[1] = 0.1
+            alphaAnimation[2] = 1.0
+            alphaAnimation[2.4] = 0.1
+            animator.addAnimation(alphaAnimation)
         }
         
         for i in 0..<10 {
@@ -621,6 +638,18 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             let iconTop = icon.topAnchor.constraintEqualToAnchor(container.topAnchor, constant: i < 5 ? 0 : 50)
             let iconLeading = icon.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor, constant: 34 + 50.0 * CGFloat(i < 5 ? i : i - 5))
             container.addConstraints([iconTop, iconLeading])
+            
+            let topAnimation = ConstraintConstantAnimation(superview: container, constraint: iconTop)
+            topAnimation[1] = 25
+            topAnimation[2] = i < 5 ? 0 : 50
+            topAnimation[2.4] = 25
+            animator.addAnimation(topAnimation)
+            
+            let leadingAnimation = ConstraintConstantAnimation(superview: container, constraint: iconLeading)
+            leadingAnimation[1] = 150
+            leadingAnimation[2] = 34 + 50.0 * CGFloat(i < 5 ? i : i - 5)
+            leadingAnimation[2.4] = 150
+            animator.addAnimation(leadingAnimation)
         }
     }
     
