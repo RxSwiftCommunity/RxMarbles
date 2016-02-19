@@ -12,12 +12,6 @@ import RxCocoa
 import SafariServices
 import Device
 
-struct Names {
-    static let setEventView = "SetEventView"
-    static let addEvent = "AddEvent"
-    static let openOperatorDescription = "OpenOperatorDescription"
-}
-
 class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private var _currentActivity: NSUserActivity?
     private var _disposeBag = DisposeBag()

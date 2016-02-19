@@ -14,7 +14,6 @@ enum FontFace: String {
     case MonoItalic         = "Menlo-Italic"
     case MonoBold           = "Menlo-Bold"
     case MonoBoldItalic     = "Menlo-BoldItalic"
-    //to do: Monaco for iOS (sketch)?
     case MalayalamSangamMN  = "MalayalamSangamMN"
 }
 

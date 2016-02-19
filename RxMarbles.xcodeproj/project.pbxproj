@@ -31,6 +31,7 @@
 		0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266071C3E96C2009E28FD /* TestableObserver.swift */; };
 		0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */; };
 		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
+		0AFA29EC1C772DA300070AF2 /* Names.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFA29EB1C772DA300070AF2 /* Names.swift */; };
 		B56EA8098BC0F10D42724B4F /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */; };
 		D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25E7A4F1C41BD4800B08F70 /* Operator.swift */; };
 		D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */; };
@@ -75,6 +76,7 @@
 		0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorsTableViewController.swift; sourceTree = "<group>"; };
 		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EquatableArray.swift; sourceTree = "<group>"; };
 		0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		0AFA29EB1C772DA300070AF2 /* Names.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Names.swift; sourceTree = "<group>"; };
 		D25E7A4F1C41BD4800B08F70 /* Operator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D28A68471C629073008A8C6F /* OperatorCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorCode.swift; sourceTree = "<group>"; };
@@ -236,6 +238,7 @@
 				D2F561AC1C52B09B0041C9A3 /* Error.swift */,
 				D2F561B21C52B15B0041C9A3 /* ColoredType.swift */,
 				D2F561B41C52B2160041C9A3 /* EventShape.swift */,
+				0AFA29EB1C772DA300070AF2 /* Names.swift */,
 			);
 			name = Model;
 			sourceTree = "<group>";
@@ -407,6 +410,7 @@
 				0AC266131C3E96C2009E28FD /* TestableObservable.swift in Sources */,
 				0AC2660C1C3E96C2009E28FD /* HotObservable.swift in Sources */,
 				0AC265931C3D2C24009E28FD /* AppDelegate.swift in Sources */,
+				0AFA29EC1C772DA300070AF2 /* Names.swift in Sources */,
 				0AC2660F1C3E96C2009E28FD /* RxTests.swift in Sources */,
 				D29878861C6FC79100AA73E8 /* Font.swift in Sources */,
 				D2F561AD1C52B09B0041C9A3 /* Error.swift in Sources */,

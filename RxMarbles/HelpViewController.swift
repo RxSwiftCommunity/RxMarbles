@@ -84,7 +84,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         _logoImageView.transform = CGAffineTransformScale(_logoImageView.transform, scale, scale)
        
-        let centerY = _logoImageView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: -200)
+        let centerY = _logoImageView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor, constant: helpMode ? -200 : 0)
         
         let centerX = _logoImageView.centerXAnchor.constraintEqualToAnchor(view.centerXAnchor, constant: 0)
         
@@ -92,7 +92,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let yAnimation = ConstraintConstantAnimation(superview: view, constraint: centerY)
         
-        yAnimation[0] = -200
+        if !helpMode {
+            UIView.animateWithDuration(0.5) {
+                var center = self._logoImageView.center
+                center.y = center.y - 200
+                self._logoImageView.center = center
+            }
+        }
+        
         if helpMode {
             yAnimation[3] = -200
             yAnimation[4] = -60
@@ -635,8 +642,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         erikMeijerTextView.textAlignment = .Center
         erikMeijerTextView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(erikMeijerTextView)
-        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 10)
-        let erikMeijerTextViewGreaterTop = erikMeijerTextView.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: 0)
+        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintEqualToAnchor(erikMeijerTwitter.bottomAnchor)
+        let erikMeijerTextViewGreaterTop = erikMeijerTextView.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor)
         let erikMeijerTextViewCenterX = erikMeijerTextView.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
         container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewGreaterTop, erikMeijerTextViewCenterX])
         
@@ -657,7 +664,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         krunoslavZaherTextView.textAlignment = .Center
         krunoslavZaherTextView.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(krunoslavZaherTextView)
-        let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor, constant: 10)
+        let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor)
         let krunoslavZaherTextViewCenterX = krunoslavZaherTextView.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor)
         container.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewCenterX])
         
@@ -859,11 +866,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
                     self.close()
                 })
             } else {
-                UIView.animateWithDuration(0.3, animations: { () -> Void in
-                    self.view.alpha = 0.0
-                    }, completion: { _ in
-                        self.close()
-                })
+                NSNotificationCenter.defaultCenter().postNotificationName(Names.makeKeyMainWindow, object: nil)
             }
         }
     }

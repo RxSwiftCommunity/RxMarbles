@@ -10,11 +10,14 @@ import UIKit
 import CoreSpotlight
 import Fabric
 import Crashlytics
+import RxSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
 
     var window: UIWindow?
+    var introWindow: UIWindow?
+    private var _disposeBag = DisposeBag()
     
     private let _operatorsTableViewController = OperatorsTableViewController()
     private let _splitViewController = UISplitViewController()
@@ -32,28 +35,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         _splitViewController.viewControllers = [masterNav, detailNav]
         
         window?.rootViewController = _splitViewController
-        window?.makeKeyAndVisible()
        
         let showIntroKey = "show_intro"
         let defaults = NSUserDefaults.standardUserDefaults()
-       
-        if defaults.objectForKey(showIntroKey)?.boolValue == true {
-            _showHelpViewController(masterNav)
+        
+        if defaults.objectForKey(showIntroKey) == nil {
+            defaults.setObject(true, forKey: showIntroKey)
         }
+        
+        //remove this
+        _showHelpWindow()
+        
+//        if defaults.objectForKey(showIntroKey)?.boolValue == true {
+//            _showHelpWindow()
+//        } else {
+//            showMainWindow()
+//        }
         
         defaults.setObject(false, forKey: showIntroKey)
         defaults.synchronize()
         
         NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
         
+        let nc = NSNotificationCenter.defaultCenter()
+        nc.rx_notification(Names.makeKeyMainWindow).subscribeNext { notification in
+            self.showMainWindow()
+        }.addDisposableTo(_disposeBag)
+        
         return true
     }
     
-    private func _showHelpViewController(parent: UIViewController) {
+    private func _showHelpWindow() {
+        introWindow = UIWindow()
         let helpViewController = HelpViewController()
         helpViewController.helpMode = false
-        helpViewController.modalPresentationStyle = .OverFullScreen
-        parent.presentViewController(helpViewController, animated: false, completion: nil)
+        introWindow?.rootViewController = helpViewController
+        introWindow?.makeKeyAndVisible()
+    }
+    
+    func showMainWindow() {
+        window?.makeKeyAndVisible()
     }
 
     // MARK: UISplitViewControllerDelegate
