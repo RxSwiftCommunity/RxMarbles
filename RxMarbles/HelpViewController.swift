@@ -833,7 +833,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxMarblesLabelLeadingAnimation[5]   = pageWidth
         animator.addAnimation(rxMarblesLabelLeadingAnimation)
         
-        versionLabel.text = "v1.0.0"
+        versionLabel.text = _version()
         versionLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(versionLabel)
         let versionLabelTop = versionLabel.topAnchor.constraintEqualToAnchor(rxMarblesLabel.bottomAnchor)
@@ -976,5 +976,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
         
         view.addMotionEffect(group)
+    }
+    
+    private func _version() -> String {
+        guard let info = NSBundle.mainBundle().infoDictionary,
+            let version = info["CFBundleShortVersionString"] as? String,
+            let build = info["CFBundleVersion"] as? String
+        else { return "Unknwon" }
+        
+        return "v\(version) build \(build)"
     }
 }
