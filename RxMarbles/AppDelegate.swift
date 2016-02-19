@@ -43,11 +43,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             defaults.setObject(true, forKey: showIntroKey)
         }
         
-        if defaults.objectForKey(showIntroKey)?.boolValue == true {
-            _showHelpWindow()
-        } else {
-            showMainWindow()
-        }
+        self.window?.makeKeyAndVisible()
+        
+        _showHelpWindow()
+        
+//        if defaults.objectForKey(showIntroKey)?.boolValue == true {
+//            _showHelpWindow()
+//        } else {
+//            showMainWindow()
+//        }
         
         defaults.setObject(false, forKey: showIntroKey)
         defaults.synchronize()
@@ -55,7 +59,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
         
         let nc = NSNotificationCenter.defaultCenter()
-        nc.rx_notification(Names.makeKeyMainWindow).subscribeNext { notification in
+        nc.rx_notification(Names.hideHelpWindow).subscribeNext { notification in
             self.showMainWindow()
         }.addDisposableTo(_disposeBag)
         
@@ -71,7 +75,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func showMainWindow() {
-        window?.makeKeyAndVisible()
+        UIView.animateWithDuration(0.5) {
+            self.introWindow?.alpha = 0
+        }
     }
 
     // MARK: UISplitViewControllerDelegate

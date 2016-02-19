@@ -93,7 +93,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let yAnimation = ConstraintConstantAnimation(superview: view, constraint: centerY)
         
         if !helpMode {
-            UIView.animateWithDuration(0.5) {
+            UIView.animateWithDuration(0.3) {
                 var center = self._logoImageView.center
                 center.y = center.y - 200
                 self._logoImageView.center = center
@@ -312,28 +312,34 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureExplorePage() {
+        let operatorsCount = Operator.all.count
+        
+        let label = UILabel()
+        label.text = "\(operatorsCount) RX operators to explore"
+        label.font = Font.text(14)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(label)
+        let labelBottom = label.bottomAnchor.constraintEqualToAnchor(_resultTimeline.topAnchor, constant: -50)
+        let labelHeight = label.heightAnchor.constraintEqualToConstant(20)
+        contentView.addConstraints([labelBottom, labelHeight])
+        keepView(label, onPage: 0)
+        
         let cloudView = UIView()
         cloudView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(cloudView)
         
         let centerX = cloudView.centerXAnchor.constraintEqualToAnchor(scrollView.centerXAnchor)
-        let centerY = cloudView.centerYAnchor.constraintEqualToAnchor(scrollView.centerYAnchor)
+        let top     = cloudView.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -150)
+        let bottom  = cloudView.bottomAnchor.constraintEqualToAnchor(label.topAnchor, constant: -20)
         let width   = cloudView.widthAnchor.constraintEqualToConstant(300)
-        let height  = cloudView.heightAnchor.constraintEqualToConstant(300)
         
-        scrollView.addConstraints([centerX, centerY, width, height])
-        
-        let relativities = [
-            (vertical: (min: -10, max: 10), horizontal: (min: -10, max: 10)),
-            (vertical: (min: 10, max: -10), horizontal: (min: 10, max: -10)),
-            (vertical: (min: -10, max: -10), horizontal: (min: -10, max: -10)),
-            (vertical: (min: 10, max: 10), horizontal: (min: 10, max: 10))
-        ]
+        scrollView.addConstraints([centerX, top, bottom, width])
         
         var cloudLabels: [UILabel] = []
         for i in 0..<4 {
             let label = UILabel()
             label.translatesAutoresizingMaskIntoConstraints = false
+            label.clipsToBounds = false
             label.numberOfLines = 0
             
             cloudLabels.append(label)
@@ -346,7 +352,22 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             
             cloudView.addConstraints([labelX, labelY, lWidth, lHeight])
             
-            _addMotionEffectToView(label, relativity: relativities[i])
+            label.center.x = pageWidth * CGFloat(i % 2 > 0 ? -2 : 2)
+            UIView.animateWithDuration(0.3, animations: {
+                label.center.x = 0
+            }, completion: { _ in
+                let leftAnimation = ConstraintConstantAnimation(superview: cloudView, constraint: labelX)
+                leftAnimation[0] = 0
+                leftAnimation[1] = self.pageWidth / 2 * CGFloat(-i)
+                self.animator.addAnimation(leftAnimation)
+            })
+            
+            if i == 0 {
+                let alphaAnimation = AlphaAnimation(view: label)
+                alphaAnimation[0] = 1.0
+                alphaAnimation[0.6] = 0.0
+                animator.addAnimation(alphaAnimation)
+            }
         }
         
         let attributedStrings = _operatorsCloud()
@@ -364,7 +385,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
         let p = NSMutableParagraphStyle()
         p.lineBreakMode = .ByWordWrapping
-        p.lineSpacing = 12
+        p.lineSpacing = 10
         p.alignment = .Center
         
         let allOperators = Operator.all.shuffle()
@@ -372,8 +393,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         var i = 0
         
         for op in allOperators[0...30] {
-            let rnd = random() % 3
-            
+            let rnd = random() % 4
             let operatorString = _attributedOperatorString(op, p: p, rnd: rnd)
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
             alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
@@ -404,7 +424,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
                 }
             } else {
                 strings.forEach {
-                    $0.appendAttributedString(NSAttributedString(string: " "))
+                    $0.appendAttributedString(NSAttributedString(string: "   "))
                 }
             }
             
@@ -422,30 +442,39 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
         
+        let shadow = NSShadow()
+//        shadow.shadowBlurRadius = 1.0
+        shadow.shadowColor = UIColor.whiteColor()
+//        shadow.shadowOffset = CGSizeMake(2, 2)
+        
         switch rnd {
         case 0:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.MonoBoldItalic, size: 15),
-                NSParagraphStyleAttributeName: p
+                NSFontAttributeName: Font.code(.MonoItalic, size: 12),
+                NSParagraphStyleAttributeName: p,
+                NSShadowAttributeName : shadow
                 ])
         case 1:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.MonoBold, size: 13),
-                NSParagraphStyleAttributeName: p
+                NSFontAttributeName: Font.code(.MonoRegular, size: 13),
+                NSParagraphStyleAttributeName: p,
+                NSShadowAttributeName : shadow
                 ])
         case 2:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.MonoRegular, size: 13),
-                NSParagraphStyleAttributeName: p
+                NSFontAttributeName: Font.code(.MonoBold, size: 13),
+                NSParagraphStyleAttributeName: p,
+                NSShadowAttributeName : shadow
                 ])
         case 3:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.MonoItalic, size: 12),
-                NSParagraphStyleAttributeName: p
+                NSFontAttributeName: Font.code(.MonoBoldItalic, size: 15),
+                NSParagraphStyleAttributeName: p,
+                NSShadowAttributeName : shadow
                 ])
         default:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.MonoRegular, size: 11),
+                NSFontAttributeName: Font.code(.MonoItalic, size: 12),
                 NSParagraphStyleAttributeName: p
                 ])
         }
@@ -866,7 +895,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
                     self.close()
                 })
             } else {
-                NSNotificationCenter.defaultCenter().postNotificationName(Names.makeKeyMainWindow, object: nil)
+                NSNotificationCenter.defaultCenter().postNotificationName(Names.hideHelpWindow, object: nil)
             }
         }
     }

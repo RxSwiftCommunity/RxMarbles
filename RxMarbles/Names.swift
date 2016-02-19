@@ -10,5 +10,5 @@ struct Names {
     static let setEventView = "SetEventView"
     static let addEvent = "AddEvent"
     static let openOperatorDescription = "OpenOperatorDescription"
-    static let makeKeyMainWindow = "MakeKeyMainWindow"
+    static let hideHelpWindow = "HideHelpWindow"
 }
