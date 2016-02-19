@@ -43,14 +43,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
             defaults.setObject(true, forKey: showIntroKey)
         }
         
-        //remove this
-        _showHelpWindow()
-        
-//        if defaults.objectForKey(showIntroKey)?.boolValue == true {
-//            _showHelpWindow()
-//        } else {
-//            showMainWindow()
-//        }
+        if defaults.objectForKey(showIntroKey)?.boolValue == true {
+            _showHelpWindow()
+        } else {
+            showMainWindow()
+        }
         
         defaults.setObject(false, forKey: showIntroKey)
         defaults.synchronize()
