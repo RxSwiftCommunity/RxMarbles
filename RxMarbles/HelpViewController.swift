@@ -828,9 +828,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraints([versionLabelTop, versionLabelLeading])
 
         developedByLabel.text = "developed by"
+        developedByLabel.font = Font.text(12)
         developedByLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(developedByLabel)
-        let developedByLabelTop = developedByLabel.topAnchor.constraintLessThanOrEqualToAnchor(versionLabel.bottomAnchor, constant: 57)
+        let developedByLabelTop = developedByLabel.topAnchor.constraintLessThanOrEqualToAnchor(versionLabel.bottomAnchor, constant: 68)
         contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
 
@@ -841,7 +842,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         anjLabButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(anjLabButton)
-        let anjLabButtonTop = anjLabButton.topAnchor.constraintLessThanOrEqualToAnchor(developedByLabel.bottomAnchor, constant: 32)
+        let anjLabButtonTop = anjLabButton.topAnchor.constraintLessThanOrEqualToAnchor(developedByLabel.bottomAnchor, constant: 0)
         let anjLabButtonBottom = anjLabButton.bottomAnchor.constraintLessThanOrEqualToAnchor(_resultTimeline.topAnchor, constant: -30)
         contentView.addConstraints([anjLabButtonTop, anjLabButtonBottom])
         keepView(anjLabButton, onPage: 4)
