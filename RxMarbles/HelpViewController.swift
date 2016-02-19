@@ -104,6 +104,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         if helpMode {
             yAnimation[3] = -200
+            yAnimation[3.2] = -200
             yAnimation[4] = -60
             yAnimation[5] = 0
         } else {
