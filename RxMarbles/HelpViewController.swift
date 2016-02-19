@@ -6,6 +6,7 @@
 //  Copyright © 2016 AnjLab. All rights reserved.
 //
 
+import Foundation
 import UIKit
 import RxSwift
 import RazzleDazzle
@@ -56,6 +57,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
         view.backgroundColor = .whiteColor()
         
         _configureLogoImageView()
@@ -256,15 +258,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             contentView.addConstraints([width, height])
         }
         
-        _tapRecognizerWithAction(explore, action: "exploreTransition")
-        _tapRecognizerWithAction(experiment, action: "experimentTransition")
-        _tapRecognizerWithAction(share, action: "shareTransition")
+        _tapRecognizerWithAction(explore, action: "_exploreTransition")
+        _tapRecognizerWithAction(experiment, action: "_experimentTransition")
+        _tapRecognizerWithAction(share, action: "_shareTransition")
         if helpMode {
-            _tapRecognizerWithAction(rx, action: "rxTransition")
-            _tapRecognizerWithAction(about, action: "aboutTransition")
-            _tapRecognizerWithAction(completed, action: "completedTransition")
+            _tapRecognizerWithAction(rx, action: "_rxTransition")
+            _tapRecognizerWithAction(about, action: "_aboutTransition")
+            _tapRecognizerWithAction(completed, action: "_completedTransition")
         } else {
-            _tapRecognizerWithAction(completed, action: "rxTransition")
+            _tapRecognizerWithAction(completed, action: "_rxTransition")
         }
         
         let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -130 : -111)
@@ -576,7 +578,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addSubview(iconContainer)
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         let iconContainerTop = iconContainer.topAnchor.constraintEqualToAnchor(shareLabel.bottomAnchor, constant: 20)
-        let iconContainerCenterX = iconContainer.centerXAnchor.constraintEqualToAnchor(shareLabel.centerXAnchor)
+        let iconContainerCenterX = iconContainer.centerXAnchor.constraintEqualToAnchor(_logoImageView.centerXAnchor)
+
         let iconContainerWidth = iconContainer.widthAnchor.constraintEqualToConstant(300)
         let iconContainerHeight = iconContainer.heightAnchor.constraintEqualToConstant(100)
         contentView.addConstraints([iconContainerTop, iconContainerCenterX, iconContainerWidth, iconContainerHeight])
@@ -585,19 +588,17 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let rotation = RotationAnimation(view: iconContainer)
         rotation[1] = -180
         rotation[2] = 0
-        rotation[2.4] = 180
         animator.addAnimation(rotation)
-        
+
         let iconContainerTopAnimation = ConstraintConstantAnimation(superview: contentView, constraint: iconContainerTop)
-        iconContainerTopAnimation[1] = -200
+        iconContainerTopAnimation[1.3] = -210
         iconContainerTopAnimation[2] = 20
-        iconContainerTopAnimation[2.4] = -200
         animator.addAnimation(iconContainerTopAnimation)
         
         let iconContainerCenterXAnimation = ConstraintConstantAnimation(superview: contentView, constraint: iconContainerCenterX)
-        iconContainerCenterXAnimation[1] = -pageWidth
+        iconContainerCenterXAnimation[1] = 0
         iconContainerCenterXAnimation[2] = 0
-        iconContainerCenterXAnimation[2.4] = pageWidth * 0.5
+        iconContainerCenterXAnimation[3] = -pageWidth
         animator.addAnimation(iconContainerCenterXAnimation)
     }
     
@@ -615,41 +616,52 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             Image.evernote
         ]
         .map { $0.imageView() }
-        
+       
+        let step = (2*M_PI) / Double(shareLogos.count);
+        var i = 0
         shareLogos.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview($0)
-            
+           
+            $0.transform = CGAffineTransformScale($0.transform, 0, 0)
             let scaleAnimation = ScaleAnimation(view: $0)
-            scaleAnimation[1] = 0.01
+            scaleAnimation[1] = 0
             scaleAnimation[2] = 1.0
-            scaleAnimation[2.4] = 0.01
+            scaleAnimation[2.6] = 0.5
             animator.addAnimation(scaleAnimation)
             
-            let alphaAnimation = AlphaAnimation(view: $0)
-            alphaAnimation[1] = 0.1
-            alphaAnimation[2] = 1.0
-            alphaAnimation[2.4] = 0.1
-            animator.addAnimation(alphaAnimation)
-        }
-        
-        for i in 0..<10 {
-            let icon = shareLogos[i]
-            let iconTop = icon.topAnchor.constraintEqualToAnchor(container.topAnchor, constant: i < 5 ? 0 : 50)
-            let iconLeading = icon.leadingAnchor.constraintEqualToAnchor(container.leadingAnchor, constant: 34 + 50.0 * CGFloat(i < 5 ? i : i - 5))
-            container.addConstraints([iconTop, iconLeading])
-            
-            let topAnimation = ConstraintConstantAnimation(superview: container, constraint: iconTop)
-            topAnimation[1] = 25
-            topAnimation[2] = i < 5 ? 0 : 50
-            topAnimation[2.4] = 25
-            animator.addAnimation(topAnimation)
-            
-            let leadingAnimation = ConstraintConstantAnimation(superview: container, constraint: iconLeading)
-            leadingAnimation[1] = 150
-            leadingAnimation[2] = 34 + 50.0 * CGFloat(i < 5 ? i : i - 5)
-            leadingAnimation[2.4] = 150
-            animator.addAnimation(leadingAnimation)
+            let col = i % 5
+            let row = i / 5
+
+            let centerX = $0.centerXAnchor.constraintEqualToAnchor(
+                container.centerXAnchor,
+                constant: 0
+            )
+
+            let centerY = $0.centerYAnchor.constraintEqualToAnchor(
+                container.centerYAnchor,
+                constant: 0
+            )
+
+            container.addConstraints([centerX, centerY])
+            let angle = CGFloat(Double(i) * step)
+            let r: CGFloat = 210
+
+            let xAnimation = ConstraintConstantAnimation(superview: container, constraint: centerX)
+            xAnimation[1] = 0
+            xAnimation[1.4] = cos(angle) * r
+            xAnimation[2] = CGFloat(col - 2) * 54
+            animator.addAnimation(xAnimation)
+
+            let yAnimation = ConstraintConstantAnimation(superview: container, constraint: centerY)
+
+            yAnimation[1] = 0
+            yAnimation[1.4] = sin(angle) * r
+            yAnimation[2] = row == 0 ? -25 : 25
+
+            animator.addAnimation(yAnimation)
+
+            i += 1
         }
     }
     
@@ -873,27 +885,27 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
 //    MARK: Navigation
     
-    func exploreTransition() {
+    private dynamic func _exploreTransition() {
         _setOffsetAnimated(0)
     }
     
-    func experimentTransition() {
+    private dynamic func _experimentTransition() {
         _setOffsetAnimated(1)
     }
     
-    func shareTransition() {
+    private dynamic func _shareTransition() {
         _setOffsetAnimated(2)
     }
     
-    func rxTransition() {
+    private dynamic func _rxTransition() {
         _setOffsetAnimated(3)
     }
     
-    func aboutTransition() {
+    private dynamic func _aboutTransition() {
         _setOffsetAnimated(4)
     }
     
-    func completedTransition() {
+    private dynamic func _completedTransition() {
         _setOffsetAnimated(5)
     }
     
