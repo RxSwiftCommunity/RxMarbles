@@ -60,6 +60,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
 
         view.backgroundColor = .whiteColor()
         
+        _configurePages()
+    }
+    
+    private func _configurePages() {
         _configureLogoImageView()
         _configureReactiveXLogo()
         _configureResultTimeline()
@@ -362,15 +366,17 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             
             cloudView.addConstraints([labelX, labelY, lWidth, lHeight])
             
-            label.center.x = pageWidth * CGFloat(i % 2 > 0 ? -2 : 2)
-            UIView.animateWithDuration(0.3, animations: {
-                label.center.x = 0
-            }, completion: { _ in
-                let leftAnimation = ConstraintConstantAnimation(superview: cloudView, constraint: labelX)
-                leftAnimation[0] = 0
-                leftAnimation[1] = self.pageWidth / 2 * CGFloat(-i)
-                self.animator.addAnimation(leftAnimation)
-            })
+            if scrollView.contentOffset.x == 0 {
+                label.center.x = pageWidth * CGFloat(i % 2 > 0 ? -2 : 2)
+                UIView.animateWithDuration(0.3, animations: {
+                    label.center.x = 0
+                    }, completion: { _ in
+                        let leftAnimation = ConstraintConstantAnimation(superview: cloudView, constraint: labelX)
+                        leftAnimation[0] = 0
+                        leftAnimation[1] = self.pageWidth / 2 * CGFloat(-i)
+                        self.animator.addAnimation(leftAnimation)
+                })
+            }
             
             if i == 0 {
                 let alphaAnimation = AlphaAnimation(view: label)
@@ -935,6 +941,18 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             } else {
                 NSNotificationCenter.defaultCenter().postNotificationName(Names.hideHelpWindow, object: nil)
             }
+        }
+    }
+    
+//    MARK: UIContentContainer
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        let page = scrollView.contentOffset.x / pageWidth
+        coordinator.animateAlongsideTransition({ _ in
+            self.contentView.subviews.forEach { $0.removeFromSuperview() }
+        }) { _ in
+            self._configurePages()
+            self.scrollView.setContentOffset(CGPointMake(page * self.pageWidth, 0), animated: false)
         }
     }
     
