@@ -314,15 +314,24 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private func _configureExplorePage() {
         let operatorsCount = Operator.all.count
         
-        let label = UILabel()
-        label.text = "\(operatorsCount) RX operators to explore"
-        label.font = Font.text(14)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(label)
-        let labelBottom = label.bottomAnchor.constraintEqualToAnchor(_resultTimeline.topAnchor, constant: -50)
-        let labelHeight = label.heightAnchor.constraintEqualToConstant(20)
+        let operatorsLabelText = NSMutableAttributedString()
+        operatorsLabelText.appendAttributedString(
+            NSAttributedString(string: "\(operatorsCount)", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(14)])
+        )
+        operatorsLabelText.appendAttributedString(
+            NSAttributedString(string: " RX operators to ", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14)])
+        )
+        operatorsLabelText.appendAttributedString(
+            NSAttributedString(string: "explore", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(14)])
+        )
+        let operatorsLabel = UILabel()
+        operatorsLabel.attributedText = operatorsLabelText
+        operatorsLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(operatorsLabel)
+        let labelBottom = operatorsLabel.bottomAnchor.constraintEqualToAnchor(_resultTimeline.topAnchor, constant: -50)
+        let labelHeight = operatorsLabel.heightAnchor.constraintEqualToConstant(20)
         contentView.addConstraints([labelBottom, labelHeight])
-        keepView(label, onPage: 0)
+        keepView(operatorsLabel, onPage: 0)
         
         let cloudView = UIView()
         cloudView.translatesAutoresizingMaskIntoConstraints = false
@@ -330,7 +339,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let centerX = cloudView.centerXAnchor.constraintEqualToAnchor(scrollView.centerXAnchor)
         let top     = cloudView.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -150)
-        let bottom  = cloudView.bottomAnchor.constraintEqualToAnchor(label.topAnchor, constant: -20)
+        let bottom  = cloudView.bottomAnchor.constraintEqualToAnchor(operatorsLabel.topAnchor, constant: -20)
         let width   = cloudView.widthAnchor.constraintEqualToConstant(300)
         
         scrollView.addConstraints([centerX, top, bottom, width])
@@ -743,8 +752,19 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let alasLabelCenterX = alasLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
         container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
-        rxSwiftLabel.text = "⭐ RxSwift on"
-        rxSwiftLabel.font = Font.text(14)
+        let rxSwiftLabelText = NSMutableAttributedString(attributedString:
+            NSAttributedString(string: "⭐ ", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14)])
+        )
+        rxSwiftLabelText.appendAttributedString(
+            NSAttributedString(
+                string: "RxSwift",
+                attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(14)]
+            )
+        )
+        rxSwiftLabelText.appendAttributedString(
+            NSAttributedString(string: " on", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14)])
+        )
+        rxSwiftLabel.attributedText = rxSwiftLabelText
         rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
         rxSwiftLabel.userInteractionEnabled = true
         container.addSubview(rxSwiftLabel)
