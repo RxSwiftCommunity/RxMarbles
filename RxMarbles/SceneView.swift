@@ -90,12 +90,12 @@ class SceneView: UIView, UITextViewDelegate {
             sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             _aLabel = UILabel()
             _aLabel!.text = "a: "
-            _aLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
+            _aLabel!.font = Font.monospacedRegularText(14)
             addSubview(_aLabel!)
             if rxOperator.multiTimelines {
                 _bLabel = UILabel()
                 _bLabel!.text = "b: "
-                _bLabel!.font = UIFont.monospacedDigitSystemFontOfSize(14, weight: UIFontWeightRegular)
+                _bLabel!.font = Font.monospacedRegularText(14)
                 addSubview(_bLabel!)
                 secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             }

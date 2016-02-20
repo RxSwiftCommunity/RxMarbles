@@ -29,7 +29,7 @@ class EventView: UIView {
        
         _imageView.contentMode = .Center
         label.textColor = Color.black
-        label.font = UIFont.systemFontOfSize(11, weight: UIFontWeightUltraLight)
+        label.font = Font.ultraLightText(11)
         addSubview(_imageView)
         addSubview(label)
         

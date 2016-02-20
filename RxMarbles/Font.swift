@@ -29,4 +29,12 @@ struct Font {
     static func boldText(size: CGFloat) -> UIFont {
         return UIFont.boldSystemFontOfSize(size)
     }
+    
+    static func ultraLightText(size: CGFloat) -> UIFont {
+        return UIFont.systemFontOfSize(size, weight: UIFontWeightUltraLight)
+    }
+    
+    static func monospacedRegularText(size: CGFloat) -> UIFont {
+        return UIFont.monospacedDigitSystemFontOfSize(size, weight: UIFontWeightRegular)
+    }
 }
