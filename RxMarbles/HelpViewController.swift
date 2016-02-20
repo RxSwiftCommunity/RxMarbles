@@ -334,6 +334,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         keepView(operatorsLabel, onPage: 0)
         
         let cloudView = UIView()
+        cloudView.clipsToBounds = false
         cloudView.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(cloudView)
         
@@ -394,14 +395,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
         let p = NSMutableParagraphStyle()
         p.lineBreakMode = .ByWordWrapping
-        p.lineSpacing = 10
+        p.lineSpacing = 8
         p.alignment = .Center
         
         let allOperators = Operator.all.shuffle()
         
         var i = 0
         
-        for op in allOperators[0...30] {
+        for op in allOperators[0...20] {
             let rnd = random() % 4
             let operatorString = _attributedOperatorString(op, p: p, rnd: rnd)
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
@@ -439,7 +440,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             
             i += 1
             
-            if i == 30 {
+            if i == 20 {
                 strings.forEach {
                     $0.appendAttributedString(NSAttributedString(string: "\n"))
                 }
@@ -452,9 +453,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
         
         let shadow = NSShadow()
-//        shadow.shadowBlurRadius = 1.0
         shadow.shadowColor = UIColor.whiteColor()
-//        shadow.shadowOffset = CGSizeMake(2, 2)
         
         switch rnd {
         case 0:
