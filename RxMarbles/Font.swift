@@ -25,4 +25,8 @@ struct Font {
     static func text(size: CGFloat) -> UIFont {
         return UIFont.systemFontOfSize(size)
     }
+    
+    static func boldText(size: CGFloat) -> UIFont {
+        return UIFont.boldSystemFontOfSize(size)
+    }
 }

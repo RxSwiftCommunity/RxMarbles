@@ -321,13 +321,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let operatorsLabelText = NSMutableAttributedString()
         operatorsLabelText.appendAttributedString(
-            NSAttributedString(string: "\(operatorsCount)", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(14)])
+            NSAttributedString(string: "\(operatorsCount)", attributes: [NSFontAttributeName : Font.boldText(14)])
         )
         operatorsLabelText.appendAttributedString(
-            NSAttributedString(string: " RX operators to ", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14)])
+            NSAttributedString(string: " RX operators to ", attributes: [NSFontAttributeName : Font.text(14)])
         )
         operatorsLabelText.appendAttributedString(
-            NSAttributedString(string: "explore", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(14)])
+            NSAttributedString(string: "explore", attributes: [NSFontAttributeName : Font.boldText(14)])
         )
         let operatorsLabel = UILabel()
         operatorsLabel.attributedText = operatorsLabelText
@@ -512,7 +512,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         keepView(navBar, onPage: 1)
         
         let editLabelText = NSMutableAttributedString(string: "Add new,\nchange colors and values in ", attributes: [NSFontAttributeName : Font.text(13)])
-        editLabelText.appendAttributedString(NSAttributedString(string: "edit", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(13)]))
+        editLabelText.appendAttributedString(NSAttributedString(string: "edit", attributes: [NSFontAttributeName : Font.boldText(13)]))
         editLabelText.appendAttributedString(NSAttributedString(string: " mode", attributes: [NSFontAttributeName : Font.text(13)]))
         
         editLabel.attributedText = editLabelText
@@ -774,16 +774,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
         let rxSwiftLabelText = NSMutableAttributedString(attributedString:
-            NSAttributedString(string: "⭐ ", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14)])
+            NSAttributedString(string: "⭐ ", attributes: [NSFontAttributeName : Font.text(14)])
         )
         rxSwiftLabelText.appendAttributedString(
             NSAttributedString(
                 string: "RxSwift",
-                attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(14)]
+                attributes: [NSFontAttributeName : Font.boldText(14)]
             )
         )
         rxSwiftLabelText.appendAttributedString(
-            NSAttributedString(string: " on", attributes: [NSFontAttributeName : UIFont.systemFontOfSize(14)])
+            NSAttributedString(string: " on", attributes: [NSFontAttributeName : Font.text(14)])
         )
         rxSwiftLabel.attributedText = rxSwiftLabelText
         rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -815,7 +815,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let twitter = NSMutableAttributedString(string: "@headinthebox", attributes:
             [
                 NSLinkAttributeName             : Link.erikMeijerTwitter,
-                NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
+                NSFontAttributeName             : Font.boldText(14)
             ]
         )
         text.appendAttributedString(twitter)
@@ -823,7 +823,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes:
             [
                 NSLinkAttributeName             : Link.reactiveX,
-                NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
+                NSFontAttributeName             : Font.boldText(14)
             ]
         )
         text.appendAttributedString(reactivex)
@@ -839,7 +839,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             [
                 NSLinkAttributeName             : Link.kZaherTwitter,
                 NSForegroundColorAttributeName  : UIColor.blackColor(),
-                NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
+                NSFontAttributeName             : Font.boldText(14)
             ]
         )
         text.appendAttributedString(twitter)
@@ -848,7 +848,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             [
                 NSLinkAttributeName             : Link.rxSwift,
                 NSForegroundColorAttributeName  : UIColor.blackColor(),
-                NSFontAttributeName             : UIFont.boldSystemFontOfSize(14)
+                NSFontAttributeName             : Font.boldText(14)
             ]
         )
         text.appendAttributedString(reactivex)
