@@ -73,15 +73,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         let nc = NSNotificationCenter.defaultCenter()
         
-        nc.rx_notification(Names.setEventView).subscribeNext {
+        nc.rx_notification(NotificationName.setEventView).subscribeNext {
             [unowned self] in self._setEventView($0)
         }.addDisposableTo(_disposeBag)
         
-        nc.rx_notification(Names.addEvent).subscribeNext {
+        nc.rx_notification(NotificationName.addEvent).subscribeNext {
             [unowned self] in self._addEventToTimeline($0)
         }.addDisposableTo(_disposeBag)
         
-        nc.rx_notification(Names.openOperatorDescription).subscribeNext {
+        nc.rx_notification(NotificationName.openOperatorDescription).subscribeNext {
             [unowned self] in self._openOperatorDocumentation($0)
         }.addDisposableTo(_disposeBag)
     }

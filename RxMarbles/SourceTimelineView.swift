@@ -222,7 +222,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
     }
     
     func addEventToTimeline(sender: UIButton) {
-        NSNotificationCenter.defaultCenter().postNotificationName(Names.addEvent, object: sender)
+        NSNotificationCenter.defaultCenter().postNotificationName(NotificationName.addEvent, object: sender)
     }
     
     func rotateEventViews() {

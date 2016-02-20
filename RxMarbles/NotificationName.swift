@@ -6,7 +6,7 @@
 //  Copyright © 2016 AnjLab. All rights reserved.
 //
 
-struct Names {
+struct NotificationName {
     static let setEventView = "SetEventView"
     static let addEvent = "AddEvent"
     static let openOperatorDescription = "OpenOperatorDescription"
