@@ -597,13 +597,21 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraints([iconContainerTop, iconContainerCenterX, iconContainerWidth, iconContainerHeight])
         
         _configureShareIcons(iconContainer)
+        
+        let alpha = AlphaAnimation(view: iconContainer)
+        alpha[1] = 0.0
+        alpha[1.05] = 0.0
+        alpha[1.2] = 1.0
+        alpha[2] = 1.0
+        animator.addAnimation(alpha)
+        
         let rotation = RotationAnimation(view: iconContainer)
-        rotation[1] = -180
+        rotation[1] = -90
         rotation[2] = 0
         animator.addAnimation(rotation)
 
         let iconContainerTopAnimation = ConstraintConstantAnimation(superview: contentView, constraint: iconContainerTop)
-        iconContainerTopAnimation[1.3] = -210
+        iconContainerTopAnimation[1.4] = -210
         iconContainerTopAnimation[2] = 20
         animator.addAnimation(iconContainerTopAnimation)
         
@@ -638,6 +646,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             $0.transform = CGAffineTransformScale($0.transform, 0, 0)
             let scaleAnimation = ScaleAnimation(view: $0)
             scaleAnimation[1] = 0
+            scaleAnimation[1.1] = 0.3
+            scaleAnimation[1.5] = 1.3
             scaleAnimation[2] = 1.0
             scaleAnimation[2.6] = 0.5
             animator.addAnimation(scaleAnimation)
@@ -656,19 +666,19 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             )
 
             container.addConstraints([centerX, centerY])
-            let angle = CGFloat(Double(i) * step)
+            let angle = CGFloat(Double(i + 5) * step)
             let r: CGFloat = 210
 
             let xAnimation = ConstraintConstantAnimation(superview: container, constraint: centerX)
             xAnimation[1] = 0
-            xAnimation[1.4] = cos(angle) * r
-            xAnimation[2] = CGFloat(col - 2) * 54
+            xAnimation[1.6] = cos(angle) * r
+            xAnimation[2] = (CGFloat(col - 2) * 54) * (row == 0 ? 1 : -1)
             animator.addAnimation(xAnimation)
 
             let yAnimation = ConstraintConstantAnimation(superview: container, constraint: centerY)
 
             yAnimation[1] = 0
-            yAnimation[1.4] = sin(angle) * r
+            yAnimation[1.6] = sin(angle) * r
             yAnimation[2] = row == 0 ? -25 : 25
 
             animator.addAnimation(yAnimation)
