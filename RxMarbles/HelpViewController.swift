@@ -11,6 +11,7 @@ import UIKit
 import RxSwift
 import RazzleDazzle
 import SafariServices
+import Device
 
 struct Link {
     static let anjlab = NSURL(string: "http://anjlab.com/en")!
@@ -531,9 +532,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let upCenterX = up.centerXAnchor.constraintEqualToAnchor(navBar.centerXAnchor, constant: 110)
         contentView.addConstraints([upTop, upCenterX])
         
+        let upCenterXPosition = Device.type() == .iPad ? pageWidth + 80 : ( scrollView.bounds.height > scrollView.bounds.width ? scrollView.bounds.width : scrollView.bounds.height ) + 80
+        
         let upXAnimation = ConstraintConstantAnimation(superview: contentView, constraint: upCenterX)
         upXAnimation[1] = 110
-        upXAnimation[2] = pageWidth + 80
+        upXAnimation[2] = upCenterXPosition
         animator.addAnimation(upXAnimation)
         
         down.translatesAutoresizingMaskIntoConstraints = false
