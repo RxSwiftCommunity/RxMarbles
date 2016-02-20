@@ -199,23 +199,26 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         aboutNextButton.hidden = true
         completedButton.hidden = true
         
-        _configureButton(experimentNextButton, onPage: 0, action: "_experimentTransition")
-        _configureButton(shareNextButton, onPage: 1, action: "_shareTransition")
+        _configureButton(experimentNextButton, onPage: 0)
+        _configureButton(shareNextButton, onPage: 1)
         if helpMode {
-            _configureButton(rxNextButton, onPage: 2, action: "_rxTransition")
-            _configureButton(aboutNextButton, onPage: 3, action: "_aboutTransition")
-            _configureButton(completedButton, onPage: 4, action: "_completedTransition")
+            _configureButton(rxNextButton, onPage: 2)
+            _configureButton(aboutNextButton, onPage: 3)
+            _configureButton(completedButton, onPage: 4)
         } else {
-            _configureButton(completedButton, onPage: 2, action: "_rxTransition")
+            _configureButton(completedButton, onPage: 2)
         }
         
         completedButton.setTitle("onCompleted()", forState: .Normal)
     }
     
-    private func _configureButton(next: UIButton, onPage page: CGFloat, action: Selector) {
+    private func _configureButton(next: UIButton, onPage page: CGFloat) {
         next.titleLabel?.font = Font.code(.MonoRegular, size: 14)
         next.setTitle("onNext(   )", forState: .Normal)
-        next.addTarget(self, action: action, forControlEvents: .TouchUpInside)
+        next.rx_tap.subscribeNext { [unowned self] _ in
+            self._setOffsetAnimated(page + 1)
+        }.addDisposableTo(_disposeBag)
+        
         next.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(next)
         
@@ -259,15 +262,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             contentView.addConstraints([width, height])
         }
         
-        _tapRecognizerWithAction(explore, action: "_exploreTransition")
-        _tapRecognizerWithAction(experiment, action: "_experimentTransition")
-        _tapRecognizerWithAction(share, action: "_shareTransition")
+        _tapRecognizerWithAction(explore, page: 0)
+        _tapRecognizerWithAction(experiment, page: 1)
+        _tapRecognizerWithAction(share, page: 2)
         if helpMode {
-            _tapRecognizerWithAction(rx, action: "_rxTransition")
-            _tapRecognizerWithAction(about, action: "_aboutTransition")
-            _tapRecognizerWithAction(completed, action: "_completedTransition")
+            _tapRecognizerWithAction(rx, page: 3)
+            _tapRecognizerWithAction(about, page: 4)
+            _tapRecognizerWithAction(completed, page: 5)
         } else {
-            _tapRecognizerWithAction(completed, action: "_rxTransition")
+            _tapRecognizerWithAction(completed, page: 3)
         }
         
         let exploreX = explore.centerXAnchor.constraintEqualToAnchor(_resultTimeline.centerXAnchor, constant: helpMode ? -130 : -111)
@@ -306,12 +309,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         yAnimation[page] = 48
         yAnimation[page + 1] = 0
         animator.addAnimation(yAnimation)
-    }
-    
-    private func _tapRecognizerWithAction(eventView: EventView, action: Selector) {
-        let tap = UITapGestureRecognizer()
-        tap.addTarget(self, action: action)
-        eventView.addGestureRecognizer(tap)
     }
     
     private func _configureExplorePage() {
@@ -749,14 +746,21 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxSwiftLabel.text = "⭐ RxSwift on"
         rxSwiftLabel.font = Font.text(14)
         rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
+        rxSwiftLabel.userInteractionEnabled = true
         container.addSubview(rxSwiftLabel)
         let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraintLessThanOrEqualToAnchor(krunoslavZaherTextView.bottomAnchor, constant: 40)
         let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraintEqualToAnchor(alasLabel.topAnchor, constant: -10)
         let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -25)
         container.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX, rxSwiftLabelBottom])
         
+        let tap = UITapGestureRecognizer()
+        rxSwiftLabel.addGestureRecognizer(tap)
+        tap.rx_event
+            .subscribeNext { [unowned self] _ in self.openURLinSafariViewController(Link.rxSwift) }
+            .addDisposableTo(_disposeBag)
+        
         githubButton.setImage(Image.github, forState: .Normal)
-        githubButton.rx_tap.subscribeNext { [unowned self] _ in self._openURLinSafariViewController(Link.rxSwift) }
+        githubButton.rx_tap.subscribeNext { [unowned self] _ in self.openURLinSafariViewController(Link.rxSwift) }
             .addDisposableTo(_disposeBag)
         githubButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(githubButton)
@@ -850,7 +854,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
 
         anjLabButton.setImage(Image.anjlab, forState: .Normal)
         
-        anjLabButton.rx_tap.subscribeNext { [unowned self] _ in self._openURLinSafariViewController(Link.anjlab) }
+        anjLabButton.rx_tap.subscribeNext { [unowned self] _ in self.openURLinSafariViewController(Link.anjlab) }
         .addDisposableTo(_disposeBag)
         
         anjLabButton.translatesAutoresizingMaskIntoConstraints = false
@@ -886,41 +890,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
 //    MARK: Navigation
     
-    private dynamic func _exploreTransition() {
-        _setOffsetAnimated(0)
-    }
-    
-    private dynamic func _experimentTransition() {
-        _setOffsetAnimated(1)
-    }
-    
-    private dynamic func _shareTransition() {
-        _setOffsetAnimated(2)
-    }
-    
-    private dynamic func _rxTransition() {
-        _setOffsetAnimated(3)
-    }
-    
-    private dynamic func _aboutTransition() {
-        _setOffsetAnimated(4)
-    }
-    
-    private dynamic func _completedTransition() {
-        _setOffsetAnimated(5)
-    }
-    
     func _setOffsetAnimated(offset: CGFloat) {
         scrollView.setContentOffset(CGPointMake(self.pageWidth * offset, 0), animated: true)
     }
     
-    private func _openURLinSafariViewController(url: NSURL) {
+    func openURLinSafariViewController(url: NSURL) {
         let safariViewController = SFSafariViewController(URL: url)
         presentViewController(safariViewController, animated: true, completion: nil)
-    }
-    
-    func close() {
-        dismissViewControllerAnimated(true, completion: nil)
     }
     
 //    MARK: UIScrollViewDelegate methods
@@ -935,7 +911,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
                 let delay = sec * Double(NSEC_PER_SEC)
                 let dispatchTime = dispatch_time(DISPATCH_TIME_NOW, Int64(delay))
                 dispatch_after(dispatchTime, dispatch_get_main_queue(), {
-                    self.close()
+                    self.dismissViewControllerAnimated(true, completion: nil)
                 })
             } else {
                 NSNotificationCenter.defaultCenter().postNotificationName(Names.hideHelpWindow, object: nil)
@@ -976,6 +952,14 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         group.motionEffects = [verticalMotionEffect, horizontalMotionEffect]
         
         view.addMotionEffect(group)
+    }
+    
+    private func _tapRecognizerWithAction(eventView: UIView, page: CGFloat) {
+        let tap = UITapGestureRecognizer()
+        eventView.addGestureRecognizer(tap)
+        tap.rx_event.subscribeNext { [unowned self] _ in
+            self._setOffsetAnimated(page)
+        }.addDisposableTo(_disposeBag)
     }
     
     private func _version() -> String {
