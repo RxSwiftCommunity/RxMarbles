@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
         
         let nc = NSNotificationCenter.defaultCenter()
-        nc.rx_notification(Names.hideHelpWindow).subscribeNext { notification in
+        nc.rx_notification(NotificationName.hideHelpWindow).subscribeNext { notification in
             self.showMainWindow()
         }.addDisposableTo(_disposeBag)
         

@@ -165,7 +165,7 @@ class SceneView: UIView, UITextViewDelegate {
 //    MARK: UITextViewDelegate methods
     
     func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
-        NSNotificationCenter.defaultCenter().postNotificationName(Names.openOperatorDescription, object: nil)
+        NSNotificationCenter.defaultCenter().postNotificationName(NotificationName.openOperatorDescription, object: nil)
         return false
     }
 }
