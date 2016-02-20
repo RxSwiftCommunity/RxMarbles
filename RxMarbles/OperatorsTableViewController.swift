@@ -69,6 +69,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
+        _searchController.searchBar.searchBarStyle = .Minimal
         definesPresentationContext = true
         tableView.tableHeaderView = _searchController.searchBar
         
