@@ -511,9 +511,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
         
-        editLabel.text = "Add new,\nchange colors and values in edit mode"
+        let editLabelText = NSMutableAttributedString(string: "Add new,\nchange colors and values in ", attributes: [NSFontAttributeName : Font.text(13)])
+        editLabelText.appendAttributedString(NSAttributedString(string: "edit", attributes: [NSFontAttributeName : UIFont.boldSystemFontOfSize(13)]))
+        editLabelText.appendAttributedString(NSAttributedString(string: " mode", attributes: [NSFontAttributeName : Font.text(13)]))
+        
+        editLabel.attributedText = editLabelText
         editLabel.numberOfLines = 2
-        editLabel.font = Font.text(13)
         editLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(editLabel)
         let editLabelTop = editLabel.topAnchor.constraintEqualToAnchor(navBar.bottomAnchor, constant: 40)
