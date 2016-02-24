@@ -699,8 +699,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         container.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(container)
         keepView(container, onPage: 3)
-        let containerTop = container.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -150)
-        let containerBottom = container.bottomAnchor.constraintEqualToAnchor(_resultTimeline.topAnchor, constant: -40)
+        let containerTop = container.topAnchor.constraintEqualToAnchor(contentView.centerYAnchor, constant: -140)
+        let containerBottom = container.bottomAnchor.constraintEqualToAnchor(_resultTimeline.topAnchor, constant: -50)
         let containerWidth = container.widthAnchor.constraintEqualToConstant(300)
         contentView.addConstraints([containerTop, containerBottom, containerWidth])
         
@@ -728,8 +728,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         erikMeijerTwitter.alpha = 0.3
         erikMeijerTwitter.translatesAutoresizingMaskIntoConstraints = false
+        _scaleView(erikMeijerTwitter)
         container.addSubview(erikMeijerTwitter)
-        let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraintLessThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 40)
+        let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraintLessThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 50)
         let erikMeijerTwitterGreaterTop = erikMeijerTwitter.topAnchor.constraintGreaterThanOrEqualToAnchor(manyLikeLabel.bottomAnchor, constant: 10)
         let erikMeijerTwitterHeight = erikMeijerTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
         let erikMeijerTwitterCenterX = erikMeijerTwitter.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -10)
@@ -742,16 +743,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         erikMeijerTextView.dataDetectorTypes = UIDataDetectorTypes.Link
         erikMeijerTextView.textAlignment = .Center
         erikMeijerTextView.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(erikMeijerTextView)
-        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintEqualToAnchor(erikMeijerTwitter.bottomAnchor)
-        let erikMeijerTextViewGreaterTop = erikMeijerTextView.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTwitter.bottomAnchor)
+        container.insertSubview(erikMeijerTextView, belowSubview: erikMeijerTwitter)
+        let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraintEqualToAnchor(erikMeijerTwitter.bottomAnchor, constant: -10)
         let erikMeijerTextViewCenterX = erikMeijerTextView.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
-        container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewGreaterTop, erikMeijerTextViewCenterX])
+        container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewCenterX])
         
         krunoslavZaherTwitter.alpha = 0.3
         krunoslavZaherTwitter.translatesAutoresizingMaskIntoConstraints = false
+        _scaleView(krunoslavZaherTwitter)
         container.addSubview(krunoslavZaherTwitter)
-        let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor, constant: 35)
+        let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraintLessThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor, constant: 30)
         let krunoslavZaherTwitterGreaterTop = krunoslavZaherTwitter.topAnchor.constraintGreaterThanOrEqualToAnchor(erikMeijerTextView.bottomAnchor)
         let krunoslavZaherTwitterHeight = krunoslavZaherTwitter.heightAnchor.constraintEqualToConstant(Image.twitter.size.height)
         let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor, constant: 15)
@@ -764,15 +765,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         krunoslavZaherTextView.dataDetectorTypes = UIDataDetectorTypes.Link
         krunoslavZaherTextView.textAlignment = .Center
         krunoslavZaherTextView.translatesAutoresizingMaskIntoConstraints = false
-        container.addSubview(krunoslavZaherTextView)
-        let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor)
+        container.insertSubview(krunoslavZaherTextView, belowSubview: krunoslavZaherTwitter)
+        let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraintEqualToAnchor(krunoslavZaherTwitter.bottomAnchor, constant: -10)
         let krunoslavZaherTextViewCenterX = krunoslavZaherTextView.centerXAnchor.constraintLessThanOrEqualToAnchor(container.centerXAnchor)
         container.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewCenterX])
         
         alasLabel.text = "¯\\_(ツ)_/¯"
         alasLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(alasLabel)
-        let alasLabelBottom = alasLabel.bottomAnchor.constraintLessThanOrEqualToAnchor(container.bottomAnchor)
+        let alasLabelBottom = alasLabel.bottomAnchor.constraintEqualToAnchor(container.bottomAnchor)
         let alasLabelCenterX = alasLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor)
         container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
@@ -793,7 +794,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxSwiftLabel.userInteractionEnabled = true
         container.addSubview(rxSwiftLabel)
         let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraintLessThanOrEqualToAnchor(krunoslavZaherTextView.bottomAnchor, constant: 40)
-        let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraintEqualToAnchor(alasLabel.topAnchor, constant: -10)
+        let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraintEqualToAnchor(alasLabel.topAnchor, constant: -15)
         let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -60)
         container.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX, rxSwiftLabelBottom])
         
@@ -843,7 +844,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         )
         text.appendAttributedString(reactivex)
         let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 10
+        paragraph.lineSpacing = 8
         text.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, text.length))
         return text
     }
@@ -868,7 +869,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         )
         text.appendAttributedString(reactivex)
         let paragraph = NSMutableParagraphStyle()
-        paragraph.lineSpacing = 10
+        paragraph.lineSpacing = 8
         text.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, text.length))
         return text
     }
@@ -1037,5 +1038,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         else { return "Unknwon" }
         
         return "v\(version) build \(build)"
+    }
+    
+    private func _scaleView(view: UIView) {
+        view.transform = CGAffineTransformMakeScale(0.7, 0.7)
     }
 }
