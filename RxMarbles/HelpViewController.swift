@@ -16,6 +16,7 @@ import Device
 struct Link {
     static let anjlab = NSURL(string: "http://anjlab.com/en")!
     static let rxSwift = NSURL(string: "https://github.com/ReactiveX/RxSwift")!
+    static let rxSwiftTwitter = NSURL(string: "https://twitter.com/rxswiftlang")!
     static let erikMeijerTwitter = NSURL(string: "https://twitter.com/headinthebox")!
     static let kZaherTwitter = NSURL(string: "https://twitter.com/KrunoslavZaher")!
     static let reactiveX = NSURL(string: "http://reactivex.io")!
@@ -713,6 +714,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let rxSwiftLabel = UILabel()
         let githubButton = UIButton(type: .Custom)
+        let andTwitterLabel = UILabel()
+        let rxSwiftTwitterButton = UIButton()
         let alasLabel = UILabel()
         
         manyLikeLabel.text = "Many ❤️👍🍻👋 to"
@@ -791,14 +794,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         container.addSubview(rxSwiftLabel)
         let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraintLessThanOrEqualToAnchor(krunoslavZaherTextView.bottomAnchor, constant: 40)
         let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraintEqualToAnchor(alasLabel.topAnchor, constant: -10)
-        let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -25)
+        let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraintEqualToAnchor(container.centerXAnchor, constant: -60)
         container.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX, rxSwiftLabelBottom])
-        
-        let tap = UITapGestureRecognizer()
-        rxSwiftLabel.addGestureRecognizer(tap)
-        tap.rx_event
-            .subscribeNext { [unowned self] _ in self.openURLinSafariViewController(Link.rxSwift) }
-            .addDisposableTo(_disposeBag)
         
         githubButton.setImage(Image.github, forState: .Normal)
         githubButton.rx_tap.subscribeNext { [unowned self] _ in self.openURLinSafariViewController(Link.rxSwift) }
@@ -808,6 +805,24 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let githubButtonLeading = githubButton.leadingAnchor.constraintEqualToAnchor(rxSwiftLabel.trailingAnchor, constant: 10)
         let githubButtonCenterY = githubButton.centerYAnchor.constraintEqualToAnchor(rxSwiftLabel.centerYAnchor)
         container.addConstraints([githubButtonLeading, githubButtonCenterY])
+        
+        andTwitterLabel.text = "and"
+        andTwitterLabel.font = Font.text(14)
+        andTwitterLabel.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(andTwitterLabel)
+        let andTwitterLabelCenterY = andTwitterLabel.centerYAnchor.constraintEqualToAnchor(rxSwiftLabel.centerYAnchor)
+        let andTwitterLabelLeading = andTwitterLabel.leadingAnchor.constraintEqualToAnchor(githubButton.trailingAnchor, constant: 10)
+        container.addConstraints([andTwitterLabelCenterY, andTwitterLabelLeading])
+        
+        rxSwiftTwitterButton.setImage(Image.twitter, forState: .Normal)
+        rxSwiftTwitterButton.alpha = 0.3
+        rxSwiftTwitterButton.rx_tap.subscribeNext { [unowned self] _ in self.openURLinSafariViewController(Link.rxSwiftTwitter) }
+            .addDisposableTo(_disposeBag)
+        rxSwiftTwitterButton.translatesAutoresizingMaskIntoConstraints = false
+        container.addSubview(rxSwiftTwitterButton)
+        let rxSwiftTwitterCenterY = rxSwiftTwitterButton.centerYAnchor.constraintEqualToAnchor(andTwitterLabel.centerYAnchor)
+        let rxSwiftTwitterLeading = rxSwiftTwitterButton.leadingAnchor.constraintEqualToAnchor(andTwitterLabel.trailingAnchor, constant: 10)
+        container.addConstraints([rxSwiftTwitterCenterY, rxSwiftTwitterLeading])
     }
     
     private func _erikMeijerText() -> NSMutableAttributedString {
