@@ -979,6 +979,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
 //    MARK: UIContentContainer
     
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
         let page = scrollView.contentOffset.x / pageWidth
         coordinator.animateAlongsideTransition({ _ in
             self.contentView.subviews.forEach { $0.removeFromSuperview() }
