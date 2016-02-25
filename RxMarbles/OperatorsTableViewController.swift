@@ -173,6 +173,10 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     func focusSearch() {
         _searchController.searchBar.becomeFirstResponder()
     }
+    
+    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
+        _searchController.active = false
+    }
 }
 
 extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
