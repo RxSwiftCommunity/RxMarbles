@@ -174,6 +174,8 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         _searchController.searchBar.becomeFirstResponder()
     }
     
+//    MARK: UIContentContainer
+    
     override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
         _searchController.active = false
     }
