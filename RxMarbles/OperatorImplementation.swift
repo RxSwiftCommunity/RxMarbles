@@ -481,7 +481,7 @@ extension Operator {
             return Observable.empty()
         case Filter:
             return aO!.filter {
-                guard let a = Int($0.value) else { throw Error.CantParseStringToInt }
+                guard let a = Int($0.value) else { throw RxError.Unknown }
                 return a > 10
             }
         case FlatMap:
@@ -514,13 +514,13 @@ extension Operator {
             return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
         case Map:
             return aO!.map { h in
-                guard let a = Int(h.value) else { throw Error.CantParseStringToInt }
+                guard let a = Int(h.value) else { throw RxError.Unknown }
                 return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
             }
         case MapWithIndex:
             return aO!.mapWithIndex { element, index in
                 if index == 1 {
-                    guard let a = Int(element.value) else { throw Error.CantParseStringToInt }
+                    guard let a = Int(element.value) else { throw RxError.Unknown }
                     return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
                 } else {
                     return element
@@ -534,7 +534,7 @@ extension Operator {
             return Observable.of(ColoredType(value: "1", color: Color.nextRandom, shape: .Star))
         case Reduce:
             return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .Circle)) {
-                guard let a = Int($0.value), let b = Int($1.value) else { throw Error.CantParseStringToInt }
+                guard let a = Int($0.value), let b = Int($1.value) else { throw RxError.Unknown }
                 return ColoredType(value: String(a + b), color: $1.color, shape: $1.shape)
             }
         case RepeatElement:
@@ -545,7 +545,7 @@ extension Operator {
             return aO!.sample(bO!)
         case Scan:
             return aO!.scan(ColoredType(value: "0", color: Color.nextGreen, shape: .Star)) { acc, e in
-                guard let a = Int(e.value), let b = Int(acc.value) else { throw Error.CantParseStringToInt }
+                guard let a = Int(e.value), let b = Int(acc.value) else { throw RxError.Unknown }
                 return ColoredType(value: String(a + b), color: e.color, shape: e.shape)
             }
         case Single:
@@ -577,7 +577,7 @@ extension Operator {
         case TakeWhileWithIndex:
             return aO!.takeWhileWithIndex { e, i in i < 4 }
         case Throw:
-            return Observable.error(Error.CantParseStringToInt)
+            return Observable.error(RxError.Unknown)
         case Timeout:
             return aO!.timeout(200, scheduler: scheduler)
         case Timer:

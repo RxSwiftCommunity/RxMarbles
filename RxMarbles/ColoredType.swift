@@ -32,5 +32,5 @@ func completed(time: Int) -> RecordedType {
 }
 
 func error(time: Int) -> RecordedType {
-    return RecordedType(time: time, event: .Error(Error.CantParseStringToInt))
+    return RecordedType(time: time, event: .Error(RxError.Unknown))
 }

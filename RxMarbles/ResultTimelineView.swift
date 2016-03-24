@@ -100,9 +100,9 @@ class ResultTimelineView: TimelineView {
                     }
                 case .Error:
                     if let index = sourceEvents.indexOf({ $0.isError }) {
-                        newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
+                        newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Error(RxError.Unknown))))
                     } else {
-                        newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Error(Error.CantParseStringToInt))))
+                        newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Error(RxError.Unknown))))
                     }
                 }
             }
