@@ -1,9 +1,10 @@
 <img src="assets/Rx_Logo_M.png" alt="Miss Electric Eel 2016" width="36" height="36"> RxSwift: ReactiveX for Swift
 ======================================
 
-[![Travis CI](https://travis-ci.org/ReactiveX/RxSwift.svg?branch=master)](https://travis-ci.org/ReactiveX/RxSwift) ![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20OSX%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%28experimental%29-333333.svg) ![pod](https://img.shields.io/cocoapods/v/RxSwift.svg)
+[![Travis CI](https://travis-ci.org/ReactiveX/RxSwift.svg?branch=master)](https://travis-ci.org/ReactiveX/RxSwift) ![platforms](https://img.shields.io/badge/platforms-iOS%20%7C%20OSX%20%7C%20tvOS%20%7C%20watchOS%20%7C%20Linux%28experimental%29-333333.svg) ![pod](https://img.shields.io/cocoapods/v/RxSwift.svg) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-Xcode 7 Swift 2.1 required
+
+Xcode 7.3 Swift 2.2 required
 
 ## About Rx
 
@@ -23,12 +24,15 @@ KVO observing, async operations and streams are all unified under [abstraction o
 
 ###### ... understand
 
-* [why to use rx?](Documentation/Why.md)
-* how RxSwift works? [Getting Started Guide](Documentation/GettingStarted.md)
-* what is that `Driver`, `ControlProperty`, `Variable` ... and why do they exist? [Units](Documentation/Units.md)
+* [why use rx?](Documentation/Why.md)
+* [the basics, getting started with RxSwift](Documentation/GettingStarted.md)
+* [units](Documentation/Units.md) - what is `Driver`, `ControlProperty`, and `Variable` ... and why do they exist?
+* [testing](Documentation/UnitTests.md)
+* [tips and common errors](Documentation/Tips.md)
+* [debugging](Documentation/GettingStarted.md#debugging)
 * [the math behind Rx](Documentation/MathBehindRx.md)
-* [what are those hot/cold observable sequences?](Documentation/HotAndColdObservables.md)
-* [how does the the public API look like](Documentation/API.md)
+* [what are hot and cold observable sequences?](Documentation/HotAndColdObservables.md)
+* [what does the the public API look like?](Documentation/API.md)
 
 ###### ... install
 
@@ -58,7 +62,7 @@ KVO observing, async operations and streams are all unified under [abstraction o
 
 ###### ... see the broader vision
 
-* Does this exist for Android also? [RxJava](https://github.com/ReactiveX/RxJava)
+* Does this exist for Android? [RxJava](https://github.com/ReactiveX/RxJava)
 * Where is all of this going, what is the future, what about reactive architectures, how do you design entire apps this way? [Cycle.js](https://github.com/cyclejs/cycle-core) - this is javascript, but [RxJS](https://github.com/Reactive-Extensions/RxJS) is javascript version of Rx.
 
 ##### References
@@ -67,6 +71,7 @@ KVO observing, async operations and streams are all unified under [abstraction o
 * [Reactive Extensions GitHub (GitHub)](https://github.com/Reactive-Extensions)
 * [Erik Meijer (Wikipedia)](http://en.wikipedia.org/wiki/Erik_Meijer_%28computer_scientist%29)
 * [Expert to Expert: Brian Beckman and Erik Meijer - Inside the .NET Reactive Framework (Rx) (video)](https://youtu.be/looJcaeboBY)
+* [Reactive Programming Overview (Jafar Husain from Netflix)](https://www.youtube.com/watch?v=dwP1TNXE6fc)
 * [Subject/Observer is Dual to Iterator (paper)](http://csl.stanford.edu/~christos/pldi2010.fit/meijer.duality.pdf)
 * [Rx standard sequence operators visualized (visualization tool)](http://rxmarbles.com/)
 * [Haskell](https://www.haskell.org/)

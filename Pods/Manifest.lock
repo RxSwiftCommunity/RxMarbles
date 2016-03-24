@@ -4,9 +4,9 @@ PODS:
   - Device (0.0.7)
   - Fabric (1.6.6)
   - RazzleDazzle (0.1.2)
-  - RxCocoa (2.2.0):
-    - RxSwift (~> 2.2)
-  - RxSwift (2.2.0)
+  - RxCocoa (2.3.1):
+    - RxSwift (~> 2.3.1)
+  - RxSwift (2.3.1)
 
 DEPENDENCIES:
   - Crashlytics
@@ -21,7 +21,7 @@ SPEC CHECKSUMS:
   Device: a476728f5aee9abf5b9573e3fa8c77de030d0b12
   Fabric: 1abc1e59f11fa39ede6f690ef7309d8563e3ec59
   RazzleDazzle: f3b6ec5595e57366192010e5ca7ffbb207639cee
-  RxCocoa: 42efb7a7145a8d1d5878e94ce48a580d29e0c796
-  RxSwift: b8a749f2204c6c7a5c29b306a9c3bc11d5b87c5b
+  RxCocoa: a2baaf3462b989559a51dce59d78fbebb8fe0afa
+  RxSwift: 829b2843e9eddc77a02cb3f5117f0d55f8f646f1
 
 COCOAPODS: 0.39.0

@@ -49,28 +49,22 @@ public struct Queue<T>: SequenceType {
     }
     
     private var dequeueIndex: Int {
-        get {
-           let index = _pushNextIndex - count
-            return index < 0 ? index + _storage.count : index
-        }
+        let index = _pushNextIndex - count
+        return index < 0 ? index + _storage.count : index
     }
     
     /**
     - returns: Is queue empty.
     */
     public var isEmpty: Bool {
-        get {
-            return count == 0
-        }
+        return count == 0
     }
     
     /**
     - returns: Number of elements inside queue.
     */
     public var count: Int {
-        get {
-            return _count
-        }
+        return _count
     }
     
     /**
@@ -162,7 +156,7 @@ public struct Queue<T>: SequenceType {
         var i = dequeueIndex
         var count = _count
 
-        return anyGenerator {
+        return AnyGenerator {
             if count == 0 {
                 return nil
             }
