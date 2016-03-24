@@ -13,7 +13,7 @@ import Device
 class TimelineView: UIView {
     
     var sourceEvents = [EventView]()
-    let timeArrow = UIImageView(image: Image.timeLine)
+    let timeArrow = Image.timeLine.imageView()
     var debounce: RxTimeInterval!
     var disposeBag = DisposeBag()
     weak var sceneView: SceneView!

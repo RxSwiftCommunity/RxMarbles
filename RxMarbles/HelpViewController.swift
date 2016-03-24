@@ -14,12 +14,12 @@ import SafariServices
 import Device
 
 struct Link {
-    static let anjlab = NSURL(string: "http://anjlab.com/en")!
-    static let rxSwift = NSURL(string: "https://github.com/ReactiveX/RxSwift")!
-    static let rxSwiftTwitter = NSURL(string: "https://twitter.com/rxswiftlang")!
+    static let anjlab            = NSURL(string: "http://anjlab.com/en")!
+    static let rxSwift           = NSURL(string: "https://github.com/ReactiveX/RxSwift")!
+    static let rxSwiftTwitter    = NSURL(string: "https://twitter.com/rxswiftlang")!
     static let erikMeijerTwitter = NSURL(string: "https://twitter.com/headinthebox")!
-    static let kZaherTwitter = NSURL(string: "https://twitter.com/KrunoslavZaher")!
-    static let reactiveX = NSURL(string: "http://reactivex.io")!
+    static let kZaherTwitter     = NSURL(string: "https://twitter.com/KrunoslavZaher")!
+    static let reactiveX         = NSURL(string: "http://reactivex.io")!
 }
 
 extension CollectionType {
@@ -49,7 +49,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     var helpMode: Bool = true
     
-    let _disposeBag = DisposeBag()
+    private let _disposeBag = DisposeBag()
     
     private let _logoImageView  = Image.helpLogo.imageView()
     private let _reactiveXLogo  = Image.rxLogo.imageView()
@@ -194,11 +194,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureButtons() {
-        let experimentNextButton   = UIButton(type: .System)
-        let shareNextButton  = UIButton(type: .System)
-        let rxNextButton  = UIButton(type: .System)
-        let aboutNextButton   = UIButton(type: .System)
-        let completedButton    = UIButton(type: .System)
+        let experimentNextButton = UIButton(type: .System)
+        let shareNextButton      = UIButton(type: .System)
+        let rxNextButton         = UIButton(type: .System)
+        let aboutNextButton      = UIButton(type: .System)
+        let completedButton      = UIButton(type: .System)
         
         shareNextButton.hidden = true
         rxNextButton.hidden = true
