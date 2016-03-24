@@ -71,7 +71,7 @@ class EventView: UIView {
             }
         }
         self.recorded = recorded
-        _tapGestureRecognizer.addTarget(self, action: "setEventView")
+        _tapGestureRecognizer.addTarget(self, action: #selector(EventView.setEventView))
         _tapGestureRecognizer.enabled = false
         addGestureRecognizer(_tapGestureRecognizer)
     }

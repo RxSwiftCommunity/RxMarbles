@@ -22,7 +22,6 @@ enum Operator: String {
     case FlatMap
     case FlatMapFirst
     case FlatMapLatest
-//    case FlatMapWithIndex
     case IgnoreElements
     case Interval
     case Just

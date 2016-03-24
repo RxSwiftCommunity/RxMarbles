@@ -213,7 +213,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
         if editing {
             addTapRecognizers()
             showAddButton()
-            addButton.addTarget(self, action: "addEventToTimeline:", forControlEvents: .TouchUpInside)
+            addButton.addTarget(self, action: #selector(SourceTimelineView.addEventToTimeline(_:)), forControlEvents: .TouchUpInside)
         } else {
             removeTapRecognizers()
             hideAddButton()

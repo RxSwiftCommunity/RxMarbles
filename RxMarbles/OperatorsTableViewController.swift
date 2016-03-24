@@ -65,7 +65,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .Plain, target: self, action: "openHelpView")
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .Plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
         
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
@@ -187,7 +187,9 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         // Obtain the index path and the cell that was pressed.
         guard let indexPath = tableView.indexPathForRowAtPoint(location),
-                  cell = tableView.cellForRowAtIndexPath(indexPath) else { return nil }
+                  cell = tableView.cellForRowAtIndexPath(indexPath)
+        else { return nil }
+        
         selectedOperator = _rowAtIndexPath(indexPath)
         
         // Create a detail view controller and set its properties.

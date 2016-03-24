@@ -119,7 +119,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Button Items
     
     private func _rightButtonItems() -> [UIBarButtonItem] {
-        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: "_share:")
+        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(OperatorViewController._share(_:)))
         
         if _sceneView.rxOperator.withoutTimelines {
             return [shareButtonItem]
