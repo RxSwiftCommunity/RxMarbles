@@ -36,7 +36,7 @@ extension MutableCollectionType where Index == Int {
     mutating func shuffleInPlace() {
         // empty and single-element collections don't shuffle
         if count < 2 { return }
-        
+
         for i in 0..<count - 1 {
             let j = Int(arc4random_uniform(UInt32(count - i))) + i
             guard i != j else { continue }
