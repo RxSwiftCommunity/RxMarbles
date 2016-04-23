@@ -22,7 +22,7 @@ func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
 
 typealias RecordedType = Recorded<Event<ColoredType>>
 
-// Helper methods
+// Helper functions
 func next(time: Int, _ value: String, _ color: UIColor, _ shape: EventShape) -> RecordedType {
     return RecordedType(time: time, event: .Next(ColoredType(value: value, color: color, shape: shape)))
 }
