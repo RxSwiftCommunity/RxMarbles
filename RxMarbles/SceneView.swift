@@ -13,7 +13,7 @@ import RxCocoa
 import Device
 
 class SceneView: UIView, UITextViewDelegate {
-    var trashView = UIImageView(image: Image.rubbish.imageWithRenderingMode(.AlwaysTemplate))
+    var trashView = Image.rubbish.imageWithRenderingMode(.AlwaysTemplate).imageView()
     var rxOperator: Operator
     let rxOperatorText = UITextView()
     
