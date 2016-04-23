@@ -33,17 +33,24 @@ struct Animation {
     }
     
     static func hideWithCompletion(view: UIView, completion: (Bool) -> Void) {
-        UIView.animateWithDuration(0.3, animations: {
-            view.alpha = 0.01
-            view.transform = CGAffineTransformMakeScale(0.1, 0.1)
-            }, completion: completion)
+        UIView.animateWithDuration(
+            0.3,
+            animations: {
+                view.alpha = 0.01
+                view.transform = CGAffineTransformMakeScale(0.1, 0.1)
+            },
+            completion: completion
+        )
     }
     
     static func scale(view: UIView) {
-        UIView.animateWithDuration(0.3, animations: {
-            view.transform = CGAffineTransformMakeScale(4.0, 4.0)
-            view.transform = CGAffineTransformMakeScale(1.0, 1.0)
-        })
+        UIView.animateWithDuration(
+            0.3,
+            animations: {
+                view.transform = CGAffineTransformMakeScale(4.0, 4.0)
+                view.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            }
+        )
     }
     
     static func rotate(view:UIView, toAngle angle: CGFloat) {

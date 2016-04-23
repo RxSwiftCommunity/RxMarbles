@@ -11,45 +11,49 @@ import UIKit
 
 
 struct Image {
-    static let timeLine = UIImage(named: "timeLine")!
-    static let trash    = UIImage(named: "Trash")!
-    static let rubbish  = UIImage(named: "Rubbish")!
+    static let timeLine = _named("timeLine")
+    static let trash    = _named("Trash")
+    static let rubbish  = _named("Rubbish")
     
-    static let nextCircle   = UIImage(named: "nextCircle")!
-    static let nextTriangle = UIImage(named: "nextTriangle")!
-    static let nextRect     = UIImage(named: "nextRect")!
-    static let nextStar     = UIImage(named: "nextStar")!
+    static let nextCircle   = _named("nextCircle")
+    static let nextTriangle = _named("nextTriangle")
+    static let nextRect     = _named("nextRect")
+    static let nextStar     = _named("nextStar")
     
-    static let complete     = UIImage(named: "complete")!
-    static let error        = UIImage(named: "error")!
+    static let complete     = _named("complete")
+    static let error        = _named("error")
     
-    static let helpLogo     = UIImage(named: "helpLogo")!
-    static let rxLogo       = UIImage(named: "reactivex")!
+    static let helpLogo     = _named("helpLogo")
+    static let rxLogo       = _named("reactivex")
     
-    static let evernote     = UIImage(named: "evernote")!
-    static let facebook     = UIImage(named: "facebook")!
-    static let hanghout     = UIImage(named: "hanghout")!
-    static let mail         = UIImage(named: "mail")!
-    static let messenger    = UIImage(named: "messenger")!
-    static let skype        = UIImage(named: "skype")!
-    static let slack        = UIImage(named: "slack")!
-    static let trello       = UIImage(named: "trello")!
-    static let twitter      = UIImage(named: "twitter")!
-    static let viber        = UIImage(named: "viber")!
-    static let github       = UIImage(named: "github")!
+    static let evernote     = _named("evernote")
+    static let facebook     = _named("facebook")
+    static let hanghout     = _named("hanghout")
+    static let mail         = _named("mail")
+    static let messenger    = _named("messenger")
+    static let skype        = _named("skype")
+    static let slack        = _named("slack")
+    static let trello       = _named("trello")
+    static let twitter      = _named("twitter")
+    static let viber        = _named("viber")
+    static let github       = _named("github")
     
-    static let cross        = UIImage(named: "cross")!
+    static let cross        = _named("cross")
     
-    static let anjlab       = UIImage(named: "anjlab")!
-    static let ellipse1     = UIImage(named: "anjlab_ellipse1")!
-    static let ellipse2     = UIImage(named: "anjlab_ellipse2")!
+    static let anjlab       = _named("anjlab")
+    static let ellipse1     = _named("anjlab_ellipse1")
+    static let ellipse2     = _named("anjlab_ellipse2")
     
-    static let navBarShare          = UIImage(named: "navBarShare")!
-    static let navBarExperiment     = UIImage(named: "navBarExperiment")!
-    static let timelineExperiment   = UIImage(named: "timelineExperiment")!
+    static let navBarShare          = _named("navBarShare")
+    static let navBarExperiment     = _named("navBarExperiment")
+    static let timelineExperiment   = _named("timelineExperiment")
     
-    static let upArrow      = UIImage(named: "upArrow")!
-    static let downArrow    = UIImage(named: "downArrow")!
+    static let upArrow      = _named("upArrow")
+    static let downArrow    = _named("downArrow")
+}
+
+private func _named(name: String) -> UIImage {
+   return UIImage(named: name)!
 }
 
 extension UIImage {

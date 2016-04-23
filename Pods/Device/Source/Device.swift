@@ -30,6 +30,7 @@ public class Device {
             case "iPhone7,1":                                return Version.iPhone6Plus
             case "iPhone8,1":                                return Version.iPhone6S
             case "iPhone8,2":                                return Version.iPhone6SPlus
+            case "iPhone8,4":                                return Version.iPhoneSE
             
             /*** iPad ***/
             case "iPad1,1":                                  return Version.iPad1
@@ -42,7 +43,7 @@ public class Device {
             case "iPad4,4", "iPad4,5", "iPad4,6":            return Version.iPadMini2
             case "iPad4,7", "iPad4,8", "iPad4,9":            return Version.iPadMini3
             case "iPad5,1", "iPad5,2":                       return Version.iPadMini4
-            case "iPad6,7", "iPad6,8":                       return Version.iPadPro
+            case "iPad6,3", "iPad6,4", "iPad6,7", "iPad6,8": return Version.iPadPro
             
             /*** iPod ***/
             case "iPod1,1":                                  return Version.iPodTouch1Gen
@@ -71,7 +72,8 @@ public class Device {
             "iPhone7,2",
             "iPhone7,1",
             "iPhone8,1",
-            "iPhone8,2":                                    return Type.iPhone
+            "iPhone8,2",
+            "iPhone8,4":                                    return Type.iPhone
 
             case "iPad1,1",
             "iPad2,1", "iPad2,2", "iPad2,3", "iPad2,4",
@@ -83,7 +85,7 @@ public class Device {
             "iPad4,4", "iPad4,5", "iPad4,6",
             "iPad4,7", "iPad4,8", "iPad4,9",
             "iPad5,1", "iPad5,2",
-            "iPad6,7", "iPad6,8":                           return Type.iPad
+            "iPad6,3", "iPad6,4", "iPad6,7", "iPad6,8":     return Type.iPad
 
             case "iPod1,1",
             "iPod2,1",
@@ -118,6 +120,15 @@ public class Device {
                 return UIScreen.mainScreen().scale == 3.0 ? Size.Screen5_5Inch : Size.Screen4_7Inch
             case 736:
                 return Size.Screen5_5Inch
+            case 1024:
+                switch Device.version() {
+                    case .iPadMini,.iPadMini2,.iPadMini3,.iPadMini4:
+                        return Size.Screen7_9Inch
+                    default:
+                        return Size.Screen9_7Inch
+                }
+            case 1366:
+                return Size.Screen12_9Inch
             default:
                 return Size.UnknownSize
         }
