@@ -1,6 +1,4 @@
 # RxMarbles for iOS
 
 
-Ого, тут тоже можно редактиовать
-
-А вот так?
+[Available in AppStore](https://itunes.apple.com/us/app/rxmarbles/id1087272442?ls=1&mt=8)
