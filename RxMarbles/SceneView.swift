@@ -25,9 +25,8 @@ class SceneView: UIView, UITextViewDelegate {
         didSet {
             addSubview(sourceSequenceA)
             
-            let initial = rxOperator.initial
-            for t in initial.line1 {
-                sourceSequenceA.addEventToTimeline(t, animator: sourceSequenceA.animator)
+            rxOperator.initial.line1.forEach {
+                sourceSequenceA.addEventToTimeline($0, animator: sourceSequenceA.animator)
             }
         }
     }
@@ -35,10 +34,9 @@ class SceneView: UIView, UITextViewDelegate {
     var sourceSequenceB: SourceSequenceView! {
         didSet {
             addSubview(sourceSequenceB)
-
-            let initial = rxOperator.initial
-            for t in initial.line2 {
-                sourceSequenceB.addEventToTimeline(t, animator: sourceSequenceB.animator)
+            
+            rxOperator.initial.line2.forEach {
+                sourceSequenceB.addEventToTimeline($0, animator: sourceSequenceB.animator)
             }
         }
     }
