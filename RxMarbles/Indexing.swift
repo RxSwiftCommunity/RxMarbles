@@ -75,6 +75,7 @@ extension Operator {
 extension Operator {
     func userActivity() -> NSUserActivity {
         let activity = NSUserActivity(activityType: UserActivityType.OperatorView.rawValue)
+        
         activity.title = description
         activity.keywords = _keywords()
         activity.eligibleForSearch = true

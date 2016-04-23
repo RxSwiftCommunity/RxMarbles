@@ -21,6 +21,7 @@ struct Color {
     static let nextLightGray    = UIColor.lightGrayColor()
     
     static let black            = _hex(0x000000)
+    static let white            = _hex(0xFFFFFF)
    
     static var nextAll: [UIColor] {
         return [

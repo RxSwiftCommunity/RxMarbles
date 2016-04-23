@@ -30,27 +30,27 @@ class ResultSequenceView: SequenceView {
             .subscribeNext { [unowned self] _ in
                 self.updateEvents(
                 (
-                    first: self._sceneView.sourceSequence1?.sourceEvents,
-                    second: self._sceneView.sourceSequence2?.sourceEvents
+                    a: self._sceneView.sourceSequenceA?.sourceEvents,
+                    b: self._sceneView.sourceSequenceB?.sourceEvents
                 )
             )
         }
         .addDisposableTo(disposeBag)
     }
     
-    private func updateEvents(sourceEvents: (first: [EventView]?, second: [EventView]?)) {
+    private func updateEvents(sourceEvents: (a: [EventView]?, b: [EventView]?)) {
         let scheduler = TestScheduler(initialClock: 0)
         
         var first: TestableObservable<ColoredType>? = nil
         
-        if sourceEvents.first != nil {
-            let events = sourceEvents.first!.map({ $0.recorded })
+        if sourceEvents.a != nil {
+            let events = sourceEvents.a!.map({ $0.recorded })
             first = scheduler.createColdObservable(events)
         }
         
         var second: TestableObservable<ColoredType>? = nil
         if _operator.multiTimelines {
-            if let s = sourceEvents.second {
+            if let s = sourceEvents.b {
                 let secondEvents = s.map({ $0.recorded })
                 second = scheduler.createColdObservable(secondEvents)
             }

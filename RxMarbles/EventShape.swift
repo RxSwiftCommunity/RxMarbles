@@ -19,11 +19,11 @@ enum EventShape: String {
     
     var image: UIImage {
         switch self {
-        case Circle:   return Image.nextCircle
-        case Rect:     return Image.nextRect
-        case Triangle: return Image.nextTriangle
-        case Star:     return Image.nextStar
-        case None:     return UIImage()
+        case .Circle:   return Image.nextCircle
+        case .Rect:     return Image.nextRect
+        case .Triangle: return Image.nextTriangle
+        case .Star:     return Image.nextStar
+        case .None:     return UIImage()
         }
     }
     
@@ -39,6 +39,7 @@ enum EventShape: String {
         let rect = CGRectMake(0, 0, size, size)
         
         UIGraphicsBeginImageContextWithOptions(grayscaleImg.size, false, grayscaleImg.scale)
+        defer { UIGraphicsEndImageContext() }
         
         let c = UIGraphicsGetCurrentContext()
         
@@ -54,7 +55,6 @@ enum EventShape: String {
         
         let res = UIGraphicsGetImageFromCurrentImageContext()!
         
-        UIGraphicsEndImageContext()
         
         __coloredImages[key] = res
         return res

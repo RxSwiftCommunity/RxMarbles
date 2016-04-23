@@ -60,7 +60,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        view.backgroundColor = .whiteColor()
+        view.backgroundColor = Color.white
         
         _configurePages()
     }
@@ -447,7 +447,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
         
         let shadow = NSShadow()
-        shadow.shadowColor = UIColor.whiteColor()
+        shadow.shadowColor = Color.white
         
         switch rnd {
         case 0:

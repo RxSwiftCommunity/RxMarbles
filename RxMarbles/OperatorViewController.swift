@@ -13,8 +13,10 @@ import SafariServices
 import Device
 
 class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
-    private var _currentActivity: NSUserActivity?
+
     private var _disposeBag = DisposeBag()
+    
+    private var _currentActivity: NSUserActivity?
     
     private let _scrollView = UIScrollView()
     private let _sceneView: SceneView
@@ -47,15 +49,16 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
         navigationItem.rightBarButtonItems = _rightButtonItems()
         
+        // Prevent interactivePopGestureRecognizer if we are in navigation controller
         guard
             let requireRecognizerToFail = navigationController?
                 .interactivePopGestureRecognizer?
                 .requireGestureRecognizerToFail
         else { return }
-        
+       
         [
-            _sceneView.sourceSequence1?.longPressGestureRecorgnizer,
-            _sceneView.sourceSequence2?.longPressGestureRecorgnizer
+            _sceneView.sourceSequenceA?.longPressGestureRecorgnizer,
+            _sceneView.sourceSequenceB?.longPressGestureRecorgnizer
         ]
         .flatMap { $0 }
         .forEach(requireRecognizerToFail)
@@ -64,7 +67,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .whiteColor()
+        view.backgroundColor = Color.white
         
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)
@@ -93,9 +96,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         var height: CGFloat = 70.0
         height += _sceneView.resultSequence.bounds.height
         if !_sceneView.rxOperator.withoutTimelines {
-            height += _sceneView.sourceSequence1.bounds.height
+            height += _sceneView.sourceSequenceA.bounds.height
             if _sceneView.rxOperator.multiTimelines {
-                height += _sceneView.sourceSequence2.bounds.height
+                height += _sceneView.sourceSequenceB.bounds.height
             }
         }
         height += _sceneView.rxOperatorText.bounds.height
@@ -140,7 +143,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
         let c = UIGraphicsGetCurrentContext()!
         
-        UIColor.whiteColor().setFill()
+        Color.white.setFill()
         UIRectFill(CGRectMake(0, 0, size.width, size.height))
         
         _scrollView.layer.renderInContext(c)
@@ -184,7 +187,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
        
         let sceneView = _sceneView
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequence1) ? .Circle : .Rect)
+            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequenceA) ? .Circle : .Rect)
             sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
@@ -284,9 +287,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private func _deleteAction(eventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Delete", style: .Destructive) { _ in
-            eventView.animator!.removeAllBehaviors()
-            eventView.animator!.addBehavior(eventView.gravity!)
-            eventView.animator!.addBehavior(eventView.removeBehavior!)
+            eventView.animator?.removeAllBehaviors()
+            eventView.animator?.addBehavior(eventView.gravity!)
+            eventView.animator?.addBehavior(eventView.removeBehavior!)
         }
     }
     
