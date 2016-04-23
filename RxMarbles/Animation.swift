@@ -15,8 +15,8 @@ struct Animation {
         let animation = CAKeyframeAnimation(keyPath: "transform")
         let wobbleAngle: CGFloat = 0.3
         
-        let valLeft = NSValue(CATransform3D:CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
-        let valRight = NSValue(CATransform3D:CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
+        let valLeft  = NSValue(CATransform3D: CATransform3DMakeRotation(wobbleAngle, 0.0, 0.0, 1.0))
+        let valRight = NSValue(CATransform3D: CATransform3DMakeRotation(-wobbleAngle, 0.0, 0.0, 1.0))
         animation.values = [valLeft, valRight]
         
         animation.autoreverses = true

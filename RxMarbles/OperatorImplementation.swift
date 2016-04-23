@@ -12,12 +12,17 @@ import RxSwift
 struct InitialValues {
     let line1: [RecordedType]
     let line2: [RecordedType]
+    
+    init(line1: [RecordedType] = [], line2: [RecordedType] = []) {
+        self.line1 = line1
+        self.line2 = line2
+    }
 }
 
 extension Operator {
     var initial: InitialValues {
         switch self {
-        case Amb:
+        case .Amb:
             return InitialValues(
                 line1: [
                     next(100, "10", Color.nextRandom, .Circle),
@@ -40,7 +45,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case CatchError:
+        case .CatchError:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -48,10 +53,9 @@ extension Operator {
                     next(300, "3", Color.nextRandom, .Circle),
                     error(400),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case CatchErrorJustReturn:
+        case .CatchErrorJustReturn:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -60,10 +64,9 @@ extension Operator {
                     next(400, "4", Color.nextRandom, .Circle),
                     error(400),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case CombineLatest:
+        case .CombineLatest:
             return InitialValues(
                 line1: [
                     next( 80, "1", Color.nextRandom, .Circle),
@@ -81,7 +84,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case Concat:
+        case .Concat:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -95,7 +98,7 @@ extension Operator {
                     completed(300)
                 ]
             )
-        case DelaySubscription:
+        case .DelaySubscription:
             return InitialValues(
                 line1: [
                     next(100, "", Color.nextRandom, .Circle),
@@ -104,10 +107,9 @@ extension Operator {
                     next(400, "", Color.nextRandom, .Circle),
                     next(500, "", Color.nextRandom, .Circle),
                     completed(700)
-                ],
-                line2: []
+                ]
             )
-        case Debounce:
+        case .Debounce:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -117,10 +119,9 @@ extension Operator {
                     next(550, "5", Color.nextRandom, .Circle),
                     next(700, "6", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case DistinctUntilChanged:
+        case .DistinctUntilChanged:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -129,10 +130,9 @@ extension Operator {
                     next(500, "1", Color.nextRandom, .Circle),
                     next(600, "3", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case ElementAt:
+        case .ElementAt:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -143,15 +143,11 @@ extension Operator {
                     next(600, "6", Color.nextRandom, .Circle),
                     next(700, "7", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case Empty:
-            return InitialValues(
-                line1: [],
-                line2: []
-            )
-        case Filter:
+        case .Empty:
+            return InitialValues()
+        case .Filter:
             return InitialValues(
                 line1: [
                     next(100, "2", Color.nextRandom, .Circle),
@@ -161,10 +157,9 @@ extension Operator {
                     next(500, "60", Color.nextRandom, .Circle),
                     next(600, "1", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case FlatMap, FlatMapFirst, FlatMapLatest:
+        case .FlatMap, .FlatMapFirst, .FlatMapLatest:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -178,7 +173,7 @@ extension Operator {
                     completed(300)
                 ]
             )
-        case IgnoreElements:
+        case .IgnoreElements:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -190,10 +185,9 @@ extension Operator {
                     next(700, "7", Color.nextRandom, .Triangle),
                     next(800, "8", Color.nextRandom, .Star),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case Retry:
+        case .Retry:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -201,10 +195,9 @@ extension Operator {
                     next(300, "3", Color.nextRandom, .Circle),
                     error(400),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case Map:
+        case .Map:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -212,10 +205,9 @@ extension Operator {
                     next(400, "3", Color.nextRandom, .Circle),
                     next(500, "4", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case MapWithIndex:
+        case .MapWithIndex:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -223,10 +215,9 @@ extension Operator {
                     next(400, "3", Color.nextRandom, .Circle),
                     next(500, "4", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case Merge:
+        case .Merge:
             return InitialValues(
                 line1: [
                     next(150, "20", Color.nextRandom, .Circle),
@@ -242,12 +233,9 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case Never:
-            return InitialValues(
-                line1: [],
-                line2: []
-            )
-        case Reduce:
+        case .Never:
+            return InitialValues()
+        case .Reduce:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -256,16 +244,12 @@ extension Operator {
                     next(400, "4", Color.nextRandom, .Circle),
                     next(700, "5", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
         
-        case Just:
-            return InitialValues(
-                line1: [],
-                line2: []
-            )
-        case Sample:
+        case .Just:
+            return InitialValues()
+        case .Sample:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -283,7 +267,7 @@ extension Operator {
                     completed(800)
                 ]
             )
-        case Scan:
+        case .Scan:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -292,10 +276,9 @@ extension Operator {
                     next(400, "4", Color.nextRandom, .Circle),
                     next(600, "5", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case Skip:
+        case .Skip:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .Circle),
@@ -303,10 +286,9 @@ extension Operator {
                     next(600, "3", Color.nextRandom, .Circle),
                     next(700, "4", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case SkipUntil, TakeUntil:
+        case .SkipUntil, .TakeUntil:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -324,16 +306,15 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case StartWith:
+        case .StartWith:
             return InitialValues(
                 line1: [
                     next(300, "2", Color.nextRandom, .Circle),
-                    next(400, "3", Color.nextRandom, .Circle),
+                    next(600, "3", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case SwitchLatest:
+        case .SwitchLatest:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -347,7 +328,7 @@ extension Operator {
                     next(350, "3", Color.nextRandom, .Rect),
                     next(450, "4", Color.nextRandom, .Rect)
                 ])
-        case Take:
+        case .Take:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .Circle),
@@ -355,10 +336,9 @@ extension Operator {
                     next(700, "3", Color.nextRandom, .Circle),
                     next(800, "4", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case TakeLast:
+        case .TakeLast:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .Circle),
@@ -366,15 +346,11 @@ extension Operator {
                     next(700, "3", Color.nextRandom, .Circle),
                     next(800, "4", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case Throw:
-            return InitialValues(
-                line1: [],
-                line2: []
-            )
-        case Timeout:
+        case .Throw:
+            return InitialValues()
+        case .Timeout:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -383,10 +359,9 @@ extension Operator {
                     next(550, "4", Color.nextRandom, .Circle),
                     next(650, "5", Color.nextRandom, .Circle),
                     completed(900)
-                ],
-                line2: []
+                ]
             )
-        case WithLatestFrom:
+        case .WithLatestFrom:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -399,8 +374,9 @@ extension Operator {
                     next(250, "2", Color.nextRandom, .Rect),
                     next(350, "3", Color.nextRandom, .Rect),
                     next(450, "4", Color.nextRandom, .Rect)
-                ])
-        case Zip:
+                ]
+            )
+        case .Zip:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .Circle),
@@ -722,89 +698,89 @@ extension Operator {
 extension Operator {
     var text: String {
         switch self {
-        case Amb:
+        case .Amb:
             return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
-        case Buffer:
+        case .Buffer:
             return "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time."
-        case CatchError, CatchErrorJustReturn:
+        case .CatchError, .CatchErrorJustReturn:
             return "Recover from an onError notification by continuing the sequence without error."
-        case CombineLatest, WithLatestFrom:
+        case .CombineLatest, .WithLatestFrom:
             return "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function."
-        case Concat:
+        case .Concat:
             return "Emit the emissions from two or more Observables without interleaving them."
-        case Debounce, Throttle:
+        case .Debounce, .Throttle:
             return "Only emit an item from an Observable if a particular timespan has passed without it emitting another item."
-        case DelaySubscription:
+        case .DelaySubscription:
             return "Shift the emissions from an Observable forward in time by a particular amount."
-        case DistinctUntilChanged:
+        case .DistinctUntilChanged:
             return "Suppress duplicate items emitted by an Observable."
-        case ElementAt:
+        case .ElementAt:
             return "Emit only item n emitted by an Observable."
-        case Empty:
+        case .Empty:
             return "Create an Observable that emits no items but terminates normally."
-        case Filter:
+        case .Filter:
             return "Emit only those items from an Observable that pass a predicate test."
-        case FlatMap:
+        case .FlatMap:
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
-        case FlatMapFirst:
+        case .FlatMapFirst:
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
-        case FlatMapLatest:
+        case .FlatMapLatest:
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
-        case IgnoreElements:
+        case .IgnoreElements:
             return "Do not emit any items from an Observable but mirror its termination notification."
-        case Interval:
+        case .Interval:
             return "Create an Observable that emits a sequence of integers spaced by a given time interval."
-        case Just:
+        case .Just:
             return "Create an Observable that emits a particular item."
-        case Map:
+        case .Map:
             return "Transform the items emitted by an Observable by applying a function to each item."
-        case MapWithIndex:
+        case .MapWithIndex:
             return "Transform the items emitted by an Observable by applying a function to each item."
-        case Merge:
+        case .Merge:
             return "Combine multiple Observables into one by merging their emissions."
-        case Never:
+        case .Never:
             return "Create an Observable that emits no items and does not terminate."
-        case Of:
+        case .Of:
             return "Convert various other objects and data types into Observables."
-        case Reduce:
+        case .Reduce:
             return "Apply a function to each item emitted by an Observable, sequentially, and emit the final value."
-        case RepeatElement:
+        case .RepeatElement:
             return "Create an Observable that emits a particular item multiple times."
-        case Retry:
+        case .Retry:
             return "If a source Observable emits an error, resubscribe to it in the hopes that it will complete without error."
-        case Sample:
+        case .Sample:
             return "Emit the most recent items emitted by an Observable within periodic time intervals."
-        case Scan:
+        case .Scan:
             return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
-        case Single:
+        case .Single:
             return "Emit only the first item (or the first item that meets some condition) emitted by an Observable."
-        case Skip, SkipDuration:
+        case .Skip, SkipDuration:
             return "Suppress the first n items emitted by an Observable."
-        case SkipUntil:
+        case .SkipUntil:
             return "Discard items emitted by an Observable until a second Observable emits an item."
-        case SkipWhile, SkipWhileWithIndex:
+        case .SkipWhile, SkipWhileWithIndex:
             return "Discard items emitted by an Observable until a specified condition becomes false."
-        case StartWith:
+        case .StartWith:
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
-        case SwitchLatest:
+        case .SwitchLatest:
             return "Convert an Observable that emits Observables into a single Observable that emits the items emitted by the most-recently-emitted of those Observables."
-        case Take, TakeDuration:
+        case .Take, .TakeDuration:
             return "Emit only the first n items emitted by an Observable."
-        case TakeLast:
+        case .TakeLast:
             return "Emit only the final n items emitted by an Observable."
-        case TakeUntil:
+        case .TakeUntil:
             return "Discard any items emitted by an Observable after a second Observable emits an item or terminates."
-        case TakeWhile, TakeWhileWithIndex:
+        case .TakeWhile, .TakeWhileWithIndex:
             return "Mirror items emitted by an Observable until a specified condition becomes false."
-        case Throw:
+        case .Throw:
             return "Create an Observable that emits no items and terminates with an error."
-        case Timeout:
+        case .Timeout:
             return "Mirror the source Observable, but issue an error notification if a particular period of time elapses without any emitted items."
-        case Timer:
+        case .Timer:
             return "Create an Observable that emits a particular item after a given delay."
-        case ToArray:
+        case .ToArray:
             return "Convert an Observable into another object or data structure."
-        case Zip:
+        case .Zip:
             return "Combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function."
         }
     }

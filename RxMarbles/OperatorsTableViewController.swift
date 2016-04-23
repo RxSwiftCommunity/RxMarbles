@@ -65,16 +65,19 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Operators"
+        
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .Plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
         
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
         _searchController.searchBar.searchBarStyle = .Minimal
+       
         definesPresentationContext = true
-        tableView.tableHeaderView = _searchController.searchBar
         
-        title = "Operators"
+        tableView.tableHeaderView = _searchController.searchBar
         tableView.tableFooterView = UIView()
+        
         tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
         
         tableView
