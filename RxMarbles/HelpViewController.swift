@@ -971,7 +971,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
                     self.dismissViewControllerAnimated(true, completion: nil)
                 })
             } else {
-                NSNotificationCenter.defaultCenter().postNotificationName(NotificationName.hideHelpWindow, object: nil)
+                Notifications.hideHelpWindow.post()
             }
         }
     }

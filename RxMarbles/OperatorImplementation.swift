@@ -424,76 +424,76 @@ extension Operator {
 extension Operator {
     func map(scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
-        case Amb:
+        case .Amb:
             return aO!.amb(bO!)
-        case Buffer:
+        case .Buffer:
             return aO!
                 .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
                 .map {
                     let values = $0.map {$0.value } .joinWithSeparator(", ")
                     return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
                 }
-        case CatchError:
+        case .CatchError:
             return aO!.catchError { error in
                 return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
             }
-        case CatchErrorJustReturn:
+        case .CatchErrorJustReturn:
             return aO!.catchErrorJustReturn(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
-        case CombineLatest:
+        case .CombineLatest:
             return Observable.combineLatest(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
             }
-        case Concat:
+        case .Concat:
             return [aO!, bO!].concat()
-        case Debounce, Throttle:
+        case .Debounce, .Throttle:
             return aO!.debounce(100, scheduler: scheduler)
-        case DelaySubscription:
+        case .DelaySubscription:
             return aO!.delaySubscription(150, scheduler: scheduler)
-        case DistinctUntilChanged:
+        case .DistinctUntilChanged:
             return aO!.distinctUntilChanged()
-        case ElementAt:
+        case .ElementAt:
             return aO!.elementAt(2)
-        case Empty:
+        case .Empty:
             return Observable.empty()
-        case Filter:
+        case .Filter:
             return aO!.filter {
                 guard let a = Int($0.value) else { throw RxError.Unknown }
                 return a > 10
             }
-        case FlatMap:
+        case .FlatMap:
             return aO!.flatMap { e in
                 bO!.map { event in
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-        case FlatMapFirst:
+        case .FlatMapFirst:
             return aO!.flatMapFirst { e in
                 bO!.map { event in
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-        case FlatMapLatest:
+        case .FlatMapLatest:
             return aO!.flatMapLatest { e in
                 bO!.map { event in
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-//        case FlatMapWithIndex:
+//        case .FlatMapWithIndex:
 //            return aO!.flatMapWithIndex { e, i  in
 //                
 //            }
-        case IgnoreElements:
+        case .IgnoreElements:
             return aO!.ignoreElements()
-        case Interval:
+        case .Interval:
             return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .Circle) }
-        case Just:
+        case .Just:
             return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
-        case Map:
+        case .Map:
             return aO!.map { h in
                 guard let a = Int(h.value) else { throw RxError.Unknown }
                 return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
             }
-        case MapWithIndex:
+        case .MapWithIndex:
             return aO!.mapWithIndex { element, index in
                 if index == 1 {
                     guard let a = Int(element.value) else { throw RxError.Unknown }
@@ -502,72 +502,72 @@ extension Operator {
                     return element
                 }
             }
-        case Merge:
+        case .Merge:
             return Observable.of(aO!, bO!).merge()
-        case Never:
+        case .Never:
             return Observable.never()
-        case Of:
+        case .Of:
             return Observable.of(ColoredType(value: "1", color: Color.nextRandom, shape: .Star))
-        case Reduce:
+        case .Reduce:
             return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .Circle)) {
                 guard let a = Int($0.value), let b = Int($1.value) else { throw RxError.Unknown }
                 return ColoredType(value: String(a + b), color: $1.color, shape: $1.shape)
             }
-        case RepeatElement:
+        case .RepeatElement:
             return Observable<Int64>.interval(150, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextGreen, shape: .Star)}
-        case Retry:
+        case .Retry:
             return aO!.retry(2)
-        case Sample:
+        case .Sample:
             return aO!.sample(bO!)
-        case Scan:
+        case .Scan:
             return aO!.scan(ColoredType(value: "0", color: Color.nextGreen, shape: .Star)) { acc, e in
                 guard let a = Int(e.value), let b = Int(acc.value) else { throw RxError.Unknown }
                 return ColoredType(value: String(a + b), color: e.color, shape: e.shape)
             }
-        case Single:
+        case .Single:
             return aO!.single()
-        case Skip:
+        case .Skip:
             return aO!.skip(2)
-        case SkipDuration:
+        case .SkipDuration:
             return aO!.skip(400, scheduler: scheduler)
-        case SkipUntil:
+        case .SkipUntil:
             return aO!.skipUntil(bO!)
-        case SkipWhile:
+        case .SkipWhile:
             return aO!.skipWhile { e in Int(e.value) < 4 }
-        case SkipWhileWithIndex:
+        case .SkipWhileWithIndex:
             return aO!.skipWhileWithIndex { e, i in i < 4 }
-        case StartWith:
+        case .StartWith:
             return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .Circle))
-        case SwitchLatest:
+        case .SwitchLatest:
             return Observable.of(aO!, bO!).switchLatest()
-        case Take:
+        case .Take:
             return aO!.take(2)
-        case TakeDuration:
+        case .TakeDuration:
             return aO!.take(400, scheduler: scheduler)
-        case TakeLast:
+        case .TakeLast:
             return aO!.takeLast(2)
-        case TakeUntil:
+        case .TakeUntil:
             return aO!.takeUntil(bO!)
-        case TakeWhile:
+        case .TakeWhile:
             return aO!.takeWhile { e in Int(e.value) < 4 }
-        case TakeWhileWithIndex:
+        case .TakeWhileWithIndex:
             return aO!.takeWhileWithIndex { e, i in i < 4 }
-        case Throw:
+        case .Throw:
             return Observable.error(RxError.Unknown)
-        case Timeout:
+        case .Timeout:
             return aO!.timeout(200, scheduler: scheduler)
-        case Timer:
+        case .Timer:
             return Observable<Int64>.timer(500, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .Circle) }
-        case ToArray:
+        case .ToArray:
             return aO!
                 .toArray()
                 .map {
                 let values = $0.map {$0.value } .joinWithSeparator(", ")
                 return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Rect)
             }
-        case WithLatestFrom:
+        case .WithLatestFrom:
             return aO!.withLatestFrom(bO!)
-        case Zip:
+        case .Zip:
             return Observable.zip(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
             }

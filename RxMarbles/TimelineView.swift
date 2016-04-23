@@ -18,6 +18,7 @@ class TimelineView: UIView {
     var disposeBag = DisposeBag()
     weak var sceneView: SceneView!
     var subject = PublishSubject<Void>()
+    
     var editing: Bool = false {
         didSet {
             setEditing()
@@ -53,9 +54,7 @@ class TimelineView: UIView {
     }
     
     func maxEventTime() -> Int {
-        return sourceEvents
-            .map({ $0.recorded.time })
-            .maxElement() ?? 0
+        return sourceEvents.map { $0.recorded.time }.maxElement() ?? 0
     }
     
     func xPositionByTime(time: Int) -> CGFloat {

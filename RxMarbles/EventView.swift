@@ -131,7 +131,7 @@ class EventView: UIView {
     }
     
     func setEventView() {
-        NSNotificationCenter.defaultCenter().postNotificationName(NotificationName.setEventView, object: self, userInfo: nil)
+        Notifications.setEventView.post(object: self)
     }
     
     func setGhostColorOnDeleteZone(onDeleteZone: Bool) {
