@@ -35,7 +35,8 @@ enum EventShape: String {
         }
         
         let grayscaleImg = image
-        let rect = CGRectMake(0, 0, 16, 16)
+        let size = 16 as CGFloat
+        let rect = CGRectMake(0, 0, size, size)
         
         UIGraphicsBeginImageContextWithOptions(grayscaleImg.size, false, grayscaleImg.scale)
         
@@ -44,7 +45,7 @@ enum EventShape: String {
         grayscaleImg.drawInRect(rect, blendMode: .Normal, alpha: 1.0)
         
         CGContextScaleCTM(c, 1.0, -1.0);
-        let r = CGRectMake(0, -16, 16, 16)
+        let r = CGRectMake(0, -size, size, size)
         CGContextClipToMask(c, r, grayscaleImg.CGImage)
     
         color.setFill()

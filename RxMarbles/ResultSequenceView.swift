@@ -30,8 +30,8 @@ class ResultSequenceView: SequenceView {
             .subscribeNext { [unowned self] _ in
                 self.updateEvents(
                 (
-                    first: self._sceneView.sourceSequence?.sourceEvents,
-                    second: self._sceneView.secondSourceSequence?.sourceEvents
+                    first: self._sceneView.sourceSequence1?.sourceEvents,
+                    second: self._sceneView.sourceSequence2?.sourceEvents
                 )
             )
         }
