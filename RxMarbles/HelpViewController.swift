@@ -417,41 +417,27 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
             switch rnd {
             case 0:
-                strings.forEach {
-                    $0.appendAttributedString(strings.indexOf($0) == 0 ? operatorString : alphaString)
-                }
+                strings.forEach { $0.appendAttributedString(strings.indexOf($0) == 0 ? operatorString : alphaString) }
             case 1:
-                strings.forEach {
-                    $0.appendAttributedString(strings.indexOf($0) == 1 ? operatorString : alphaString)
-                }
+                strings.forEach { $0.appendAttributedString(strings.indexOf($0) == 1 ? operatorString : alphaString) }
             case 2:
-                strings.forEach {
-                    $0.appendAttributedString(strings.indexOf($0) == 2 ? operatorString : alphaString)
-                }
+                strings.forEach { $0.appendAttributedString(strings.indexOf($0) == 2 ? operatorString : alphaString) }
             case 3:
-                strings.forEach {
-                    $0.appendAttributedString(strings.indexOf($0) == 3 ? operatorString : alphaString)
-                }
+                strings.forEach { $0.appendAttributedString(strings.indexOf($0) == 3 ? operatorString : alphaString) }
             default:
                 break
             }
             
             if i == 0 {
-                strings.forEach {
-                    $0.appendAttributedString(NSAttributedString(string: "\n"))
-                }
+                strings.forEach { $0.appendAttributedString(NSAttributedString(string: "\n")) }
             } else {
-                strings.forEach {
-                    $0.appendAttributedString(NSAttributedString(string: "   "))
-                }
+                strings.forEach { $0.appendAttributedString(NSAttributedString(string: "   ")) }
             }
             
             i += 1
             
             if i == 20 {
-                strings.forEach {
-                    $0.appendAttributedString(NSAttributedString(string: "\n"))
-                }
+                strings.forEach { $0.appendAttributedString(NSAttributedString(string: "\n")) }
             }
         }
         
