@@ -21,39 +21,39 @@ class SceneView: UIView, UITextViewDelegate {
     private var _aLabel: UILabel?
     private var _bLabel: UILabel?
     
-    var sourceTimeline: SourceTimelineView! {
+    var sourceSequence: SourceSequenceView! {
         didSet {
-            addSubview(sourceTimeline)
+            addSubview(sourceSequence)
             
             let initial = rxOperator.initial
             for t in initial.line1 {
-                sourceTimeline.addEventToTimeline(t, animator: sourceTimeline.animator)
+                sourceSequence.addEventToTimeline(t, animator: sourceSequence.animator)
             }
         }
     }
     
-    var secondSourceTimeline: SourceTimelineView! {
+    var secondSourceSequence: SourceSequenceView! {
         didSet {
-            addSubview(secondSourceTimeline)
+            addSubview(secondSourceSequence)
 
             let initial = rxOperator.initial
             for t in initial.line2 {
-                secondSourceTimeline.addEventToTimeline(t, animator: secondSourceTimeline.animator)
+                secondSourceSequence.addEventToTimeline(t, animator: secondSourceSequence.animator)
             }
         }
     }
     
-    var resultTimeline: ResultTimelineView! {
+    var resultSequence: ResultSequenceView! {
         didSet {
-            addSubview(resultTimeline)
+            addSubview(resultSequence)
         }
     }
     
     var editing: Bool = false {
         didSet {
-            resultTimeline.editing = editing
-            sourceTimeline?.editing = editing
-            secondSourceTimeline?.editing = editing
+            resultSequence.editing = editing
+            sourceSequence?.editing = editing
+            secondSourceSequence?.editing = editing
             dimRxOperatorText(editing)
             setNeedsLayout()
         }
@@ -85,9 +85,9 @@ class SceneView: UIView, UITextViewDelegate {
         rxOperatorText.dataDetectorTypes = UIDataDetectorTypes.Link
         rxOperatorText.attributedText = rxOperator.linkText
         
-        resultTimeline = ResultTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
+        resultSequence = ResultSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
-            sourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+            sourceSequence = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             _aLabel = UILabel()
             _aLabel!.text = "a: "
             _aLabel!.font = Font.monospacedRegularText(14)
@@ -97,7 +97,7 @@ class SceneView: UIView, UITextViewDelegate {
                 _bLabel!.text = "b: "
                 _bLabel!.font = Font.monospacedRegularText(14)
                 addSubview(_bLabel!)
-                secondSourceTimeline = SourceTimelineView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+                secondSourceSequence = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             }
         }
     }
@@ -109,27 +109,27 @@ class SceneView: UIView, UITextViewDelegate {
         
         _rxOperatorLabel.frame = CGRectMake(0, 20, bounds.width, labelHeight)
         if !rxOperator.withoutTimelines {
-            sourceTimeline.frame = CGRectMake(20, 20, bounds.width - 20, height)
-            _rxOperatorLabel.frame.origin.y = sourceTimeline.frame.origin.y + height
-            _aLabel?.frame = CGRectMake(0, sourceTimeline.frame.origin.y, 20, height)
+            sourceSequence.frame = CGRectMake(20, 20, bounds.width - 20, height)
+            _rxOperatorLabel.frame.origin.y = sourceSequence.frame.origin.y + height
+            _aLabel?.frame = CGRectMake(0, sourceSequence.frame.origin.y, 20, height)
             
             if rxOperator.multiTimelines {
-                secondSourceTimeline.frame = CGRectMake(20, sourceTimeline.frame.origin.y + sourceTimeline.frame.height, bounds.width - 20.0, height)
-                _bLabel?.frame = CGRectMake(0, secondSourceTimeline.frame.origin.y, 20, height)
-                _rxOperatorLabel.frame.origin.y = secondSourceTimeline.frame.origin.y + height
+                secondSourceSequence.frame = CGRectMake(20, sourceSequence.frame.origin.y + sourceSequence.frame.height, bounds.width - 20.0, height)
+                _bLabel?.frame = CGRectMake(0, secondSourceSequence.frame.origin.y, 20, height)
+                _rxOperatorLabel.frame.origin.y = secondSourceSequence.frame.origin.y + height
             }
         }
-        resultTimeline.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight + 10, bounds.width - 20, height)
+        resultSequence.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight + 10, bounds.width - 20, height)
         
         let size = rxOperatorText.text.boundingRectWithSize(CGSizeMake(bounds.width, 1000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: rxOperatorText.font!], context: nil).size
-        rxOperatorText.frame = CGRectMake(0, resultTimeline.frame.origin.y + resultTimeline.frame.height + 10, bounds.width, size.height + 40)
+        rxOperatorText.frame = CGRectMake(0, resultSequence.frame.origin.y + resultSequence.frame.height + 10, bounds.width, size.height + 40)
         
         if UIApplication.sharedApplication().statusBarOrientation.isLandscape && Device.isSmallerThanScreenSize(.Screen4_7Inch) && Device.size() != .UnknownSize {
             trashView.center = CGPointMake(rxOperatorText.center.x, UIScreen.mainScreen().bounds.height - 60)
         } else {
             trashView.center = rxOperatorText.center
         }
-        resultTimeline.subject.onNext()
+        resultSequence.subject.onNext()
     }
     
     func showTrashView() {

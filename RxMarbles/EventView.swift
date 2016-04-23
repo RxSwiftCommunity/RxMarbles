@@ -11,7 +11,7 @@ import RxSwift
 
 class EventView: UIView {
     weak var animator: UIDynamicAnimator? = nil
-    weak var timeLine: SourceTimelineView?
+    weak var sequenceView: SourceSequenceView?
     
     var recorded = RecordedType(time: 0, event: .Completed)
     
@@ -59,13 +59,13 @@ class EventView: UIView {
         gravity = UIGravityBehavior(items: [self])
         removeBehavior = UIDynamicItemBehavior(items: [self])
         removeBehavior?.action = {
-            let timeline = self.timeLine
-            if let scene = timeline?.sceneView {
-                if let index = timeline?.sourceEvents.indexOf(self) {
+            let sequenceView = self.sequenceView
+            if let scene = sequenceView?.sceneView {
+                if let index = sequenceView?.sourceEvents.indexOf(self) {
                     if CGRectIntersectsRect(scene.bounds, self.frame) == false {
                         self.removeFromSuperview()
-                        timeline?.sourceEvents.removeAtIndex(index)
-                        scene.resultTimeline.subject.onNext()
+                        sequenceView?.sourceEvents.removeAtIndex(index)
+                        scene.resultSequence.subject.onNext()
                     }
                 }
             }
@@ -82,15 +82,15 @@ class EventView: UIView {
         label.center = CGPointMake(bounds.width / 2.0, bounds.height * 0.15)
     }
     
-    func use(animator: UIDynamicAnimator?, timeLine: SourceTimelineView?) {
+    func use(animator: UIDynamicAnimator?, sequence: SourceSequenceView?) {
         if let snap = snap {
             animator?.removeBehavior(snap)
         }
         self.animator = animator
-        self.timeLine = timeLine
-        if let timeLine = timeLine {
-            let x = timeLine.xPositionByTime(recorded.time)
-            center = CGPointMake(x, timeLine.bounds.height / 2.0)
+        self.sequenceView = sequence
+        if let sequence = sequence {
+            let x = sequence.xPositionByTime(recorded.time)
+            center = CGPointMake(x, sequence.bounds.height / 2.0)
             snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(x, center.y))
         }
         

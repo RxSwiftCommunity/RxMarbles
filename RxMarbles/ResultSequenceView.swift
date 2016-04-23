@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 import Device
 
-class ResultTimelineView: TimelineView {
+class ResultSequenceView: SequenceView {
     
     private var _operator: Operator!
     private weak var _sceneView: SceneView!
@@ -30,8 +30,8 @@ class ResultTimelineView: TimelineView {
             .subscribeNext { [unowned self] _ in
                 self.updateEvents(
                 (
-                    first: self._sceneView.sourceTimeline?.sourceEvents,
-                    second: self._sceneView.secondSourceTimeline?.sourceEvents
+                    first: self._sceneView.sourceSequence?.sourceEvents,
+                    second: self._sceneView.secondSourceSequence?.sourceEvents
                 )
             )
         }

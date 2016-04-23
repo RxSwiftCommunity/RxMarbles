@@ -54,8 +54,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         else { return }
         
         [
-            _sceneView.sourceTimeline?.longPressGestureRecorgnizer,
-            _sceneView.secondSourceTimeline?.longPressGestureRecorgnizer
+            _sceneView.sourceSequence?.longPressGestureRecorgnizer,
+            _sceneView.secondSourceSequence?.longPressGestureRecorgnizer
         ]
         .flatMap { $0 }
         .forEach(requireRecognizerToFail)
@@ -91,11 +91,11 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         _sceneView.layoutSubviews()
         
         var height: CGFloat = 70.0
-        height += _sceneView.resultTimeline.bounds.height
+        height += _sceneView.resultSequence.bounds.height
         if !_sceneView.rxOperator.withoutTimelines {
-            height += _sceneView.sourceTimeline.bounds.height
+            height += _sceneView.sourceSequence.bounds.height
             if _sceneView.rxOperator.multiTimelines {
-                height += _sceneView.secondSourceTimeline.bounds.height
+                height += _sceneView.secondSourceSequence.bounds.height
             }
         }
         height += _sceneView.rxOperatorText.bounds.height
@@ -175,7 +175,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private func _addEventToTimeline(notification: NSNotification) {
         guard
             let sender = notification.object as? UIButton,
-            let timeline = sender.superview as? SourceTimelineView
+            let timeline = sender.superview as? SourceSequenceView
         else { return }
         
         var time = Int(timeline.bounds.size.width / 2.0)
@@ -184,20 +184,20 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
        
         let sceneView = _sceneView
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (timeline == sceneView.sourceTimeline) ? .Circle : .Rect)
+            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (timeline == sceneView.sourceSequence) ? .Circle : .Rect)
             timeline.addEventToTimeline(e, animator: timeline.animator)
-            sceneView.resultTimeline.subject.onNext()
+            sceneView.resultSequence.subject.onNext()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
             time = timeline.maxEventTime() > 850 ? timeline.maxEventTime() + 30 : 850
             let e = completed(time)
             timeline.addEventToTimeline(e, animator: timeline.animator)
-            sceneView.resultTimeline.subject.onNext()
+            sceneView.resultSequence.subject.onNext()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
             let e = error(500)
             timeline.addEventToTimeline(e, animator: timeline.animator)
-            sceneView.resultTimeline.subject.onNext()
+            sceneView.resultSequence.subject.onNext()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
         
@@ -272,13 +272,13 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     
     private func _saveAction(newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Save", style: .Default) { _ in
-            guard let index = oldEventView.timeLine?.sourceEvents.indexOf(oldEventView)
+            guard let index = oldEventView.sequenceView?.sourceEvents.indexOf(oldEventView)
             else { return }
             
-            oldEventView.timeLine?.sourceEvents.removeAtIndex(index)
-            oldEventView.timeLine?.addEventToTimeline(newEventView.recorded, animator: oldEventView.timeLine?.animator)
+            oldEventView.sequenceView?.sourceEvents.removeAtIndex(index)
+            oldEventView.sequenceView?.addEventToTimeline(newEventView.recorded, animator: oldEventView.sequenceView?.animator)
             oldEventView.removeFromSuperview()
-            self._sceneView.resultTimeline.subject.onNext()
+            self._sceneView.resultSequence.subject.onNext()
         }
     }
     

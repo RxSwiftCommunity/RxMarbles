@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
+class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
     var addButton = UIButton(type: .ContactAdd)
     let longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     var animator: UIDynamicAnimator?
@@ -116,21 +116,21 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
                 changeGhostColorAndAlpha(_ghostEventView!, recognizer: r)
                 _ghostEventView!.recorded = panEventView.recorded
                 _ghostEventView!.center = CGPointMake(xPositionByTime(time), bounds.height / 2)
-                sceneView.resultTimeline.subject.onNext()
+                sceneView.resultSequence.subject.onNext()
             }
         case .Ended, .Cancelled:
             _ghostEventView?.removeFromSuperview()
             _ghostEventView = nil
             
             if let panEventView = _panEventView {
-                animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultTimeline: sceneView.resultTimeline)
+                animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultSequence: sceneView.resultSequence)
                 panEventView.superview?.bringSubviewToFront(panEventView)
                 let time = timeByXPosition(r.locationInView(self).x)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
             sceneView.hideTrashView()
-            sceneView.resultTimeline.subject.onNext()
+            sceneView.resultSequence.subject.onNext()
         default: break
         }
     }
@@ -141,7 +141,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
             v.addTapRecognizer()
         }
         addSubview(v)
-        v.use(animator, timeLine: self)
+        v.use(animator, sequence: self)
         sourceEvents.append(v)
     }
     
@@ -156,7 +156,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
         ghostEventView.setGhostColorOnDeleteZone(onDeleteZone(recognizer))
     }
     
-    private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultTimeline: ResultTimelineView) {
+    private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultSequence: ResultSequenceView) {
         if let animator = panEventView.animator {
             let time = timeByXPosition(recognizer.locationInView(self).x)
             
@@ -213,7 +213,7 @@ class SourceTimelineView: TimelineView, UIDynamicAnimatorDelegate {
         if editing {
             addTapRecognizers()
             showAddButton()
-            addButton.addTarget(self, action: #selector(SourceTimelineView.addEventToTimeline(_:)), forControlEvents: .TouchUpInside)
+            addButton.addTarget(self, action: #selector(SourceSequenceView.addEventToTimeline(_:)), forControlEvents: .TouchUpInside)
         } else {
             removeTapRecognizers()
             hideAddButton()

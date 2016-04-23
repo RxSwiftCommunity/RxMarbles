@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import Device
 
-class TimelineView: UIView {
+class SequenceView: UIView {
     
     var sourceEvents = [EventView]()
     let timeArrow = Image.timeLine.imageView()

@@ -9,9 +9,9 @@
 /* Begin PBXBuildFile section */
 		0A3F63E21C6B43030099C9E8 /* HelpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A3F63E11C6B43030099C9E8 /* HelpViewController.swift */; };
 		0A4111CC1C510C2F0067D0E3 /* EventView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111CB1C510C2F0067D0E3 /* EventView.swift */; };
-		0A4111CE1C510FE80067D0E3 /* TimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111CD1C510FE80067D0E3 /* TimelineView.swift */; };
-		0A4111D01C5110090067D0E3 /* SourceTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111CF1C5110090067D0E3 /* SourceTimelineView.swift */; };
-		0A4111D21C51103D0067D0E3 /* ResultTimelineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111D11C51103D0067D0E3 /* ResultTimelineView.swift */; };
+		0A4111CE1C510FE80067D0E3 /* SequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111CD1C510FE80067D0E3 /* SequenceView.swift */; };
+		0A4111D01C5110090067D0E3 /* SourceSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111CF1C5110090067D0E3 /* SourceSequenceView.swift */; };
+		0A4111D21C51103D0067D0E3 /* ResultSequenceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111D11C51103D0067D0E3 /* ResultSequenceView.swift */; };
 		0A4111D41C5110610067D0E3 /* SceneView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A4111D31C5110610067D0E3 /* SceneView.swift */; };
 		0AC130871C74BD8E0095F810 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 0AC130861C74BD8E0095F810 /* Settings.bundle */; };
 		0AC265931C3D2C24009E28FD /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265921C3D2C24009E28FD /* AppDelegate.swift */; };
@@ -49,9 +49,9 @@
 /* Begin PBXFileReference section */
 		0A3F63E11C6B43030099C9E8 /* HelpViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpViewController.swift; sourceTree = "<group>"; };
 		0A4111CB1C510C2F0067D0E3 /* EventView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventView.swift; sourceTree = "<group>"; };
-		0A4111CD1C510FE80067D0E3 /* TimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimelineView.swift; sourceTree = "<group>"; };
-		0A4111CF1C5110090067D0E3 /* SourceTimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceTimelineView.swift; sourceTree = "<group>"; };
-		0A4111D11C51103D0067D0E3 /* ResultTimelineView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultTimelineView.swift; sourceTree = "<group>"; };
+		0A4111CD1C510FE80067D0E3 /* SequenceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SequenceView.swift; sourceTree = "<group>"; };
+		0A4111CF1C5110090067D0E3 /* SourceSequenceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceSequenceView.swift; sourceTree = "<group>"; };
+		0A4111D11C51103D0067D0E3 /* ResultSequenceView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ResultSequenceView.swift; sourceTree = "<group>"; };
 		0A4111D31C5110610067D0E3 /* SceneView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneView.swift; sourceTree = "<group>"; };
 		0AC130861C74BD8E0095F810 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		0AC2658F1C3D2C24009E28FD /* RxMarbles.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RxMarbles.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -116,9 +116,9 @@
 		0A4111D61C51114D0067D0E3 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				0A4111CD1C510FE80067D0E3 /* TimelineView.swift */,
-				0A4111CF1C5110090067D0E3 /* SourceTimelineView.swift */,
-				0A4111D11C51103D0067D0E3 /* ResultTimelineView.swift */,
+				0A4111CD1C510FE80067D0E3 /* SequenceView.swift */,
+				0A4111CF1C5110090067D0E3 /* SourceSequenceView.swift */,
+				0A4111D11C51103D0067D0E3 /* ResultSequenceView.swift */,
 				0A4111D31C5110610067D0E3 /* SceneView.swift */,
 				0A4111CB1C510C2F0067D0E3 /* EventView.swift */,
 			);
@@ -380,7 +380,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A4111D21C51103D0067D0E3 /* ResultTimelineView.swift in Sources */,
+				0A4111D21C51103D0067D0E3 /* ResultSequenceView.swift in Sources */,
 				D2F561B11C52B13B0041C9A3 /* Image.swift in Sources */,
 				D2F561B51C52B2160041C9A3 /* EventShape.swift in Sources */,
 				D2F561AF1C52B0DD0041C9A3 /* OperatorImplementation.swift in Sources */,
@@ -396,11 +396,11 @@
 				0AC266111C3E96C2009E28FD /* TestSchedulerVirtualTimeConverter.swift in Sources */,
 				0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */,
 				0A4111CC1C510C2F0067D0E3 /* EventView.swift in Sources */,
-				0A4111CE1C510FE80067D0E3 /* TimelineView.swift in Sources */,
+				0A4111CE1C510FE80067D0E3 /* SequenceView.swift in Sources */,
 				0A4111D41C5110610067D0E3 /* SceneView.swift in Sources */,
 				0A3F63E21C6B43030099C9E8 /* HelpViewController.swift in Sources */,
 				D2F561A71C52AEF30041C9A3 /* Animation.swift in Sources */,
-				0A4111D01C5110090067D0E3 /* SourceTimelineView.swift in Sources */,
+				0A4111D01C5110090067D0E3 /* SourceSequenceView.swift in Sources */,
 				0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */,
 				0AC266091C3E96C2009E28FD /* Any+Equatable.swift in Sources */,
 				D28A68481C629073008A8C6F /* OperatorCode.swift in Sources */,
