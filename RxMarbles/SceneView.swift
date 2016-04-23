@@ -21,24 +21,24 @@ class SceneView: UIView, UITextViewDelegate {
     private var _aLabel: UILabel?
     private var _bLabel: UILabel?
     
-    var sourceSequence: SourceSequenceView! {
+    var sourceSequence1: SourceSequenceView! {
         didSet {
-            addSubview(sourceSequence)
+            addSubview(sourceSequence1)
             
             let initial = rxOperator.initial
             for t in initial.line1 {
-                sourceSequence.addEventToTimeline(t, animator: sourceSequence.animator)
+                sourceSequence1.addEventToTimeline(t, animator: sourceSequence1.animator)
             }
         }
     }
     
-    var secondSourceSequence: SourceSequenceView! {
+    var sourceSequence2: SourceSequenceView! {
         didSet {
-            addSubview(secondSourceSequence)
+            addSubview(sourceSequence2)
 
             let initial = rxOperator.initial
             for t in initial.line2 {
-                secondSourceSequence.addEventToTimeline(t, animator: secondSourceSequence.animator)
+                sourceSequence2.addEventToTimeline(t, animator: sourceSequence2.animator)
             }
         }
     }
@@ -52,8 +52,8 @@ class SceneView: UIView, UITextViewDelegate {
     var editing: Bool = false {
         didSet {
             resultSequence.editing = editing
-            sourceSequence?.editing = editing
-            secondSourceSequence?.editing = editing
+            sourceSequence1?.editing = editing
+            sourceSequence2?.editing = editing
             dimRxOperatorText(editing)
             setNeedsLayout()
         }
@@ -87,7 +87,7 @@ class SceneView: UIView, UITextViewDelegate {
         
         resultSequence = ResultSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
-            sourceSequence = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+            sourceSequence1 = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             _aLabel = UILabel()
             _aLabel!.text = "a: "
             _aLabel!.font = Font.monospacedRegularText(14)
@@ -97,7 +97,7 @@ class SceneView: UIView, UITextViewDelegate {
                 _bLabel!.text = "b: "
                 _bLabel!.font = Font.monospacedRegularText(14)
                 addSubview(_bLabel!)
-                secondSourceSequence = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+                sourceSequence2 = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
             }
         }
     }
@@ -109,14 +109,14 @@ class SceneView: UIView, UITextViewDelegate {
         
         _rxOperatorLabel.frame = CGRectMake(0, 20, bounds.width, labelHeight)
         if !rxOperator.withoutTimelines {
-            sourceSequence.frame = CGRectMake(20, 20, bounds.width - 20, height)
-            _rxOperatorLabel.frame.origin.y = sourceSequence.frame.origin.y + height
-            _aLabel?.frame = CGRectMake(0, sourceSequence.frame.origin.y, 20, height)
+            sourceSequence1.frame = CGRectMake(20, 20, bounds.width - 20, height)
+            _rxOperatorLabel.frame.origin.y = sourceSequence1.frame.origin.y + height
+            _aLabel?.frame = CGRectMake(0, sourceSequence1.frame.origin.y, 20, height)
             
             if rxOperator.multiTimelines {
-                secondSourceSequence.frame = CGRectMake(20, sourceSequence.frame.origin.y + sourceSequence.frame.height, bounds.width - 20.0, height)
-                _bLabel?.frame = CGRectMake(0, secondSourceSequence.frame.origin.y, 20, height)
-                _rxOperatorLabel.frame.origin.y = secondSourceSequence.frame.origin.y + height
+                sourceSequence2.frame = CGRectMake(20, sourceSequence1.frame.origin.y + sourceSequence1.frame.height, bounds.width - 20.0, height)
+                _bLabel?.frame = CGRectMake(0, sourceSequence2.frame.origin.y, 20, height)
+                _rxOperatorLabel.frame.origin.y = sourceSequence2.frame.origin.y + height
             }
         }
         resultSequence.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight + 10, bounds.width - 20, height)

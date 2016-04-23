@@ -54,8 +54,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         else { return }
         
         [
-            _sceneView.sourceSequence?.longPressGestureRecorgnizer,
-            _sceneView.secondSourceSequence?.longPressGestureRecorgnizer
+            _sceneView.sourceSequence1?.longPressGestureRecorgnizer,
+            _sceneView.sourceSequence2?.longPressGestureRecorgnizer
         ]
         .flatMap { $0 }
         .forEach(requireRecognizerToFail)
@@ -93,9 +93,9 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         var height: CGFloat = 70.0
         height += _sceneView.resultSequence.bounds.height
         if !_sceneView.rxOperator.withoutTimelines {
-            height += _sceneView.sourceSequence.bounds.height
+            height += _sceneView.sourceSequence1.bounds.height
             if _sceneView.rxOperator.multiTimelines {
-                height += _sceneView.secondSourceSequence.bounds.height
+                height += _sceneView.sourceSequence2.bounds.height
             }
         }
         height += _sceneView.rxOperatorText.bounds.height
@@ -175,34 +175,34 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     private func _addEventToTimeline(notification: NSNotification) {
         guard
             let sender = notification.object as? UIButton,
-            let timeline = sender.superview as? SourceSequenceView
+            let sequence = sender.superview as? SourceSequenceView
         else { return }
         
-        var time = Int(timeline.bounds.size.width / 2.0)
+        var time = Int(sequence.bounds.size.width / 2.0)
         
         let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
        
         let sceneView = _sceneView
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (timeline == sceneView.sourceSequence) ? .Circle : .Rect)
-            timeline.addEventToTimeline(e, animator: timeline.animator)
+            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequence1) ? .Circle : .Rect)
+            sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
         let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
-            time = timeline.maxEventTime() > 850 ? timeline.maxEventTime() + 30 : 850
+            time = sequence.maxEventTime() > 850 ? sequence.maxEventTime() + 30 : 850
             let e = completed(time)
-            timeline.addEventToTimeline(e, animator: timeline.animator)
+            sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
         let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
             let e = error(500)
-            timeline.addEventToTimeline(e, animator: timeline.animator)
+            sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
         
         elementSelector.addAction(nextAction)
-        let sourceEvents: [EventView] = timeline.sourceEvents
+        let sourceEvents: [EventView] = sequence.sourceEvents
         if sourceEvents.indexOf({ $0.isCompleted }) == nil {
             elementSelector.addAction(completedAction)
         }
