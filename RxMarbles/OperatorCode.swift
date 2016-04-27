@@ -17,7 +17,7 @@ extension Operator {
         case .Buffer:
             return "a.buffer(timeSpan: 150, count: 3, scheduler: s)"
         case .CatchError:
-            return "a.catchError(1)"
+            return "a.catchError { Observable.of(1) }"
         case .CatchErrorJustReturn:
             return "a.catchErrorJustReturn(1)"
         case CombineLatest:
@@ -83,7 +83,7 @@ extension Operator {
         case .StartWith:
             return "a.startWith(1)"
         case .SwitchLatest:
-            return "Observable.of(a).switchLatest()"
+            return "Observable.of(a, b).switchLatest()"
         case .Take:
             return "a.take(2)"
         case .TakeDuration:
