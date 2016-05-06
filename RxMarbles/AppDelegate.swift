@@ -118,10 +118,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
    
     // MARK: Shortcuts
     func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+        focusSearch()
+    }
+    
+    func focusSearch() {
         if let nav = _splitViewController.viewControllers.first as? UINavigationController {
             nav.popToRootViewControllerAnimated(false)
             
-            _operatorsTableViewController.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
             
             _operatorsTableViewController.focusSearch()
         }
@@ -149,6 +152,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }
         
         return false
+    }
+    
+    // MARK: Commands
+    override var keyCommands: [UIKeyCommand]? {
+        let cmdF = UIKeyCommand(input: "f", modifierFlags: [.Command], action: #selector(AppDelegate.focusSearch), discoverabilityTitle: "Search")
+        return [cmdF]
     }
     
 }
