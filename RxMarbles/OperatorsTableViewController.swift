@@ -174,6 +174,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     }
     
     func focusSearch() {
+        presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
         _searchController.searchBar.becomeFirstResponder()
     }
     

@@ -434,9 +434,7 @@ extension Operator {
                     return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
                 }
         case .CatchError:
-            return aO!.catchError { error in
-                return Observable.of(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
-            }
+            return aO!.catchError { _ in return .just(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle)) }
         case .CatchErrorJustReturn:
             return aO!.catchErrorJustReturn(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
         case .CombineLatest:
