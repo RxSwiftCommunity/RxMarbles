@@ -150,7 +150,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
-        return snapshot
+        return snapshot!
     }
     
     private dynamic func _share(sender: AnyObject?) {
@@ -187,7 +187,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
        
         let sceneView = _sceneView
         let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequenceA) ? .Circle : .Rect)
+            let e = next(time, String(arc4random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequenceA) ? .Circle : .Rect)
             sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }

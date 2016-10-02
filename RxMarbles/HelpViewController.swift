@@ -411,8 +411,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         var i = 0
         
         for op in allOperators[0...20] {
-            let rnd = random() % 4
-            let operatorString = _attributedOperatorString(op, p: p, rnd: rnd)
+            let rnd = arc4random() % 4
+            let operatorString = _attributedOperatorString(op, p: p, rnd: Int(rnd))
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
             alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clearColor()], range: NSMakeRange(0, operatorString.length))
             switch rnd {

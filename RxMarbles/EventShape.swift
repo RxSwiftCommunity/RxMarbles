@@ -45,9 +45,9 @@ enum EventShape: String {
         
         grayscaleImg.drawInRect(rect, blendMode: .Normal, alpha: 1.0)
         
-        CGContextScaleCTM(c, 1.0, -1.0);
+        CGContextScaleCTM(c!, 1.0, -1.0);
         let r = CGRectMake(0, -size, size, size)
-        CGContextClipToMask(c, r, grayscaleImg.CGImage)
+        CGContextClipToMask(c!, r, grayscaleImg.CGImage!)
     
         color.setFill()
         

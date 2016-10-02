@@ -34,7 +34,7 @@ struct Color {
     static var nextRandom: UIColor {
         var allColors = nextAll
         allColors.removeLast()
-        return allColors[random() % allColors.count]
+        return allColors[Int(arc4random()) % allColors.count]
     }
     
     
@@ -48,6 +48,7 @@ struct Color {
 private func _hex(hex: Int) -> UIColor {
     return _rgba(red:(hex >> 16) & 0xff, green:(hex >> 8) & 0xff, blue:hex & 0xff)
 }
+
 
 private func _rgba(red red: Int, green: Int, blue: Int, alpha: CGFloat = 1.0) -> UIColor {
     assert(red >= 0 && red <= 255,     "Invalid red component")

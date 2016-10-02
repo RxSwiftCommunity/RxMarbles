@@ -191,7 +191,7 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
     func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         // Obtain the index path and the cell that was pressed.
         guard let indexPath = tableView.indexPathForRowAtPoint(location),
-                  cell = tableView.cellForRowAtIndexPath(indexPath)
+                  let cell = tableView.cellForRowAtIndexPath(indexPath)
         else { return nil }
         
         selectedOperator = _rowAtIndexPath(indexPath)
