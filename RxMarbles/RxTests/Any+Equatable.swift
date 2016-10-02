@@ -16,13 +16,13 @@ import Foundation
 struct AnyEquatable<Target>
     : Equatable
     , CustomDebugStringConvertible
-    , CustomStringConvertible {
+, CustomStringConvertible {
     typealias Comparer = (Target, Target) -> Bool
-
+    
     let _target: Target
     let _comparer: Comparer
-
-    init(target: Target, comparer: Comparer) {
+    
+    init(target: Target, comparer: @escaping Comparer) {
         _target = target
         _comparer = comparer
     }
@@ -36,7 +36,7 @@ extension AnyEquatable {
     var description: String {
         return "\(_target)"
     }
-
+    
     var debugDescription: String {
         return "\(_target)"
     }

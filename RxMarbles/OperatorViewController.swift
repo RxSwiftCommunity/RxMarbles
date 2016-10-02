@@ -26,14 +26,14 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     }
     
     init(rxOperator: Operator) {
-        _sceneView = SceneView(rxOperator: rxOperator, frame: CGRectZero)
+        _sceneView = SceneView(rxOperator: rxOperator, frame: CGRect.zero)
         
         super.init(nibName: nil, bundle: nil)
         
         title = rxOperator.description
     }
     
-    override func setEditing(editing: Bool, animated: Bool) {
+    override func setEditing(_ editing: Bool, animated: Bool) {
         super.setEditing(editing, animated: animated)
         
         _sceneView.editing = editing
@@ -42,18 +42,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.rightBarButtonItems = _rightButtonItems()
     }
     
-    override func didMoveToParentViewController(parent: UIViewController?) {
-        super.didMoveToParentViewController(parent)
+    override func didMove(toParentViewController parent: UIViewController?) {
+        super.didMove(toParentViewController: parent)
         
         navigationItem.leftItemsSupplementBackButton = true
-        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem()
+        navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
         navigationItem.rightBarButtonItems = _rightButtonItems()
         
         // Prevent interactivePopGestureRecognizer if we are in navigation controller
         guard
             let requireRecognizerToFail = navigationController?
                 .interactivePopGestureRecognizer?
-                .requireGestureRecognizerToFail
+                .require
         else { return }
        
         [
@@ -74,23 +74,23 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         _currentActivity = _sceneView.rxOperator.userActivity()
         
-        Notifications.setEventView.rx().subscribeNext {
-            [unowned self] in self._setEventView($0)
-        }.addDisposableTo(_disposeBag)
+        Notifications.setEventView.rx().subscribe(onNext: {
+            [unowned self] (notification: Notification) in self._setEventView(notification)
+        }).addDisposableTo(_disposeBag)
         
-        Notifications.addEvent.rx().subscribeNext {
-            [unowned self] in self._addEventToTimeline($0)
-        }.addDisposableTo(_disposeBag)
+        Notifications.addEvent.rx().subscribe(onNext: {
+            [unowned self] (notification: Notification) -> Void in self._addEventToTimeline(notification)
+        }).addDisposableTo(_disposeBag)
         
-        Notifications.openOperatorDescription.rx().subscribeNext {
-            [unowned self] in self._openOperatorDocumentation($0)
-        }.addDisposableTo(_disposeBag)
+        Notifications.openOperatorDescription.rx().subscribe(onNext: {
+            [unowned self] (notification: Notification) -> Void in self._openOperatorDocumentation(notification)
+        }).addDisposableTo(_disposeBag)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         _scrollView.frame = view.bounds
-        _sceneView.frame = CGRectMake(20, 0, _scrollView.bounds.size.width - 40, _scrollView.bounds.height)
+        _sceneView.frame = CGRect(x: 20, y: 0, width: _scrollView.bounds.size.width - 40, height: _scrollView.bounds.height)
         _sceneView.layoutSubviews()
         
         var height: CGFloat = 70.0
@@ -107,12 +107,12 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     }
     
     
-    override func viewDidAppear(animated: Bool) {
+    override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         _currentActivity?.becomeCurrent()
     }
     
-    override func viewDidDisappear(animated: Bool) {
+    override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
         _currentActivity?.resignCurrent()
     }
@@ -120,48 +120,48 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Button Items
     
     private func _rightButtonItems() -> [UIBarButtonItem] {
-        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .Action, target: self, action: #selector(OperatorViewController._share(_:)))
+        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(OperatorViewController._share(_:)))
         
         if _sceneView.rxOperator.withoutTimelines {
             return [shareButtonItem]
         }
-        return editing ? [editButtonItem()] : [editButtonItem(), shareButtonItem]
+        return isEditing ? [editButtonItem] : [editButtonItem, shareButtonItem]
     }
     
 //    MARK: Navigation
     
-    private func _openOperatorDocumentation(notification: NSNotification) {
-        let safariViewController = SFSafariViewController(URL: _sceneView.rxOperator.url)
-        presentViewController(safariViewController, animated: true, completion: nil)
+    private func _openOperatorDocumentation(_ notification: Notification) {
+        let safariViewController = SFSafariViewController(url: _sceneView.rxOperator.url as URL)
+        present(safariViewController, animated: true, completion: nil)
     }
     
 //    MARK: Snapshot
     
     private func _makeSnapshot() -> UIImage {
-        let size = CGSizeMake(_scrollView.bounds.width, _sceneView.bounds.size.height - _sceneView.rxOperatorText.bounds.height)
+        let size = CGSize(width: _scrollView.bounds.width, height: _sceneView.bounds.size.height - _sceneView.rxOperatorText.bounds.height)
         
-        UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.mainScreen().scale)
+        UIGraphicsBeginImageContextWithOptions(size, true, UIScreen.main.scale)
         let c = UIGraphicsGetCurrentContext()!
         
         Color.white.setFill()
-        UIRectFill(CGRectMake(0, 0, size.width, size.height))
+        UIRectFill(CGRect(x: 0, y: 0, width: size.width, height: size.height))
         
-        _scrollView.layer.renderInContext(c)
+        _scrollView.layer.render(in: c)
         
         let snapshot = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         return snapshot!
     }
     
-    private dynamic func _share(sender: AnyObject?) {
+    private dynamic func _share(_ sender: AnyObject?) {
        
         let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
         
         activity.excludedActivityTypes = [
-            UIActivityTypeAssignToContact,
-            UIActivityTypePrint,
+            UIActivityType.assignToContact,
+            UIActivityType.print,
         ]
-        if let delegate = UIApplication.sharedApplication().delegate as? AppDelegate,
+        if let delegate = UIApplication.shared.delegate as? AppDelegate,
             let rootViewController = delegate.window?.rootViewController {
                 if Device.type() == .iPad || Device.type() == .Simulator {
                     activity.popoverPresentationController?.sourceView = view
@@ -169,13 +169,13 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
                         activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
                     }
                 }
-                rootViewController.presentViewController(activity, animated: true, completion: nil)
+                rootViewController.present(activity, animated: true, completion: nil)
             }
     }
     
 //    MARK: Alert controllers
     
-    private func _addEventToTimeline(notification: NSNotification) {
+    private func _addEventToTimeline(_ notification: Notification) {
         guard
             let sender = notification.object as? UIButton,
             let sequence = sender.superview as? SourceSequenceView
@@ -183,30 +183,30 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         var time = Int(sequence.bounds.size.width / 2.0)
         
-        let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .ActionSheet)
+        let elementSelector = UIAlertController(title: "Add event", message: nil, preferredStyle: .actionSheet)
        
         let sceneView = _sceneView
-        let nextAction = UIAlertAction(title: "Next", style: .Default) { _ in
-            let e = next(time, String(arc4random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequenceA) ? .Circle : .Rect)
+        let nextAction = UIAlertAction(title: "Next", style: .default) { _ in
+            let e = RxMarbles.next(time, String(arc4random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequenceA) ? .circle : .rect)
             sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
-        let completedAction = UIAlertAction(title: "Completed", style: .Default) { _ in
+        let completedAction = UIAlertAction(title: "Completed", style: .default) { _ in
             time = sequence.maxEventTime() > 850 ? sequence.maxEventTime() + 30 : 850
             let e = completed(time)
             sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
-        let errorAction = UIAlertAction(title: "Error", style: .Default) { _ in
+        let errorAction = UIAlertAction(title: "Error", style: .default) { _ in
             let e = error(500)
             sequence.addEventToTimeline(e, animator: sequence.animator)
             sceneView.resultSequence.subject.onNext()
         }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
         
         elementSelector.addAction(nextAction)
         let sourceEvents: [EventView] = sequence.sourceEvents
-        if sourceEvents.indexOf({ $0.isCompleted }) == nil {
+        if sourceEvents.index(where: { $0.isCompleted }) == nil {
             elementSelector.addAction(completedAction)
         }
         elementSelector.addAction(errorAction)
@@ -215,27 +215,27 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         elementSelector.popoverPresentationController?.sourceRect = sender.frame
         elementSelector.popoverPresentationController?.sourceView = sender.superview
         
-        presentViewController(elementSelector, animated: true, completion: nil)
+        present(elementSelector, animated: true, completion: nil)
     }
 
-    private func _setEventView(notification: NSNotification) {
+    private func _setEventView(_ notification: Notification) {
         guard let eventView = notification.object as? EventView else { return }
         
-        let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .Alert)
+        let settingsAlertController = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
         
         if eventView.isNext {
             let contentViewController = UIViewController()
-            contentViewController.preferredContentSize = CGSizeMake(200.0, 90.0)
+            contentViewController.preferredContentSize = CGSize(width: 200.0, height: 90.0)
             
             let preview = EventView(recorded: eventView.recorded)
-            preview.center = CGPointMake(100.0, 25.0)
+            preview.center = CGPoint(x: 100.0, y: 25.0)
             contentViewController.view.addSubview(preview)
             
             let colorsSegmentedControl = _contentViewColorsSegmentedControl(eventView)
             contentViewController.view.addSubview(colorsSegmentedControl)
             
             settingsAlertController.setValue(contentViewController, forKey: "contentViewController")
-            settingsAlertController.addTextFieldWithConfigurationHandler { textField in
+            settingsAlertController.addTextField { textField in
                 if let text = eventView.recorded.value.element?.value {
                     textField.text = text
                 }
@@ -243,10 +243,10 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             settingsAlertController.addAction(_saveAction(preview, oldEventView: eventView))
             
             Observable
-                .combineLatest(settingsAlertController.textFields!.first!.rx_text, colorsSegmentedControl.rx_value, resultSelector: { text, segment in
+                .combineLatest(settingsAlertController.textFields!.first!.rx.textInput.text, colorsSegmentedControl.rx.value, resultSelector: { text, segment in
                     return (text, segment)
                 })
-                .subscribeNext({ text, segment in
+                .subscribe(onNext: { text, segment in
                     self._updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
                 })
                 .addDisposableTo(_disposeBag)
@@ -254,31 +254,31 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             settingsAlertController.message = "Delete event?"
         }
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel) { _ in }
-        settingsAlertController.addAction(_deleteAction(eventView))
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
+        settingsAlertController.addAction(_deleteAction(eventView: eventView))
         settingsAlertController.addAction(cancelAction)
-        presentViewController(settingsAlertController, animated: true, completion: nil)
+        present(settingsAlertController, animated: true, completion: nil)
     }
     
-    private func _contentViewColorsSegmentedControl(eventView: EventView) -> UISegmentedControl {
+    private func _contentViewColorsSegmentedControl(_ eventView: EventView) -> UISegmentedControl {
         let colors = Color.nextAll
         let currentColor = eventView.recorded.value.element?.color
         let colorsSegment = UISegmentedControl(items: colors.map { _ in "" } )
-        colorsSegment.tintColor = .clearColor()
-        colorsSegment.frame = CGRectMake(0.0, 50.0, 200.0, 30.0)
+        colorsSegment.tintColor = .clear
+        colorsSegment.frame = CGRect(x: 0.0, y: 50.0, width: 200.0, height: 30.0)
         
         zip(colorsSegment.subviews, colors).forEach { v, color in v.backgroundColor = color }
         
-        colorsSegment.selectedSegmentIndex = colors.indexOf(currentColor!)!
+        colorsSegment.selectedSegmentIndex = colors.index(of: currentColor!)!
         return colorsSegment
     }
     
-    private func _saveAction(newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
-        return UIAlertAction(title: "Save", style: .Default) { _ in
-            guard let index = oldEventView.sequenceView?.sourceEvents.indexOf(oldEventView)
+    private func _saveAction(_ newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
+        return UIAlertAction(title: "Save", style: .default) { _ in
+            guard let index = oldEventView.sequenceView?.sourceEvents.index(of: oldEventView)
             else { return }
             
-            oldEventView.sequenceView?.sourceEvents.removeAtIndex(index)
+            oldEventView.sequenceView?.sourceEvents.remove(at: index)
             oldEventView.sequenceView?.addEventToTimeline(newEventView.recorded, animator: oldEventView.sequenceView?.animator)
             oldEventView.removeFromSuperview()
             self._sceneView.resultSequence.subject.onNext()
@@ -286,27 +286,26 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     }
     
     private func _deleteAction(eventView: EventView) -> UIAlertAction {
-        return UIAlertAction(title: "Delete", style: .Destructive) { _ in
+        return UIAlertAction(title: "Delete", style: .destructive) { _ in
             eventView.animator?.removeAllBehaviors()
             eventView.animator?.addBehavior(eventView.gravity!)
             eventView.animator?.addBehavior(eventView.removeBehavior!)
         }
     }
     
-    private func _updatePreviewEventView(preview: EventView, params: (color: UIColor, value: String)) {
+    private func _updatePreviewEventView(_ preview: EventView, params: (color: UIColor, value: String)) {
         let time = preview.recorded.time
         let shape = preview.recorded.value.element?.shape
-        let event = Event.Next(ColoredType(value: params.value, color: params.color, shape: shape!))
+        let event = Event.next(ColoredType(value: params.value, color: params.color, shape: shape!))
         
         preview.recorded = RecordedType(time: time, event: event)
         preview.label.text = params.value
-        preview.setColorOnPreview(params.color)
+        preview.setColorOnPreview(color: params.color)
     }
     
 //    MARK: Preview Actions
-    
-    override func previewActionItems() -> [UIPreviewActionItem] {
-        let shareAction = UIPreviewAction(title: "Share", style: .Default) { _, _ in
+    override var previewActionItems: [UIPreviewActionItem] {
+        let shareAction = UIPreviewAction(title: "Share", style: .default) { _, _ in
             self._share(nil)
         }
         return [shareAction]

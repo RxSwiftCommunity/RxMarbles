@@ -10,7 +10,9 @@
 #import "_RX.h"
 #import "_RXObjCRuntime.h"
 
-@interface _RXDelegateProxy ()
+@interface _RXDelegateProxy () {
+    id __weak __forwardToDelegate;
+}
 
 @property (nonatomic, strong) id strongForwardDelegate;
 
@@ -58,7 +60,7 @@ static NSMutableDictionary *forwardableSelectorsPerClass = nil;
 #define CLASS_HIERARCHY_MAX_DEPTH 100
 
         NSInteger  classHierarchyDepth = 0;
-        Class      targetClass         = self;
+        Class      targetClass         = NULL;
 
         for (classHierarchyDepth = 0, targetClass = self;
              classHierarchyDepth < CLASS_HIERARCHY_MAX_DEPTH && targetClass != nil;
@@ -90,7 +92,11 @@ static NSMutableDictionary *forwardableSelectorsPerClass = nil;
     
 }
 
--(void)_setForwardToDelegate:(id)forwardToDelegate retainDelegate:(BOOL)retainDelegate {
+-(id)_forwardToDelegate {
+    return __forwardToDelegate;
+}
+
+-(void)_setForwardToDelegate:(id __nullable)forwardToDelegate retainDelegate:(BOOL)retainDelegate {
     __forwardToDelegate = forwardToDelegate;
     if (retainDelegate) {
         self.strongForwardDelegate = forwardToDelegate;

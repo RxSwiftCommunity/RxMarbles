@@ -52,7 +52,7 @@ struct Image {
     static let downArrow    = _named("downArrow")
 }
 
-private func _named(name: String) -> UIImage {
+private func _named(_ name: String) -> UIImage {
    return UIImage(named: name)!
 }
 

@@ -8,7 +8,7 @@
 
 import Foundation
 
-class TimeoutSink<ElementType, O: ObserverType where O.E == ElementType>: Sink<O>, LockOwnerType, ObserverType {
+class TimeoutSink<ElementType, O: ObserverType>: Sink<O>, LockOwnerType, ObserverType where O.E == ElementType {
     typealias E = ElementType
     typealias Parent = Timeout<E>
     
@@ -35,12 +35,12 @@ class TimeoutSink<ElementType, O: ObserverType where O.E == ElementType>: Sink<O
         
         original.disposable = _parent._source.subscribeSafe(self)
         
-        return StableCompositeDisposable.create(_subscription, _timerD)
+        return Disposables.create(_subscription, _timerD)
     }
 
-    func on(event: Event<E>) {
+    func on(_ event: Event<E>) {
         switch event {
-        case .Next:
+        case .next:
             var onNextWins = false
             
             _lock.performLocked() {
@@ -54,7 +54,7 @@ class TimeoutSink<ElementType, O: ObserverType where O.E == ElementType>: Sink<O
                 forwardOn(event)
                 self._createTimeoutTimer()
             }
-        case .Error, .Completed:
+        case .error, .completed:
             var onEventWins = false
             
             _lock.performLocked() {
@@ -72,7 +72,7 @@ class TimeoutSink<ElementType, O: ObserverType where O.E == ElementType>: Sink<O
     }
     
     private func _createTimeoutTimer() {
-        if _timerD.disposed {
+        if _timerD.isDisposed {
             return
         }
         
@@ -92,7 +92,7 @@ class TimeoutSink<ElementType, O: ObserverType where O.E == ElementType>: Sink<O
                 self._subscription.disposable = self._parent._other.subscribeSafe(self.forwarder())
             }
             
-            return NopDisposable.instance
+            return Disposables.create()
         }
     }
 }
@@ -100,10 +100,10 @@ class TimeoutSink<ElementType, O: ObserverType where O.E == ElementType>: Sink<O
 
 class Timeout<Element> : Producer<Element> {
     
-    private let _source: Observable<Element>
-    private let _dueTime: RxTimeInterval
-    private let _other: Observable<Element>
-    private let _scheduler: SchedulerType
+    fileprivate let _source: Observable<Element>
+    fileprivate let _dueTime: RxTimeInterval
+    fileprivate let _other: Observable<Element>
+    fileprivate let _scheduler: SchedulerType
     
     init(source: Observable<Element>, dueTime: RxTimeInterval, other: Observable<Element>, scheduler: SchedulerType) {
         _source = source
@@ -112,7 +112,7 @@ class Timeout<Element> : Producer<Element> {
         _scheduler = scheduler
     }
     
-    override func run<O : ObserverType where O.E == Element>(observer: O) -> Disposable {
+    override func run<O : ObserverType>(_ observer: O) -> Disposable where O.E == Element {
         let sink = TimeoutSink(parent: self, observer: observer)
         sink.disposable = sink.run()
         return sink

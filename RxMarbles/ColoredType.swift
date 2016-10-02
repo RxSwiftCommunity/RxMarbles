@@ -23,14 +23,14 @@ func ==(lhs: ColoredType, rhs: ColoredType) -> Bool {
 typealias RecordedType = Recorded<Event<ColoredType>>
 
 // Helper functions
-func next(time: Int, _ value: String, _ color: UIColor, _ shape: EventShape) -> RecordedType {
-    return RecordedType(time: time, event: .Next(ColoredType(value: value, color: color, shape: shape)))
+func next(_ time: Int, _ value: String, _ color: UIColor, _ shape: EventShape) -> RecordedType {
+    return RecordedType(time: time, event: Event.next(ColoredType(value: value, color: color, shape: shape)))
 }
 
-func completed(time: Int) -> RecordedType {
-    return RecordedType(time: time, event: .Completed)
+func completed(_ time: Int) -> RecordedType {
+    return RecordedType(time: time, event: .completed)
 }
 
-func error(time: Int) -> RecordedType {
-    return RecordedType(time: time, event: .Error(RxError.Unknown))
+func error(_ time: Int) -> RecordedType {
+    return RecordedType(time: time, event: Event.error(RxError.unknown))
 }

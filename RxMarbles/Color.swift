@@ -18,7 +18,7 @@ struct Color {
     static let nextViolet       = _hex(0xBD10E0)
     static let nextLighterBlue  = _hex(0x50E3C2)
     static let nextLightGreen   = _hex(0xB8E986)
-    static let nextLightGray    = UIColor.lightGrayColor()
+    static let nextLightGray    = UIColor.lightGray
     
     static let black            = _hex(0x000000)
     static let white            = _hex(0xFFFFFF)
@@ -45,12 +45,12 @@ struct Color {
     static let codeType    = _hex(0x3F6E74)
 }
 
-private func _hex(hex: Int) -> UIColor {
+private func _hex(_ hex: Int) -> UIColor {
     return _rgba(red:(hex >> 16) & 0xff, green:(hex >> 8) & 0xff, blue:hex & 0xff)
 }
 
 
-private func _rgba(red red: Int, green: Int, blue: Int, alpha: CGFloat = 1.0) -> UIColor {
+private func _rgba(red: Int, green: Int, blue: Int, alpha: CGFloat = 1.0) -> UIColor {
     assert(red >= 0 && red <= 255,     "Invalid red component")
     assert(green >= 0 && green <= 255, "Invalid green component")
     assert(blue >= 0 && blue <= 255,   "Invalid blue component")

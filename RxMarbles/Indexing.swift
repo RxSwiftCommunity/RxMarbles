@@ -19,56 +19,56 @@ enum UserActivityType: String {
 extension Operator {
     static var all: [Operator] {
         return
-    [.Amb,
-    .Buffer,
-    .CatchError,
-    .CatchErrorJustReturn,
-    .CombineLatest,
-    .Concat,
-    .Debounce,
-    .DelaySubscription,
-    .DistinctUntilChanged,
-    .ElementAt,
-    .Empty,
-    .Filter,
-    .FlatMap,
-    .FlatMapFirst,
-    .FlatMapLatest,
-    .IgnoreElements,
-    .Interval,
-    .Just,
-    .Map,
-    .MapWithIndex,
-    .Merge,
-    .Never,
-    .Of,
-    .Reduce,
-    .RepeatElement,
-    .Retry,
-    .Sample,
-    .Scan,
-    .Single,
-    .Skip,
-    .SkipDuration,
-    .SkipUntil,
-    .SkipWhile,
-    .SkipWhileWithIndex,
-    .StartWith,
-    .SwitchLatest,
-    .Take,
-    .TakeDuration,
-    .TakeLast,
-    .TakeUntil,
-    .TakeWhile,
-    .TakeWhileWithIndex,
-    .Throttle,
-    .Throw,
-    .Timeout,
-    .Timer,
-    .ToArray,
-    .WithLatestFrom,
-    .Zip
-    ]
+            [.Amb,
+             .Buffer,
+             .CatchError,
+             .CatchErrorJustReturn,
+             .CombineLatest,
+             .Concat,
+             .Debounce,
+             .DelaySubscription,
+             .DistinctUntilChanged,
+             .ElementAt,
+             .Empty,
+             .Filter,
+             .FlatMap,
+             .FlatMapFirst,
+             .FlatMapLatest,
+             .IgnoreElements,
+             .Interval,
+             .Just,
+             .Map,
+             .MapWithIndex,
+             .Merge,
+             .Never,
+             .Of,
+             .Reduce,
+             .RepeatElement,
+             .Retry,
+             .Sample,
+             .Scan,
+             .Single,
+             .Skip,
+             .SkipDuration,
+             .SkipUntil,
+             .SkipWhile,
+             .SkipWhileWithIndex,
+             .StartWith,
+             .SwitchLatest,
+             .Take,
+             .TakeDuration,
+             .TakeLast,
+             .TakeUntil,
+             .TakeWhile,
+             .TakeWhileWithIndex,
+             .Throttle,
+             .Throw,
+             .Timeout,
+             .Timer,
+             .ToArray,
+             .WithLatestFrom,
+             .Zip
+        ]
     }
 }
 
@@ -78,8 +78,8 @@ extension Operator {
         
         activity.title = description
         activity.keywords = _keywords()
-        activity.eligibleForSearch = true
-        activity.eligibleForPublicIndexing = true
+        activity.isEligibleForSearch = true
+        activity.isEligibleForPublicIndexing = true
         activity.userInfo = ["operator": rawValue]
         
         
@@ -115,18 +115,18 @@ extension Operator {
     static func index() {
         guard CSSearchableIndex.isIndexingAvailable() else { return }
         
-        let userDefaults = NSUserDefaults.standardUserDefaults()
+        let userDefaults = UserDefaults.standard
         
         let indexVersionKey = "indexVersion"
         
-        if let indexVersion = userDefaults.stringForKey(indexVersionKey)
-            where indexVersion == IndexVersion {
+        if let indexVersion = userDefaults.string(forKey: indexVersionKey)
+            , indexVersion == IndexVersion {
             return debugPrint("already indexed")
         }
         
-        let index = CSSearchableIndex.defaultSearchableIndex()
+        let index = CSSearchableIndex.default()
         let items = Operator.all.map { $0._searchableItem() }
-        index.deleteAllSearchableItemsWithCompletionHandler { error in
+        index.deleteAllSearchableItems { error in
             if let e = error {
                 return debugPrint(e)
             }
@@ -136,7 +136,7 @@ extension Operator {
                     return debugPrint("failed to index items \(e)")
                 }
                 
-                userDefaults.setObject(IndexVersion, forKey: indexVersionKey)
+                userDefaults.set(IndexVersion, forKey: indexVersionKey)
                 userDefaults.synchronize()
             })
         }

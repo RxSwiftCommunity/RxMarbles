@@ -13,7 +13,7 @@ import Device
 class SequenceView: UIView {
     
     var sourceEvents = [EventView]()
-    let timeArrow = Image.timeLine.imageView()
+    let timeArrow = RxMarbles.Image.timeLine.imageView()
     var debounce: RxTimeInterval!
     var disposeBag = DisposeBag()
     weak var sceneView: SceneView!
@@ -49,15 +49,15 @@ class SequenceView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        timeArrow.frame = CGRectMake(0, 0, bounds.width, Image.timeLine.size.height)
+        timeArrow.frame = CGRect(x: 0, y: 0, width: bounds.width, height: RxMarbles.Image.timeLine.size.height)
         timeArrow.center.y = bounds.height / 2.0
     }
     
     func maxEventTime() -> Int {
-        return sourceEvents.map { $0.recorded.time }.maxElement() ?? 0
+        return sourceEvents.map { $0.recorded.time }.max() ?? 0
     }
     
-    func xPositionByTime(time: Int) -> CGFloat {
+    func xPositionByTime(_ time: Int) -> CGFloat {
         let maxTime: CGFloat = 1000.0
         let width = timeArrow.bounds.size.width - 25
         return (width / maxTime) * CGFloat(time)
@@ -77,7 +77,7 @@ class SequenceView: UIView {
         return time
     }
     
-    func angles(events: [RecordedType]) -> [CGFloat] {
+    func angles(_ events: [RecordedType]) -> [CGFloat] {
         var angles: [CGFloat] = []
         angles.append(0.0)
         for index in 1..<events.count {

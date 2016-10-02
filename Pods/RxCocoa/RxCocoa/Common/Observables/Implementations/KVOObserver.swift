@@ -20,11 +20,11 @@ protocol KVOObservableProtocol {
 
 class KVOObserver : _RXKVOObserver
                   , Disposable {
-    typealias Callback = (AnyObject?) -> Void
+    typealias Callback = (Any?) -> Void
 
     var retainSelf: KVOObserver? = nil
 
-    init(parent: KVOObservableProtocol, callback: Callback) {
+    init(parent: KVOObservableProtocol, callback: @escaping Callback) {
     #if TRACE_RESOURCES
         OSAtomicIncrement32(&resourceCount)
     #endif

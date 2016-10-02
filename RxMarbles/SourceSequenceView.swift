@@ -11,7 +11,7 @@ import RxSwift
 import RxCocoa
 
 class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
-    var addButton = UIButton(type: .ContactAdd)
+    var addButton = UIButton(type: .contactAdd)
     let longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     var animator: UIDynamicAnimator?
     private var _panEventView: EventView?
@@ -25,7 +25,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
     
     init(frame: CGRect, scene: SceneView) {
         super.init(frame: frame)
-        userInteractionEnabled = true
+        isUserInteractionEnabled = true
         clipsToBounds = false
         sceneView = scene
         
@@ -36,19 +36,19 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         
         addGestureRecognizer(longPressGestureRecorgnizer)
         
-        addButton.hidden = true
+        addButton.isHidden = true
         longPressGestureRecorgnizer
-            .rx_event
-            .subscribeNext {
-                [unowned self] r in self._handleLongPressGestureRecognizer(r)
-            }
+            .rx.event
+            .subscribe(onNext: {
+                [unowned self] r in self._handleLongPressGestureRecognizer(r: r)
+            })
             .addDisposableTo(disposeBag)
         
         subject
             .debounce(debounce, scheduler: MainScheduler.instance)
-            .subscribeNext { [unowned self] in
+            .subscribe(onNext: { [unowned self] in
                 self.rotateEventViews()
-            }
+            })
             .addDisposableTo(disposeBag)
     }
     
@@ -56,20 +56,20 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         let oldTimeArrowFrame = timeArrow.frame
         super.layoutSubviews()
         
-        addButton.center = CGPointMake(frame.size.width - 10.0, bounds.height / 2.0)
+        addButton.center = CGPoint(x: frame.size.width - 10.0, y: bounds.height / 2.0)
         
         if addButton.superview != nil {
-            addButton.hidden = false
+            addButton.isHidden = false
             timeArrow.frame.size.width -= 23
             timeArrow.center.y = bounds.height / 2.0
         } else {
-            addButton.hidden = true
+            addButton.isHidden = true
         }
         
         let newTimeArrowFrame = timeArrow.frame
         
         if oldTimeArrowFrame != newTimeArrowFrame {
-            sourceEvents.forEach({ $0.removeBehavior })
+            sourceEvents.forEach({ _ = $0.removeBehavior })
             animator?.removeAllBehaviors()
             _needRefreshEventViews = true
         }
@@ -91,41 +91,41 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
     }
     
     private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
-        let location = r.locationInView(self)
+        let location = r.location(in: self)
         switch r.state {
-        case .Began:
-            if let i = sourceEvents.indexOf({ $0.frame.contains(location) }) {
+        case .began:
+            if let i = sourceEvents.index(where: { $0.frame.contains(location) }) {
                 _panEventView = sourceEvents[i]
             }
             if let panEventView = _panEventView {
                 panEventView.animator?.removeBehavior(panEventView.snap!)
                 
                 _ghostEventView = EventView(recorded: panEventView.recorded)
-                _ghostEventView!.center = CGPointMake(xPositionByTime(_ghostEventView!.recorded.time), bounds.height / 2)
-                changeGhostColorAndAlpha(_ghostEventView!, recognizer: r)
+                _ghostEventView!.center = CGPoint(x: xPositionByTime(_ghostEventView!.recorded.time), y: bounds.height / 2)
+                changeGhostColorAndAlpha(ghostEventView: _ghostEventView!, recognizer: r)
                 addSubview(_ghostEventView!)
                 
                 sceneView.showTrashView()
             }
-        case .Changed:
+        case .changed:
             if let panEventView = _panEventView {
-                let time = timeByXPosition(location.x)
-                panEventView.center = CGPointMake(xPositionByTime(time), location.y)
+                let time = timeByXPosition(x: location.x)
+                panEventView.center = CGPoint(x: xPositionByTime(time), y: location.y)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
                 
-                changeGhostColorAndAlpha(_ghostEventView!, recognizer: r)
+                changeGhostColorAndAlpha(ghostEventView: _ghostEventView!, recognizer: r)
                 _ghostEventView!.recorded = panEventView.recorded
-                _ghostEventView!.center = CGPointMake(xPositionByTime(time), bounds.height / 2)
+                _ghostEventView!.center = CGPoint(x: xPositionByTime(time), y: bounds.height / 2)
                 sceneView.resultSequence.subject.onNext()
             }
-        case .Ended, .Cancelled:
+        case .ended, .cancelled:
             _ghostEventView?.removeFromSuperview()
             _ghostEventView = nil
             
             if let panEventView = _panEventView {
-                animatorAddBehaviorsToPanEventView(panEventView, recognizer: r, resultSequence: sceneView.resultSequence)
-                panEventView.superview?.bringSubviewToFront(panEventView)
-                let time = timeByXPosition(r.locationInView(self).x)
+                animatorAddBehaviorsToPanEventView(panEventView: panEventView, recognizer: r, resultSequence: sceneView.resultSequence)
+                panEventView.superview?.bringSubview(toFront: panEventView)
+                let time = timeByXPosition(x: r.location(in: self).x)
                 panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
             }
             _panEventView = nil
@@ -135,35 +135,35 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         }
     }
     
-    func addEventToTimeline(recorded: RecordedType, animator: UIDynamicAnimator!) {
+    func addEventToTimeline(_ recorded: RecordedType, animator: UIDynamicAnimator!) {
         let v = EventView(recorded: recorded)
         if editing {
             v.addTapRecognizer()
         }
         addSubview(v)
-        v.use(animator, sequence: self)
+        v.use(animator: animator, sequence: self)
         sourceEvents.append(v)
     }
     
      func changeGhostColorAndAlpha(ghostEventView: EventView, recognizer: UIGestureRecognizer) {
-        if onDeleteZone(recognizer) == true {
+        if onDeleteZone(recognizer: recognizer) == true {
             [ghostEventView, sceneView.trashView].forEach(Animation.shake)
             sceneView.trashView.alpha = 0.5
         } else {
             [ghostEventView, sceneView.trashView].forEach(Animation.stopShake)
             sceneView.trashView.alpha = 0.2
         }
-        ghostEventView.setGhostColorOnDeleteZone(onDeleteZone(recognizer))
+        ghostEventView.setGhostColorOnDeleteZone(onDeleteZone: onDeleteZone(recognizer: recognizer))
     }
     
     private func animatorAddBehaviorsToPanEventView(panEventView: EventView, recognizer: UIGestureRecognizer, resultSequence: ResultSequenceView) {
         if let animator = panEventView.animator {
-            let time = timeByXPosition(recognizer.locationInView(self).x)
+            let time = timeByXPosition(x: recognizer.location(in: self).x)
             
-            if onDeleteZone(recognizer) == true {
+            if onDeleteZone(recognizer: recognizer) == true {
                 Animation.hideWithCompletion(panEventView) { _ in
-                    if let index = self.sourceEvents.indexOf(panEventView) {
-                        self.sourceEvents.removeAtIndex(index)
+                    if let index = self.sourceEvents.index(of: panEventView) {
+                        self.sourceEvents.remove(at: index)
                     }
                 }
             } else {
@@ -178,9 +178,9 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
     
     private func onDeleteZone(recognizer: UIGestureRecognizer) -> Bool {
         let trash = sceneView.trashView
-        let loc = recognizer.locationInView(superview)
-        let eventViewFrame = CGRectMake(loc.x - 19, loc.y - 19, 38, 38)
-        if CGRectIntersectsRect(trash.frame, eventViewFrame) {
+        let loc = recognizer.location(in: superview)
+        let eventViewFrame = CGRect(x: loc.x - 19, y: loc.y - 19, width: 38, height: 38)
+        if trash.frame.intersects(eventViewFrame) {
             return true
         }
         return false
@@ -213,7 +213,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         if editing {
             addTapRecognizers()
             showAddButton()
-            addButton.addTarget(self, action: #selector(SourceSequenceView.addEventToTimeline(_:)), forControlEvents: .TouchUpInside)
+            addButton.addTarget(self, action: #selector(SourceSequenceView.addEventToTimeline(_:)), for: .touchUpInside)
         } else {
             removeTapRecognizers()
             hideAddButton()
@@ -221,16 +221,16 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         allEventViewsAnimation()
     }
     
-    func addEventToTimeline(sender: UIButton) {
+    func addEventToTimeline(_ sender: UIButton) {
         Notifications.addEvent.post(object: sender)
     }
     
     func rotateEventViews() {
-        let sortedEvents = sourceEvents.sort({ $0.recorded.time < $1.recorded.time })
-        let sortedEventsRecorded = sortedEvents.map({ $0.recorded })
+        let sortedEvents = sourceEvents.sorted(by: { $0.recorded.time < $1.recorded.time })
+        let sortedEventsRecorded = sortedEvents.map { $0.recorded }
         let angs = angles(sortedEventsRecorded)
         sortedEvents.forEach({ eventView in
-            if let index = sortedEvents.indexOf({ $0 == eventView }) {
+            if let index = sortedEvents.index(where: { $0 == eventView }) {
                 Animation.rotate(eventView, toAngle: angs[index])
             }
         })
@@ -238,7 +238,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
 
 //    MARK: UIDynamicAnimatorDelegate methods
     
-    func dynamicAnimatorDidPause(animator: UIDynamicAnimator) {
+    func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
         subject.onNext()
     }
 }

@@ -25,32 +25,32 @@ extension Operator {
         case .Amb:
             return InitialValues(
                 line1: [
-                    next(100, "10", Color.nextRandom, .Circle),
-                    next(200, "20", Color.nextRandom, .Circle),
-                    next(300, "30", Color.nextRandom, .Circle),
-                    next(400, "40", Color.nextRandom, .Circle),
-                    next(500, "50", Color.nextRandom, .Circle),
-                    next(600, "60", Color.nextRandom, .Circle),
-                    next(700, "70", Color.nextRandom, .Circle),
+                    next(100, "10", Color.nextRandom, .circle),
+                    next(200, "20", Color.nextRandom, .circle),
+                    next(300, "30", Color.nextRandom, .circle),
+                    next(400, "40", Color.nextRandom, .circle),
+                    next(500, "50", Color.nextRandom, .circle),
+                    next(600, "60", Color.nextRandom, .circle),
+                    next(700, "70", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(150, "1", Color.nextRandom, .Star),
-                    next(250, "2", Color.nextRandom, .Star),
-                    next(350, "3", Color.nextRandom, .Star),
-                    next(450, "4", Color.nextRandom, .Star),
-                    next(550, "5", Color.nextRandom, .Star),
-                    next(650, "6", Color.nextRandom, .Star),
-                    next(750, "7", Color.nextRandom, .Star),
+                    next(150, "1", Color.nextRandom, .star),
+                    next(250, "2", Color.nextRandom, .star),
+                    next(350, "3", Color.nextRandom, .star),
+                    next(450, "4", Color.nextRandom, .star),
+                    next(550, "5", Color.nextRandom, .star),
+                    next(650, "6", Color.nextRandom, .star),
+                    next(750, "7", Color.nextRandom, .star),
                     completed(900)
                 ]
             )
         case .CatchError:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
                     error(400),
                     completed(900)
                 ]
@@ -58,10 +58,10 @@ extension Operator {
         case .CatchErrorJustReturn:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle),
                     error(400),
                     completed(900)
                 ]
@@ -69,79 +69,79 @@ extension Operator {
         case .CombineLatest:
             return InitialValues(
                 line1: [
-                    next( 80, "1", Color.nextRandom, .Circle),
-                    next(300, "2", Color.nextRandom, .Circle),
-                    next(500, "3", Color.nextRandom, .Circle),
-                    next(650, "4", Color.nextRandom, .Circle),
-                    next(800, "5", Color.nextRandom, .Circle),
+                    next( 80, "1", Color.nextRandom, .circle),
+                    next(300, "2", Color.nextRandom, .circle),
+                    next(500, "3", Color.nextRandom, .circle),
+                    next(650, "4", Color.nextRandom, .circle),
+                    next(800, "5", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(200, "a", Color.nextRandom, .Rect),
-                    next(400, "b", Color.nextRandom, .Rect),
-                    next(550, "c", Color.nextRandom, .Rect),
-                    next(750, "d", Color.nextRandom, .Rect),
+                    next(200, "a", Color.nextRandom, .rect),
+                    next(400, "b", Color.nextRandom, .rect),
+                    next(550, "c", Color.nextRandom, .rect),
+                    next(750, "d", Color.nextRandom, .rect),
                     completed(900)
                 ]
             )
         case .Concat:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(300, "2", Color.nextRandom, .Circle),
-                    next(600, "3", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(300, "2", Color.nextRandom, .circle),
+                    next(600, "3", Color.nextRandom, .circle),
                     completed(650)
                 ],
                 line2: [
-                    next(100, "2", Color.nextRandom, .Rect),
-                    next(200, "2", Color.nextRandom, .Rect),
+                    next(100, "2", Color.nextRandom, .rect),
+                    next(200, "2", Color.nextRandom, .rect),
                     completed(300)
                 ]
             )
         case .DelaySubscription:
             return InitialValues(
                 line1: [
-                    next(100, "", Color.nextRandom, .Circle),
-                    next(200, "", Color.nextRandom, .Circle),
-                    next(300, "", Color.nextRandom, .Circle),
-                    next(400, "", Color.nextRandom, .Circle),
-                    next(500, "", Color.nextRandom, .Circle),
+                    next(100, "", Color.nextRandom, .circle),
+                    next(200, "", Color.nextRandom, .circle),
+                    next(300, "", Color.nextRandom, .circle),
+                    next(400, "", Color.nextRandom, .circle),
+                    next(500, "", Color.nextRandom, .circle),
                     completed(700)
                 ]
             )
         case .Debounce:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(450, "3", Color.nextRandom, .Circle),
-                    next(500, "4", Color.nextRandom, .Circle),
-                    next(550, "5", Color.nextRandom, .Circle),
-                    next(700, "6", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(400, "2", Color.nextRandom, .circle),
+                    next(450, "3", Color.nextRandom, .circle),
+                    next(500, "4", Color.nextRandom, .circle),
+                    next(550, "5", Color.nextRandom, .circle),
+                    next(700, "6", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .DistinctUntilChanged:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "2", Color.nextRandom, .Circle),
-                    next(500, "1", Color.nextRandom, .Circle),
-                    next(600, "3", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "2", Color.nextRandom, .circle),
+                    next(500, "1", Color.nextRandom, .circle),
+                    next(600, "3", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .ElementAt:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Circle),
-                    next(700, "7", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle),
+                    next(500, "5", Color.nextRandom, .circle),
+                    next(600, "6", Color.nextRandom, .circle),
+                    next(700, "7", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
@@ -150,49 +150,49 @@ extension Operator {
         case .Filter:
             return InitialValues(
                 line1: [
-                    next(100, "2", Color.nextRandom, .Circle),
-                    next(200, "30", Color.nextRandom, .Circle),
-                    next(300, "22", Color.nextRandom, .Circle),
-                    next(400, "5", Color.nextRandom, .Circle),
-                    next(500, "60", Color.nextRandom, .Circle),
-                    next(600, "1", Color.nextRandom, .Circle),
+                    next(100, "2", Color.nextRandom, .circle),
+                    next(200, "30", Color.nextRandom, .circle),
+                    next(300, "22", Color.nextRandom, .circle),
+                    next(400, "5", Color.nextRandom, .circle),
+                    next(500, "60", Color.nextRandom, .circle),
+                    next(600, "1", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .FlatMap, .FlatMapFirst, .FlatMapLatest:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(500, "3", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(400, "2", Color.nextRandom, .circle),
+                    next(500, "3", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(100, "1", Color.nextLightGray, .Rect),
-                    next(200, "2", Color.nextLightGray, .Rect),
+                    next(100, "1", Color.nextLightGray, .rect),
+                    next(200, "2", Color.nextLightGray, .rect),
                     completed(300)
                 ]
             )
         case .IgnoreElements:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Rect),
-                    next(300, "3", Color.nextRandom, .Triangle),
-                    next(400, "4", Color.nextRandom, .Star),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Rect),
-                    next(700, "7", Color.nextRandom, .Triangle),
-                    next(800, "8", Color.nextRandom, .Star),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .rect),
+                    next(300, "3", Color.nextRandom, .triangle),
+                    next(400, "4", Color.nextRandom, .star),
+                    next(500, "5", Color.nextRandom, .circle),
+                    next(600, "6", Color.nextRandom, .rect),
+                    next(700, "7", Color.nextRandom, .triangle),
+                    next(800, "8", Color.nextRandom, .star),
                     completed(900)
                 ]
             )
         case .Retry:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
                     error(400),
                     completed(900)
                 ]
@@ -200,36 +200,36 @@ extension Operator {
         case .Map:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(400, "3", Color.nextRandom, .Circle),
-                    next(500, "4", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(400, "3", Color.nextRandom, .circle),
+                    next(500, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .MapWithIndex:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(400, "3", Color.nextRandom, .Circle),
-                    next(500, "4", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(400, "3", Color.nextRandom, .circle),
+                    next(500, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .Merge:
             return InitialValues(
                 line1: [
-                    next(150, "20", Color.nextRandom, .Circle),
-                    next(300, "40", Color.nextRandom, .Circle),
-                    next(450, "60", Color.nextRandom, .Circle),
-                    next(600, "80", Color.nextRandom, .Circle),
-                    next(750, "100", Color.nextRandom, .Circle),
+                    next(150, "20", Color.nextRandom, .circle),
+                    next(300, "40", Color.nextRandom, .circle),
+                    next(450, "60", Color.nextRandom, .circle),
+                    next(600, "80", Color.nextRandom, .circle),
+                    next(750, "100", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(550, "1", Color.nextRandom, .Circle),
-                    next(650, "2", Color.nextRandom, .Circle),
+                    next(550, "1", Color.nextRandom, .circle),
+                    next(650, "2", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
@@ -238,113 +238,113 @@ extension Operator {
         case .Reduce:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(700, "5", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle),
+                    next(700, "5", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
-        
+            
         case .Just:
             return InitialValues()
         case .Sample:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(400, "3", Color.nextRandom, .Circle),
-                    next(550, "4", Color.nextRandom, .Circle),
-                    next(700, "5", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(400, "3", Color.nextRandom, .circle),
+                    next(550, "4", Color.nextRandom, .circle),
+                    next(700, "5", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next( 50, "a", Color.nextRandom, .Rect),
-                    next(250, "b", Color.nextRandom, .Rect),
-                    next(350, "c", Color.nextRandom, .Rect),
-                    next(600, "d", Color.nextRandom, .Rect),
+                    next( 50, "a", Color.nextRandom, .rect),
+                    next(250, "b", Color.nextRandom, .rect),
+                    next(350, "c", Color.nextRandom, .rect),
+                    next(600, "d", Color.nextRandom, .rect),
                     completed(800)
                 ]
             )
         case .Scan:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(600, "5", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle),
+                    next(600, "5", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .Skip:
             return InitialValues(
                 line1: [
-                    next(300, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(600, "3", Color.nextRandom, .Circle),
-                    next(700, "4", Color.nextRandom, .Circle),
+                    next(300, "1", Color.nextRandom, .circle),
+                    next(400, "2", Color.nextRandom, .circle),
+                    next(600, "3", Color.nextRandom, .circle),
+                    next(700, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .SkipUntil, .TakeUntil:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Circle),
-                    next(700, "7", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle),
+                    next(500, "5", Color.nextRandom, .circle),
+                    next(600, "6", Color.nextRandom, .circle),
+                    next(700, "7", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(350, "a", Color.nextRandom, .Rect),
-                    next(650, "b", Color.nextRandom, .Rect),
+                    next(350, "a", Color.nextRandom, .rect),
+                    next(650, "b", Color.nextRandom, .rect),
                     completed(900)
                 ]
             )
         case .StartWith:
             return InitialValues(
                 line1: [
-                    next(300, "2", Color.nextRandom, .Circle),
-                    next(600, "3", Color.nextRandom, .Circle),
+                    next(300, "2", Color.nextRandom, .circle),
+                    next(600, "3", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .SwitchLatest:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle)
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle)
                 ],
                 line2: [
-                    next(150, "1", Color.nextRandom, .Rect),
-                    next(250, "2", Color.nextRandom, .Rect),
-                    next(350, "3", Color.nextRandom, .Rect),
-                    next(450, "4", Color.nextRandom, .Rect)
+                    next(150, "1", Color.nextRandom, .rect),
+                    next(250, "2", Color.nextRandom, .rect),
+                    next(350, "3", Color.nextRandom, .rect),
+                    next(450, "4", Color.nextRandom, .rect)
                 ])
         case .Take:
             return InitialValues(
                 line1: [
-                    next(300, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(700, "3", Color.nextRandom, .Circle),
-                    next(800, "4", Color.nextRandom, .Circle),
+                    next(300, "1", Color.nextRandom, .circle),
+                    next(400, "2", Color.nextRandom, .circle),
+                    next(700, "3", Color.nextRandom, .circle),
+                    next(800, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .TakeLast:
             return InitialValues(
                 line1: [
-                    next(300, "1", Color.nextRandom, .Circle),
-                    next(400, "2", Color.nextRandom, .Circle),
-                    next(700, "3", Color.nextRandom, .Circle),
-                    next(800, "4", Color.nextRandom, .Circle),
+                    next(300, "1", Color.nextRandom, .circle),
+                    next(400, "2", Color.nextRandom, .circle),
+                    next(700, "3", Color.nextRandom, .circle),
+                    next(800, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
@@ -353,67 +353,67 @@ extension Operator {
         case .Timeout:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(550, "4", Color.nextRandom, .Circle),
-                    next(650, "5", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(550, "4", Color.nextRandom, .circle),
+                    next(650, "5", Color.nextRandom, .circle),
                     completed(900)
                 ]
             )
         case .WithLatestFrom:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle)
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle)
                 ],
                 line2: [
-                    next(150, "1", Color.nextRandom, .Rect),
-                    next(250, "2", Color.nextRandom, .Rect),
-                    next(350, "3", Color.nextRandom, .Rect),
-                    next(450, "4", Color.nextRandom, .Rect)
+                    next(150, "1", Color.nextRandom, .rect),
+                    next(250, "2", Color.nextRandom, .rect),
+                    next(350, "3", Color.nextRandom, .rect),
+                    next(450, "4", Color.nextRandom, .rect)
                 ]
             )
         case .Zip:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(300, "2", Color.nextRandom, .Circle),
-                    next(700, "3", Color.nextRandom, .Circle),
-                    next(750, "4", Color.nextRandom, .Circle),
-                    next(800, "5", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(300, "2", Color.nextRandom, .circle),
+                    next(700, "3", Color.nextRandom, .circle),
+                    next(750, "4", Color.nextRandom, .circle),
+                    next(800, "5", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(200, "a", Color.nextRandom, .Rect),
-                    next(350, "b", Color.nextRandom, .Rect),
-                    next(600, "c", Color.nextRandom, .Rect),
-                    next(650, "d", Color.nextRandom, .Rect),
+                    next(200, "a", Color.nextRandom, .rect),
+                    next(350, "b", Color.nextRandom, .rect),
+                    next(600, "c", Color.nextRandom, .rect),
+                    next(650, "d", Color.nextRandom, .rect),
                     completed(900)
                 ]
             )
         default:
             return InitialValues(
                 line1: [
-                    next(100, "1", Color.nextRandom, .Circle),
-                    next(200, "2", Color.nextRandom, .Circle),
-                    next(300, "3", Color.nextRandom, .Circle),
-                    next(400, "4", Color.nextRandom, .Circle),
-                    next(500, "5", Color.nextRandom, .Circle),
-                    next(600, "6", Color.nextRandom, .Circle),
-                    next(700, "7", Color.nextRandom, .Circle),
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(300, "3", Color.nextRandom, .circle),
+                    next(400, "4", Color.nextRandom, .circle),
+                    next(500, "5", Color.nextRandom, .circle),
+                    next(600, "6", Color.nextRandom, .circle),
+                    next(700, "7", Color.nextRandom, .circle),
                     completed(900)
                 ],
                 line2: [
-                    next(100, "1", Color.nextRandom, .Rect),
-                    next(200, "2", Color.nextRandom, .Rect),
-                    next(300, "3", Color.nextRandom, .Rect),
-                    next(400, "4", Color.nextRandom, .Rect),
-                    next(500, "5", Color.nextRandom, .Rect),
-                    next(600, "6", Color.nextRandom, .Rect),
-                    next(700, "7", Color.nextRandom, .Rect),
+                    next(100, "1", Color.nextRandom, .rect),
+                    next(200, "2", Color.nextRandom, .rect),
+                    next(300, "3", Color.nextRandom, .rect),
+                    next(400, "4", Color.nextRandom, .rect),
+                    next(500, "5", Color.nextRandom, .rect),
+                    next(600, "6", Color.nextRandom, .rect),
+                    next(700, "7", Color.nextRandom, .rect),
                     completed(900)
                 ]
             )
@@ -422,7 +422,8 @@ extension Operator {
 }
 
 extension Operator {
-    func map(scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
+    
+    func map(_ scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
         case .Amb:
             return aO!.amb(bO!)
@@ -430,13 +431,13 @@ extension Operator {
             return aO!
                 .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
                 .map {
-                    let values = $0.map {$0.value } .joinWithSeparator(", ")
-                    return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Triangle)
+                    let values = $0.map {$0.value } .joined(separator: ", ")
+                    return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .triangle)
                 }
         case .CatchError:
-            return aO!.catchError { _ in return .just(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle)) }
+            return aO!.catchError { _ in return .just(ColoredType(value: "1", color: Color.nextBlue, shape: .circle)) }
         case .CatchErrorJustReturn:
-            return aO!.catchErrorJustReturn(ColoredType(value: "1", color: Color.nextBlue, shape: .Circle))
+            return aO!.catchErrorJustReturn(ColoredType(value: "1", color: Color.nextBlue, shape: .circle))
         case .CombineLatest:
             return Observable.combineLatest(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
@@ -455,7 +456,7 @@ extension Operator {
             return Observable.empty()
         case .Filter:
             return aO!.filter {
-                guard let a = Int($0.value) else { throw RxError.Unknown }
+                guard let a = Int($0.value) else { throw RxError.unknown }
                 return a > 10
             }
         case .FlatMap:
@@ -477,24 +478,24 @@ extension Operator {
                 }
             }
 //        case .FlatMapWithIndex:
-//            return aO!.flatMapWithIndex { e, i  in
-//                
+//            return aO!.flatMapWithIndex { e, i
+//
 //            }
         case .IgnoreElements:
             return aO!.ignoreElements()
         case .Interval:
-            return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .Circle) }
+            return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
         case .Just:
-            return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .Circle))
+            return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .circle))
         case .Map:
-            return aO!.map { h in
-                guard let a = Int(h.value) else { throw RxError.Unknown }
-                return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
+        return aO!.map { h in
+            guard let a = Int(h.value) else { throw RxError.unknown }
+            return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
             }
         case .MapWithIndex:
             return aO!.mapWithIndex { element, index in
                 if index == 1 {
-                    guard let a = Int(element.value) else { throw RxError.Unknown }
+                    guard let a = Int(element.value) else { throw RxError.unknown }
                     return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
                 } else {
                     return element
@@ -505,21 +506,21 @@ extension Operator {
         case .Never:
             return Observable.never()
         case .Of:
-            return Observable.of(ColoredType(value: "1", color: Color.nextRandom, shape: .Star))
+            return Observable.of(ColoredType(value: "1", color: Color.nextRandom, shape: .star))
         case .Reduce:
-            return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .Circle)) {
-                guard let a = Int($0.value), let b = Int($1.value) else { throw RxError.Unknown }
+            return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .circle)) {
+                guard let a = Int($0.value), let b = Int($1.value) else { throw RxError.unknown }
                 return ColoredType(value: String(a + b), color: $1.color, shape: $1.shape)
             }
         case .RepeatElement:
-            return Observable<Int64>.interval(150, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextGreen, shape: .Star)}
+            return Observable<Int64>.interval(150, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextGreen, shape: .star)}
         case .Retry:
             return aO!.retry(2)
         case .Sample:
             return aO!.sample(bO!)
         case .Scan:
-            return aO!.scan(ColoredType(value: "0", color: Color.nextGreen, shape: .Star)) { acc, e in
-                guard let a = Int(e.value), let b = Int(acc.value) else { throw RxError.Unknown }
+            return aO!.scan(ColoredType(value: "0", color: Color.nextGreen, shape: .star)) { acc, e in
+                guard let a = Int(e.value), let b = Int(acc.value) else { throw RxError.unknown }
                 return ColoredType(value: String(a + b), color: e.color, shape: e.shape)
             }
         case .Single:
@@ -531,11 +532,11 @@ extension Operator {
         case .SkipUntil:
             return aO!.skipUntil(bO!)
         case .SkipWhile:
-            return aO!.skipWhile { e in Int(e.value) < 4 }
+            return aO!.skipWhile { e in Int(e.value)! < 4 }
         case .SkipWhileWithIndex:
             return aO!.skipWhileWithIndex { e, i in i < 4 }
         case .StartWith:
-            return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .Circle))
+            return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .circle))
         case .SwitchLatest:
             return Observable.of(aO!, bO!).switchLatest()
         case .Take:
@@ -547,21 +548,21 @@ extension Operator {
         case .TakeUntil:
             return aO!.takeUntil(bO!)
         case .TakeWhile:
-            return aO!.takeWhile { e in Int(e.value) < 4 }
+            return aO!.takeWhile { e in Int(e.value)! < 4 }
         case .TakeWhileWithIndex:
             return aO!.takeWhileWithIndex { e, i in i < 4 }
         case .Throw:
-            return Observable.error(RxError.Unknown)
+            return Observable.error(RxError.unknown)
         case .Timeout:
             return aO!.timeout(200, scheduler: scheduler)
         case .Timer:
-            return Observable<Int64>.timer(500, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .Circle) }
+            return Observable<Int64>.timer(500, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
         case .ToArray:
             return aO!
                 .toArray()
                 .map {
-                let values = $0.map {$0.value } .joinWithSeparator(", ")
-                return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .Rect)
+                    let values = $0.map {$0.value } .joined(separator: ", ")
+                    return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .rect)
             }
         case .WithLatestFrom:
             return aO!.withLatestFrom(bO!)
@@ -646,44 +647,44 @@ extension Operator {
 extension Operator {
     var urlString: String {
         switch self {
-        case CatchError, CatchErrorJustReturn:
+        case .CatchError, .CatchErrorJustReturn:
             return "catch.html"
-        case DelaySubscription:
+        case .DelaySubscription:
             return "delay.html"
-        case DistinctUntilChanged:
+        case .DistinctUntilChanged:
             return "distinct.html"
-        case Empty, Never, Throw:
+        case .Empty, .Never, .Throw:
             return "empty-never-throw.html"
-        case FlatMap, FlatMapFirst, FlatMapLatest:
+        case .FlatMap, .FlatMapFirst, .FlatMapLatest:
             return "flatmap.html"
-        case IgnoreElements:
+        case .IgnoreElements:
             return "ignoreelements.html"
-        case Map, MapWithIndex:
+        case .Map, .MapWithIndex:
             return "map.html"
-        case Of:
+        case .Of:
             return "from.html"
-        case RepeatElement:
+        case .RepeatElement:
             return "repeat.html"
-        case Single:
+        case .Single:
             return "first.html"
-        case SkipDuration:
+        case .SkipDuration:
             return "skip.html"
-        case SkipWhileWithIndex:
+        case .SkipWhileWithIndex:
             return "skipwhile.html"
-        case SwitchLatest:
+        case .SwitchLatest:
             return "switch.html"
-        case TakeDuration:
+        case .TakeDuration:
             return "take.html"
-        case TakeWhileWithIndex:
+        case .TakeWhileWithIndex:
             return "takewhile.html"
-        case Throttle:
+        case .Throttle:
             return "debounce.html"
-        case ToArray:
+        case .ToArray:
             return "to.html"
-        case WithLatestFrom:
+        case .WithLatestFrom:
             return "combinelatest.html"
         default:
-            return "\(rawValue.lowercaseString).html"
+            return "\(rawValue.lowercased()).html"
         }
     }
     
@@ -731,7 +732,7 @@ extension Operator {
         case .Just:
             return "Create an Observable that emits a particular item."
         case .Map:
-            return "Transform the items emitted by an Observable by applying a function to each item."
+        return "Transform the items emitted by an Observable by applying a function to each item."
         case .MapWithIndex:
             return "Transform the items emitted by an Observable by applying a function to each item."
         case .Merge:
@@ -752,11 +753,11 @@ extension Operator {
             return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
         case .Single:
             return "Emit only the first item (or the first item that meets some condition) emitted by an Observable."
-        case .Skip, SkipDuration:
+        case .Skip, .SkipDuration:
             return "Suppress the first n items emitted by an Observable."
         case .SkipUntil:
             return "Discard items emitted by an Observable until a second Observable emits an item."
-        case .SkipWhile, SkipWhileWithIndex:
+        case .SkipWhile, .SkipWhileWithIndex:
             return "Discard items emitted by an Observable until a specified condition becomes false."
         case .StartWith:
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
@@ -786,9 +787,9 @@ extension Operator {
     var linkText: NSMutableAttributedString {
         let res = NSMutableAttributedString(string: text)
         let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSLinkAttributeName: url])
-        res.appendAttributedString(NSAttributedString(string: " "))
-        res.appendAttributedString(link)
-        res.addAttribute(NSFontAttributeName, value: Font.code(.MonoRegular, size: 16), range: NSMakeRange(0, res.length))
+        res.append(NSAttributedString(string: " "))
+        res.append(link)
+        res.addAttribute(NSFontAttributeName, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))
         return res
     }
 }

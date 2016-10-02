@@ -17,11 +17,11 @@ enum Notifications: String {
     case openOperatorDescription
     case hideHelpWindow
     
-    func post(center: NSNotificationCenter = NSNotificationCenter.defaultCenter(), object: AnyObject? = nil, userInfo: [NSObject: AnyObject]? = nil) {
-        center.postNotificationName(rawValue, object: object, userInfo: userInfo)
+    func post(center: NotificationCenter = NotificationCenter.default, object: AnyObject? = nil, userInfo: [AnyHashable: AnyObject]? = nil) {
+        center.post(name: NSNotification.Name(rawValue: rawValue), object: object, userInfo: userInfo)
     }
 
-    func rx(center: NSNotificationCenter = NSNotificationCenter.defaultCenter(), object: AnyObject? = nil) -> Observable<NSNotification> {
-        return center.rx_notification(rawValue, object: object)
+    func rx(center: NotificationCenter = NotificationCenter.default, object: AnyObject? = nil) -> Observable<Notification> {
+        return center.rx.notification(Notification.Name(rawValue: rawValue), object: object)
     }
 }

@@ -10,31 +10,31 @@ import Foundation
 import UIKit
 
 enum FontFace: String {
-    case MonoRegular        = "Menlo-Regular"
-    case MonoItalic         = "Menlo-Italic"
-    case MonoBold           = "Menlo-Bold"
-    case MonoBoldItalic     = "Menlo-BoldItalic"
-    case MalayalamSangamMN  = "MalayalamSangamMN"
+    case monoRegular        = "Menlo-Regular"
+    case monoItalic         = "Menlo-Italic"
+    case monoBold           = "Menlo-Bold"
+    case monoBoldItalic     = "Menlo-BoldItalic"
+    case malayalamSangamMN  = "MalayalamSangamMN"
 }
 
 struct Font {
-    static func code(face:FontFace, size: CGFloat) -> UIFont {
+    static func code(_ face:FontFace, size: CGFloat) -> UIFont {
         return UIFont(name: face.rawValue, size: size)!
     }
     
-    static func text(size: CGFloat) -> UIFont {
-        return UIFont.systemFontOfSize(size)
+    static func text(_ size: CGFloat) -> UIFont {
+        return UIFont.systemFont(ofSize: size)
     }
     
-    static func boldText(size: CGFloat) -> UIFont {
-        return UIFont.boldSystemFontOfSize(size)
+    static func boldText(_ size: CGFloat) -> UIFont {
+        return UIFont.boldSystemFont(ofSize: size)
     }
     
-    static func ultraLightText(size: CGFloat) -> UIFont {
-        return UIFont.systemFontOfSize(size, weight: UIFontWeightUltraLight)
+    static func ultraLightText(_ size: CGFloat) -> UIFont {
+        return UIFont.systemFont(ofSize: size, weight: UIFontWeightUltraLight)
     }
     
-    static func monospacedRegularText(size: CGFloat) -> UIFont {
-        return UIFont.monospacedDigitSystemFontOfSize(size, weight: UIFontWeightRegular)
+    static func monospacedRegularText(_ size: CGFloat) -> UIFont {
+        return UIFont.monospacedDigitSystemFont(ofSize: size, weight: UIFontWeightRegular)
     }
 }
