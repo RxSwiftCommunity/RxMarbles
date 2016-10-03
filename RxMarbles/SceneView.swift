@@ -13,7 +13,7 @@ import RxCocoa
 import Device
 
 class SceneView: UIView, UITextViewDelegate {
-    var trashView = Image.rubbish.imageWithRenderingMode(.AlwaysTemplate).imageView()
+    var trashView = RxMarbles.Image.rubbish.withRenderingMode(.alwaysTemplate).imageView()
     var rxOperator: Operator
     let rxOperatorText = UITextView()
     
@@ -52,7 +52,7 @@ class SceneView: UIView, UITextViewDelegate {
             resultSequence.editing = editing
             sourceSequenceA?.editing = editing
             sourceSequenceB?.editing = editing
-            dimRxOperatorText(editing)
+            dimRxOperatorText(editing: editing)
             setNeedsLayout()
         }
     }
@@ -64,28 +64,28 @@ class SceneView: UIView, UITextViewDelegate {
     init(rxOperator: Operator, frame: CGRect) {
         self.rxOperator = rxOperator
         super.init(frame: frame)
-        trashView.frame = CGRectMake(0, 0, 40, 40)
+        trashView.frame = CGRect(x: 0, y: 0, width: 40, height: 40)
         setTimelines()
     }
     
     private func setTimelines() {
         addSubview(_rxOperatorLabel)
-        _rxOperatorLabel.textAlignment = .Center
+        _rxOperatorLabel.textAlignment = .center
         _rxOperatorLabel.minimumScaleFactor = 0.5
         _rxOperatorLabel.adjustsFontSizeToFitWidth = true
         _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
         
         addSubview(rxOperatorText)
         rxOperatorText.delegate = self
-        rxOperatorText.editable = false
-        rxOperatorText.scrollEnabled = false
-        rxOperatorText.userInteractionEnabled = true
-        rxOperatorText.dataDetectorTypes = UIDataDetectorTypes.Link
+        rxOperatorText.isEditable = false
+        rxOperatorText.isScrollEnabled = false
+        rxOperatorText.isUserInteractionEnabled = true
+        rxOperatorText.dataDetectorTypes = UIDataDetectorTypes.link
         rxOperatorText.attributedText = rxOperator.linkText
         
-        resultSequence = ResultSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), rxOperator: rxOperator, sceneView: self)
+        resultSequence = ResultSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
-            sourceSequenceA = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+            sourceSequenceA = SourceSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), scene: self)
             _aLabel = UILabel()
             _aLabel!.text = "a: "
             _aLabel!.font = Font.monospacedRegularText(14)
@@ -95,7 +95,7 @@ class SceneView: UIView, UITextViewDelegate {
                 _bLabel!.text = "b: "
                 _bLabel!.font = Font.monospacedRegularText(14)
                 addSubview(_bLabel!)
-                sourceSequenceB = SourceSequenceView(frame: CGRectMake(0, 0, bounds.width, 60), scene: self)
+                sourceSequenceB = SourceSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), scene: self)
             }
         }
     }
@@ -105,25 +105,28 @@ class SceneView: UIView, UITextViewDelegate {
         let height: CGFloat = 60
         let labelHeight: CGFloat = 40
         
-        _rxOperatorLabel.frame = CGRectMake(0, 20, bounds.width, labelHeight)
+        _rxOperatorLabel.frame = CGRect(x: 0, y: 20, width: bounds.width, height: labelHeight)
         if !rxOperator.withoutTimelines {
-            sourceSequenceA.frame = CGRectMake(20, 20, bounds.width - 20, height)
+            sourceSequenceA.frame = CGRect(x: 20, y: 20, width: bounds.width - 20, height: height)
             _rxOperatorLabel.frame.origin.y = sourceSequenceA.frame.origin.y + height
-            _aLabel?.frame = CGRectMake(0, sourceSequenceA.frame.origin.y, 20, height)
+            _aLabel?.frame = CGRect(x: 0, y: sourceSequenceA.frame.origin.y, width: 20, height: height)
             
             if rxOperator.multiTimelines {
-                sourceSequenceB.frame = CGRectMake(20, sourceSequenceA.frame.origin.y + sourceSequenceA.frame.height, bounds.width - 20.0, height)
-                _bLabel?.frame = CGRectMake(0, sourceSequenceB.frame.origin.y, 20, height)
+                sourceSequenceB.frame = CGRect(x: 20, y: sourceSequenceA.frame.origin.y + sourceSequenceA.frame.height, width: bounds.width - 20.0, height: height)
+                _bLabel?.frame = CGRect(x: 0, y: sourceSequenceB.frame.origin.y, width: 20, height: height)
                 _rxOperatorLabel.frame.origin.y = sourceSequenceB.frame.origin.y + height
             }
         }
-        resultSequence.frame = CGRectMake(20, _rxOperatorLabel.frame.origin.y + labelHeight + 10, bounds.width - 20, height)
+        resultSequence.frame = CGRect(x: 20, y: _rxOperatorLabel.frame.origin.y + labelHeight + 10, width: bounds.width - 20, height: height)
         
-        let size = rxOperatorText.text.boundingRectWithSize(CGSizeMake(bounds.width, 1000), options: NSStringDrawingOptions.UsesLineFragmentOrigin, attributes: [NSFontAttributeName: rxOperatorText.font!], context: nil).size
-        rxOperatorText.frame = CGRectMake(0, resultSequence.frame.origin.y + resultSequence.frame.height + 10, bounds.width, size.height + 40)
+        let size = rxOperatorText.text.boundingRect(with: CGSize(width: bounds.width, height: 1000 ),
+                                                    options: NSStringDrawingOptions.usesLineFragmentOrigin,
+                                                    attributes: [NSFontAttributeName: rxOperatorText.font!],
+                                                    context: nil).size
+        rxOperatorText.frame = CGRect(x: 0, y: resultSequence.frame.origin.y + resultSequence.frame.height + 10, width: bounds.width, height: size.height + 40)
         
-        if UIApplication.sharedApplication().statusBarOrientation.isLandscape && Device.isSmallerThanScreenSize(.Screen4_7Inch) && Device.size() != .UnknownSize {
-            trashView.center = CGPointMake(rxOperatorText.center.x, UIScreen.mainScreen().bounds.height - 60)
+        if UIApplication.shared.statusBarOrientation.isLandscape && Device.isSmallerThanScreenSize(.screen4_7Inch) && Device.size() != .unknownSize {
+            trashView.center = CGPoint(x: rxOperatorText.center.x, y: UIScreen.main.bounds.height - 60)
         } else {
             trashView.center = rxOperatorText.center
         }
@@ -132,21 +135,21 @@ class SceneView: UIView, UITextViewDelegate {
     
     func showTrashView() {
         addSubview(trashView)
-        trashView.hidden = false
-        trashView.transform = CGAffineTransformMakeScale(0.1, 0.1)
+        trashView.isHidden = false
+        trashView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         trashView.alpha = 0.05
         trashView.tintColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
-        UIView.animateWithDuration(0.3) { _ in
+        UIView.animate(withDuration: 0.3) { _ in
             self.rxOperatorText.alpha = 0.04
             self.trashView.alpha = 0.2
-            self.trashView.transform = CGAffineTransformMakeScale(1.5, 1.5)
-            self.trashView.transform = CGAffineTransformMakeScale(1.0, 1.0)
+            self.trashView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
+            self.trashView.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
         }
     }
     
     func hideTrashView() {
         Animation.hideWithCompletion(trashView) { _ in
-            UIView.animateWithDuration(0.3) { _ in
+            UIView.animate(withDuration: 0.3) { _ in
                 self.rxOperatorText.alpha = 1.0
             }
             self.trashView.removeFromSuperview()
@@ -154,15 +157,15 @@ class SceneView: UIView, UITextViewDelegate {
     }
     
     func dimRxOperatorText(editing: Bool) {
-        rxOperatorText.selectable = !editing
-        UIView.animateWithDuration(0.3) {
+        rxOperatorText.isSelectable = !editing
+        UIView.animate(withDuration: 0.3) {
             self.rxOperatorText.alpha = editing ? 0.2 : 1.0
         }
     }
     
 //    MARK: UITextViewDelegate methods
     
-    func textView(textView: UITextView, shouldInteractWithURL URL: NSURL, inRange characterRange: NSRange) -> Bool {
+    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         Notifications.openOperatorDescription.post()
         return false
     }

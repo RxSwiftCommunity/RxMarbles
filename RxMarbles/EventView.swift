@@ -13,7 +13,7 @@ class EventView: UIView {
     weak var animator: UIDynamicAnimator? = nil
     weak var sequenceView: SourceSequenceView?
     
-    var recorded = RecordedType(time: 0, event: .Completed)
+    var recorded = RecordedType(time: 0, event: .completed)
     
     var snap: UISnapBehavior? = nil
     var gravity: UIGravityBehavior? = nil
@@ -25,32 +25,32 @@ class EventView: UIView {
     var label = UILabel()
     
     init(recorded: RecordedType) {
-        super.init(frame: CGRectMake(0, 0, 42, 50))
+        super.init(frame: CGRect(x: 0, y: 0, width: 42, height: 50))
        
-        _imageView.contentMode = .Center
+        _imageView.contentMode = .center
         label.textColor = Color.black
         label.font = Font.ultraLightText(11)
         addSubview(_imageView)
         addSubview(label)
         
         layer.shouldRasterize = true
-        layer.rasterizationScale = UIScreen.mainScreen().scale
+        layer.rasterizationScale = UIScreen.main.scale
         
         switch recorded.value {
-        case let .Next(v):
+        case let .next(v):
             if let value = recorded.value.element?.value {
                 label.text = value
                 label.sizeToFit()
             }
-
+            
             _imageView.image = v.shape.image(v.color)
-            _imageView.frame = CGRectMake(0, 0, 16, 16)
-        case .Completed:
-            _imageView.image = Image.complete
+            _imageView.frame = CGRect(x: 0, y: 0, width: 16, height: 16)
+        case .completed:
+            _imageView.image = RxMarbles.Image.complete
             _imageView.tintColor = Color.black
             layer.zPosition = -1
-        case .Error:
-            _imageView.image = Image.error
+        case .error:
+            _imageView.image = RxMarbles.Image.error
             _imageView.tintColor = Color.black
             layer.zPosition = -1
         }
@@ -61,10 +61,10 @@ class EventView: UIView {
         removeBehavior?.action = {
             let sequenceView = self.sequenceView
             if let scene = sequenceView?.sceneView {
-                if let index = sequenceView?.sourceEvents.indexOf(self) {
-                    if CGRectIntersectsRect(scene.bounds, self.frame) == false {
+                if let index = sequenceView?.sourceEvents.index(of: self) {
+                    if scene.bounds.intersects(self.frame) == false {
                         self.removeFromSuperview()
-                        sequenceView?.sourceEvents.removeAtIndex(index)
+                        sequenceView?.sourceEvents.remove(at: index)
                         scene.resultSequence.subject.onNext()
                     }
                 }
@@ -72,14 +72,14 @@ class EventView: UIView {
         }
         self.recorded = recorded
         _tapGestureRecognizer.addTarget(self, action: #selector(EventView.setEventView))
-        _tapGestureRecognizer.enabled = false
+        _tapGestureRecognizer.isEnabled = false
         addGestureRecognizer(_tapGestureRecognizer)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        _imageView.center = CGPointMake(bounds.width / 2.0, bounds.height / 2.0)
-        label.center = CGPointMake(bounds.width / 2.0, bounds.height * 0.15)
+        _imageView.center = CGPoint(x: bounds.width / 2.0, y: bounds.height / 2.0)
+        label.center = CGPoint(x: bounds.width / 2.0, y: bounds.height * 0.15)
     }
     
     func use(animator: UIDynamicAnimator?, sequence: SourceSequenceView?) {
@@ -90,16 +90,16 @@ class EventView: UIView {
         self.sequenceView = sequence
         if let sequence = sequence {
             let x = sequence.xPositionByTime(recorded.time)
-            center = CGPointMake(x, sequence.bounds.height / 2.0)
-            snap = UISnapBehavior(item: self, snapToPoint: CGPointMake(x, center.y))
+            center = CGPoint(x: x, y: sequence.bounds.height / 2.0)
+            snap = UISnapBehavior(item: self, snapTo: CGPoint(x: x, y: center.y))
         }
         
         
-        userInteractionEnabled = animator != nil
+        isUserInteractionEnabled = animator != nil
     }
     
     var isCompleted: Bool {
-        if case .Completed = recorded.value {
+        if case .completed = recorded.value {
             return true
         } else {
             return false
@@ -107,7 +107,7 @@ class EventView: UIView {
     }
     
     var isNext: Bool {
-        if case .Next = recorded.value {
+        if case .next = recorded.value {
             return true
         } else {
             return false
@@ -115,7 +115,7 @@ class EventView: UIView {
     }
     
     var isError: Bool {
-        if case .Error = recorded.value {
+        if case .error = recorded.value {
             return true
         } else {
             return false
@@ -123,11 +123,11 @@ class EventView: UIView {
     }
     
     func addTapRecognizer() {
-        _tapGestureRecognizer.enabled = true
+        _tapGestureRecognizer.isEnabled = true
     }
     
     func removeTapRecognizer() {
-        _tapGestureRecognizer.enabled = false
+        _tapGestureRecognizer.isEnabled = false
     }
     
     func setEventView() {
@@ -135,15 +135,15 @@ class EventView: UIView {
     }
     
     func setGhostColorOnDeleteZone(onDeleteZone: Bool) {
-        let color: UIColor = onDeleteZone ? .redColor() : .grayColor()
+        let color: UIColor = onDeleteZone ? .red : .gray
         let alpha: CGFloat = onDeleteZone ? 1.0 : 0.2
         switch recorded.value {
-        case .Next:
-            _imageView.image = recorded.value.element?.shape.image.imageWithRenderingMode(.AlwaysTemplate)
-        case .Completed:
-            _imageView.image = Image.complete.imageWithRenderingMode(.AlwaysTemplate)
-        case .Error:
-            _imageView.image = Image.error.imageWithRenderingMode(.AlwaysTemplate)
+        case .next:
+            _imageView.image = recorded.value.element?.shape.image.withRenderingMode(.alwaysTemplate)
+        case .completed:
+            _imageView.image = RxMarbles.Image.complete.withRenderingMode(.alwaysTemplate)
+        case .error:
+            _imageView.image = RxMarbles.Image.error.withRenderingMode(.alwaysTemplate)
         }
         _imageView.tintColor = color
         self.alpha = alpha

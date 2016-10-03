@@ -1,3 +1,4 @@
+
 //
 //  AppDelegate.swift
 //  RxMarbles
@@ -22,7 +23,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     private let _operatorsTableViewController = OperatorsTableViewController()
     private let _splitViewController = UISplitViewController()
 
-    func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
+
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Fabric.with([Crashlytics.self])
         
         window = UIWindow()
@@ -35,30 +37,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         _splitViewController.viewControllers = [masterNav, detailNav]
         
         window?.rootViewController = _splitViewController
-       
-        let showIntroKey = "show_intro"
-        let defaults = NSUserDefaults.standardUserDefaults()
         
-        if defaults.objectForKey(showIntroKey) == nil {
-            defaults.setObject(true, forKey: showIntroKey)
+        let showIntroKey = "show_intro"
+        let defaults = UserDefaults.standard
+        
+        if defaults.object(forKey: showIntroKey) == nil {
+            defaults.set(true, forKey: showIntroKey)
         }
         
         self.window?.makeKeyAndVisible()
         
-        if defaults.objectForKey(showIntroKey)?.boolValue == true {
+        if (defaults.object(forKey: showIntroKey)! as AnyObject).boolValue == true {
             _showHelpWindow()
         } else {
             showMainWindow()
         }
         
-        defaults.setObject(false, forKey: showIntroKey)
+        defaults.set(false, forKey: showIntroKey)
         defaults.synchronize()
         
-        NSOperationQueue.mainQueue().addOperationWithBlock(Operator.index)
+        OperationQueue.main.addOperation(Operator.index)
         
-        Notifications.hideHelpWindow.rx().subscribeNext { _ in
-           self.showMainWindow()
-        }.addDisposableTo(_disposeBag)
+        Notifications.hideHelpWindow.rx().subscribe { _ in
+            self.showMainWindow()
+            }.addDisposableTo(_disposeBag)
         
         return true
     }
@@ -72,15 +74,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func showMainWindow() {
-        UIView.animateWithDuration(0.5) {
+        UIView.animate(withDuration: 0.5) {
             self.introWindow?.alpha = 0
         }
     }
-
+    
     // MARK: UISplitViewControllerDelegate
-    func splitViewController(splitViewController: UISplitViewController, showDetailViewController vc: UIViewController, sender: AnyObject?) -> Bool {
-      
-        if splitViewController.collapsed {
+    
+    func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
+        if splitViewController.isCollapsed {
             if let masterNav = splitViewController.viewControllers.first as? UINavigationController {
                 masterNav.pushViewController(vc, animated: true)
                 return true
@@ -95,10 +97,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         return false
     }
     
-   
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
         if let detailNav = secondaryViewController as? UINavigationController,
-           let masterNav = primaryViewController as? UINavigationController {
+            let masterNav = primaryViewController as? UINavigationController {
             let detailControllers = detailNav.childViewControllers
             masterNav.viewControllers = masterNav.childViewControllers + detailControllers
             return true
@@ -108,22 +109,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
         
-        if let detail = primaryViewController.separateSecondaryViewControllerForSplitViewController(splitViewController) {
+        if let detail = primaryViewController.separateSecondaryViewController(for: splitViewController) {
             return UINavigationController(rootViewController: detail)
         } else {
             let op = _operatorsTableViewController.selectedOperator
             return UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
         }
     }
-   
+    
     // MARK: Shortcuts
-    func application(application: UIApplication, performActionForShortcutItem shortcutItem: UIApplicationShortcutItem, completionHandler: (Bool) -> Void) {
+    
+    func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
         focusSearch()
     }
     
     func focusSearch() {
         if let nav = _splitViewController.viewControllers.first as? UINavigationController {
-            nav.popToRootViewControllerAnimated(false)
+            nav.popToRootViewController(animated: false)
             
             
             _operatorsTableViewController.focusSearch()
@@ -131,23 +133,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     // MARK: UserActivity
-    func application(application: UIApplication, continueUserActivity userActivity: NSUserActivity, restorationHandler: ([AnyObject]?) -> Void) -> Bool {
-     
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+        
         var operatorRawValue = Operator.CombineLatest.rawValue
         
         // NSUserActivity
         if let _ = UserActivityType(rawValue: userActivity.activityType),
             let opRawValue = userActivity.userInfo?["operator"] as? String {
             operatorRawValue = opRawValue
-        // Spotlite index
+            // Spotlite index
         } else if userActivity.activityType == CSSearchableItemActionType,
             let opRawValue = userActivity.userInfo?[CSSearchableItemActivityIdentifier] as? String {
             operatorRawValue = opRawValue
         }
         if  let op = Operator(rawValue: operatorRawValue),
             let nav = _splitViewController.viewControllers.first as? UINavigationController {
-            nav.popToRootViewControllerAnimated(false)
-            _operatorsTableViewController.presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
+            nav.popToRootViewController(animated: false)
+            _operatorsTableViewController.presentingViewController?.dismiss(animated: false, completion: nil)
             _operatorsTableViewController.openOperator(op)
         }
         
@@ -156,9 +158,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     // MARK: Commands
     override var keyCommands: [UIKeyCommand]? {
-        let cmdF = UIKeyCommand(input: "f", modifierFlags: [.Command], action: #selector(AppDelegate.focusSearch), discoverabilityTitle: "Search")
+        let cmdF = UIKeyCommand(input: "f", modifierFlags: [.command], action: #selector(AppDelegate.focusSearch), discoverabilityTitle: "Search")
         return [cmdF]
     }
-    
+
+
 }
 

@@ -24,42 +24,42 @@ struct Animation {
         animation.repeatCount = 10000
         
         if view.layer.animationKeys() == nil {
-            view.layer.addAnimation(animation, forKey: "shake")
+            view.layer.add(animation, forKey: "shake")
         }
     }
     
     static func stopShake(view: UIView) {
-        view.layer.removeAnimationForKey("shake")
+        view.layer.removeAnimation(forKey: "shake")
     }
     
-    static func hideWithCompletion(view: UIView, completion: (Bool) -> Void) {
-        UIView.animateWithDuration(
-            0.3,
+    static func hideWithCompletion(_ view: UIView, completion: @escaping (Bool) -> Void) {
+        UIView.animate(
+            withDuration: 0.3,
             animations: {
                 view.alpha = 0.01
-                view.transform = CGAffineTransformMakeScale(0.1, 0.1)
+                view.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
             },
             completion: completion
         )
     }
     
-    static func scale(view: UIView) {
-        UIView.animateWithDuration(
-            0.3,
+    static func scale(_ view: UIView) {
+        UIView.animate(
+            withDuration: 0.3,
             animations: {
-                view.transform = CGAffineTransformMakeScale(4.0, 4.0)
-                view.transform = CGAffineTransformMakeScale(1.0, 1.0)
+                view.transform = CGAffineTransform(scaleX: 4.0, y: 4.0)
+                view.transform = CGAffineTransform(scaleX: 1.0, y: 1.0)
             }
         )
     }
     
-    static func rotate(view:UIView, toAngle angle: CGFloat) {
-        UIView.animateWithDuration(0.6) {
+    static func rotate(_ view:UIView, toAngle angle: CGFloat) {
+        UIView.animate(withDuration: 0.6) {
             if angle > 0.0 {
-                view.transform = CGAffineTransformMakeRotation(angle)
-                view.transform = CGAffineTransformTranslate(view.transform, 0.0, 3.0)
+                view.transform = CGAffineTransform(rotationAngle: angle)
+                view.transform = view.transform.translatedBy(x: 0.0, y: 3.0)
             } else {
-                view.transform = CGAffineTransformIdentity
+                view.transform = CGAffineTransform.identity
             }
         }
     }

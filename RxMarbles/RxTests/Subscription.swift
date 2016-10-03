@@ -9,38 +9,38 @@
 import Foundation
 
 /**
-Records information about subscriptions to and unsubscriptions from observable sequences.
-*/
+ Records information about subscriptions to and unsubscriptions from observable sequences.
+ */
 public struct Subscription
     : Equatable
     , Hashable
-    , CustomDebugStringConvertible {
-
+, CustomDebugStringConvertible {
+    
     /**
      Subscription virtual time.
-    */
+     */
     public let subscribe : Int
     /**
      Unsubscription virtual time.
-    */
+     */
     public let unsubscribe : Int
-
+    
     /**
      Creates a new subscription object with the given virtual subscription time.
      
      - parameter subscribe: Virtual time at which the subscription occurred.
-    */
+     */
     public init(_ subscribe: Int) {
         self.subscribe = subscribe
         self.unsubscribe = Int.max
     }
-
+    
     /**
      Creates a new subscription object with the given virtual subscription and unsubscription time.
-
+     
      - parameter subscribe: Virtual time at which the subscription occurred.
      - parameter unsubscribe: Virtual time at which the unsubscription occurred.
-    */
+     */
     public init(_ subscribe: Int, _ unsubscribe: Int) {
         self.subscribe = subscribe
         self.unsubscribe = unsubscribe
@@ -48,23 +48,19 @@ public struct Subscription
     
     /**
      The hash value.
-    */
+     */
     public var hashValue : Int {
-        get {
-            return subscribe.hashValue ^ unsubscribe.hashValue
-        }
+        return subscribe.hashValue ^ unsubscribe.hashValue
     }
 }
 
 extension Subscription {
-    /** 
-    A textual representation of `self`, suitable for debugging.
-    */
+    /**
+     A textual representation of `self`, suitable for debugging.
+     */
     public var debugDescription : String {
-        get {
-            let infiniteText = "Infinity"
-            return "(\(subscribe) : \(unsubscribe != Int.max ? String(unsubscribe) : infiniteText))"
-        }
+        let infiniteText = "Infinity"
+        return "(\(subscribe) : \(unsubscribe != Int.max ? String(unsubscribe) : infiniteText))"
     }
 }
 

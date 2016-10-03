@@ -32,7 +32,7 @@
 		0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */; };
 		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
 		0AFA29EC1C772DA300070AF2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFA29EB1C772DA300070AF2 /* Notifications.swift */; };
-		B56EA8098BC0F10D42724B4F /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */; };
+		6B5417EA67FBF1ABDB81F389 /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */; };
 		D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25E7A4F1C41BD4800B08F70 /* Operator.swift */; };
 		D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */; };
 		D28A68481C629073008A8C6F /* OperatorCode.swift in Sources */ = {isa = PBXBuildFile; fileRef = D28A68471C629073008A8C6F /* OperatorCode.swift */; };
@@ -74,8 +74,10 @@
 		0AC266071C3E96C2009E28FD /* TestableObserver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestableObserver.swift; sourceTree = "<group>"; };
 		0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorsTableViewController.swift; sourceTree = "<group>"; };
 		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EquatableArray.swift; sourceTree = "<group>"; };
-		0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		0AFA29EB1C772DA300070AF2 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.debug.xcconfig"; sourceTree = "<group>"; };
+		CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.release.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.release.xcconfig"; sourceTree = "<group>"; };
 		D25E7A4F1C41BD4800B08F70 /* Operator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
 		D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = "Launch Screen.storyboard"; sourceTree = "<group>"; };
 		D28A68471C629073008A8C6F /* OperatorCode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorCode.swift; sourceTree = "<group>"; };
@@ -87,8 +89,6 @@
 		D2F561B01C52B13B0041C9A3 /* Image.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		D2F561B21C52B15B0041C9A3 /* ColoredType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ColoredType.swift; sourceTree = "<group>"; };
 		D2F561B41C52B2160041C9A3 /* EventShape.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventShape.swift; sourceTree = "<group>"; };
-		E53F520ED8D12F16A6CA768B /* Pods-RxMarbles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.release.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.release.xcconfig"; sourceTree = "<group>"; };
-		FC5F3BE6490B02E2D9D720E3 /* Pods-RxMarbles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,7 +96,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B56EA8098BC0F10D42724B4F /* Pods_RxMarbles.framework in Frameworks */,
+				6B5417EA67FBF1ABDB81F389 /* Pods_RxMarbles.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -131,8 +131,8 @@
 				D25E7A511C41BF3F00B08F70 /* Launch Screen.storyboard */,
 				0AC265911C3D2C24009E28FD /* RxMarbles */,
 				0AC265901C3D2C24009E28FD /* Products */,
-				8153F03DEC8FA4DD67B90F09 /* Pods */,
 				D028916D53309B4D877173B9 /* Frameworks */,
+				3C070976F34E97EE5EAAE3BE /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -178,11 +178,11 @@
 			path = Schedulers;
 			sourceTree = "<group>";
 		};
-		8153F03DEC8FA4DD67B90F09 /* Pods */ = {
+		3C070976F34E97EE5EAAE3BE /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				FC5F3BE6490B02E2D9D720E3 /* Pods-RxMarbles.debug.xcconfig */,
-				E53F520ED8D12F16A6CA768B /* Pods-RxMarbles.release.xcconfig */,
+				6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */,
+				CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -190,8 +190,8 @@
 		D028916D53309B4D877173B9 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				0AE9F116A7FA7CF82830AA31 /* Pods_RxMarbles.framework */,
 				0AC265A41C3D2D1B009E28FD /* SpriteKit.framework */,
+				354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -247,13 +247,13 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 0AC265A11C3D2C24009E28FD /* Build configuration list for PBXNativeTarget "RxMarbles" */;
 			buildPhases = (
-				109F769F40BAF5DDF2EB1C50 /* Check Pods Manifest.lock */,
+				45FD365BAAC66359A170F6FB /* [CP] Check Pods Manifest.lock */,
 				0AC2658B1C3D2C24009E28FD /* Sources */,
 				0AC2658C1C3D2C24009E28FD /* Frameworks */,
 				0AC2658D1C3D2C24009E28FD /* Resources */,
-				D21B76E9BF248CAD0260930D /* Embed Pods Frameworks */,
-				F747CF4A6B2E09D392FB721F /* Copy Pods Resources */,
 				0A9D41121C5F31A700ECADF1 /* Run Fabric */,
+				9C2518058971B20966D61966 /* [CP] Embed Pods Frameworks */,
+				C14C82473CBB5DFB88A02D1E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -272,7 +272,7 @@
 			attributes = {
 				CLASSPREFIX = RXM;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0720;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = AnjLab;
 				TargetAttributes = {
 					0AC2658E1C3D2C24009E28FD = {
@@ -328,29 +328,29 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\" b824a78adf5fc476fa301f0ae83ab49db162c671 88e1da6edaebfbae81b510e11bfef114ee0abf2e1d677c9305dc4027af2ad278";
 		};
-		109F769F40BAF5DDF2EB1C50 /* Check Pods Manifest.lock */ = {
+		45FD365BAAC66359A170F6FB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Check Pods Manifest.lock";
+			name = "[CP] Check Pods Manifest.lock";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
 			showEnvVarsInLog = 0;
 		};
-		D21B76E9BF248CAD0260930D /* Embed Pods Frameworks */ = {
+		9C2518058971B20966D61966 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Embed Pods Frameworks";
+			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,14 +358,14 @@
 			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		F747CF4A6B2E09D392FB721F /* Copy Pods Resources */ = {
+		C14C82473CBB5DFB88A02D1E /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Copy Pods Resources";
+			name = "[CP] Copy Pods Resources";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -431,8 +431,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -459,6 +461,7 @@
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -475,8 +478,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -496,14 +501,17 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 2.3;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
 		};
 		0AC265A21C3D2C24009E28FD /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = FC5F3BE6490B02E2D9D720E3 /* Pods-RxMarbles.debug.xcconfig */;
+			baseConfigurationReference = 6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -514,14 +522,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
 		0AC265A31C3D2C24009E28FD /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E53F520ED8D12F16A6CA768B /* Pods-RxMarbles.release.xcconfig */;
+			baseConfigurationReference = CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = YES;
@@ -530,6 +540,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

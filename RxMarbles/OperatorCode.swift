@@ -20,7 +20,7 @@ extension Operator {
             return "a.catchError { _ in .just(1) }"
         case .CatchErrorJustReturn:
             return "a.catchErrorJustReturn(1)"
-        case CombineLatest:
+        case .CombineLatest:
             return "Observable.combineLatest(a, b) { $0 + $1 }"
         case .Concat:
             return "[a, b].concat()"
@@ -119,21 +119,21 @@ private let __typeRegex = try? NSRegularExpression(pattern: "(Observable)|(Int64
 private let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
 private let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
-private func __colorize(src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [String: AnyObject]) {
+private func __colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [String: AnyObject]) {
     
     let str = src.string as NSString
     
-    let matches = regex.matchesInString(src.string, options: [], range: NSMakeRange(0, str.length))
+    let matches = regex.matches(in: src.string, options: [], range: NSMakeRange(0, str.length))
     
     for m in matches {
-        let r = m.rangeAtIndex(rangeIndex)
+        let r = m.rangeAt(rangeIndex)
         src.setAttributes(attrs, range: r)
     }
 }
 
 extension Operator {
     func higlightedCode() -> NSAttributedString {
-        let font = Font.code(.MonoRegular, size:18)
+        let font = Font.code(.monoRegular, size:18)
         let src = NSMutableAttributedString(string: code, attributes: [
             NSFontAttributeName: font,
             NSForegroundColorAttributeName: Color.codeDefault

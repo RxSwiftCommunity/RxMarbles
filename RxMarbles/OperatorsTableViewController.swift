@@ -67,28 +67,27 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         
         title = "Operators"
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .Plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
         
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
-        _searchController.searchBar.searchBarStyle = .Minimal
+        _searchController.searchBar.searchBarStyle = .minimal
        
         definesPresentationContext = true
         
         tableView.tableHeaderView = _searchController.searchBar
         tableView.tableFooterView = UIView()
         
-        tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
         
-        tableView
-            .rx_itemSelected
+        tableView.rx
+            .itemSelected
             .map(_rowAtIndexPath)
-            .subscribeNext { [unowned self] op in self.openOperator(op)
-            }
+            .subscribe(onNext: { [unowned self] op in self.openOperator(op) })
             .addDisposableTo(_disposeBag)
         
         // Check for force touch feature, and add force touch/previewing capability.
-        if traitCollection.forceTouchCapability == .Available {
+        if traitCollection.forceTouchCapability == .available {
             /*  
                 Register for `UIViewControllerPreviewingDelegate` to enable
                 "Peek" and "Pop".
@@ -97,11 +96,11 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
                 The view controller will be automatically unregistered when it is
                 deallocated.
             */
-            registerForPreviewingWithDelegate(self, sourceView: view)
+            registerForPreviewing(with: self, sourceView: view)
         }
     }
     
-    func openOperator(op: Operator) {
+    func openOperator(_ op: Operator) {
         selectedOperator = op
         let viewController = OperatorViewController(rxOperator: selectedOperator)
         showDetailViewController(viewController, sender: nil)
@@ -109,7 +108,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     
     func openHelpView() {
         let helpController = HelpViewController()
-        presentViewController(helpController, animated: true, completion: nil)
+        present(helpController, animated: true, completion: nil)
     }
 
     // MARK: - Table view data source
@@ -117,31 +116,31 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     private var _activeSections: [Section] {
         get { return isSearchActive() ? _filteredSections : _sections }
     }
-
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return _activeSections.count
     }
     
-    override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let sec = _activeSections[section]
         return sec.name
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return _activeSections[section].rows.count
     }
     
-    private func _rowAtIndexPath(indexPath: NSIndexPath) -> Operator {
+    fileprivate func _rowAtIndexPath(_ indexPath: IndexPath) -> Operator {
         let section = _activeSections[indexPath.section]
         return section.rows[indexPath.row]
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let op = _rowAtIndexPath(indexPath)
-        let cell = tableView.dequeueReusableCellWithIdentifier("OperatorCell", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OperatorCell", for: indexPath as IndexPath)
         
         cell.textLabel?.text = op.description
-        cell.accessoryType = op == selectedOperator ? .Checkmark : .None
+        cell.accessoryType = op == selectedOperator ? .checkmark : .none
 
         return cell
     }
@@ -152,7 +151,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         _filteredSections.removeAll()
         _sections.forEach({ section in
             let results = section.rows.filter({ row in
-                row.description.lowercaseString.containsString(text.lowercaseString)
+                row.description.range(of: text.lowercased()) != nil
             })
             if results.count > 0 {
                 _filteredSections.append(Section(name: section.name, rows: results))
@@ -163,35 +162,35 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
 //    MARK: - UISearchResultsUpdating
     
     func isSearchActive() -> Bool {
-        return _searchController.active && _searchController.searchBar.text != ""
+        return _searchController.isActive && _searchController.searchBar.text != ""
     }
     
-    func updateSearchResultsForSearchController(searchController: UISearchController) {
+    func updateSearchResults(for searchController: UISearchController) {
         if let searchString = searchController.searchBar.text {
-            filterSectionsWithText(searchString)
+            filterSectionsWithText(text: searchString)
         }
         tableView.reloadData()
     }
     
     func focusSearch() {
-        presentingViewController?.dismissViewControllerAnimated(false, completion: nil)
+        presentingViewController?.dismiss(animated: false, completion: nil)
         _searchController.searchBar.becomeFirstResponder()
     }
     
 //    MARK: UIContentContainer
     
-    override func viewWillTransitionToSize(size: CGSize, withTransitionCoordinator coordinator: UIViewControllerTransitionCoordinator) {
-        super.viewWillTransitionToSize(size, withTransitionCoordinator: coordinator)
-        _searchController.active = false
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        _searchController.isActive = false
     }
 }
 
 extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
     /// Create a previewing view controller to be shown at "Peek".
-    func previewingContext(previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         // Obtain the index path and the cell that was pressed.
-        guard let indexPath = tableView.indexPathForRowAtPoint(location),
-                  cell = tableView.cellForRowAtIndexPath(indexPath)
+        guard let indexPath = tableView.indexPathForRow(at: location),
+              let cell = tableView.cellForRow(at: indexPath)
         else { return nil }
         
         selectedOperator = _rowAtIndexPath(indexPath)
@@ -206,7 +205,7 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
     }
     
     /// Present the view controller for the "Pop" action.
-    func previewingContext(previewingContext: UIViewControllerPreviewing, commitViewController viewControllerToCommit: UIViewController) {
+    func previewingContext(_ previewingContext: UIViewControllerPreviewing, commit viewControllerToCommit: UIViewController) {
         // Reuse the "Peek" view controller for presentation.
         showDetailViewController(viewControllerToCommit, sender: self)
     }

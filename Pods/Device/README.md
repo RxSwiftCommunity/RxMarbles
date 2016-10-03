@@ -5,7 +5,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/Device.svg?style=flat)](http://cocoapods.org/pods/Device)
 ![](https://img.shields.io/badge/Supported-iOS8-4BC51D.svg?style=flat-square)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-![](https://img.shields.io/badge/Swift 2-compatible-4BC51D.svg?style=flat-square)
+![](https://img.shields.io/badge/Swift 3-compatible-4BC51D.svg?style=flat-square)
 
 Device detect the current  device model and screen size.
 
@@ -15,7 +15,7 @@ Device is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Device", '~> 1.0.1'
+pod "Device", '~> 1.1.0'
 ```
 
 ## Carthage
@@ -32,7 +32,7 @@ $ brew install carthage
 To integrate Device into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "Ekhoo/Device" ~> 1.0.1
+github "Ekhoo/Device" ~> 1.1.0
 ```
 
 Run `carthage update` to build the framework and drag the built `Device.framework` into your Xcode project.
@@ -113,6 +113,28 @@ func myFunc() {
             default:            print("Unknown device type")
         }
 }
+
+```
+
+or 
+
+```swift
+func myFunc() {
+        /*** Display the device type ***/
+        if (Device.isPad()){
+            print("It's an iPad")
+        }
+        else if (Device.isPhone()){
+            print("It's an iPhone")
+        }
+        else if (Device.isPod()){
+            print("It's an iPod")
+        }
+        else if (Device.isSimulator()){
+            print("It's a Simulated device")
+        }
+}
+
 ```
 
 ## Helpers
@@ -130,6 +152,11 @@ func myFunc() {
         if Device.isSmallerThanScreenSize(Size.Screen4_7Inch) {
             print("Your device screen is smaller than 4.7 inch")
         }
+
+        if Device.isRetina() {
+            print("It's a retina display")
+        }
+        
 }
 ```
 

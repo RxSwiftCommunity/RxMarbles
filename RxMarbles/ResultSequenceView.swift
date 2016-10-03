@@ -27,7 +27,7 @@ class ResultSequenceView: SequenceView {
         
         subject
             .debounce(debounce, scheduler: MainScheduler.instance)
-            .subscribeNext { [unowned self] _ in
+            .subscribe { [unowned self] _ in
                 self.updateEvents(
                 (
                     a: self._sceneView.sourceSequenceA?.sourceEvents,
@@ -38,7 +38,7 @@ class ResultSequenceView: SequenceView {
         .addDisposableTo(disposeBag)
     }
     
-    private func updateEvents(sourceEvents: (a: [EventView]?, b: [EventView]?)) {
+    private func updateEvents(_ sourceEvents: (a: [EventView]?, b: [EventView]?)) {
         let scheduler = TestScheduler(initialClock: 0)
         
         var first: TestableObservable<ColoredType>? = nil
@@ -66,10 +66,10 @@ class ResultSequenceView: SequenceView {
         addEventsToTimeline(res!.events)
     }
     
-    func addEventsToTimeline(events: [RecordedType]) {
+    func addEventsToTimeline(_ events: [RecordedType]) {
         sourceEvents.forEach { $0.removeFromSuperview() }
         
-        let sortedEvents = events.sort {
+        let sortedEvents = events.sorted {
             return $0.time < $1.time
         }
         
@@ -79,30 +79,30 @@ class ResultSequenceView: SequenceView {
             var newSourceEvents = [EventView]()
             sortedEvents.forEach { event in
                 switch event.value {
-                case .Next:
-                    let angleIndex = sortedEvents.indexOf({ $0 == event })
+                case .next:
+                    let angleIndex = sortedEvents.index(where: { $0 == event })
                     let angle = ang[angleIndex!]
-                    if let index = sourceEvents.indexOf({ $0.isNext }) {
-                        let eventView = reuseEventView(index, recorded: event)
+                    if let index = sourceEvents.index(where: { $0.isNext }) {
+                        let eventView = reuseEventView(index: index, recorded: event)
                         eventView.refreshColorAndValue()
                         newSourceEvents.append(eventView)
                         Animation.rotate(eventView, toAngle: angle)
                     } else {
-                        let eventView = newEventView(RecordedType(time: event.time, event: event.value))
+                        let eventView = newEventView(recorded: RecordedType(time: event.time, event: event.value))
                         newSourceEvents.append(eventView)
                         Animation.rotate(eventView, toAngle: angle)
                     }
-                case .Completed:
-                    if let index = sourceEvents.indexOf({ $0.isCompleted }) {
-                        newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Completed)))
+                case .completed:
+                    if let index = sourceEvents.index(where: { $0.isCompleted }) {
+                        newSourceEvents.append(reuseEventView(index: index, recorded: RecordedType(time: event.time, event: .completed)))
                     } else {
-                        newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Completed)))
+                        newSourceEvents.append(newEventView(recorded: RecordedType(time: event.time, event: .completed)))
                     }
-                case .Error:
-                    if let index = sourceEvents.indexOf({ $0.isError }) {
-                        newSourceEvents.append(reuseEventView(index, recorded: RecordedType(time: event.time, event: .Error(RxError.Unknown))))
+                case .error:
+                    if let index = sourceEvents.index(where: { $0.isError }) {
+                        newSourceEvents.append(reuseEventView(index: index, recorded: RecordedType(time: event.time, event: .error(RxError.unknown))))
                     } else {
-                        newSourceEvents.append(newEventView(RecordedType(time: event.time, event: .Error(RxError.Unknown))))
+                        newSourceEvents.append(newEventView(recorded: RecordedType(time: event.time, event: .error(RxError.unknown))))
                     }
                 }
             }
@@ -112,7 +112,7 @@ class ResultSequenceView: SequenceView {
     
     private func reuseEventView(index: Int, recorded: RecordedType) -> EventView {
         let reuseEventView = sourceEvents[index]
-        sourceEvents.removeAtIndex(index)
+        _ = sourceEvents.remove(at: index)
         reuseEventView.recorded = RecordedType(time: recorded.time, event: recorded.value)
         reuseEventView.center.x = xPositionByTime(recorded.time)
         reuseEventView.center.y = bounds.height / 2
@@ -130,7 +130,7 @@ class ResultSequenceView: SequenceView {
     
     override func setEditing() {
         super.setEditing()
-        UIView.animateWithDuration(0.3) { _ in
+        UIView.animate(withDuration: 0.3) { _ in
             self.alpha = self.editing ? 0.5 : 1.0
         }
         if !editing {

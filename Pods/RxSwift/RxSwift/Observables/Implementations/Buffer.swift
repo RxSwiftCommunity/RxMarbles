@@ -10,10 +10,10 @@ import Foundation
 
 class BufferTimeCount<Element> : Producer<[Element]> {
     
-    private let _timeSpan: RxTimeInterval
-    private let _count: Int
-    private let _scheduler: SchedulerType
-    private let _source: Observable<Element>
+    fileprivate let _timeSpan: RxTimeInterval
+    fileprivate let _count: Int
+    fileprivate let _scheduler: SchedulerType
+    fileprivate let _source: Observable<Element>
     
     init(source: Observable<Element>, timeSpan: RxTimeInterval, count: Int, scheduler: SchedulerType) {
         _source = source
@@ -22,18 +22,18 @@ class BufferTimeCount<Element> : Producer<[Element]> {
         _scheduler = scheduler
     }
     
-    override func run<O : ObserverType where O.E == [Element]>(observer: O) -> Disposable {
+    override func run<O : ObserverType>(_ observer: O) -> Disposable where O.E == [Element] {
         let sink = BufferTimeCountSink(parent: self, observer: observer)
         sink.disposable = sink.run()
         return sink
     }
 }
 
-class BufferTimeCountSink<Element, O: ObserverType where O.E == [Element]>
+class BufferTimeCountSink<Element, O: ObserverType>
     : Sink<O>
     , LockOwnerType
     , ObserverType
-    , SynchronizedOnType {
+    , SynchronizedOnType where O.E == [Element] {
     typealias Parent = BufferTimeCount<Element>
     typealias E = Element
     
@@ -53,7 +53,7 @@ class BufferTimeCountSink<Element, O: ObserverType where O.E == [Element]>
  
     func run() -> Disposable {
         createTimer(_windowID)
-        return StableCompositeDisposable.create(_timerD, _parent._source.subscribe(self))
+        return Disposables.create(_timerD, _parent._source.subscribe(self))
     }
     
     func startNewWindowAndSendCurrentOne() {
@@ -62,37 +62,37 @@ class BufferTimeCountSink<Element, O: ObserverType where O.E == [Element]>
         
         let buffer = _buffer
         _buffer = []
-        forwardOn(.Next(buffer))
+        forwardOn(.next(buffer))
         
         createTimer(windowID)
     }
     
-    func on(event: Event<E>) {
+    func on(_ event: Event<E>) {
         synchronizedOn(event)
     }
 
-    func _synchronized_on(event: Event<E>) {
+    func _synchronized_on(_ event: Event<E>) {
         switch event {
-        case .Next(let element):
+        case .next(let element):
             _buffer.append(element)
             
             if _buffer.count == _parent._count {
                 startNewWindowAndSendCurrentOne()
             }
             
-        case .Error(let error):
+        case .error(let error):
             _buffer = []
-            forwardOn(.Error(error))
+            forwardOn(.error(error))
             dispose()
-        case .Completed:
-            forwardOn(.Next(_buffer))
-            forwardOn(.Completed)
+        case .completed:
+            forwardOn(.next(_buffer))
+            forwardOn(.completed)
             dispose()
         }
     }
     
-    func createTimer(windowID: Int) {
-        if _timerD.disposed {
+    func createTimer(_ windowID: Int) {
+        if _timerD.isDisposed {
             return
         }
         
@@ -113,7 +113,7 @@ class BufferTimeCountSink<Element, O: ObserverType where O.E == [Element]>
                 self.startNewWindowAndSendCurrentOne()
             }
             
-            return NopDisposable.instance
+            return Disposables.create()
         }
     }
 }
