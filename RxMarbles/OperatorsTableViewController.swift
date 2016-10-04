@@ -149,9 +149,11 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     
     private func filterSectionsWithText(text: String) {
         _filteredSections.removeAll()
+        
         _sections.forEach({ section in
             let results = section.rows.filter({ row in
-                row.description.range(of: text.lowercased()) != nil
+                row.description.range(of: text, options: String.CompareOptions.caseInsensitive) != nil
+                
             })
             if results.count > 0 {
                 _filteredSections.append(Section(name: section.name, rows: results))
