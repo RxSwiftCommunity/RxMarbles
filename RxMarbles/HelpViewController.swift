@@ -951,10 +951,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         if scrollView.contentOffset.x == pageWidth * CGFloat(numberOfPages() - 1) {
             view.isUserInteractionEnabled = false
             if helpMode {
-//                MARK: Delay before dismiss
-                let sec = 0.3
-                let delay = sec * Double(NSEC_PER_SEC)
-                
+                // Delay before dismiss
+                let delay = 0.4
                 DispatchQueue.main.asyncAfter(deadline: .now() + delay) {
                     self.dismiss(animated: true, completion: nil)
                 }

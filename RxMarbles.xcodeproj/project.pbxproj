@@ -278,6 +278,7 @@
 					0AC2658E1C3D2C24009E28FD = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = FD6ZML48V9;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -533,6 +534,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
