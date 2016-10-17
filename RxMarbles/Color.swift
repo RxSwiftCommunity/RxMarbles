@@ -34,7 +34,7 @@ struct Color {
     static var nextRandom: UIColor {
         var allColors = nextAll
         allColors.removeLast()
-        return allColors[Int(arc4random()) % allColors.count]
+        return allColors[Int(arc4random() % UInt32(allColors.count))]
     }
     
     
