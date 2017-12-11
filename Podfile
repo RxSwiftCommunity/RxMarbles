@@ -5,8 +5,8 @@ use_frameworks!
 
 target 'RxMarbles' do
 
-pod 'RxSwift',    '~> 3.0.0-beta.1'
-pod 'RxCocoa',    '~> 3.0.0-beta.1'
+pod 'RxSwift',    '~> 4.0'
+pod 'RxCocoa',    '~> 4.0'
 pod 'Device'
 pod 'Fabric'
 pod 'Crashlytics'
@@ -17,7 +17,7 @@ end
 post_install do |installer|
   installer.pods_project.targets.each do |target|
     target.build_configurations.each do |configuration|
-      configuration.build_settings['SWIFT_VERSION'] = "3.0"
+      configuration.build_settings['SWIFT_VERSION'] = "4.0"
     end
   end
 end

@@ -1,6 +1,6 @@
 //
 //  UIView+Rx.swift
-//  Rx
+//  RxCocoa
 //
 //  Created by Krunoslav Zaher on 12/6/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
@@ -8,30 +8,33 @@
 
 #if os(iOS) || os(tvOS)
 
-import Foundation
 import UIKit
 #if !RX_NO_MODULE
 import RxSwift
 #endif
 
 extension Reactive where Base: UIView {
-    /**
-     Bindable sink for `hidden` property.
-     */
-    public var hidden: AnyObserver<Bool> {
-        return UIBindingObserver(UIElement: self.base) { view, hidden in
+    /// Bindable sink for `hidden` property.
+    public var isHidden: Binder<Bool> {
+        return Binder(self.base) { view, hidden in
             view.isHidden = hidden
-        }.asObserver()
+        }
     }
 
-    /**
-     Bindable sink for `alpha` property.
-     */
-    public var alpha: AnyObserver<CGFloat> {
-        return UIBindingObserver(UIElement: self.base) { view, alpha in
+    /// Bindable sink for `alpha` property.
+    public var alpha: Binder<CGFloat> {
+        return Binder(self.base) { view, alpha in
             view.alpha = alpha
-        }.asObserver()
+        }
     }
+
+    /// Bindable sink for `isUserInteractionEnabled` property.
+    public var isUserInteractionEnabled: Binder<Bool> {
+        return Binder(self.base) { view, userInteractionEnabled in
+            view.isUserInteractionEnabled = userInteractionEnabled
+        }
+    }
+    
 }
 
 #endif
