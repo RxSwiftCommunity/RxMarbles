@@ -24,13 +24,13 @@ typealias RecordedType = Recorded<Event<ColoredType>>
 
 // Helper functions
 func next(_ time: Int, _ value: String, _ color: UIColor, _ shape: EventShape) -> RecordedType {
-    return RecordedType(time: time, event: Event.next(ColoredType(value: value, color: color, shape: shape)))
+    return RecordedType(time: time, value: Event.next(ColoredType(value: value, color: color, shape: shape)))
 }
 
 func completed(_ time: Int) -> RecordedType {
-    return RecordedType(time: time, event: .completed)
+    return RecordedType(time: time, value: .completed)
 }
 
 func error(_ time: Int) -> RecordedType {
-    return RecordedType(time: time, event: Event.error(RxError.unknown))
+    return RecordedType(time: time, value: Event.error(RxError.unknown))
 }

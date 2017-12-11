@@ -50,8 +50,6 @@ extension Operator {
             return "Observable.just()"
         case .Map:
             return "a.map { $0 * 10 }"
-        case .MapWithIndex:
-            return "a.mapWithIndex { e, i in i == 1 ? e * 10 : e }"
         case .Merge:
             return "Observable.of(a, b).merge()"
         case .Never:
@@ -78,8 +76,6 @@ extension Operator {
             return "a.skipUntil(b)"
         case .SkipWhile:
             return "a.skipWhile { $0 < 4 }"
-        case .SkipWhileWithIndex:
-            return "a.skipWhileWithIndex { e, i in i < 4 }"
         case .StartWith:
             return "a.startWith(1)"
         case .SwitchLatest:
@@ -94,8 +90,6 @@ extension Operator {
             return "a.takeUntil(b)"
         case .TakeWhile:
             return "a.takeWhile { $0 < 4 }"
-        case .TakeWhileWithIndex:
-            return "a.takeWhileWithIndex { e, i in i < 4 }"
         case .Throttle:
             return "a.throttle(100, scheduler: s)"
         case .Throw:
@@ -119,14 +113,14 @@ private let __typeRegex = try? NSRegularExpression(pattern: "(Observable)|(Int64
 private let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
 private let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
-private func __colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [String: AnyObject]) {
+private func __colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [NSAttributedStringKey: Any]) {
     
     let str = src.string as NSString
     
     let matches = regex.matches(in: src.string, options: [], range: NSMakeRange(0, str.length))
     
     for m in matches {
-        let r = m.rangeAt(rangeIndex)
+        let r = m.range(at: rangeIndex)
         src.setAttributes(attrs, range: r)
     }
 }
@@ -135,30 +129,30 @@ extension Operator {
     func higlightedCode() -> NSAttributedString {
         let font = Font.code(.monoRegular, size:18)
         let src = NSMutableAttributedString(string: code, attributes: [
-            NSFontAttributeName: font,
-            NSForegroundColorAttributeName: Color.codeDefault
+            NSAttributedStringKey.font: font,
+            NSAttributedStringKey.foregroundColor: Color.codeDefault
         ])
         
         __colorize(src, regex: __methodRegex!, rangeIndex: 0, attrs: [
-                NSFontAttributeName: font,
-                NSForegroundColorAttributeName: Color.codeMethod
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeMethod
             ]
         )
         __colorize(src, regex: __numberRegex!, rangeIndex: 1, attrs: [
-                NSFontAttributeName: font,
-                NSForegroundColorAttributeName: Color.codeNumber
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeNumber
             ]
         )
         
         __colorize(src, regex: __typeRegex!, rangeIndex: 0, attrs: [
-                NSFontAttributeName: font,
-                NSForegroundColorAttributeName: Color.codeType
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeType
             ]
         )
         
         __colorize(src, regex: __keywordRegex!, rangeIndex: 0, attrs: [
-                NSFontAttributeName: font,
-                NSForegroundColorAttributeName: Color.codeKeyword
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
+            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeKeyword
             ]
         )
         

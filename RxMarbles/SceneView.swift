@@ -121,7 +121,7 @@ class SceneView: UIView, UITextViewDelegate {
         
         let size = rxOperatorText.text.boundingRect(with: CGSize(width: bounds.width, height: 1000 ),
                                                     options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                    attributes: [NSFontAttributeName: rxOperatorText.font!],
+                                                    attributes: [NSAttributedStringKey.font: rxOperatorText.font!],
                                                     context: nil).size
         rxOperatorText.frame = CGRect(x: 0, y: resultSequence.frame.origin.y + resultSequence.frame.height + 10, width: bounds.width, height: size.height + 40)
         
@@ -130,7 +130,7 @@ class SceneView: UIView, UITextViewDelegate {
         } else {
             trashView.center = rxOperatorText.center
         }
-        resultSequence.subject.onNext()
+        resultSequence.subject.onNext(())
     }
     
     func showTrashView() {
@@ -139,7 +139,7 @@ class SceneView: UIView, UITextViewDelegate {
         trashView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         trashView.alpha = 0.05
         trashView.tintColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
-        UIView.animate(withDuration: 0.3) { _ in
+        UIView.animate(withDuration: 0.3) { 
             self.rxOperatorText.alpha = 0.04
             self.trashView.alpha = 0.2
             self.trashView.transform = CGAffineTransform(scaleX: 1.5, y: 1.5)
@@ -149,7 +149,7 @@ class SceneView: UIView, UITextViewDelegate {
     
     func hideTrashView() {
         Animation.hideWithCompletion(trashView) { _ in
-            UIView.animate(withDuration: 0.3) { _ in
+            UIView.animate(withDuration: 0.3) { 
                 self.rxOperatorText.alpha = 1.0
             }
             self.trashView.removeFromSuperview()

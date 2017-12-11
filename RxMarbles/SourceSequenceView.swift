@@ -42,14 +42,14 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
             .subscribe(onNext: {
                 [unowned self] r in self._handleLongPressGestureRecognizer(r: r)
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
         
         subject
             .debounce(debounce, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [unowned self] in
                 self.rotateEventViews()
             })
-            .addDisposableTo(disposeBag)
+            .disposed(by: disposeBag)
     }
     
     override func layoutSubviews() {
@@ -111,12 +111,12 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
             if let panEventView = _panEventView {
                 let time = timeByXPosition(x: location.x)
                 panEventView.center = CGPoint(x: xPositionByTime(time), y: location.y)
-                panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
+                panEventView.recorded = RecordedType(time: time, value: panEventView.recorded.value)
                 
                 changeGhostColorAndAlpha(ghostEventView: _ghostEventView!, recognizer: r)
                 _ghostEventView!.recorded = panEventView.recorded
                 _ghostEventView!.center = CGPoint(x: xPositionByTime(time), y: bounds.height / 2)
-                sceneView.resultSequence.subject.onNext()
+                sceneView.resultSequence.subject.onNext(())
             }
         case .ended, .cancelled:
             _ghostEventView?.removeFromSuperview()
@@ -126,11 +126,11 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
                 animatorAddBehaviorsToPanEventView(panEventView: panEventView, recognizer: r, resultSequence: sceneView.resultSequence)
                 panEventView.superview?.bringSubview(toFront: panEventView)
                 let time = timeByXPosition(x: r.location(in: self).x)
-                panEventView.recorded = RecordedType(time: time, event: panEventView.recorded.value)
+                panEventView.recorded = RecordedType(time: time, value: panEventView.recorded.value)
             }
             _panEventView = nil
             sceneView.hideTrashView()
-            sceneView.resultSequence.subject.onNext()
+            sceneView.resultSequence.subject.onNext(())
         default: break
         }
     }
@@ -221,7 +221,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         allEventViewsAnimation()
     }
     
-    func addEventToTimeline(_ sender: UIButton) {
+    @objc func addEventToTimeline(_ sender: UIButton) {
         Notifications.addEvent.post(object: sender)
     }
     
@@ -239,6 +239,6 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
 //    MARK: UIDynamicAnimatorDelegate methods
     
     func dynamicAnimatorDidPause(_ animator: UIDynamicAnimator) {
-        subject.onNext()
+        subject.onNext(())
     }
 }

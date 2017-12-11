@@ -26,7 +26,6 @@ enum Operator: String {
     case Interval
     case Just
     case Map
-    case MapWithIndex
     case Merge
     case Never
     case Of
@@ -40,7 +39,6 @@ enum Operator: String {
     case SkipDuration
     case SkipUntil
     case SkipWhile
-    case SkipWhileWithIndex
     case StartWith
     case SwitchLatest
     case Take
@@ -48,7 +46,6 @@ enum Operator: String {
     case TakeLast
     case TakeUntil
     case TakeWhile
-    case TakeWhileWithIndex
     case Throttle
     case Throw
     case Timeout

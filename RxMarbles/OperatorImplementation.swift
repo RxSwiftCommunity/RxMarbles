@@ -206,17 +206,7 @@ extension Operator {
                     next(500, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
-            )
-        case .MapWithIndex:
-            return InitialValues(
-                line1: [
-                    next(100, "1", Color.nextRandom, .circle),
-                    next(200, "2", Color.nextRandom, .circle),
-                    next(400, "3", Color.nextRandom, .circle),
-                    next(500, "4", Color.nextRandom, .circle),
-                    completed(900)
-                ]
-            )
+            ) 
         case .Merge:
             return InitialValues(
                 line1: [
@@ -433,7 +423,7 @@ extension Operator {
                 .map {
                     let values = $0.map {$0.value } .joined(separator: ", ")
                     return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .triangle)
-                }
+            }
         case .CatchError:
             return aO!.catchError { _ in return .just(ColoredType(value: "1", color: Color.nextBlue, shape: .circle)) }
         case .CatchErrorJustReturn:
@@ -443,7 +433,7 @@ extension Operator {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
             }
         case .Concat:
-            return [aO!, bO!].concat()
+            return aO!.concat(bO!)
         case .Debounce, .Throttle:
             return aO!.debounce(100, scheduler: scheduler)
         case .DelaySubscription:
@@ -477,30 +467,33 @@ extension Operator {
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-//        case .FlatMapWithIndex:
-//            return aO!.flatMapWithIndex { e, i
-//
-//            }
+            //        case .FlatMapWithIndex:
+            //            return aO!.flatMapWithIndex { e, i
+            //
+        //            }
         case .IgnoreElements:
-            return aO!.ignoreElements()
+            return aO!.ignoreElements().asObservable()
+                .flatMapLatest { _ in
+                    return Observable.never()
+            }
         case .Interval:
             return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
         case .Just:
             return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .circle))
         case .Map:
-        return aO!.map { h in
-            guard let a = Int(h.value) else { throw RxError.unknown }
-            return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
+            return aO!.map { h in
+                guard let a = Int(h.value) else { throw RxError.unknown }
+                return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
             }
-        case .MapWithIndex:
-            return aO!.mapWithIndex { element, index in
-                if index == 1 {
-                    guard let a = Int(element.value) else { throw RxError.unknown }
-                    return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
-                } else {
-                    return element
-                }
-            }
+//        case .MapWithIndex:
+//            return aO!.mapWithIndex { element, index in
+//                if index == 1 {
+//                    guard let a = Int(element.value) else { throw RxError.unknown }
+//                    return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
+//                } else {
+//                    return element
+//                }
+//            }
         case .Merge:
             return Observable.of(aO!, bO!).merge()
         case .Never:
@@ -533,8 +526,8 @@ extension Operator {
             return aO!.skipUntil(bO!)
         case .SkipWhile:
             return aO!.skipWhile { e in Int(e.value)! < 4 }
-        case .SkipWhileWithIndex:
-            return aO!.skipWhileWithIndex { e, i in i < 4 }
+//        case .SkipWhileWithIndex:
+//            return aO!.skipWhileWithIndex { e, i in i < 4 }
         case .StartWith:
             return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .circle))
         case .SwitchLatest:
@@ -549,8 +542,8 @@ extension Operator {
             return aO!.takeUntil(bO!)
         case .TakeWhile:
             return aO!.takeWhile { e in Int(e.value)! < 4 }
-        case .TakeWhileWithIndex:
-            return aO!.takeWhileWithIndex { e, i in i < 4 }
+//        case .TakeWhileWithIndex:
+//            return aO!.takeWhileWithIndex { e, i in i < 4 }
         case .Throw:
             return Observable.error(RxError.unknown)
         case .Timeout:
@@ -607,7 +600,6 @@ extension Operator {
         .Interval,
         .Just,
         .Map,
-        .MapWithIndex,
         .Never,
         .Of,
         .Reduce,
@@ -618,13 +610,11 @@ extension Operator {
         .Skip,
         .SkipDuration,
         .SkipWhile,
-        .SkipWhileWithIndex,
         .StartWith,
         .Take,
         .TakeDuration,
         .TakeLast,
         .TakeWhile,
-        .TakeWhileWithIndex,
         .Throttle,
         .Throw,
         .Timeout,
@@ -659,7 +649,7 @@ extension Operator {
             return "flatmap.html"
         case .IgnoreElements:
             return "ignoreelements.html"
-        case .Map, .MapWithIndex:
+        case .Map:
             return "map.html"
         case .Of:
             return "from.html"
@@ -669,13 +659,13 @@ extension Operator {
             return "first.html"
         case .SkipDuration:
             return "skip.html"
-        case .SkipWhileWithIndex:
+        case .SkipWhile:
             return "skipwhile.html"
         case .SwitchLatest:
             return "switch.html"
         case .TakeDuration:
             return "take.html"
-        case .TakeWhileWithIndex:
+        case .Take:
             return "takewhile.html"
         case .Throttle:
             return "debounce.html"
@@ -732,8 +722,6 @@ extension Operator {
         case .Just:
             return "Create an Observable that emits a particular item."
         case .Map:
-        return "Transform the items emitted by an Observable by applying a function to each item."
-        case .MapWithIndex:
             return "Transform the items emitted by an Observable by applying a function to each item."
         case .Merge:
             return "Combine multiple Observables into one by merging their emissions."
@@ -757,7 +745,7 @@ extension Operator {
             return "Suppress the first n items emitted by an Observable."
         case .SkipUntil:
             return "Discard items emitted by an Observable until a second Observable emits an item."
-        case .SkipWhile, .SkipWhileWithIndex:
+        case .SkipWhile:
             return "Discard items emitted by an Observable until a specified condition becomes false."
         case .StartWith:
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
@@ -769,7 +757,7 @@ extension Operator {
             return "Emit only the final n items emitted by an Observable."
         case .TakeUntil:
             return "Discard any items emitted by an Observable after a second Observable emits an item or terminates."
-        case .TakeWhile, .TakeWhileWithIndex:
+        case .TakeWhile:
             return "Mirror items emitted by an Observable until a specified condition becomes false."
         case .Throw:
             return "Create an Observable that emits no items and terminates with an error."
@@ -786,10 +774,10 @@ extension Operator {
     
     var linkText: NSMutableAttributedString {
         let res = NSMutableAttributedString(string: text)
-        let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSLinkAttributeName: url])
+        let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSAttributedStringKey.link: url])
         res.append(NSAttributedString(string: " "))
         res.append(link)
-        res.addAttribute(NSFontAttributeName, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))
+        res.addAttribute(NSAttributedStringKey.font, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))
         return res
     }
 }

@@ -31,10 +31,10 @@ struct Font {
     }
     
     static func ultraLightText(_ size: CGFloat) -> UIFont {
-        return UIFont.systemFont(ofSize: size, weight: UIFontWeightUltraLight)
+        return UIFont.systemFont(ofSize: size, weight: UIFont.Weight.ultraLight)
     }
     
     static func monospacedRegularText(_ size: CGFloat) -> UIFont {
-        return UIFont.monospacedDigitSystemFont(ofSize: size, weight: UIFontWeightRegular)
+        return UIFont.monospacedDigitSystemFont(ofSize: size, weight: UIFont.Weight.regular)
     }
 }

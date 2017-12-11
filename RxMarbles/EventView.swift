@@ -13,7 +13,7 @@ class EventView: UIView {
     weak var animator: UIDynamicAnimator? = nil
     weak var sequenceView: SourceSequenceView?
     
-    var recorded = RecordedType(time: 0, event: .completed)
+    var recorded = RecordedType(time: 0, value: .completed)
     
     var snap: UISnapBehavior? = nil
     var gravity: UIGravityBehavior? = nil
@@ -65,7 +65,7 @@ class EventView: UIView {
                     if scene.bounds.intersects(self.frame) == false {
                         self.removeFromSuperview()
                         sequenceView?.sourceEvents.remove(at: index)
-                        scene.resultSequence.subject.onNext()
+                        scene.resultSequence.subject.onNext(())
                     }
                 }
             }
@@ -130,7 +130,7 @@ class EventView: UIView {
         _tapGestureRecognizer.isEnabled = false
     }
     
-    func setEventView() {
+    @objc func setEventView() {
         Notifications.setEventView.post(object: self)
     }
     

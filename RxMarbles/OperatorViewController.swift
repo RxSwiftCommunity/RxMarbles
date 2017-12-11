@@ -76,15 +76,15 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         Notifications.setEventView.rx().subscribe(onNext: {
             [unowned self] (notification: Notification) in self._setEventView(notification)
-        }).addDisposableTo(_disposeBag)
+        }).disposed(by: _disposeBag)
         
         Notifications.addEvent.rx().subscribe(onNext: {
             [unowned self] (notification: Notification) -> Void in self._addEventToTimeline(notification)
-        }).addDisposableTo(_disposeBag)
+        }).disposed(by: _disposeBag)
         
         Notifications.openOperatorDescription.rx().subscribe(onNext: {
             [unowned self] (notification: Notification) -> Void in self._openOperatorDocumentation(notification)
-        }).addDisposableTo(_disposeBag)
+        }).disposed(by: _disposeBag)
     }
     
     override func viewDidLayoutSubviews() {
@@ -120,7 +120,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Button Items
     
     private func _rightButtonItems() -> [UIBarButtonItem] {
-        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(OperatorViewController._share(_:)))
+        let shareButtonItem = UIBarButtonItem(barButtonSystemItem: .action, target: self, action: #selector(OperatorViewController.share(_:)))
         
         if _sceneView.rxOperator.withoutTimelines {
             return [shareButtonItem]
@@ -153,7 +153,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         return snapshot!
     }
     
-    private dynamic func _share(_ sender: AnyObject?) {
+    @objc private dynamic func share(_ sender: AnyObject?) {
        
         let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
         
@@ -163,7 +163,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         ]
         if let delegate = UIApplication.shared.delegate as? AppDelegate,
             let rootViewController = delegate.window?.rootViewController {
-                if Device.type() == .iPad || Device.type() == .Simulator {
+                if Device.type() == .iPad || Device.type() == .simulator {
                     activity.popoverPresentationController?.sourceView = view
                     if let shareButtonItem = sender {
                         activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
@@ -189,18 +189,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         let nextAction = UIAlertAction(title: "Next", style: .default) { _ in
             let e = RxMarbles.next(time, String(arc4random() % 9 + 1), Color.nextRandom, (sequence == sceneView.sourceSequenceA) ? .circle : .rect)
             sequence.addEventToTimeline(e, animator: sequence.animator)
-            sceneView.resultSequence.subject.onNext()
+            sceneView.resultSequence.subject.onNext(())
         }
         let completedAction = UIAlertAction(title: "Completed", style: .default) { _ in
             time = sequence.maxEventTime() > 850 ? sequence.maxEventTime() + 30 : 850
             let e = completed(time)
             sequence.addEventToTimeline(e, animator: sequence.animator)
-            sceneView.resultSequence.subject.onNext()
+            sceneView.resultSequence.subject.onNext(())
         }
         let errorAction = UIAlertAction(title: "Error", style: .default) { _ in
             let e = error(500)
             sequence.addEventToTimeline(e, animator: sequence.animator)
-            sceneView.resultSequence.subject.onNext()
+            sceneView.resultSequence.subject.onNext(())
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel) { _ in }
         
@@ -243,13 +243,13 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             settingsAlertController.addAction(_saveAction(preview, oldEventView: eventView))
             
             Observable
-                .combineLatest(settingsAlertController.textFields!.first!.rx.textInput.text, colorsSegmentedControl.rx.value, resultSelector: { text, segment in
+                .combineLatest(settingsAlertController.textFields!.first!.rx.textInput.text.orEmpty, colorsSegmentedControl.rx.value, resultSelector: { text, segment in
                     return (text, segment)
                 })
                 .subscribe(onNext: { text, segment in
                     self._updatePreviewEventView(preview, params: (color: Color.nextAll[segment], value: text))
                 })
-                .addDisposableTo(_disposeBag)
+                .disposed(by: _disposeBag)
         } else {
             settingsAlertController.message = "Delete event?"
         }
@@ -281,7 +281,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             oldEventView.sequenceView?.sourceEvents.remove(at: index)
             oldEventView.sequenceView?.addEventToTimeline(newEventView.recorded, animator: oldEventView.sequenceView?.animator)
             oldEventView.removeFromSuperview()
-            self._sceneView.resultSequence.subject.onNext()
+            self._sceneView.resultSequence.subject.onNext(())
         }
     }
     
@@ -298,7 +298,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         let shape = preview.recorded.value.element?.shape
         let event = Event.next(ColoredType(value: params.value, color: params.color, shape: shape!))
         
-        preview.recorded = RecordedType(time: time, event: event)
+        preview.recorded = RecordedType(time: time, value: event)
         preview.label.text = params.value
         preview.setColorOnPreview(color: params.color)
     }
@@ -306,7 +306,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Preview Actions
     override var previewActionItems: [UIPreviewActionItem] {
         let shareAction = UIPreviewAction(title: "Share", style: .default) { _, _ in
-            self._share(nil)
+            self.share(nil)
         }
         return [shareAction]
     }

@@ -60,7 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         Notifications.hideHelpWindow.rx().subscribe { _ in
             self.showMainWindow()
-            }.addDisposableTo(_disposeBag)
+            }.disposed(by: _disposeBag)
         
         return true
     }
@@ -123,7 +123,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         focusSearch()
     }
     
-    func focusSearch() {
+    @objc func focusSearch() {
         if let nav = _splitViewController.viewControllers.first as? UINavigationController {
             nav.popToRootViewController(animated: false)
             

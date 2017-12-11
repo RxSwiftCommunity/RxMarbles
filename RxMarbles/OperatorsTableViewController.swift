@@ -34,7 +34,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Conditional",
-            rows: [.Amb, .SkipUntil, .SkipWhile, .SkipWhileWithIndex, .TakeUntil, .TakeWhile, .TakeWhileWithIndex]
+            rows: [.Amb, .SkipUntil, .SkipWhile, .TakeUntil, .TakeWhile]
         ),
         Section(
             name: "Creating",
@@ -54,7 +54,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Transforming",
-            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan, .ToArray]
+            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .Scan, .ToArray]
         ),
         Section(
             name: "Utility",
@@ -84,7 +84,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
             .itemSelected
             .map(_rowAtIndexPath)
             .subscribe(onNext: { [unowned self] op in self.openOperator(op) })
-            .addDisposableTo(_disposeBag)
+            .disposed(by: _disposeBag)
         
         // Check for force touch feature, and add force touch/previewing capability.
         if traitCollection.forceTouchCapability == .available {
@@ -106,7 +106,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         showDetailViewController(viewController, sender: nil)
     }
     
-    func openHelpView() {
+    @objc func openHelpView() {
         let helpController = HelpViewController()
         present(helpController, animated: true, completion: nil)
     }
