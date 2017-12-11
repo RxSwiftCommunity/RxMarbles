@@ -125,7 +125,7 @@ class SceneView: UIView, UITextViewDelegate {
                                                     context: nil).size
         rxOperatorText.frame = CGRect(x: 0, y: resultSequence.frame.origin.y + resultSequence.frame.height + 10, width: bounds.width, height: size.height + 40)
         
-        if UIApplication.shared.statusBarOrientation.isLandscape && Device.isSmallerThanScreenSize(.screen4_7Inch) && Device.size() != .unknownSize {
+        if UIApplication.shared.statusBarOrientation.isLandscape && Device.size() < .screen4_7Inch && Device.size() != .unknownSize {
             trashView.center = CGPoint(x: rxOperatorText.center.x, y: UIScreen.main.bounds.height - 60)
         } else {
             trashView.center = rxOperatorText.center
