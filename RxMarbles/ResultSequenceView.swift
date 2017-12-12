@@ -56,7 +56,7 @@ class ResultSequenceView: SequenceView {
             }
         }
         
-        let o = _operator.map(scheduler, aO:first, bO:second)
+        let o = _operator._map(scheduler, aO:first, bO:second)
         
         var res: TestableObserver<ColoredType>?
         res = scheduler.start(created: 0, subscribed: 0, disposed: 1001) {

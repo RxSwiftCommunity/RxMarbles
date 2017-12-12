@@ -12,103 +12,103 @@ import UIKit
 extension Operator {
     var code: String {
         switch self {
-        case .Amb:
+        case .amb:
             return "a.amb(b)"
-        case .Buffer:
+        case .buffer:
             return "a.buffer(timeSpan: 150, count: 3, scheduler: s)"
-        case .CatchError:
+        case .catchError:
             return "a.catchError { _ in .just(1) }"
-        case .CatchErrorJustReturn:
+        case .catchErrorJustReturn:
             return "a.catchErrorJustReturn(1)"
-        case .CombineLatest:
+        case .combineLatest:
             return "Observable.combineLatest(a, b) { $0 + $1 }"
-        case .Concat:
+        case .concat:
             return "[a, b].concat()"
-        case .Debounce:
+        case .debounce:
             return "a.debounce(100, scheduler: s)"
-        case .DelaySubscription:
+        case .delaySubscription:
             return "a.delaySubscription(150, scheduler: s)"
-        case .DistinctUntilChanged:
+        case .distinctUntilChanged:
             return "a.distinctUntilChanged()"
-        case .ElementAt:
+        case .elementAt:
             return "a.elementAt(2)"
-        case .Empty:
+        case .empty:
             return "Observable.empty()"
-        case .Filter:
+        case .filter:
             return "a.filter { $0 > 10 }"
-        case .FlatMap:
+        case .flatMap:
             return "a.flatMap(b)"
-        case .FlatMapFirst:
+        case .flatMapFirst:
             return "a.flatMapFirst(b)"
-        case .FlatMapLatest:
+        case .flatMapLatest:
             return "a.flatMapLatest(b)"
-        case .IgnoreElements:
+        case .ignoreElements:
             return "a.ignoreElements()"
-        case .Interval:
+        case .interval:
             return "Observable.interval<Int64>(100, scheduler: s).map { $0 }"
-        case .Just:
+        case .just:
             return "Observable.just()"
-        case .Map:
+        case .map:
             return "a.map { $0 * 10 }"
-        case .MapWithIndex:
+        case .mapWithIndex:
             return "a.mapWithIndex { e, i in i == 1 ? e * 10 : e }"
-        case .Merge:
+        case .merge:
             return "Observable.of(a, b).merge()"
-        case .Never:
+        case .never:
             return "Observable.never()"
-        case .Of:
+        case .of:
             return "Observable.of()"
-        case .Reduce:
+        case .reduce:
             return "a.reduce { $0 + $1 }"
-        case .RepeatElement:
+        case .repeatElement:
             return "Observable.repeatElement(1)"
-        case .Retry:
+        case .retry:
             return "a.retry(2)"
-        case .Sample:
+        case .sample:
             return "a.sample(b)"
-        case .Scan:
+        case .scan:
             return "a.scan(0) { $0 + $1 }"
-        case .Single:
+        case .single:
             return "a.single()"
-        case .Skip:
+        case .skip:
             return "a.skip(2)"
-        case .SkipDuration:
+        case .skipDuration:
             return "a.skip(400, scheduler: scheduler)"
-        case .SkipUntil:
+        case .skipUntil:
             return "a.skipUntil(b)"
-        case .SkipWhile:
+        case .skipWhile:
             return "a.skipWhile { $0 < 4 }"
-        case .SkipWhileWithIndex:
+        case .skipWhileWithIndex:
             return "a.skipWhileWithIndex { e, i in i < 4 }"
-        case .StartWith:
+        case .startWith:
             return "a.startWith(1)"
-        case .SwitchLatest:
+        case .switchLatest:
             return "Observable.of(a, b).switchLatest()"
-        case .Take:
+        case .take:
             return "a.take(2)"
-        case .TakeDuration:
+        case .takeDuration:
             return "a.take(400, scheduler: scheduler)"
-        case .TakeLast:
+        case .takeLast:
             return "a.takeLast(2)"
-        case .TakeUntil:
+        case .takeUntil:
             return "a.takeUntil(b)"
-        case .TakeWhile:
+        case .takeWhile:
             return "a.takeWhile { $0 < 4 }"
-        case .TakeWhileWithIndex:
+        case .takeWhileWithIndex:
             return "a.takeWhileWithIndex { e, i in i < 4 }"
-        case .Throttle:
+        case .throttle:
             return "a.throttle(100, scheduler: s)"
-        case .Throw:
+        case .throw:
             return "Observable.error()"
-        case .Timeout:
+        case .timeout:
             return "a.timeout(200, scheduler: s)"
-        case .Timer:
+        case .timer:
             return "Observable<Int64>.timer(500, scheduler: s).map { $0 }"
-        case .ToArray:
+        case .toArray:
             return "a.toArray()"
-        case .WithLatestFrom:
+        case .withLatestFrom:
             return "a.withLatestFrom(b)"
-        case .Zip:
+        case .zip:
             return "Observable.zip(a, b) { $0 + $1 }"
         }
     }

@@ -18,7 +18,7 @@ struct Section {
 class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
     private let _disposeBag = DisposeBag()
 
-    var selectedOperator: Operator = Operator.CombineLatest {
+    var selectedOperator: Operator = Operator.combineLatest {
         didSet {
             tableView.reloadData()
         }
@@ -30,35 +30,35 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     private let _sections = [
         Section(
             name: "Combining",
-            rows: [.CombineLatest, .Concat, .Merge, .StartWith, .SwitchLatest, .WithLatestFrom, .Zip]
+            rows: [.combineLatest, .concat, .merge, .startWith, .switchLatest, .withLatestFrom, .zip]
         ),
         Section(
             name: "Conditional",
-            rows: [.Amb, .SkipUntil, .SkipWhile, .SkipWhileWithIndex, .TakeUntil, .TakeWhile, .TakeWhileWithIndex]
+            rows: [.amb, .skipUntil, .skipWhile, .skipWhileWithIndex, .takeUntil, .takeWhile, .takeWhileWithIndex]
         ),
         Section(
             name: "Creating",
-            rows: [.Empty, .Interval, .Just, .Never, .Of, .RepeatElement, .Throw, .Timer]
+            rows: [.empty, .interval, .just, .never, .of, .repeatElement, .throw, .timer]
         ),
         Section(
             name: "Error",
-            rows: [.CatchError, .CatchErrorJustReturn, .Retry]
+            rows: [.catchError, .catchErrorJustReturn, .retry]
         ),
         Section(
             name: "Filtering",
-            rows: [.Debounce, .DistinctUntilChanged, .ElementAt, .Filter, .IgnoreElements, .Sample, .Single, .Skip, .SkipDuration, .Take, .TakeDuration, .TakeLast, .Throttle]
+            rows: [.debounce, .distinctUntilChanged, .elementAt, .filter, .ignoreElements, .sample, .single, .skip, .skipDuration, .take, .takeDuration, .takeLast, .throttle]
         ),
         Section(
             name: "Mathematical",
-            rows: [.Reduce]
+            rows: [.reduce]
         ),
         Section(
             name: "Transforming",
-            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan, .ToArray]
+            rows: [.buffer, .delaySubscription, .flatMap, .flatMapFirst, .flatMapLatest, .map, .mapWithIndex, .scan, .toArray]
         ),
         Section(
             name: "Utility",
-            rows: [.Timeout]
+            rows: [.timeout]
         )
     ]
     

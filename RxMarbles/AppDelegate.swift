@@ -135,7 +135,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     // MARK: UserActivity
     func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
         
-        var operatorRawValue = Operator.CombineLatest.rawValue
+        var operatorRawValue = Operator.combineLatest.rawValue
         
         // NSUserActivity
         if let _ = UserActivityType(rawValue: userActivity.activityType),
