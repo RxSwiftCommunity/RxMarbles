@@ -695,9 +695,9 @@ extension Operator {
         }
     }
     
-    var url: NSURL {
+    var url: URL {
         let reactivex = "http://reactivex.io/documentation/operators/"
-        return NSURL(string: reactivex + urlString)!
+        return URL(string: reactivex + urlString)!
     }
 }
 

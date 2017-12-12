@@ -15,15 +15,15 @@ import RxSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
-
+    
     var window: UIWindow?
     var introWindow: UIWindow?
     private var _disposeBag = DisposeBag()
     
     private let _operatorsTableViewController = OperatorsTableViewController()
     private let _splitViewController = UISplitViewController()
-
-
+    
+    
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         Fabric.with([Crashlytics.self])
         
@@ -58,9 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         OperationQueue.main.addOperation(Operator.index)
         
-        Notifications.hideHelpWindow.rx().subscribe { _ in
-            self.showMainWindow()
-            }.disposed(by: _disposeBag)
+        Notifications.hideHelpWindow.rx()
+            .subscribe { _ in self.showMainWindow() }
+            .disposed(by: _disposeBag)
         
         return true
     }
@@ -74,9 +74,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     func showMainWindow() {
-        UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.5, animations: {
             self.introWindow?.alpha = 0
-        }
+        }) { _ in self.window?.makeKeyAndVisible() }
     }
     
     // MARK: UISplitViewControllerDelegate
@@ -161,7 +161,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         let cmdF = UIKeyCommand(input: "f", modifierFlags: [.command], action: #selector(AppDelegate.focusSearch), discoverabilityTitle: "Search")
         return [cmdF]
     }
-
-
+    
+    
 }
 

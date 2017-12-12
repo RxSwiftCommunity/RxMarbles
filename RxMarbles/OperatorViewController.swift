@@ -131,7 +131,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
 //    MARK: Navigation
     
     private func _openOperatorDocumentation(_ notification: Notification) {
-        let safariViewController = SFSafariViewController(url: _sceneView.rxOperator.url as URL)
+        let safariViewController = SFSafariViewController(url: _sceneView.rxOperator.url)
         present(safariViewController, animated: true, completion: nil)
     }
     
