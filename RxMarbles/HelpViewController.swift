@@ -171,7 +171,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addSubview(_closeButton)
         _closeButton.translatesAutoresizingMaskIntoConstraints = false
         
-        let top = _closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
+        var top: NSLayoutConstraint
+        
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            top = _closeButton.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+        } else {
+           top = _closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
+        }
+        
         let right = _closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10)
         
         let width = _closeButton.widthAnchor.constraint(equalToConstant: 40)
