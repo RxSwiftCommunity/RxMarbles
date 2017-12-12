@@ -575,7 +575,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 2)
         
-        shareLabel.text = "Share you diagrams"
+        shareLabel.text = "Share your diagrams"
         shareLabel.font = Font.text(13)
         shareLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(shareLabel)
