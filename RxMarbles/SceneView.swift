@@ -104,20 +104,21 @@ class SceneView: UIView, UITextViewDelegate {
         super.layoutSubviews()
         let height: CGFloat = 60
         let labelHeight: CGFloat = 40
+        let widthSpace: CGFloat = UIApplication.shared.statusBarOrientation.isLandscape ? 40.0 : 20.0
         
         _rxOperatorLabel.frame = CGRect(x: 0, y: 20, width: bounds.width, height: labelHeight)
         if !rxOperator.withoutTimelines {
-            sourceSequenceA.frame = CGRect(x: 20, y: 20, width: bounds.width - 20, height: height)
+            sourceSequenceA.frame = CGRect(x: 20, y: 20, width: bounds.width - widthSpace, height: height)
             _rxOperatorLabel.frame.origin.y = sourceSequenceA.frame.origin.y + height
             _aLabel?.frame = CGRect(x: 0, y: sourceSequenceA.frame.origin.y, width: 20, height: height)
             
             if rxOperator.multiTimelines {
-                sourceSequenceB.frame = CGRect(x: 20, y: sourceSequenceA.frame.origin.y + sourceSequenceA.frame.height, width: bounds.width - 20.0, height: height)
+                sourceSequenceB.frame = CGRect(x: 20, y: sourceSequenceA.frame.origin.y + sourceSequenceA.frame.height, width: bounds.width - widthSpace, height: height)
                 _bLabel?.frame = CGRect(x: 0, y: sourceSequenceB.frame.origin.y, width: 20, height: height)
                 _rxOperatorLabel.frame.origin.y = sourceSequenceB.frame.origin.y + height
             }
         }
-        resultSequence.frame = CGRect(x: 20, y: _rxOperatorLabel.frame.origin.y + labelHeight + 10, width: bounds.width - 20, height: height)
+        resultSequence.frame = CGRect(x: 20, y: _rxOperatorLabel.frame.origin.y + labelHeight + 10, width: bounds.width - widthSpace, height: height)
         
         let size = rxOperatorText.text.boundingRect(with: CGSize(width: bounds.width, height: 1000 ),
                                                     options: NSStringDrawingOptions.usesLineFragmentOrigin,
