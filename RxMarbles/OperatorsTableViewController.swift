@@ -34,7 +34,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Conditional",
-            rows: [.Amb, .SkipUntil, .SkipWhile, .TakeUntil, .TakeWhile]
+            rows: [.Amb, .SkipUntil, .SkipWhile, .SkipWhileWithIndex, .TakeUntil, .TakeWhile, .TakeWhileWithIndex]
         ),
         Section(
             name: "Creating",
@@ -54,7 +54,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         ),
         Section(
             name: "Transforming",
-            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .Scan, .ToArray]
+            rows: [.Buffer, .DelaySubscription, .FlatMap, .FlatMapFirst, .FlatMapLatest, .Map, .MapWithIndex, .Scan, .ToArray]
         ),
         Section(
             name: "Utility",
