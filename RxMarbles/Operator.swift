@@ -26,6 +26,7 @@ enum Operator: String {
     case Interval
     case Just
     case Map
+    case MapWithIndex
     case Merge
     case Never
     case Of

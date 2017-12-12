@@ -485,15 +485,15 @@ extension Operator {
                 guard let a = Int(h.value) else { throw RxError.unknown }
                 return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
             }
-//        case .MapWithIndex:
-//            return aO!.mapWithIndex { element, index in
-//                if index == 1 {
-//                    guard let a = Int(element.value) else { throw RxError.unknown }
-//                    return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
-//                } else {
-//                    return element
-//                }
-//            }
+        case .MapWithIndex:
+            return aO!.enumerated().map { index, element in
+                if index == 1 {
+                    guard let a = Int(element.value) else { throw RxError.unknown }
+                    return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
+                } else {
+                    return element
+                }
+            }
         case .Merge:
             return Observable.of(aO!, bO!).merge()
         case .Never:
@@ -600,6 +600,7 @@ extension Operator {
         .Interval,
         .Just,
         .Map,
+        .MapWithIndex,
         .Never,
         .Of,
         .Reduce,
@@ -721,7 +722,7 @@ extension Operator {
             return "Create an Observable that emits a sequence of integers spaced by a given time interval."
         case .Just:
             return "Create an Observable that emits a particular item."
-        case .Map:
+        case .Map, .MapWithIndex:
             return "Transform the items emitted by an Observable by applying a function to each item."
         case .Merge:
             return "Combine multiple Observables into one by merging their emissions."
