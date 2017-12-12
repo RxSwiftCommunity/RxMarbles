@@ -536,8 +536,10 @@ extension Operator {
             return aO!.skipUntil(bO!)
         case .SkipWhile:
             return aO!.skipWhile { e in Int(e.value)! < 4 }
-//        case .SkipWhileWithIndex:
-//            return aO!.skipWhileWithIndex { e, i in i < 4 }
+        case .SkipWhileWithIndex:
+            return aO!.enumerated()
+                .skipWhile { index, _ in index < 4 }
+                .map { _, element in element }
         case .StartWith:
             return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .circle))
         case .SwitchLatest:
@@ -623,6 +625,7 @@ extension Operator {
         .Skip,
         .SkipDuration,
         .SkipWhile,
+        .SkipWhileWithIndex,
         .StartWith,
         .Take,
         .TakeDuration,
@@ -759,7 +762,7 @@ extension Operator {
             return "Suppress the first n items emitted by an Observable."
         case .SkipUntil:
             return "Discard items emitted by an Observable until a second Observable emits an item."
-        case .SkipWhile:
+        case .SkipWhile, .SkipWhileWithIndex:
             return "Discard items emitted by an Observable until a specified condition becomes false."
         case .StartWith:
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."

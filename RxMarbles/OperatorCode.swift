@@ -78,6 +78,8 @@ extension Operator {
             return "a.skipUntil(b)"
         case .SkipWhile:
             return "a.skipWhile { $0 < 4 }"
+        case .SkipWhileWithIndex:
+            return "a.skipWhileWithIndex { e, i in i < 4 }"
         case .StartWith:
             return "a.startWith(1)"
         case .SwitchLatest:

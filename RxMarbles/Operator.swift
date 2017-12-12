@@ -40,6 +40,7 @@ enum Operator: String {
     case SkipDuration
     case SkipUntil
     case SkipWhile
+    case SkipWhileWithIndex
     case StartWith
     case SwitchLatest
     case Take
