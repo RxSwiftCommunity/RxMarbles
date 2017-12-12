@@ -92,6 +92,8 @@ extension Operator {
             return "a.takeUntil(b)"
         case .TakeWhile:
             return "a.takeWhile { $0 < 4 }"
+        case .TakeWhileWithIndex:
+            return "a.takeWhileWithIndex { e, i in i < 4 }"
         case .Throttle:
             return "a.throttle(100, scheduler: s)"
         case .Throw:

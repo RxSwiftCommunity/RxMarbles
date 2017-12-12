@@ -47,6 +47,7 @@ enum Operator: String {
     case TakeLast
     case TakeUntil
     case TakeWhile
+    case TakeWhileWithIndex
     case Throttle
     case Throw
     case Timeout

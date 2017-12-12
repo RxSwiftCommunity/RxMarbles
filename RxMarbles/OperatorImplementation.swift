@@ -206,7 +206,17 @@ extension Operator {
                     next(500, "4", Color.nextRandom, .circle),
                     completed(900)
                 ]
-            ) 
+            )
+        case .MapWithIndex:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(200, "2", Color.nextRandom, .circle),
+                    next(400, "3", Color.nextRandom, .circle),
+                    next(500, "4", Color.nextRandom, .circle),
+                    completed(900)
+                ]
+            )
         case .Merge:
             return InitialValues(
                 line1: [
@@ -542,8 +552,10 @@ extension Operator {
             return aO!.takeUntil(bO!)
         case .TakeWhile:
             return aO!.takeWhile { e in Int(e.value)! < 4 }
-//        case .TakeWhileWithIndex:
-//            return aO!.takeWhileWithIndex { e, i in i < 4 }
+        case .TakeWhileWithIndex:
+            return aO!.enumerated()
+                .takeWhile { index, _ in index < 4 }
+                .map { _, element in element  }
         case .Throw:
             return Observable.error(RxError.unknown)
         case .Timeout:
@@ -616,6 +628,7 @@ extension Operator {
         .TakeDuration,
         .TakeLast,
         .TakeWhile,
+        .TakeWhileWithIndex,
         .Throttle,
         .Throw,
         .Timeout,
@@ -758,7 +771,7 @@ extension Operator {
             return "Emit only the final n items emitted by an Observable."
         case .TakeUntil:
             return "Discard any items emitted by an Observable after a second Observable emits an item or terminates."
-        case .TakeWhile:
+        case .TakeWhile, .TakeWhileWithIndex:
             return "Mirror items emitted by an Observable until a specified condition becomes false."
         case .Throw:
             return "Create an Observable that emits no items and terminates with an error."
