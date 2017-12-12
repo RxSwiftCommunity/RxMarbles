@@ -24,7 +24,7 @@ struct Link {
 
 extension Collection {
     /// Return a copy of `self` with its elements shuffled
-    func shuffle() -> [Generator.Element] {
+    func shuffle() -> [Iterator.Element] {
         var list = Array(self)
         list.shuffleInPlace()
         return list
@@ -34,7 +34,7 @@ extension Collection {
 extension MutableCollection where Index == Int {
     /// Shuffle the elements of `self` in-place.
     mutating func shuffleInPlace() {
-        let count = self.count.toIntMax()
+        let count = Int(self.count)
         
         // empty and single-element collections don't shuffle
         if count < 2 { return }
@@ -42,7 +42,7 @@ extension MutableCollection where Index == Int {
         for i in 0..<Int(count - 1) {
             let j = Int(arc4random_uniform(UInt32(count - i))) + i
             guard i != j else { continue }
-            swap(&self[i], &self[j])
+            self.swapAt(i, j)
         }
     }
 }
@@ -58,10 +58,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private let _resultTimeline = RxMarbles.Image.timeLine.imageView()
     
     private let _closeButton = UIButton(type: .custom)
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         view.backgroundColor = Color.white
         
         _configurePages()
@@ -93,7 +93,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let scale = CGFloat(0.81666)
         
         _logoImageView.transform = _logoImageView.transform.scaledBy(x: scale, y: scale)
-       
+        
         let centerY = _logoImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: helpMode ? -200 : 0)
         
         let centerX = _logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor, constant: 0)
@@ -121,7 +121,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
         
         animator.addAnimation(yAnimation)
-       
+        
         let xAnimation = ConstraintConstantAnimation(superview: view, constraint: centerX)
         
         xAnimation[3] = 0
@@ -171,12 +171,20 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         view.addSubview(_closeButton)
         _closeButton.translatesAutoresizingMaskIntoConstraints = false
         
-        let top = _closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
+        var top: NSLayoutConstraint
+        
+        if #available(iOS 11, *) {
+            let guide = view.safeAreaLayoutGuide
+            top = _closeButton.topAnchor.constraint(equalTo: guide.topAnchor, constant: 0)
+        } else {
+           top = _closeButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 20)
+        }
+        
         let right = _closeButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10)
         
         let width = _closeButton.widthAnchor.constraint(equalToConstant: 40)
         let height = _closeButton.heightAnchor.constraint(equalToConstant: 40)
-       
+        
         view.addConstraints([top, right, width, height])
     }
     
@@ -225,7 +233,8 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         next.setTitle("onNext(   )", for: .normal)
         next.rx.tap.subscribe { [unowned self] _ in
             self._setOffsetAnimated(page + 1)
-        }.addDisposableTo(_disposeBag)
+            }
+            .disposed(by: _disposeBag)
         
         next.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(next)
@@ -251,12 +260,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _configureEventViews() {
-        let explore     = EventView(recorded: RecordedType(time: 0, event: Event.next(ColoredType(value: "Explore", color: Color.nextGreen, shape: .circle))))
-        let experiment  = EventView(recorded: RecordedType(time: 0, event: Event.next(ColoredType(value: "Experiment", color: Color.nextOrange, shape: .triangle))))
-        let share       = EventView(recorded: RecordedType(time: 0, event: Event.next(ColoredType(value: "Share", color: Color.nextBlue, shape: .rect))))
-        let rx          = EventView(recorded: RecordedType(time: 0, event: Event.next(ColoredType(value: "Rx", color: Color.nextDarkYellow, shape: .star))))
-        let about       = EventView(recorded: RecordedType(time: 0, event: Event.next(ColoredType(value: "About", color: Color.nextLightBlue, shape: .star))))
-        let completed   = EventView(recorded: RecordedType(time: 0, event: .completed))
+        let explore     = EventView(recorded: RecordedType(time: 0, value: Event.next(ColoredType(value: "Explore", color: Color.nextGreen, shape: .circle))))
+        let experiment  = EventView(recorded: RecordedType(time: 0, value: Event.next(ColoredType(value: "Experiment", color: Color.nextOrange, shape: .triangle))))
+        let share       = EventView(recorded: RecordedType(time: 0, value: Event.next(ColoredType(value: "Share", color: Color.nextBlue, shape: .rect))))
+        let rx          = EventView(recorded: RecordedType(time: 0, value: Event.next(ColoredType(value: "Rx", color: Color.nextDarkYellow, shape: .star))))
+        let about       = EventView(recorded: RecordedType(time: 0, value: Event.next(ColoredType(value: "About", color: Color.nextLightBlue, shape: .star))))
+        let completed   = EventView(recorded: RecordedType(time: 0, value: .completed))
         
         let helpEvents = [ explore, experiment, share, rx, about, completed ]
         let introEvents = [ explore, experiment, share, completed ]
@@ -324,13 +333,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         let operatorsLabelText = NSMutableAttributedString()
         operatorsLabelText.append(
-            NSAttributedString(string: "\(operatorsCount)", attributes: [NSFontAttributeName : Font.boldText(14)])
+            NSAttributedString(string: "\(operatorsCount)", attributes: [NSAttributedStringKey.font : Font.boldText(14)])
         )
         operatorsLabelText.append(
-            NSAttributedString(string: " RX operators to ", attributes: [NSFontAttributeName : Font.text(14)])
+            NSAttributedString(string: " RX operators to ", attributes: [NSAttributedStringKey.font : Font.text(14)])
         )
         operatorsLabelText.append(
-            NSAttributedString(string: "explore", attributes: [NSFontAttributeName : Font.boldText(14)])
+            NSAttributedString(string: "explore", attributes: [NSAttributedStringKey.font : Font.boldText(14)])
         )
         let operatorsLabel = UILabel()
         operatorsLabel.attributedText = operatorsLabelText
@@ -374,11 +383,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
                 label.center.x = pageWidth * CGFloat(i % 2 > 0 ? -2 : 2)
                 UIView.animate(withDuration: 0.3, animations: {
                     label.center.x = 0
-                    }, completion: { _ in
-                        let leftAnimation = ConstraintConstantAnimation(superview: cloudView, constraint: labelX)
-                        leftAnimation[0] = 0
-                        leftAnimation[1] = self.pageWidth / 2 * CGFloat(-i)
-                        self.animator.addAnimation(leftAnimation)
+                }, completion: { _ in
+                    let leftAnimation = ConstraintConstantAnimation(superview: cloudView, constraint: labelX)
+                    leftAnimation[0] = 0
+                    leftAnimation[1] = self.pageWidth / 2 * CGFloat(-i)
+                    self.animator.addAnimation(leftAnimation)
                 })
             }
             
@@ -416,7 +425,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             let rnd = arc4random() % 4
             let operatorString = _attributedOperatorString(op: op, p: p, rnd: Int(rnd))
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
-            alphaString.addAttributes([NSForegroundColorAttributeName : UIColor.clear], range: NSMakeRange(0, operatorString.length))
+            alphaString.addAttributes([NSAttributedStringKey.foregroundColor : UIColor.clear], range: NSMakeRange(0, operatorString.length))
             switch rnd {
             case 0:
                 strings.forEach { $0.append(strings.index(of: $0) == 0 ? operatorString : alphaString) }
@@ -454,32 +463,32 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         switch rnd {
         case 0:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.monoItalic, size: 12),
-                NSParagraphStyleAttributeName: p,
-                NSShadowAttributeName : shadow
+                NSAttributedStringKey.font: Font.code(.monoItalic, size: 12),
+                NSAttributedStringKey.paragraphStyle: p,
+                NSAttributedStringKey.shadow : shadow
                 ])
         case 1:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.monoRegular, size: 13),
-                NSParagraphStyleAttributeName: p,
-                NSShadowAttributeName : shadow
+                NSAttributedStringKey.font: Font.code(.monoRegular, size: 13),
+                NSAttributedStringKey.paragraphStyle: p,
+                NSAttributedStringKey.shadow : shadow
                 ])
         case 2:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.monoBold, size: 13),
-                NSParagraphStyleAttributeName: p,
-                NSShadowAttributeName : shadow
+                NSAttributedStringKey.font: Font.code(.monoBold, size: 13),
+                NSAttributedStringKey.paragraphStyle: p,
+                NSAttributedStringKey.shadow : shadow
                 ])
         case 3:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.monoBoldItalic, size: 15),
-                NSParagraphStyleAttributeName: p,
-                NSShadowAttributeName : shadow
+                NSAttributedStringKey.font: Font.code(.monoBoldItalic, size: 15),
+                NSAttributedStringKey.paragraphStyle: p,
+                NSAttributedStringKey.shadow : shadow
                 ])
         default:
             return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSFontAttributeName: Font.code(.monoItalic, size: 12),
-                NSParagraphStyleAttributeName: p
+                NSAttributedStringKey.font: Font.code(.monoItalic, size: 12),
+                NSAttributedStringKey.paragraphStyle: p
                 ])
         }
     }
@@ -500,9 +509,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
         
-        let editLabelText = NSMutableAttributedString(string: "Add new,\nchange colors and values in ", attributes: [NSFontAttributeName : Font.text(13)])
-        editLabelText.append(NSAttributedString(string: "edit", attributes: [NSFontAttributeName : Font.boldText(13)]))
-        editLabelText.append(NSAttributedString(string: " mode", attributes: [NSFontAttributeName : Font.text(13)]))
+        let editLabelText = NSMutableAttributedString(string: "Add new,\nchange colors and values in ", attributes: [NSAttributedStringKey.font : Font.text(13)])
+        editLabelText.append(NSAttributedString(string: "edit", attributes: [NSAttributedStringKey.font : Font.boldText(13)]))
+        editLabelText.append(NSAttributedString(string: " mode", attributes: [NSAttributedStringKey.font : Font.text(13)]))
         
         editLabel.attributedText = editLabelText
         editLabel.numberOfLines = 2
@@ -511,7 +520,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let editLabelTop = editLabel.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 40)
         let editLabelCenterX = editLabel.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: -25)
         contentView.addConstraints([editLabelTop, editLabelCenterX])
-
+        
         timeline.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(timeline)
         let timelineTop = timeline.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 130)
@@ -536,7 +545,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let downBottom = down.bottomAnchor.constraint(equalTo: timeline.topAnchor, constant: -10)
         let downCenterX = down.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: 110)
         contentView.addConstraints([downBottom, downCenterX])
-
+        
         timelineLabel.translatesAutoresizingMaskIntoConstraints = false
         timelineLabel.text = "move events around"
         timelineLabel.font = Font.text(13)
@@ -544,7 +553,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let timelineLabelTop = timelineLabel.topAnchor.constraint(equalTo: timeline.bottomAnchor, constant: 20)
         contentView.addConstraint(timelineLabelTop)
         keepView(timelineLabel, onPage: 1)
-
+        
         experimentLabel.translatesAutoresizingMaskIntoConstraints = false
         experimentLabel.text = "Edit. Learn. Experiment."
         experimentLabel.font = Font.text(14)
@@ -586,7 +595,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
         let iconContainerTop = iconContainer.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 20)
         let iconContainerCenterX = iconContainer.centerXAnchor.constraint(equalTo: _logoImageView.centerXAnchor)
-
+        
         let iconContainerWidth = iconContainer.widthAnchor.constraint(equalToConstant: 300)
         let iconContainerHeight = iconContainer.heightAnchor.constraint(equalToConstant: 100)
         contentView.addConstraints([iconContainerTop, iconContainerCenterX, iconContainerWidth, iconContainerHeight])
@@ -604,7 +613,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rotation[1] = -90
         rotation[2] = 0
         animator.addAnimation(rotation)
-
+        
         let iconContainerTopAnimation = ConstraintConstantAnimation(superview: contentView, constraint: iconContainerTop)
         iconContainerTopAnimation[1.4] = -210
         iconContainerTopAnimation[2] = 20
@@ -629,15 +638,15 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             RxMarbles.Image.skype,
             RxMarbles.Image.hanghout,
             RxMarbles.Image.evernote
-        ]
-        .map { $0.imageView() }
-       
-        let step = (2*M_PI) / Double(shareLogos.count);
+            ]
+            .map { $0.imageView() }
+        
+        let step = (2 * .pi) / Double(shareLogos.count);
         var i = 0
         shareLogos.forEach {
             $0.translatesAutoresizingMaskIntoConstraints = false
             container.addSubview($0)
-           
+            
             $0.transform = $0.transform.scaledBy(x: 0, y: 0)
             let scaleAnimation = ScaleAnimation(view: $0)
             scaleAnimation[1] = 0
@@ -649,35 +658,35 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             
             let col = i % 5
             let row = i / 5
-
+            
             let centerX = $0.centerXAnchor.constraint(
                 equalTo: container.centerXAnchor,
                 constant: 0
             )
-
+            
             let centerY = $0.centerYAnchor.constraint(
                 equalTo: container.centerYAnchor,
                 constant: 0
             )
-
+            
             container.addConstraints([centerX, centerY])
             let angle = CGFloat(Double(i + 5) * step)
             let r: CGFloat = 210
-
+            
             let xAnimation = ConstraintConstantAnimation(superview: container, constraint: centerX)
             xAnimation[1] = 0
             xAnimation[1.6] = cos(angle) * r
             xAnimation[2] = (CGFloat(col - 2) * 54) * (row == 0 ? 1 : -1)
             animator.addAnimation(xAnimation)
-
+            
             let yAnimation = ConstraintConstantAnimation(superview: container, constraint: centerY)
-
+            
             yAnimation[1] = 0
             yAnimation[1.6] = sin(angle) * r
             yAnimation[2] = row == 0 ? -25 : 25
-
+            
             animator.addAnimation(yAnimation)
-
+            
             i += 1
         }
     }
@@ -766,16 +775,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
         let rxSwiftLabelText = NSMutableAttributedString(attributedString:
-            NSAttributedString(string: "⭐ ", attributes: [NSFontAttributeName : Font.text(14)])
+            NSAttributedString(string: "⭐ ", attributes: [NSAttributedStringKey.font : Font.text(14)])
         )
         rxSwiftLabelText.append(
             NSAttributedString(
                 string: "RxSwift",
-                attributes: [NSFontAttributeName : Font.boldText(14)]
+                attributes: [NSAttributedStringKey.font : Font.boldText(14)]
             )
         )
         rxSwiftLabelText.append(
-            NSAttributedString(string: " on", attributes: [NSFontAttributeName : Font.text(14)])
+            NSAttributedString(string: " on", attributes: [NSAttributedStringKey.font : Font.text(14)])
         )
         rxSwiftLabel.attributedText = rxSwiftLabelText
         rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -788,7 +797,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         
         githubButton.setImage(RxMarbles.Image.github, for: .normal)
         githubButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwift) }
-            .addDisposableTo(_disposeBag)
+            .disposed(by: _disposeBag)
         githubButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(githubButton)
         let githubButtonLeading = githubButton.leadingAnchor.constraint(equalTo: rxSwiftLabel.trailingAnchor, constant: 10)
@@ -806,7 +815,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxSwiftTwitterButton.setImage(RxMarbles.Image.twitter, for: .normal)
         rxSwiftTwitterButton.alpha = 0.3
         rxSwiftTwitterButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwiftTwitter) }
-            .addDisposableTo(_disposeBag)
+            .disposed(by: _disposeBag)
         rxSwiftTwitterButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(rxSwiftTwitterButton)
         let rxSwiftTwitterCenterY = rxSwiftTwitterButton.centerYAnchor.constraint(equalTo: andTwitterLabel.centerYAnchor)
@@ -815,50 +824,50 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _erikMeijerText() -> NSMutableAttributedString {
-        let text = NSMutableAttributedString(string: "Erik ", attributes: [NSFontAttributeName : Font.text(14)])
+        let text = NSMutableAttributedString(string: "Erik ", attributes: [NSAttributedStringKey.font : Font.text(14)])
         let twitter = NSMutableAttributedString(string: "@headinthebox", attributes:
             [
-                NSLinkAttributeName             : Link.erikMeijerTwitter,
-                NSFontAttributeName             : Font.boldText(14)
+                NSAttributedStringKey.link             : Link.erikMeijerTwitter,
+                NSAttributedStringKey.font             : Font.boldText(14)
             ]
         )
         text.append(twitter)
-        text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [NSFontAttributeName : Font.text(14)]))
+        text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [NSAttributedStringKey.font : Font.text(14)]))
         let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes:
             [
-                NSLinkAttributeName             : Link.reactiveX,
-                NSFontAttributeName             : Font.boldText(14)
+                NSAttributedStringKey.link             : Link.reactiveX,
+                NSAttributedStringKey.font             : Font.boldText(14)
             ]
         )
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        text.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, text.length))
+        text.addAttributes([NSAttributedStringKey.paragraphStyle : paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
     private func _krunoslavZaherText() -> NSMutableAttributedString {
-        let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [NSFontAttributeName : Font.text(14)])
+        let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [NSAttributedStringKey.font : Font.text(14)])
         let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes:
             [
-                NSLinkAttributeName             : Link.kZaherTwitter,
-                NSForegroundColorAttributeName  : UIColor.black,
-                NSFontAttributeName             : Font.boldText(14)
+                NSAttributedStringKey.link             : Link.kZaherTwitter,
+                NSAttributedStringKey.foregroundColor  : UIColor.black,
+                NSAttributedStringKey.font             : Font.boldText(14)
             ]
         )
         text.append(twitter)
-        text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [NSFontAttributeName : Font.text(14)]))
+        text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [NSAttributedStringKey.font : Font.text(14)]))
         let reactivex = NSMutableAttributedString(string: "RxSwift", attributes:
             [
-                NSLinkAttributeName             : Link.rxSwift,
-                NSForegroundColorAttributeName  : UIColor.black,
-                NSFontAttributeName             : Font.boldText(14)
+                NSAttributedStringKey.link             : Link.rxSwift,
+                NSAttributedStringKey.foregroundColor  : UIColor.black,
+                NSAttributedStringKey.font             : Font.boldText(14)
             ]
         )
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        text.addAttributes([NSParagraphStyleAttributeName : paragraph], range: NSMakeRange(0, text.length))
+        text.addAttributes([NSAttributedStringKey.paragraphStyle : paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
@@ -888,7 +897,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let versionLabelTop = versionLabel.topAnchor.constraint(equalTo: rxMarblesLabel.bottomAnchor)
         let versionLabelLeading = versionLabel.leadingAnchor.constraint(equalTo: rxMarblesLabel.leadingAnchor)
         contentView.addConstraints([versionLabelTop, versionLabelLeading])
-
+        
         developedByLabel.text = "developed by"
         developedByLabel.font = Font.text(12)
         developedByLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -896,11 +905,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let developedByLabelTop = developedByLabel.topAnchor.constraint(lessThanOrEqualTo: versionLabel.bottomAnchor, constant: 68)
         contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
-
+        
         anjLabButton.setImage(RxMarbles.Image.anjlab, for: .normal)
         
-        anjLabButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.anjlab) }
-        .addDisposableTo(_disposeBag)
+        anjLabButton.rx.tap
+            .subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.anjlab) }
+            .disposed(by: _disposeBag)
         
         anjLabButton.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(anjLabButton)
@@ -933,7 +943,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         return 4
     }
     
-//    MARK: Navigation
+    //    MARK: Navigation
     
     func _setOffsetAnimated(_ offset: CGFloat) {
         scrollView.setContentOffset(CGPoint(x: self.pageWidth * offset, y: 0), animated: true)
@@ -944,7 +954,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         present(safariViewController, animated: true, completion: nil)
     }
     
-//    MARK: UIScrollViewDelegate methods
+    //    MARK: UIScrollViewDelegate methods
     
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
         super.scrollViewDidScroll(scrollView)
@@ -962,7 +972,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
     }
     
-//    MARK: UIContentContainer
+    //    MARK: UIContentContainer
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
@@ -975,7 +985,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         }
     }
     
-//    MARK: UIInterfaceOrientationMask Portrait only
+    //    MARK: UIInterfaceOrientationMask Portrait only
     override var shouldAutorotate: Bool {
         return false
     }
@@ -984,22 +994,22 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         return .portrait
     }
     
-//    MARK: UITextViewDelegate
+    //    MARK: UITextViewDelegate
     
     func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
         return true
     }
     
-//    MARK: Helpers
+    //    MARK: Helpers
     
     private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
         let verticalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.y",
-            type: .tiltAlongVerticalAxis)
+                                                               type: .tiltAlongVerticalAxis)
         verticalMotionEffect.minimumRelativeValue = relativity.vertical.min
         verticalMotionEffect.maximumRelativeValue = relativity.vertical.max
         
         let horizontalMotionEffect = UIInterpolatingMotionEffect(keyPath: "center.x",
-            type: .tiltAlongHorizontalAxis)
+                                                                 type: .tiltAlongHorizontalAxis)
         horizontalMotionEffect.minimumRelativeValue = relativity.horizontal.min
         horizontalMotionEffect.maximumRelativeValue = relativity.horizontal.max
         
@@ -1012,16 +1022,18 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     private func _tapRecognizerWithAction(_ eventView: UIView, page: CGFloat) {
         let tap = UITapGestureRecognizer()
         eventView.addGestureRecognizer(tap)
-        tap.rx.event.subscribe { [unowned self] _ in
-            self._setOffsetAnimated(page)
-        }.addDisposableTo(_disposeBag)
+        tap.rx.event
+            .subscribe { [unowned self] _ in
+                self._setOffsetAnimated(page)
+            }
+            .disposed(by: _disposeBag)
     }
     
     private func _version() -> String {
         guard let info = Bundle.main.infoDictionary,
             let version = info["CFBundleShortVersionString"] as? String,
             let build = info["CFBundleVersion"] as? String
-        else { return "Unknwon" }
+            else { return "Unknwon" }
         
         return "v\(version) build \(build)"
     }

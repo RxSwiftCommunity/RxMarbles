@@ -22,7 +22,7 @@ struct InitialValues {
 extension Operator {
     var initial: InitialValues {
         switch self {
-        case .Amb:
+        case .amb:
             return InitialValues(
                 line1: [
                     next(100, "10", Color.nextRandom, .circle),
@@ -45,7 +45,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .CatchError:
+        case .catchError:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -55,7 +55,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .CatchErrorJustReturn:
+        case .catchErrorJustReturn:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -66,7 +66,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .CombineLatest:
+        case .combineLatest:
             return InitialValues(
                 line1: [
                     next( 80, "1", Color.nextRandom, .circle),
@@ -84,7 +84,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Concat:
+        case .concat:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -98,7 +98,7 @@ extension Operator {
                     completed(300)
                 ]
             )
-        case .DelaySubscription:
+        case .delaySubscription:
             return InitialValues(
                 line1: [
                     next(100, "", Color.nextRandom, .circle),
@@ -109,7 +109,7 @@ extension Operator {
                     completed(700)
                 ]
             )
-        case .Debounce:
+        case .debounce:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -121,7 +121,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .DistinctUntilChanged:
+        case .distinctUntilChanged:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -132,7 +132,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .ElementAt:
+        case .elementAt:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -145,9 +145,9 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Empty:
+        case .empty:
             return InitialValues()
-        case .Filter:
+        case .filter:
             return InitialValues(
                 line1: [
                     next(100, "2", Color.nextRandom, .circle),
@@ -159,7 +159,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .FlatMap, .FlatMapFirst, .FlatMapLatest:
+        case .flatMap, .flatMapFirst, .flatMapLatest:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -173,7 +173,7 @@ extension Operator {
                     completed(300)
                 ]
             )
-        case .IgnoreElements:
+        case .ignoreElements:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -187,7 +187,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Retry:
+        case .retry:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -197,7 +197,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Map:
+        case .map:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -207,7 +207,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .MapWithIndex:
+        case .mapWithIndex:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -217,7 +217,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Merge:
+        case .merge:
             return InitialValues(
                 line1: [
                     next(150, "20", Color.nextRandom, .circle),
@@ -233,9 +233,9 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Never:
+        case .never:
             return InitialValues()
-        case .Reduce:
+        case .reduce:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -247,9 +247,9 @@ extension Operator {
                 ]
             )
             
-        case .Just:
+        case .just:
             return InitialValues()
-        case .Sample:
+        case .sample:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -267,7 +267,7 @@ extension Operator {
                     completed(800)
                 ]
             )
-        case .Scan:
+        case .scan:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -278,7 +278,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Skip:
+        case .skip:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .circle),
@@ -288,7 +288,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .SkipUntil, .TakeUntil:
+        case .skipUntil, .takeUntil:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -306,7 +306,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .StartWith:
+        case .startWith:
             return InitialValues(
                 line1: [
                     next(300, "2", Color.nextRandom, .circle),
@@ -314,7 +314,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .SwitchLatest:
+        case .switchLatest:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -328,7 +328,7 @@ extension Operator {
                     next(350, "3", Color.nextRandom, .rect),
                     next(450, "4", Color.nextRandom, .rect)
                 ])
-        case .Take:
+        case .take:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .circle),
@@ -338,7 +338,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .TakeLast:
+        case .takeLast:
             return InitialValues(
                 line1: [
                     next(300, "1", Color.nextRandom, .circle),
@@ -348,9 +348,9 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .Throw:
+        case .throw:
             return InitialValues()
-        case .Timeout:
+        case .timeout:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -361,7 +361,7 @@ extension Operator {
                     completed(900)
                 ]
             )
-        case .WithLatestFrom:
+        case .withLatestFrom:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -376,7 +376,7 @@ extension Operator {
                     next(450, "4", Color.nextRandom, .rect)
                 ]
             )
-        case .Zip:
+        case .zip:
             return InitialValues(
                 line1: [
                     next(100, "1", Color.nextRandom, .circle),
@@ -423,77 +423,80 @@ extension Operator {
 
 extension Operator {
     
-    func map(_ scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
+    func _map(_ scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
-        case .Amb:
+        case .amb:
             return aO!.amb(bO!)
-        case .Buffer:
+        case .buffer:
             return aO!
                 .buffer(timeSpan: 150, count: 3, scheduler: scheduler)
                 .map {
                     let values = $0.map {$0.value } .joined(separator: ", ")
                     return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .triangle)
-                }
-        case .CatchError:
+            }
+        case .catchError:
             return aO!.catchError { _ in return .just(ColoredType(value: "1", color: Color.nextBlue, shape: .circle)) }
-        case .CatchErrorJustReturn:
+        case .catchErrorJustReturn:
             return aO!.catchErrorJustReturn(ColoredType(value: "1", color: Color.nextBlue, shape: .circle))
-        case .CombineLatest:
+        case .combineLatest:
             return Observable.combineLatest(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
             }
-        case .Concat:
-            return [aO!, bO!].concat()
-        case .Debounce, .Throttle:
+        case .concat:
+            return aO!.concat(bO!)
+        case .debounce, .throttle:
             return aO!.debounce(100, scheduler: scheduler)
-        case .DelaySubscription:
+        case .delaySubscription:
             return aO!.delaySubscription(150, scheduler: scheduler)
-        case .DistinctUntilChanged:
+        case .distinctUntilChanged:
             return aO!.distinctUntilChanged()
-        case .ElementAt:
+        case .elementAt:
             return aO!.elementAt(2)
-        case .Empty:
+        case .empty:
             return Observable.empty()
-        case .Filter:
+        case .filter:
             return aO!.filter {
                 guard let a = Int($0.value) else { throw RxError.unknown }
                 return a > 10
             }
-        case .FlatMap:
+        case .flatMap:
             return aO!.flatMap { e in
                 bO!.map { event in
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-        case .FlatMapFirst:
+        case .flatMapFirst:
             return aO!.flatMapFirst { e in
                 bO!.map { event in
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-        case .FlatMapLatest:
+        case .flatMapLatest:
             return aO!.flatMapLatest { e in
                 bO!.map { event in
                     event.color == Color.nextLightGray ? ColoredType(value: event.value, color: e.color, shape: event.shape) : event
                 }
             }
-//        case .FlatMapWithIndex:
-//            return aO!.flatMapWithIndex { e, i
-//
-//            }
-        case .IgnoreElements:
-            return aO!.ignoreElements()
-        case .Interval:
-            return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
-        case .Just:
-            return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .circle))
-        case .Map:
-        return aO!.map { h in
-            guard let a = Int(h.value) else { throw RxError.unknown }
-            return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
+            //        case .FlatMapWithIndex:
+            //            return aO!.flatMapWithIndex { e, i
+            //
+        //            }
+        case .ignoreElements:
+            return aO!.ignoreElements().asObservable()
+                .flatMapLatest { _ in
+                    return Observable.never()
             }
-        case .MapWithIndex:
-            return aO!.mapWithIndex { element, index in
+        case .interval:
+            return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
+        case .just:
+            return Observable.just(ColoredType(value: "", color: Color.nextRandom, shape: .circle))
+        case .map:
+            return aO!.map { h in
+                guard let a = Int(h.value) else { throw RxError.unknown }
+                return ColoredType(value: String(a * 10), color: h.color, shape: h.shape)
+            }
+        case .mapWithIndex:
+            return aO!.enumerated().map { index, element in
                 if index == 1 {
                     guard let a = Int(element.value) else { throw RxError.unknown }
                     return ColoredType(value: String(a * 10), color: element.color, shape: element.shape)
@@ -501,72 +504,76 @@ extension Operator {
                     return element
                 }
             }
-        case .Merge:
+        case .merge:
             return Observable.of(aO!, bO!).merge()
-        case .Never:
+        case .never:
             return Observable.never()
-        case .Of:
+        case .of:
             return Observable.of(ColoredType(value: "1", color: Color.nextRandom, shape: .star))
-        case .Reduce:
+        case .reduce:
             return aO!.reduce(ColoredType(value: "0", color: Color.nextGreen, shape: .circle)) {
                 guard let a = Int($0.value), let b = Int($1.value) else { throw RxError.unknown }
                 return ColoredType(value: String(a + b), color: $1.color, shape: $1.shape)
             }
-        case .RepeatElement:
+        case .repeatElement:
             return Observable<Int64>.interval(150, scheduler: scheduler).map { _ in ColoredType(value: "1", color: Color.nextGreen, shape: .star)}
-        case .Retry:
+        case .retry:
             return aO!.retry(2)
-        case .Sample:
+        case .sample:
             return aO!.sample(bO!)
-        case .Scan:
+        case .scan:
             return aO!.scan(ColoredType(value: "0", color: Color.nextGreen, shape: .star)) { acc, e in
                 guard let a = Int(e.value), let b = Int(acc.value) else { throw RxError.unknown }
                 return ColoredType(value: String(a + b), color: e.color, shape: e.shape)
             }
-        case .Single:
+        case .single:
             return aO!.single()
-        case .Skip:
+        case .skip:
             return aO!.skip(2)
-        case .SkipDuration:
+        case .skipDuration:
             return aO!.skip(400, scheduler: scheduler)
-        case .SkipUntil:
+        case .skipUntil:
             return aO!.skipUntil(bO!)
-        case .SkipWhile:
+        case .skipWhile:
             return aO!.skipWhile { e in Int(e.value)! < 4 }
-        case .SkipWhileWithIndex:
-            return aO!.skipWhileWithIndex { e, i in i < 4 }
-        case .StartWith:
+        case .skipWhileWithIndex:
+            return aO!.enumerated()
+                .skipWhile { index, _ in index < 4 }
+                .map { _, element in element }
+        case .startWith:
             return aO!.startWith(ColoredType(value: "1", color: Color.nextGreen, shape: .circle))
-        case .SwitchLatest:
+        case .switchLatest:
             return Observable.of(aO!, bO!).switchLatest()
-        case .Take:
+        case .take:
             return aO!.take(2)
-        case .TakeDuration:
+        case .takeDuration:
             return aO!.take(400, scheduler: scheduler)
-        case .TakeLast:
+        case .takeLast:
             return aO!.takeLast(2)
-        case .TakeUntil:
+        case .takeUntil:
             return aO!.takeUntil(bO!)
-        case .TakeWhile:
+        case .takeWhile:
             return aO!.takeWhile { e in Int(e.value)! < 4 }
-        case .TakeWhileWithIndex:
-            return aO!.takeWhileWithIndex { e, i in i < 4 }
-        case .Throw:
+        case .takeWhileWithIndex:
+            return aO!.enumerated()
+                .takeWhile { index, _ in index < 4 }
+                .map { _, element in element  }
+        case .throw:
             return Observable.error(RxError.unknown)
-        case .Timeout:
+        case .timeout:
             return aO!.timeout(200, scheduler: scheduler)
-        case .Timer:
+        case .timer:
             return Observable<Int64>.timer(500, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
-        case .ToArray:
+        case .toArray:
             return aO!
                 .toArray()
                 .map {
                     let values = $0.map {$0.value } .joined(separator: ", ")
                     return ColoredType(value: "[\(values)]", color: Color.nextGreen, shape: .rect)
             }
-        case .WithLatestFrom:
+        case .withLatestFrom:
             return aO!.withLatestFrom(bO!)
-        case .Zip:
+        case .zip:
             return Observable.zip(aO!, bO!) {
                 return ColoredType(value: $0.value + $1.value, color: $0.color, shape: $1.shape)
             }
@@ -578,65 +585,65 @@ extension Operator {
     var multiTimelines: Bool {
         switch self {
         case
-        .Amb,
-        .CombineLatest,
-        .Concat,
-        .FlatMap,
-        .FlatMapFirst,
-        .FlatMapLatest,
-        .Merge,
-        .Sample,
-        .SkipUntil,
-        .SwitchLatest,
-        .TakeUntil,
-        .WithLatestFrom,
-        .Zip:
+        .amb,
+        .combineLatest,
+        .concat,
+        .flatMap,
+        .flatMapFirst,
+        .flatMapLatest,
+        .merge,
+        .sample,
+        .skipUntil,
+        .switchLatest,
+        .takeUntil,
+        .withLatestFrom,
+        .zip:
             return true
             
         case
-        .Buffer,
-        .CatchError,
-        .CatchErrorJustReturn,
-        .Debounce,
-        .DelaySubscription,
-        .DistinctUntilChanged,
-        .ElementAt,
-        .Empty,
-        .Filter,
-        .IgnoreElements,
-        .Interval,
-        .Just,
-        .Map,
-        .MapWithIndex,
-        .Never,
-        .Of,
-        .Reduce,
-        .RepeatElement,
-        .Retry,
-        .Scan,
-        .Single,
-        .Skip,
-        .SkipDuration,
-        .SkipWhile,
-        .SkipWhileWithIndex,
-        .StartWith,
-        .Take,
-        .TakeDuration,
-        .TakeLast,
-        .TakeWhile,
-        .TakeWhileWithIndex,
-        .Throttle,
-        .Throw,
-        .Timeout,
-        .Timer,
-        .ToArray:
+        .buffer,
+        .catchError,
+        .catchErrorJustReturn,
+        .debounce,
+        .delaySubscription,
+        .distinctUntilChanged,
+        .elementAt,
+        .empty,
+        .filter,
+        .ignoreElements,
+        .interval,
+        .just,
+        .map,
+        .mapWithIndex,
+        .never,
+        .of,
+        .reduce,
+        .repeatElement,
+        .retry,
+        .scan,
+        .single,
+        .skip,
+        .skipDuration,
+        .skipWhile,
+        .skipWhileWithIndex,
+        .startWith,
+        .take,
+        .takeDuration,
+        .takeLast,
+        .takeWhile,
+        .takeWhileWithIndex,
+        .throttle,
+        .throw,
+        .timeout,
+        .timer,
+        .toArray:
             return false
         }
     }
     
     var withoutTimelines: Bool {
         switch self {
-        case .Empty, .Interval, .Just, .Never, .Of, .RepeatElement, .Throw, .Timer:
+        case .empty, .interval, .just, .never, .of, .repeatElement, .throw, .timer:
             return true
         default:
             return false
@@ -647,149 +654,147 @@ extension Operator {
 extension Operator {
     var urlString: String {
         switch self {
-        case .CatchError, .CatchErrorJustReturn:
+        case .catchError, .catchErrorJustReturn:
             return "catch.html"
-        case .DelaySubscription:
+        case .delaySubscription:
             return "delay.html"
-        case .DistinctUntilChanged:
+        case .distinctUntilChanged:
             return "distinct.html"
-        case .Empty, .Never, .Throw:
+        case .empty, .never, .throw:
             return "empty-never-throw.html"
-        case .FlatMap, .FlatMapFirst, .FlatMapLatest:
+        case .flatMap, .flatMapFirst, .flatMapLatest:
             return "flatmap.html"
-        case .IgnoreElements:
+        case .ignoreElements:
             return "ignoreelements.html"
-        case .Map, .MapWithIndex:
+        case .map:
             return "map.html"
-        case .Of:
+        case .of:
             return "from.html"
-        case .RepeatElement:
+        case .repeatElement:
             return "repeat.html"
-        case .Single:
+        case .single:
             return "first.html"
-        case .SkipDuration:
+        case .skipDuration:
             return "skip.html"
-        case .SkipWhileWithIndex:
+        case .skipWhile:
             return "skipwhile.html"
-        case .SwitchLatest:
+        case .switchLatest:
             return "switch.html"
-        case .TakeDuration:
+        case .takeDuration:
             return "take.html"
-        case .TakeWhileWithIndex:
+        case .take:
             return "takewhile.html"
-        case .Throttle:
+        case .throttle:
             return "debounce.html"
-        case .ToArray:
+        case .toArray:
             return "to.html"
-        case .WithLatestFrom:
+        case .withLatestFrom:
             return "combinelatest.html"
         default:
             return "\(rawValue.lowercased()).html"
         }
     }
     
-    var url: NSURL {
+    var url: URL {
         let reactivex = "http://reactivex.io/documentation/operators/"
-        return NSURL(string: reactivex + urlString)!
+        return URL(string: reactivex + urlString)!
     }
 }
 
 extension Operator {
     var text: String {
         switch self {
-        case .Amb:
+        case .amb:
             return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
-        case .Buffer:
+        case .buffer:
             return "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time."
-        case .CatchError, .CatchErrorJustReturn:
+        case .catchError, .catchErrorJustReturn:
             return "Recover from an onError notification by continuing the sequence without error."
-        case .CombineLatest, .WithLatestFrom:
+        case .combineLatest, .withLatestFrom:
             return "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function."
-        case .Concat:
+        case .concat:
             return "Emit the emissions from two or more Observables without interleaving them."
-        case .Debounce, .Throttle:
+        case .debounce, .throttle:
             return "Only emit an item from an Observable if a particular timespan has passed without it emitting another item."
-        case .DelaySubscription:
+        case .delaySubscription:
             return "Shift the emissions from an Observable forward in time by a particular amount."
-        case .DistinctUntilChanged:
+        case .distinctUntilChanged:
             return "Suppress duplicate items emitted by an Observable."
-        case .ElementAt:
+        case .elementAt:
             return "Emit only item n emitted by an Observable."
-        case .Empty:
+        case .empty:
             return "Create an Observable that emits no items but terminates normally."
-        case .Filter:
+        case .filter:
             return "Emit only those items from an Observable that pass a predicate test."
-        case .FlatMap:
+        case .flatMap:
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
-        case .FlatMapFirst:
+        case .flatMapFirst:
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
-        case .FlatMapLatest:
+        case .flatMapLatest:
             return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
-        case .IgnoreElements:
+        case .ignoreElements:
             return "Do not emit any items from an Observable but mirror its termination notification."
-        case .Interval:
+        case .interval:
             return "Create an Observable that emits a sequence of integers spaced by a given time interval."
-        case .Just:
+        case .just:
             return "Create an Observable that emits a particular item."
-        case .Map:
-        return "Transform the items emitted by an Observable by applying a function to each item."
-        case .MapWithIndex:
+        case .map, .mapWithIndex:
             return "Transform the items emitted by an Observable by applying a function to each item."
-        case .Merge:
+        case .merge:
             return "Combine multiple Observables into one by merging their emissions."
-        case .Never:
+        case .never:
             return "Create an Observable that emits no items and does not terminate."
-        case .Of:
+        case .of:
             return "Convert various other objects and data types into Observables."
-        case .Reduce:
+        case .reduce:
             return "Apply a function to each item emitted by an Observable, sequentially, and emit the final value."
-        case .RepeatElement:
+        case .repeatElement:
             return "Create an Observable that emits a particular item multiple times."
-        case .Retry:
+        case .retry:
             return "If a source Observable emits an error, resubscribe to it in the hopes that it will complete without error."
-        case .Sample:
+        case .sample:
             return "Emit the most recent items emitted by an Observable within periodic time intervals."
-        case .Scan:
+        case .scan:
             return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
-        case .Single:
+        case .single:
             return "Emit only the first item (or the first item that meets some condition) emitted by an Observable."
-        case .Skip, .SkipDuration:
+        case .skip, .skipDuration:
             return "Suppress the first n items emitted by an Observable."
-        case .SkipUntil:
+        case .skipUntil:
             return "Discard items emitted by an Observable until a second Observable emits an item."
-        case .SkipWhile, .SkipWhileWithIndex:
+        case .skipWhile, .skipWhileWithIndex:
             return "Discard items emitted by an Observable until a specified condition becomes false."
-        case .StartWith:
+        case .startWith:
             return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
-        case .SwitchLatest:
+        case .switchLatest:
             return "Convert an Observable that emits Observables into a single Observable that emits the items emitted by the most-recently-emitted of those Observables."
-        case .Take, .TakeDuration:
+        case .take, .takeDuration:
             return "Emit only the first n items emitted by an Observable."
-        case .TakeLast:
+        case .takeLast:
             return "Emit only the final n items emitted by an Observable."
-        case .TakeUntil:
+        case .takeUntil:
             return "Discard any items emitted by an Observable after a second Observable emits an item or terminates."
-        case .TakeWhile, .TakeWhileWithIndex:
+        case .takeWhile, .takeWhileWithIndex:
             return "Mirror items emitted by an Observable until a specified condition becomes false."
-        case .Throw:
+        case .throw:
             return "Create an Observable that emits no items and terminates with an error."
-        case .Timeout:
+        case .timeout:
             return "Mirror the source Observable, but issue an error notification if a particular period of time elapses without any emitted items."
-        case .Timer:
+        case .timer:
             return "Create an Observable that emits a particular item after a given delay."
-        case .ToArray:
+        case .toArray:
             return "Convert an Observable into another object or data structure."
-        case .Zip:
+        case .zip:
             return "Combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function."
         }
     }
     
     var linkText: NSMutableAttributedString {
         let res = NSMutableAttributedString(string: text)
-        let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSLinkAttributeName: url])
+        let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [NSAttributedStringKey.link: url])
         res.append(NSAttributedString(string: " "))
         res.append(link)
-        res.addAttribute(NSFontAttributeName, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))
+        res.addAttribute(NSAttributedStringKey.font, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))
         return res
     }
 }

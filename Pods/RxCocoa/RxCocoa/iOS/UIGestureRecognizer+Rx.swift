@@ -1,6 +1,6 @@
 //
 //  UIGestureRecognizer+Rx.swift
-//  Touches
+//  RxCocoa
 //
 //  Created by Carlos García on 10/6/15.
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
@@ -15,7 +15,7 @@ import RxSwift
 
 
 // This should be only used from `MainScheduler`
-class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
+final class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
     typealias Callback = (Recognizer) -> Void
     
     let selector = #selector(ControlTarget.eventHandler(_:))
@@ -37,7 +37,7 @@ class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
         }
     }
     
-    func eventHandler(_ sender: UIGestureRecognizer!) {
+    @objc func eventHandler(_ sender: UIGestureRecognizer) {
         if let callback = self.callback, let gestureRecognizer = self.gestureRecognizer {
             callback(gestureRecognizer)
         }
@@ -53,9 +53,7 @@ class GestureTarget<Recognizer: UIGestureRecognizer>: RxTarget {
 
 extension Reactive where Base: UIGestureRecognizer {
     
-    /**
-    Reactive wrapper for gesture recognizer events.
-    */
+    /// Reactive wrapper for gesture recognizer events.
     public var event: ControlEvent<Base> {
         let source: Observable<Base> = Observable.create { [weak control = self.base] observer in
             MainScheduler.ensureExecutingOnScheduler()

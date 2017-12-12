@@ -42,7 +42,7 @@ class SequenceView: UIView {
             Version.iPadAir2,
             Version.iPadMini3,
             Version.iPadMini4,
-            Version.iPadPro
+            Version.iPadPro10_5Inch
         ]
         debounce = powerDevices.contains(Device.version()) ? 0.008 : 0.03
     }
@@ -86,7 +86,7 @@ class SequenceView: UIView {
             let current = events[index]
             let delta: Int = 19
             if ((current.time > prev.time - delta) && (current.time < prev.time + delta)) && current.value.isStopEvent == false {
-                angles.append(prevAngle + CGFloat(M_PI / 5.15))
+                angles.append(prevAngle + CGFloat(.pi / 5.15))
             } else {
                 angles.append(0.0)
             }

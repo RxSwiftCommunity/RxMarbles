@@ -6,7 +6,8 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-import Foundation
+import class Foundation.NSObject
+
 #if !RX_NO_MODULE
 import RxSwift
 #endif
@@ -21,7 +22,7 @@ class RxTarget : NSObject
         self.retainSelf = self
 
 #if TRACE_RESOURCES
-        OSAtomicIncrement32(&resourceCount)
+        _ = Resources.incrementTotal()
 #endif
 
 #if DEBUG
@@ -38,7 +39,7 @@ class RxTarget : NSObject
 
 #if TRACE_RESOURCES
     deinit {
-        OSAtomicDecrement32(&resourceCount)
+        _ = Resources.decrementTotal()
     }
 #endif
 }
