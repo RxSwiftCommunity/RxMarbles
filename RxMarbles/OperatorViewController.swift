@@ -67,6 +67,10 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        if #available(iOS 11, *) {
+            navigationItem.largeTitleDisplayMode = .always;
+        }
+        
         view.backgroundColor = Color.white
         
         view.addSubview(_scrollView)

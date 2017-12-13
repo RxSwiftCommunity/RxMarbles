@@ -69,6 +69,10 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
         
+        if #available(iOS 11, *) {
+            navigationItem.largeTitleDisplayMode = .always;
+        }
+        
         _searchController.searchResultsUpdater = self
         _searchController.dimsBackgroundDuringPresentation = false
         _searchController.searchBar.searchBarStyle = .minimal

@@ -33,6 +33,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         
         let masterNav = UINavigationController(rootViewController: _operatorsTableViewController)
         let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: _operatorsTableViewController.selectedOperator))
+  
+        if #available(iOS 11, *) {
+            masterNav.navigationBar.prefersLargeTitles = true
+            
+        }
         
         _splitViewController.viewControllers = [masterNav, detailNav]
         
@@ -109,12 +114,18 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
     func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
         
+        let navController: UINavigationController
         if let detail = primaryViewController.separateSecondaryViewController(for: splitViewController) {
-            return UINavigationController(rootViewController: detail)
+            navController = UINavigationController(rootViewController: detail)
         } else {
             let op = _operatorsTableViewController.selectedOperator
-            return UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
+            navController = UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
         }
+        if #available(iOS 11.0, *) {
+            navController.navigationBar.prefersLargeTitles = true
+        }
+
+        return navController
     }
     
     // MARK: Shortcuts
