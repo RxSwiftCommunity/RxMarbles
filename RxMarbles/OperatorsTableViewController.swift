@@ -69,17 +69,22 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
         
         navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
         
-        if #available(iOS 11, *) {
-            navigationItem.largeTitleDisplayMode = .always;
-        }
-        
         _searchController.searchResultsUpdater = self
-        _searchController.dimsBackgroundDuringPresentation = false
+        _searchController.obscuresBackgroundDuringPresentation = false
         _searchController.searchBar.searchBarStyle = .minimal
-       
+        
         definesPresentationContext = true
         
-        tableView.tableHeaderView = _searchController.searchBar
+        if #available(iOS 11, *) {
+            navigationItem.largeTitleDisplayMode = .always
+            navigationItem.searchController = _searchController
+            tableView.tableHeaderView = UIView()
+        } else {
+            _searchController.hidesNavigationBarDuringPresentation = false
+            _searchController.searchBar.backgroundColor = UIColor.white
+            tableView.tableHeaderView = _searchController.searchBar
+        }
+        
         tableView.tableFooterView = UIView()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
