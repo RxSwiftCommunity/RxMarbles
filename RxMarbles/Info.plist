@@ -38,6 +38,8 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Store your marbles in your Library</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Store your marbles in your Library</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
 		<dict>
