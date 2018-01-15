@@ -15,11 +15,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.2.1</string>
+	<string>1.2.2</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>26</string>
+	<string>27</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -36,9 +36,9 @@
 	</dict>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Store your marbles in your Library</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Store your marbles in your Library</string>
+	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Store your marbles in your Library</string>
 	<key>UIApplicationShortcutItems</key>
 	<array>
