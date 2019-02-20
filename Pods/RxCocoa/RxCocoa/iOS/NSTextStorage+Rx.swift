@@ -7,10 +7,12 @@
 //
 
 #if os(iOS) || os(tvOS)
-#if !RX_NO_MODULE
     import RxSwift
-#endif
     import UIKit
+
+    #if swift(>=4.2)
+        public typealias NSTextStorageEditActions = NSTextStorage.EditActions
+    #endif
     
     extension Reactive where Base: NSTextStorage {
 

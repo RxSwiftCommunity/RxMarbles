@@ -26,7 +26,7 @@ extension Observable {
      - seealso: [from operator on reactivex.io](http://reactivex.io/documentation/operators/from.html)
 
      - parameter optional: Optional element in the resulting observable sequence.
-     - parameter: Scheduler to send the optional element on.
+     - parameter scheduler: Scheduler to send the optional element on.
      - returns: An observable sequence containing the wrapped value or not from given optional.
      */
     @available(*, deprecated, message: "Implicit conversions from any type to optional type are allowed and that is causing issues with `from` operator overloading.", renamed: "from(optional:scheduler:)")
@@ -48,7 +48,7 @@ extension ObservableType {
     @available(*, deprecated, message: "Please use enumerated().map()")
     public func mapWithIndex<R>(_ selector: @escaping (E, Int) throws -> R)
         -> Observable<R> {
-        return enumerated().map { try selector($0.element, $0.index) }
+        return self.enumerated().map { try selector($0.element, $0.index) }
     }
 
 
@@ -64,7 +64,7 @@ extension ObservableType {
     @available(*, deprecated, message: "Please use enumerated().flatMap()")
     public func flatMapWithIndex<O: ObservableConvertibleType>(_ selector: @escaping (E, Int) throws -> O)
         -> Observable<O.E> {
-        return enumerated().flatMap { try selector($0.element, $0.index) }
+        return self.enumerated().flatMap { try selector($0.element, $0.index) }
     }
 
     /**
@@ -79,7 +79,7 @@ extension ObservableType {
      */
     @available(*, deprecated, message: "Please use enumerated().skipWhile().map()")
     public func skipWhileWithIndex(_ predicate: @escaping (E, Int) throws -> Bool) -> Observable<E> {
-        return enumerated().skipWhile { try predicate($0.element, $0.index) }.map { $0.element }
+        return self.enumerated().skipWhile { try predicate($0.element, $0.index) }.map { $0.element }
     }
 
 
@@ -96,7 +96,7 @@ extension ObservableType {
      */
     @available(*, deprecated, message: "Please use enumerated().takeWhile().map()")
     public func takeWhileWithIndex(_ predicate: @escaping (E, Int) throws -> Bool) -> Observable<E> {
-        return enumerated().takeWhile { try predicate($0.element, $0.index) }.map { $0.element }
+        return self.enumerated().takeWhile { try predicate($0.element, $0.index) }.map { $0.element }
     }
 }
 
@@ -109,7 +109,7 @@ extension Disposable {
     /// - parameter bag: `DisposeBag` to add `self` to.
     @available(*, deprecated, message: "use disposed(by:) instead", renamed: "disposed(by:)")
     public func addDisposableTo(_ bag: DisposeBag) {
-        disposed(by: bag)
+        self.disposed(by: bag)
     }
 }
 
@@ -128,7 +128,7 @@ extension ObservableType {
     @available(*, deprecated, message: "use share(replay: 1) instead", renamed: "share(replay:)")
     public func shareReplayLatestWhileConnected()
         -> Observable<E> {
-        return share(replay: 1, scope: .whileConnected)
+        return self.share(replay: 1, scope: .whileConnected)
     }
 }
 
@@ -156,6 +156,17 @@ extension ObservableType {
 ///
 /// Unlike `BehaviorSubject` it can't terminate with error, and when variable is deallocated
 /// it will complete its observable sequence (`asObservable`).
+///
+/// **This concept will be deprecated from RxSwift but offical migration path hasn't been decided yet.**
+/// https://github.com/ReactiveX/RxSwift/issues/1501
+///
+/// Current recommended replacement for this API is `RxCocoa.BehaviorRelay` because:
+/// * `Variable` isn't a standard cross platform concept, hence it's out of place in RxSwift target.
+/// * It doesn't have a counterpart for handling events (`PublishRelay`). It models state only.
+/// * It doesn't have a consistent naming with *Relay or other Rx concepts.
+/// * It has an inconsistent memory management model compared to other parts of RxSwift (completes on `deinit`).
+///
+/// Once plans are finalized, official availability attribute will be added in one of upcoming versions.
 public final class Variable<Element> {
 
     public typealias E = Element
@@ -178,19 +189,19 @@ public final class Variable<Element> {
     /// Even if the newly set value is same as the old value, observers are still notified for change.
     public var value: E {
         get {
-            _lock.lock(); defer { _lock.unlock() }
-            return _value
+            self._lock.lock(); defer { self._lock.unlock() }
+            return self._value
         }
         set(newValue) {
             #if DEBUG
-                _synchronizationTracker.register(synchronizationErrorMessage: .variable)
-                defer { _synchronizationTracker.unregister() }
+                self._synchronizationTracker.register(synchronizationErrorMessage: .variable)
+                defer { self._synchronizationTracker.unregister() }
             #endif
-            _lock.lock()
-            _value = newValue
-            _lock.unlock()
+            self._lock.lock()
+            self._value = newValue
+            self._lock.unlock()
 
-            _subject.on(.next(newValue))
+            self._subject.on(.next(newValue))
         }
     }
 
@@ -198,16 +209,20 @@ public final class Variable<Element> {
     ///
     /// - parameter value: Initial variable value.
     public init(_ value: Element) {
-        _value = value
-        _subject = BehaviorSubject(value: value)
+        #if DEBUG
+            DeprecationWarner.warnIfNeeded(.variable)
+        #endif
+
+        self._value = value
+        self._subject = BehaviorSubject(value: value)
     }
 
     /// - returns: Canonical interface for push style sequence
     public func asObservable() -> Observable<E> {
-        return _subject
+        return self._subject
     }
 
     deinit {
-        _subject.on(.completed)
+        self._subject.on(.completed)
     }
 }

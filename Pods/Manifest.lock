@@ -1,12 +1,14 @@
 PODS:
-  - Crashlytics (3.9.3):
-    - Fabric (~> 1.7.2)
-  - Device (3.0.3)
-  - Fabric (1.7.2)
+  - Crashlytics (3.12.0):
+    - Fabric (~> 1.9.0)
+  - Device (3.1.2)
+  - Fabric (1.9.0)
   - RazzleDazzle (0.2.0)
-  - RxCocoa (4.0.0):
+  - RxAtomic (4.4.1)
+  - RxCocoa (4.4.1):
     - RxSwift (~> 4.0)
-  - RxSwift (4.0.0)
+  - RxSwift (4.4.1):
+    - RxAtomic (~> 4.4)
 
 DEPENDENCIES:
   - Crashlytics
@@ -15,6 +17,15 @@ DEPENDENCIES:
   - RazzleDazzle (from `https://github.com/carlosypunto/RazzleDazzle.git`, tag `0.2.0`)
   - RxCocoa (~> 4.0)
   - RxSwift (~> 4.0)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Crashlytics
+    - Device
+    - Fabric
+    - RxAtomic
+    - RxCocoa
+    - RxSwift
 
 EXTERNAL SOURCES:
   RazzleDazzle:
@@ -27,13 +38,14 @@ CHECKOUT OPTIONS:
     :tag: 0.2.0
 
 SPEC CHECKSUMS:
-  Crashlytics: dbb07d01876c171c5ccbdf7826410380189e452c
-  Device: 9a5264ee4e0f392e7153d2c46b10c8df46b7aad2
-  Fabric: 9cd6a848efcf1b8b07497e0b6a2e7d336353ba15
+  Crashlytics: 07fb167b1694128c1c9a5a5cc319b0e9c3ca0933
+  Device: 62242076214c30fb5760174b3601cefafa70a481
+  Fabric: f988e33c97f08930a413e08123064d2e5f68d655
   RazzleDazzle: 6ab76b0790cafc13e3acee9ef7c863bd63f472a4
-  RxCocoa: d62846ca96495d862fa4c59ea7d87e5031d7340e
-  RxSwift: fd680d75283beb5e2559486f3c0ff852f0d35334
+  RxAtomic: f8d6adc1ccb87a767811269e4875887bc74dbf19
+  RxCocoa: 2f35a76bf8887872e28a1914112395b11b8e0e64
+  RxSwift: 92fcf68dfef21f3e2ab1965363d9e7b3d787597e
 
 PODFILE CHECKSUM: 176a9ad81388cfc1a7ed586168641a851a009841
 
-COCOAPODS: 1.3.1
+COCOAPODS: 1.6.0

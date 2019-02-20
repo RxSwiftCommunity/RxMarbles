@@ -8,9 +8,7 @@
 
 #if os(iOS)
     
-#if !RX_NO_MODULE
     import RxSwift
-#endif
     import UIKit
 
     extension Reactive where Base: UIPickerView {
@@ -67,7 +65,7 @@
          - parameter modelType: Type of a Model which bound to the dataSource
          */
         public func modelSelected<T>(_ modelType: T.Type) -> ControlEvent<[T]> {
-            let source = itemSelected.flatMap { [weak view = self.base as UIPickerView] (_, component) -> Observable<[T]> in
+            let source = itemSelected.flatMap { [weak view = self.base as UIPickerView] _, component -> Observable<[T]> in
                 guard let view = view else {
                     return Observable.empty()
                 }

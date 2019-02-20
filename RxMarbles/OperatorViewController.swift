@@ -42,8 +42,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         navigationItem.rightBarButtonItems = _rightButtonItems()
     }
     
-    override func didMove(toParentViewController parent: UIViewController?) {
-        super.didMove(toParentViewController: parent)
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
         
         navigationItem.leftItemsSupplementBackButton = true
         navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
@@ -60,7 +60,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
             _sceneView.sourceSequenceA?.longPressGestureRecorgnizer,
             _sceneView.sourceSequenceB?.longPressGestureRecorgnizer
         ]
-        .flatMap { $0 }
+        .compactMap { $0 }
         .forEach(requireRecognizerToFail)
     }
 
@@ -162,8 +162,8 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
         
         activity.excludedActivityTypes = [
-            UIActivityType.assignToContact,
-            UIActivityType.print,
+            UIActivity.ActivityType.assignToContact,
+            .print,
         ]
         if let delegate = UIApplication.shared.delegate as? AppDelegate,
             let rootViewController = delegate.window?.rootViewController {
