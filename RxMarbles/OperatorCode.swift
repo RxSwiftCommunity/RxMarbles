@@ -119,7 +119,7 @@ private let __typeRegex = try? NSRegularExpression(pattern: "(Observable)|(Int64
 private let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
 private let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
-private func __colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [NSAttributedStringKey: Any]) {
+private func __colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [NSAttributedString.Key: Any]) {
     
     let str = src.string as NSString
     
@@ -135,30 +135,30 @@ extension Operator {
     func higlightedCode() -> NSAttributedString {
         let font = Font.code(.monoRegular, size:18)
         let src = NSMutableAttributedString(string: code, attributes: [
-            NSAttributedStringKey.font: font,
-            NSAttributedStringKey.foregroundColor: Color.codeDefault
+            .font: font,
+            NSAttributedString.Key.foregroundColor: Color.codeDefault
         ])
         
         __colorize(src, regex: __methodRegex!, rangeIndex: 0, attrs: [
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeMethod
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeMethod
             ]
         )
         __colorize(src, regex: __numberRegex!, rangeIndex: 1, attrs: [
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeNumber
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeNumber
             ]
         )
         
         __colorize(src, regex: __typeRegex!, rangeIndex: 0, attrs: [
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeType
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeType
             ]
         )
         
         __colorize(src, regex: __keywordRegex!, rangeIndex: 0, attrs: [
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.font.rawValue): font,
-            NSAttributedStringKey(rawValue: NSAttributedStringKey.foregroundColor.rawValue): Color.codeKeyword
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
+            NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeKeyword
             ]
         )
         

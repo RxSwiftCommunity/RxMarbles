@@ -22,12 +22,12 @@ public final class MainScheduler : SerialDispatchQueueScheduler {
 
     private let _mainQueue: DispatchQueue
 
-    var numberEnqueued: AtomicInt = 0
+    var numberEnqueued = AtomicInt(0)
 
     /// Initializes new instance of `MainScheduler`.
     public init() {
-        _mainQueue = DispatchQueue.main
-        super.init(serialQueue: _mainQueue)
+        self._mainQueue = DispatchQueue.main
+        super.init(serialQueue: self._mainQueue)
     }
 
     /// Singleton instance of `MainScheduler`
@@ -40,27 +40,27 @@ public final class MainScheduler : SerialDispatchQueueScheduler {
     /// In case this method is called on a background thread it will throw an exception.
     public class func ensureExecutingOnScheduler(errorMessage: String? = nil) {
         if !DispatchQueue.isMain {
-            rxFatalError(errorMessage ?? "Executing on backgound thread. Please use `MainScheduler.instance.schedule` to schedule work on main thread.")
+            rxFatalError(errorMessage ?? "Executing on background thread. Please use `MainScheduler.instance.schedule` to schedule work on main thread.")
         }
     }
 
     override func scheduleInternal<StateType>(_ state: StateType, action: @escaping (StateType) -> Disposable) -> Disposable {
-        let currentNumberEnqueued = AtomicIncrement(&numberEnqueued)
+        let previousNumberEnqueued = increment(&self.numberEnqueued)
 
-        if DispatchQueue.isMain && currentNumberEnqueued == 1 {
+        if DispatchQueue.isMain && previousNumberEnqueued == 0 {
             let disposable = action(state)
-            _ = AtomicDecrement(&numberEnqueued)
+            decrement(&self.numberEnqueued)
             return disposable
         }
 
         let cancel = SingleAssignmentDisposable()
 
-        _mainQueue.async {
+        self._mainQueue.async {
             if !cancel.isDisposed {
                 _ = action(state)
             }
 
-            _ = AtomicDecrement(&self.numberEnqueued)
+            decrement(&self.numberEnqueued)
         }
 
         return cancel

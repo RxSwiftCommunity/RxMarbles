@@ -5,7 +5,7 @@
 [![Platform](https://img.shields.io/cocoapods/p/Device.svg?style=flat)](http://cocoapods.org/pods/Device)
 ![](https://img.shields.io/badge/Supported-iOS8%20%7C%20OSX%2010.10-4BC51D.svg?style=flat-square)
 [![Carthage Compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
-![](https://img.shields.io/badge/Swift-3.0.2-orange.svg?style=flat)
+![](https://img.shields.io/badge/Swift-4.0-orange.svg?style=flat)
 [![Twitter](https://img.shields.io/badge/Twitter-@LucasEkhoo-blue.svg?style=flat)](http://twitter.com/LucasEkhoo)
 
 Device detect the current  device model and screen size.
@@ -16,7 +16,7 @@ Device is available through [CocoaPods](http://cocoapods.org). To install
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "Device", '~> 3.0.3'
+pod "Device", '~> 3.1.2'
 ```
 
 ## Carthage
@@ -33,7 +33,7 @@ $ brew install carthage
 To integrate Device into your Xcode project using Carthage, specify it in your `Cartfile`:
 
 ```ogdl
-github "Ekhoo/Device" ~> 3.0.3
+github "Ekhoo/Device" ~> 3.1.2
 ```
 
 Run `carthage update` to build the framework and drag the built `Device.framework` into your Xcode project.
@@ -55,6 +55,15 @@ func myFunc() {
             case .iPhone6S:      print("It's an iPhone 6S")
             case .iPhone6Plus:   print("It's an iPhone 6 Plus")
             case .iPhone6SPlus:  print("It's an iPhone 6 S Plus")
+            case .iPhoneSE:      print("It's an iPhone SE")
+            case .iPhone7:       print("It's an iPhone 7")
+            case .iPhone7Plus:   print("It's an iPhone 7 Plus")
+            case .iPhone8:       print("It's an iPhone 8")
+            case .iPhone8Plus:   print("It's an iPhone 8 Plus")
+            case .iPhoneX:       print("It's an iPhone X")
+            case .iPhoneXS:      print("It's an iPhone Xs")
+            case .iPhoneXS_Max:  print("It's an iPhone Xs Max")
+            case .iPhoneXR:      print("It's an iPhone Xr")
 
             /*** iPad ***/
             case .iPad1:           print("It's an iPad 1")
@@ -62,6 +71,7 @@ func myFunc() {
             case .iPad3:           print("It's an iPad 3")
             case .iPad4:           print("It's an iPad 4")
             case .iPad5:           print("It's an iPad 5")
+            case .iPad6:           print("It's an iPad 6")
             case .iPadAir:         print("It's an iPad Air")
             case .iPadAir2:        print("It's an iPad Air 2")
             case .iPadMini:        print("It's an iPad Mini")
@@ -69,6 +79,7 @@ func myFunc() {
             case .iPadMini3:       print("It's an iPad Mini 3")
             case .iPadMini4:       print("It's an iPad Mini 4")
             case .iPadPro9_7Inch:  print("It's an iPad Pro 9.7 Inch")
+            case .iPadPro10_5Inch: print("It's an iPad Pro 10.5 Inch")
             case .iPadPro12_9Inch: print("It's an iPad Pro 12.9 Inch")
 
             /*** iPod ***/
@@ -98,8 +109,11 @@ func myFunc() {
             case .screen4_7Inch:  print("It's a 4.7 inch screen")
             case .screen5_5Inch:  print("It's a 5.5 inch screen")
             case .screen5_8Inch:  print("It's a 5.8 inch screen")
+            case .screen6_1Inch:  print("It's a 6.1 inch screen")
+            case .screen6_5Inch:  print("It's a 6.8 inch screen")
             case .screen7_9Inch:  print("It's a 7.9 inch screen")
             case .screen9_7Inch:  print("It's a 9.7 inch screen")
+            case .screen10_5Inch: print("It's a 10.5 inch screen")
             case .screen12_9Inch: print("It's a 12.9 inch screen")
             default:              print("Unknown size")
         }

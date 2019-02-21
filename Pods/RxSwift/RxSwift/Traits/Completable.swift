@@ -6,6 +6,10 @@
 //  Copyright © 2017 Krunoslav Zaher. All rights reserved.
 //
 
+#if DEBUG
+import Foundation
+#endif
+
 /// Sequence containing 0 elements
 public enum CompletableTrait { }
 /// Represents a push style sequence containing 0 elements.
@@ -19,8 +23,8 @@ public enum CompletableEvent {
     case completed
 }
 
-public extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Swift.Never {
-    public typealias CompletableObserver = (CompletableEvent) -> ()
+extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Swift.Never {
+    public typealias CompletableObserver = (CompletableEvent) -> Void
     
     /**
      Creates an observable sequence from a specified subscribe method implementation.
@@ -50,7 +54,7 @@ public extension PrimitiveSequenceType where TraitType == CompletableTrait, Elem
      
      - returns: Subscription for `observer` that can be used to cancel production of sequence elements and free resources.
      */
-    public func subscribe(_ observer: @escaping (CompletableEvent) -> ()) -> Disposable {
+    public func subscribe(_ observer: @escaping (CompletableEvent) -> Void) -> Disposable {
         var stopped = false
         return self.primitiveSequence.asObservable().subscribe { event in
             if stopped { return }
@@ -75,10 +79,20 @@ public extension PrimitiveSequenceType where TraitType == CompletableTrait, Elem
      - returns: Subscription object used to unsubscribe from the observable sequence.
      */
     public func subscribe(onCompleted: (() -> Void)? = nil, onError: ((Swift.Error) -> Void)? = nil) -> Disposable {
+        #if DEBUG
+                let callStack = Hooks.recordCallStackOnError ? Thread.callStackSymbols : []
+        #else
+                let callStack = [String]()
+        #endif
+
         return self.primitiveSequence.subscribe { event in
             switch event {
             case .error(let error):
-                onError?(error)
+                if let onError = onError {
+                    onError(error)
+                } else {
+                    Hooks.defaultErrorHandler(callStack, error)
+                }
             case .completed:
                 onCompleted?()
             }
@@ -86,7 +100,7 @@ public extension PrimitiveSequenceType where TraitType == CompletableTrait, Elem
     }
 }
 
-public extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Swift.Never {
+extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Swift.Never {
     /**
      Returns an observable sequence that terminates with an `error`.
 
@@ -122,7 +136,7 @@ public extension PrimitiveSequenceType where TraitType == CompletableTrait, Elem
 
 }
 
-public extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Swift.Never {    
+extension PrimitiveSequenceType where TraitType == CompletableTrait, ElementType == Swift.Never {
     /**
      Invokes an action for each event in the observable sequence, and propagates all observer messages through the result sequence.
      
@@ -138,11 +152,11 @@ public extension PrimitiveSequenceType where TraitType == CompletableTrait, Elem
      */
     public func `do`(onError: ((Swift.Error) throws -> Void)? = nil,
                      onCompleted: (() throws -> Void)? = nil,
-                     onSubscribe: (() -> ())? = nil,
-                     onSubscribed: (() -> ())? = nil,
-                     onDispose: (() -> ())? = nil)
+                     onSubscribe: (() -> Void)? = nil,
+                     onSubscribed: (() -> Void)? = nil,
+                     onDispose: (() -> Void)? = nil)
         -> Completable {
-            return Completable(raw: primitiveSequence.source.do(
+            return Completable(raw: self.primitiveSequence.source.do(
                 onError: onError,
                 onCompleted: onCompleted,
                 onSubscribe: onSubscribe,
@@ -162,7 +176,7 @@ public extension PrimitiveSequenceType where TraitType == CompletableTrait, Elem
      - returns: An observable sequence that contains the elements of `self`, followed by those of the second sequence.
      */
     public func concat(_ second: Completable) -> Completable {
-        return Completable.concat(primitiveSequence, second)
+        return Completable.concat(self.primitiveSequence, second)
     }
     
     /**

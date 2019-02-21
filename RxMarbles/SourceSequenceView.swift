@@ -124,7 +124,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
             
             if let panEventView = _panEventView {
                 animatorAddBehaviorsToPanEventView(panEventView: panEventView, recognizer: r, resultSequence: sceneView.resultSequence)
-                panEventView.superview?.bringSubview(toFront: panEventView)
+                panEventView.superview?.bringSubviewToFront(panEventView)
                 let time = timeByXPosition(x: r.location(in: self).x)
                 panEventView.recorded = RecordedType(time: time, value: panEventView.recorded.value)
             }

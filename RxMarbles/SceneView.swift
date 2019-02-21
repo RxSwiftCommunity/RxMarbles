@@ -122,7 +122,7 @@ class SceneView: UIView, UITextViewDelegate {
         
         let size = rxOperatorText.text.boundingRect(with: CGSize(width: bounds.width, height: 1000 ),
                                                     options: NSStringDrawingOptions.usesLineFragmentOrigin,
-                                                    attributes: [NSAttributedStringKey.font: rxOperatorText.font!],
+                                                    attributes: [.font: rxOperatorText.font!],
                                                     context: nil).size
         rxOperatorText.frame = CGRect(x: 0, y: resultSequence.frame.origin.y + resultSequence.frame.height + 10, width: bounds.width, height: size.height + 40)
         

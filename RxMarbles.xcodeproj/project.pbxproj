@@ -21,7 +21,6 @@
 		0AC2660A1C3E96C2009E28FD /* ColdObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FC1C3E96C2009E28FD /* ColdObservable.swift */; };
 		0AC2660B1C3E96C2009E28FD /* Event+Equatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FD1C3E96C2009E28FD /* Event+Equatable.swift */; };
 		0AC2660C1C3E96C2009E28FD /* HotObservable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC265FE1C3E96C2009E28FD /* HotObservable.swift */; };
-		0AC2660D1C3E96C2009E28FD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0AC265FF1C3E96C2009E28FD /* Info.plist */; };
 		0AC2660E1C3E96C2009E28FD /* Recorded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266001C3E96C2009E28FD /* Recorded.swift */; };
 		0AC2660F1C3E96C2009E28FD /* RxTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266011C3E96C2009E28FD /* RxTests.swift */; };
 		0AC266101C3E96C2009E28FD /* TestScheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC266031C3E96C2009E28FD /* TestScheduler.swift */; };
@@ -65,7 +64,6 @@
 		0AC265FC1C3E96C2009E28FD /* ColdObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ColdObservable.swift; path = RxTests/ColdObservable.swift; sourceTree = "<group>"; };
 		0AC265FD1C3E96C2009E28FD /* Event+Equatable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Event+Equatable.swift"; path = "RxTests/Event+Equatable.swift"; sourceTree = "<group>"; };
 		0AC265FE1C3E96C2009E28FD /* HotObservable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HotObservable.swift; path = RxTests/HotObservable.swift; sourceTree = "<group>"; };
-		0AC265FF1C3E96C2009E28FD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = RxTests/Info.plist; sourceTree = "<group>"; };
 		0AC266001C3E96C2009E28FD /* Recorded.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Recorded.swift; path = RxTests/Recorded.swift; sourceTree = "<group>"; };
 		0AC266011C3E96C2009E28FD /* RxTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RxTests.swift; path = RxTests/RxTests.swift; sourceTree = "<group>"; };
 		0AC266031C3E96C2009E28FD /* TestScheduler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestScheduler.swift; sourceTree = "<group>"; };
@@ -218,7 +216,6 @@
 				0AC265FC1C3E96C2009E28FD /* ColdObservable.swift */,
 				0AC265FD1C3E96C2009E28FD /* Event+Equatable.swift */,
 				0AC265FE1C3E96C2009E28FD /* HotObservable.swift */,
-				0AC265FF1C3E96C2009E28FD /* Info.plist */,
 				0AC266001C3E96C2009E28FD /* Recorded.swift */,
 				0AC266011C3E96C2009E28FD /* RxTests.swift */,
 				0AC266021C3E96C2009E28FD /* Schedulers */,
@@ -256,7 +253,6 @@
 				0AC2658D1C3D2C24009E28FD /* Resources */,
 				0A9D41121C5F31A700ECADF1 /* Run Fabric */,
 				9C2518058971B20966D61966 /* [CP] Embed Pods Frameworks */,
-				C14C82473CBB5DFB88A02D1E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -275,12 +271,13 @@
 			attributes = {
 				CLASSPREFIX = RXM;
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0920;
+				LastUpgradeCheck = 1010;
 				ORGANIZATIONNAME = AnjLab;
 				TargetAttributes = {
 					0AC2658E1C3D2C24009E28FD = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = FD6ZML48V9;
+						LastSwiftMigration = 1010;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -311,7 +308,6 @@
 				0AC130871C74BD8E0095F810 /* Settings.bundle in Resources */,
 				0AC2659A1C3D2C24009E28FD /* Assets.xcassets in Resources */,
 				D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */,
-				0AC2660D1C3E96C2009E28FD /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -356,9 +352,10 @@
 			files = (
 			);
 			inputPaths = (
-				"${SRCROOT}/Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles-frameworks.sh",
+				"${PODS_ROOT}/Target Support Files/Pods-RxMarbles/Pods-RxMarbles-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Device/Device.framework",
 				"${BUILT_PRODUCTS_DIR}/RazzleDazzle/RazzleDazzle.framework",
+				"${BUILT_PRODUCTS_DIR}/RxAtomic/RxAtomic.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
 			);
@@ -366,27 +363,13 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Device.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RazzleDazzle.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAtomic.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		C14C82473CBB5DFB88A02D1E /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles-resources.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-RxMarbles/Pods-RxMarbles-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -447,12 +430,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -500,12 +485,14 @@
 				CLANG_WARN_BOOL_CONVERSION = YES;
 				CLANG_WARN_COMMA = YES;
 				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
 				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
@@ -540,7 +527,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -552,7 +538,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -561,7 +547,6 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
@@ -572,7 +557,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

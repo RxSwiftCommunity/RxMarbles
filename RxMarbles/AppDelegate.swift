@@ -24,7 +24,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     private let _splitViewController = UISplitViewController()
     
     
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         Fabric.with([Crashlytics.self])
         
         window = UIWindow()
@@ -105,8 +105,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
         if let detailNav = secondaryViewController as? UINavigationController,
             let masterNav = primaryViewController as? UINavigationController {
-            let detailControllers = detailNav.childViewControllers
-            masterNav.viewControllers = masterNav.childViewControllers + detailControllers
+            let detailControllers = detailNav.children
+            masterNav.viewControllers = masterNav.children + detailControllers
             return true
         }
         return false
@@ -144,7 +144,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     }
     
     // MARK: UserActivity
-    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([Any]?) -> Void) -> Bool {
+    func application(_ application: UIApplication, continue userActivity: NSUserActivity, restorationHandler: @escaping ([UIUserActivityRestoring]?) -> Void) -> Bool {
         
         var operatorRawValue = Operator.combineLatest.rawValue
         

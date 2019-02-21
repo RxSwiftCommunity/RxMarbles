@@ -6,9 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
-    import RxSwift
-#endif
+import RxSwift
 
 /**
     Trait that represents observable sequence that shares computation resources with following properties:
@@ -51,7 +49,7 @@ public struct SharedSequence<S: SharingStrategyProtocol, Element> : SharedSequen
     - returns: Built observable sequence.
     */
     public func asObservable() -> Observable<E> {
-        return _source
+        return self._source
     }
 
     /**
@@ -95,7 +93,7 @@ public protocol SharedSequenceConvertibleType : ObservableConvertibleType {
 
 extension SharedSequenceConvertibleType {
     public func asObservable() -> Observable<E> {
-        return asSharedSequence().asObservable()
+        return self.asSharedSequence().asObservable()
     }
 }
 
