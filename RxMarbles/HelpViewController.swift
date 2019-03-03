@@ -336,10 +336,10 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             NSAttributedString(string: "\(operatorsCount)", attributes: [NSAttributedString.Key.font : Font.boldText(14)])
         )
         operatorsLabelText.append(
-            NSAttributedString(string: " RX operators to ", attributes: [NSAttributedString.Key.font : Font.text(14)])
+            NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [NSAttributedString.Key.font : Font.text(14)])
         )
         operatorsLabelText.append(
-            NSAttributedString(string: "explore", attributes: [NSAttributedString.Key.font : Font.boldText(14)])
+            NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [NSAttributedString.Key.font : Font.boldText(14)])
         )
         let operatorsLabel = UILabel()
         operatorsLabel.attributedText = operatorsLabelText
@@ -509,7 +509,9 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
         
-        let editLabelText = NSMutableAttributedString(string: "Add new,\nchange colors and values in ", attributes: [NSAttributedString.Key.font : Font.text(13)])
+        let editLabelText = NSMutableAttributedString(
+            string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
+                                                      attributes: [NSAttributedString.Key.font : Font.text(13)])
         editLabelText.append(NSAttributedString(string: "edit", attributes: [NSAttributedString.Key.font : Font.boldText(13)]))
         editLabelText.append(NSAttributedString(string: " mode", attributes: [NSAttributedString.Key.font : Font.text(13)]))
         
@@ -547,7 +549,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraints([downBottom, downCenterX])
         
         timelineLabel.translatesAutoresizingMaskIntoConstraints = false
-        timelineLabel.text = "move events around"
+        timelineLabel.text = NSLocalizedString("move_events_around", comment: "")
         timelineLabel.font = Font.text(13)
         contentView.addSubview(timelineLabel)
         let timelineLabelTop = timelineLabel.topAnchor.constraint(equalTo: timeline.bottomAnchor, constant: 20)
@@ -555,7 +557,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         keepView(timelineLabel, onPage: 1)
         
         experimentLabel.translatesAutoresizingMaskIntoConstraints = false
-        experimentLabel.text = "Edit. Learn. Experiment."
+        experimentLabel.text = NSLocalizedString("edit_learn_experiment", comment: "")
         experimentLabel.font = Font.text(14)
         contentView.addSubview(experimentLabel)
         let experimentLabelBottom = experimentLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
@@ -575,7 +577,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 2)
         
-        shareLabel.text = "Share your diagrams"
+        shareLabel.text = NSLocalizedString("share_your_diagrams", comment: "")
         shareLabel.font = Font.text(13)
         shareLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(shareLabel)
@@ -583,7 +585,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let shareLabelCenterX = shareLabel.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: -10)
         contentView.addConstraints([shareLabelTop, shareLabelCenterX])
         
-        spreadTheWordLabel.text = "Spread the word"
+        spreadTheWordLabel.text = NSLocalizedString("spread_the_world", comment: "")
         spreadTheWordLabel.font = Font.text(14)
         spreadTheWordLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(spreadTheWordLabel)

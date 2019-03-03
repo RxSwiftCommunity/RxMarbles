@@ -31,6 +31,7 @@
 		0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */; };
 		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
 		0AFA29EC1C772DA300070AF2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFA29EB1C772DA300070AF2 /* Notifications.swift */; };
+		654CF3E32222BC2300E68D10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 654CF3E52222BC2300E68D10 /* Localizable.strings */; };
 		6B5417EA67FBF1ABDB81F389 /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */; };
 		A3B1F0351FDF47B0002F4CAC /* Bag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1F0341FDF47B0002F4CAC /* Bag.swift */; };
 		D25E7A501C41BD4800B08F70 /* Operator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D25E7A4F1C41BD4800B08F70 /* Operator.swift */; };
@@ -75,6 +76,8 @@
 		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquatableArray.swift; path = RxTests/EquatableArray.swift; sourceTree = "<group>"; };
 		0AFA29EB1C772DA300070AF2 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
 		354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		654CF3E42222BC2300E68D10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		654CF3E62222BC2C00E68D10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.debug.xcconfig"; sourceTree = "<group>"; };
 		A3B1F0341FDF47B0002F4CAC /* Bag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bag.swift; sourceTree = "<group>"; };
 		CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.release.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.release.xcconfig"; sourceTree = "<group>"; };
@@ -153,6 +156,7 @@
 				0A4111D51C51113C0067D0E3 /* ViewControllers */,
 				0A4111D61C51114D0067D0E3 /* Views */,
 				0AC265991C3D2C24009E28FD /* Assets.xcassets */,
+				654CF3E52222BC2300E68D10 /* Localizable.strings */,
 				0AC130861C74BD8E0095F810 /* Settings.bundle */,
 				0AC2659E1C3D2C24009E28FD /* Info.plist */,
 				0AC265921C3D2C24009E28FD /* AppDelegate.swift */,
@@ -289,6 +293,7 @@
 			knownRegions = (
 				en,
 				Base,
+				ru,
 			);
 			mainGroup = 0AC265861C3D2C23009E28FD;
 			productRefGroup = 0AC265901C3D2C24009E28FD /* Products */;
@@ -306,6 +311,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0AC130871C74BD8E0095F810 /* Settings.bundle in Resources */,
+				654CF3E32222BC2300E68D10 /* Localizable.strings in Resources */,
 				0AC2659A1C3D2C24009E28FD /* Assets.xcassets in Resources */,
 				D25E7A521C41BF3F00B08F70 /* Launch Screen.storyboard in Resources */,
 			);
@@ -417,11 +423,24 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		654CF3E52222BC2300E68D10 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				654CF3E42222BC2300E68D10 /* en */,
+				654CF3E62222BC2C00E68D10 /* ru */,
+			);
+			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
 		0AC2659F1C3D2C24009E28FD /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
@@ -477,6 +496,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_ENABLE_MODULES = YES;
