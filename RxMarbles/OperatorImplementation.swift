@@ -705,93 +705,93 @@ extension Operator {
     var text: String {
         switch self {
         case .amb:
-            return "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .buffer:
-            return "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .catchError, .catchErrorJustReturn:
-            return "Recover from an onError notification by continuing the sequence without error."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .combineLatest, .withLatestFrom:
-            return "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .concat:
-            return "Emit the emissions from two or more Observables without interleaving them."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .debounce, .throttle:
-            return "Only emit an item from an Observable if a particular timespan has passed without it emitting another item."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .delaySubscription:
-            return "Shift the emissions from an Observable forward in time by a particular amount."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .distinctUntilChanged:
-            return "Suppress duplicate items emitted by an Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .elementAt:
-            return "Emit only item n emitted by an Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .empty:
-            return "Create an Observable that emits no items but terminates normally."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .filter:
-            return "Emit only those items from an Observable that pass a predicate test."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .flatMap:
-            return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .flatMapFirst:
-            return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .flatMapLatest:
-            return "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .ignoreElements:
-            return "Do not emit any items from an Observable but mirror its termination notification."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .interval:
-            return "Create an Observable that emits a sequence of integers spaced by a given time interval."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .just:
-            return "Create an Observable that emits a particular item."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .map, .mapWithIndex:
-            return "Transform the items emitted by an Observable by applying a function to each item."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .merge:
-            return "Combine multiple Observables into one by merging their emissions."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .never:
-            return "Create an Observable that emits no items and does not terminate."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .of:
-            return "Convert various other objects and data types into Observables."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .reduce:
-            return "Apply a function to each item emitted by an Observable, sequentially, and emit the final value."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .repeatElement:
-            return "Create an Observable that emits a particular item multiple times."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .retry:
-            return "If a source Observable emits an error, resubscribe to it in the hopes that it will complete without error."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .sample:
-            return "Emit the most recent items emitted by an Observable within periodic time intervals."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .scan:
-            return "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .single:
-            return "Emit only the first item (or the first item that meets some condition) emitted by an Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .skip, .skipDuration:
-            return "Suppress the first n items emitted by an Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .skipUntil:
-            return "Discard items emitted by an Observable until a second Observable emits an item."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .skipWhile, .skipWhileWithIndex:
-            return "Discard items emitted by an Observable until a specified condition becomes false."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .startWith:
-            return "Emit a specified sequence of items before beginning to emit the items from the source Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .switchLatest:
-            return "Convert an Observable that emits Observables into a single Observable that emits the items emitted by the most-recently-emitted of those Observables."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .take, .takeDuration:
-            return "Emit only the first n items emitted by an Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .takeLast:
-            return "Emit only the final n items emitted by an Observable."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .takeUntil:
-            return "Discard any items emitted by an Observable after a second Observable emits an item or terminates."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .takeWhile, .takeWhileWithIndex:
-            return "Mirror items emitted by an Observable until a specified condition becomes false."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .throw:
-            return "Create an Observable that emits no items and terminates with an error."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .timeout:
-            return "Mirror the source Observable, but issue an error notification if a particular period of time elapses without any emitted items."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .timer:
-            return "Create an Observable that emits a particular item after a given delay."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .toArray:
-            return "Convert an Observable into another object or data structure."
+            return NSLocalizedString(self.rawValue, comment: "")
         case .zip:
-            return "Combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function."
+            return NSLocalizedString(self.rawValue, comment: "")
         }
     }
     
     var linkText: NSMutableAttributedString {
         let res = NSMutableAttributedString(string: text)
-        let link = NSMutableAttributedString(string: "Read\u{a0}more...", attributes: [.link: url])
+        let link = NSMutableAttributedString(string: "\(NSLocalizedString("read", comment: ""))\u{a0}\(NSLocalizedString("more", comment: ""))...", attributes: [.link: url])
         res.append(NSAttributedString(string: " "))
         res.append(link)
         res.addAttribute(.font, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))

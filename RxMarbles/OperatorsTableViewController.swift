@@ -65,9 +65,14 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        title = "Operators"
+        title = NSLocalizedString("operators", comment: "")
         
-        navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Help", style: .plain, target: self, action: #selector(OperatorsTableViewController.openHelpView))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: NSLocalizedString("help_button_title", comment: ""),
+            style: .plain,
+            target: self,
+            action: #selector(OperatorsTableViewController.openHelpView)
+        )
         
         _searchController.searchResultsUpdater = self
         _searchController.obscuresBackgroundDuringPresentation = false

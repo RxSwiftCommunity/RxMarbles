@@ -1,0 +1,139 @@
+/* 
+  Localizable.strings
+  RxMarbles
+
+  Created by Pavel Grechikhin on 24/02/2019.
+  Copyright © 2019 AnjLab. All rights reserved.
+*/
+
+"operators" = "Operators";
+
+"edit_learn_experiment" = "Edit. Learn. Experiment.";
+
+"add_new_change_colors_and_values_in" = "Add new,\nchange colors and values in ";
+"edit" = "edit";
+"mode" = " mode";
+"move_events_around" = "move events around";
+"help_button_title" = "Help";
+"operators_to" = " RX operators to ";
+"explore" = "explore";
+"share_your_diagrams" = "Share your diagrams";
+"spread_the_world" = "Spread the word";
+
+//Operators description
+
+//amb
+"amb" = "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification.";
+
+//buffer
+"buffer" = "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time.";
+
+//catch error
+"catchError" = "Recover from an onError notification by continuing the sequence without error.";
+"catchErrorJustReturn" = "Recover from an onError notification by continuing the sequence without error.";
+
+//with latest from
+"withLatestFrom" = "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function.";
+
+//combine latest
+"combineLatest" = "When an item is emitted by either of two Observables, combine the latest item emitted by each Observable via a specified function and emit items based on the results of this function.";
+
+//concat
+"concat" = "Emit the emissions from two or more Observables without interleaving them.";
+
+//throttle
+"throttle" = "Only emit an item from an Observable if a particular timespan has passed without it emitting another item.";
+
+//debounce
+"debounce" = "Only emit an item from an Observable if a particular timespan has passed without it emitting another item.";
+
+//delaySubscription
+"delaySubscription" = "Shift the emissions from an Observable forward in time by a particular amount.";
+
+//distinctUntilChanged
+"distinctUntilChanged" = "Suppress duplicate items emitted by an Observable.";
+
+//elementAt
+"elementAt" = "Emit only item n emitted by an Observable.";
+
+//empty
+"empty" = "Create an Observable that emits no items but terminates normally.";
+
+//filter
+"filter" = "Emit only those items from an Observable that pass a predicate test.";
+
+//flatMap
+"flatMap" = "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable.";
+
+//flatMapFirst
+"flatMapFirst" = "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable.";
+
+//flatMapLatest
+"flatMapLatest" = "Transform the items emitted by an Observable into Observables, then flatten the emissions from those into a single Observable.";
+
+//ignoreElements
+"ignoreElements" = "Do not emit any items from an Observable but mirror its termination notification.";
+
+//interval
+"interval" = "Create an Observable that emits a sequence of integers spaced by a given time interval.";
+
+//just
+"just" = "Create an Observable that emits a particular item.";
+
+//map
+"map" = "Transform the items emitted by an Observable by applying a function to each item.";
+"mapWithIndex" = "Transform the items emitted by an Observable by applying a function to each item.";
+
+"merge" = "Combine multiple Observables into one by merging their emissions.";
+
+"never" = "Create an Observable that emits no items and does not terminate.";
+
+"of" = "Convert various other objects and data types into Observables.";
+
+"reduce" = "Apply a function to each item emitted by an Observable, sequentially, and emit the final value.";
+
+"repeatElement" = "Create an Observable that emits a particular item multiple times.";
+
+"retry" = "If a source Observable emits an error, resubscribe to it in the hopes that it will complete without error.";
+
+"sample" = "Emit the most recent items emitted by an Observable within periodic time intervals.";
+
+"scan" = "Apply a function to each item emitted by an Observable, sequentially, and emit each successive value.";
+
+"single" = "Emit only the first item (or the first item that meets some condition) emitted by an Observable.";
+
+"skipDuration" = "Suppress the first n items emitted by an Observable.";
+"skip" = "Suppress the first n items emitted by an Observable.";
+
+"skipUntil" = "Discard items emitted by an Observable until a second Observable emits an item.";
+
+"skipWhile" = "Discard items emitted by an Observable until a specified condition becomes false.";
+"skipWhileWithIndex" = "Discard items emitted by an Observable until a specified condition becomes false.";
+
+"startWith" = "Emit a specified sequence of items before beginning to emit the items from the source Observable.";
+
+"switchLatest" = "Convert an Observable that emits Observables into a single Observable that emits the items emitted by the most-recently-emitted of those Observables.";
+
+"take" = "Emit only the first n items emitted by an Observable.";
+"takeDuration" = "Emit only the first n items emitted by an Observable.";
+"takeLast" = "Emit only the final n items emitted by an Observable.";
+
+"takeUntil" = "Discard any items emitted by an Observable after a second Observable emits an item or terminates.";
+
+"takeWhile" = "Mirror items emitted by an Observable until a specified condition becomes false.";
+"takeWhileWithIndex" = "Mirror items emitted by an Observable until a specified condition becomes false.";
+
+"throw" = "Create an Observable that emits no items and terminates with an error.";
+
+"timeout" = "Mirror the source Observable, but issue an error notification if a particular period of time elapses without any emitted items.";
+
+"timer" = "Create an Observable that emits a particular item after a given delay.";
+
+"toArray" = "Convert an Observable into another object or data structure.";
+
+"zip" = "Combine the emissions of multiple Observables together via a specified function and emit single items for each combination based on the results of this function.";
+
+//read more
+
+"read" = "Read";
+"more" = "more";
