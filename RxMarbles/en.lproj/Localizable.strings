@@ -42,7 +42,7 @@
 "concat" = "Emit the emissions from two or more Observables without interleaving them.";
 
 //throttle
-"throttle" = "Only emit an item from an Observable if a particular timespan has passed without it emitting another item.";
+"throttle" = "Emit the first and the latest item emitted by the source Observable during sequential time windows of a specified duration.";
 
 //debounce
 "debounce" = "Only emit an item from an Observable if a particular timespan has passed without it emitting another item.";
