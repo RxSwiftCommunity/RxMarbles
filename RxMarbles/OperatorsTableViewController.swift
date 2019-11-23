@@ -110,12 +110,6 @@ class OperatorsTableViewController: UITableViewController {
         cell.accessoryType = op == selectedOperator ? .checkmark : .none
         return cell
     }
-    
-//    MARK: - UISearchResultsUpdating
-    
-    func isSearchActive() -> Bool {
-        return _searchController.isActive && _searchController.searchBar.text != ""
-    }
 
     func focusSearch() {
         presentingViewController?.dismiss(animated: false, completion: nil)
