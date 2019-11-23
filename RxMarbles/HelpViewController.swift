@@ -332,15 +332,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let operatorsCount = Operator.all.count
         
         let operatorsLabelText = NSMutableAttributedString()
-        operatorsLabelText.append(
-            NSAttributedString(string: "\(operatorsCount)", attributes: [NSAttributedString.Key.font : Font.boldText(14)])
-        )
-        operatorsLabelText.append(
-            NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [NSAttributedString.Key.font : Font.text(14)])
-        )
-        operatorsLabelText.append(
-            NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [NSAttributedString.Key.font : Font.boldText(14)])
-        )
+        operatorsLabelText.append(NSAttributedString(string: "\(operatorsCount)", attributes: [NSAttributedString.Key.font : Font.boldText(14)]))
+        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [NSAttributedString.Key.font : Font.text(14)]))
+        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [NSAttributedString.Key.font : Font.boldText(14)]))
         let operatorsLabel = UILabel()
         operatorsLabel.attributedText = operatorsLabelText
         operatorsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -456,40 +450,14 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
-        
         let shadow = NSShadow()
         shadow.shadowColor = Color.white
-        
         switch rnd {
-        case 0:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoItalic, size: 12),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        case 1:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoRegular, size: 13),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        case 2:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoBold, size: 13),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        case 3:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoBoldItalic, size: 15),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        default:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoItalic, size: 12),
-                NSAttributedString.Key.paragraphStyle: p
-                ])
+        case 0: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoItalic, size: 12), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
+        case 1: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoRegular, size: 13), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
+        case 2: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoBold, size: 13), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
+        case 3: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoBoldItalic, size: 15), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
+        default: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoItalic, size: 12), NSAttributedString.Key.paragraphStyle: p])
         }
     }
     
@@ -845,20 +813,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _erikMeijerText() -> NSMutableAttributedString {
         let text = NSMutableAttributedString(string: "Erik ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        let twitter = NSMutableAttributedString(string: "@headinthebox", attributes:
-            [
-                NSAttributedString.Key.link             : Link.erikMeijerTwitter,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        let twitter = NSMutableAttributedString(string: "@headinthebox", attributes: [NSAttributedString.Key.link : Link.erikMeijerTwitter, NSAttributedString.Key.font : Font.boldText(14)])
         text.append(twitter)
         text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes:
-            [
-                NSAttributedString.Key.link             : Link.reactiveX,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes: [NSAttributedString.Key.link : Link.reactiveX, NSAttributedString.Key.font : Font.boldText(14)])
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
@@ -868,22 +826,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _krunoslavZaherText() -> NSMutableAttributedString {
         let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes:
-            [
-                NSAttributedString.Key.link             : Link.kZaherTwitter,
-                NSAttributedString.Key.foregroundColor  : UIColor.black,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes: [NSAttributedString.Key.link : Link.kZaherTwitter, NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : Font.boldText(14)])
         text.append(twitter)
         text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        let reactivex = NSMutableAttributedString(string: "RxSwift", attributes:
-            [
-                NSAttributedString.Key.link             : Link.rxSwift,
-                NSAttributedString.Key.foregroundColor  : UIColor.black,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        let reactivex = NSMutableAttributedString(string: "RxSwift", attributes: [NSAttributedString.Key.link : Link.rxSwift, NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : Font.boldText(14)])
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
