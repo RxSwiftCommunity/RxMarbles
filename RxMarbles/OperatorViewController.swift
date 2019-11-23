@@ -157,25 +157,18 @@ class OperatorViewController: UIViewController {
         return snapshot!
     }
     
-    @objc private dynamic func share(_ sender: AnyObject?) {
-       
-        let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
-        
-        activity.excludedActivityTypes = [
-            UIActivity.ActivityType.assignToContact,
-            .print,
-        ]
-        if let delegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootViewController = delegate.window?.rootViewController {
-                if Device.type() == .iPad || Device.type() == .simulator {
-                    activity.popoverPresentationController?.sourceView = view
-                    if let shareButtonItem = sender {
-                        activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
-                    }
-                }
-                rootViewController.present(activity, animated: true, completion: nil)
-            }
-    }
+	@objc private dynamic func share(_ sender: AnyObject?) {
+		let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
+		activity.excludedActivityTypes = [UIActivity.ActivityType.assignToContact, .print]
+		guard let rootViewController = (UIApplication.shared.delegate as? AppDelegate)?.window?.rootViewController else { return }
+		if Device.type() == .iPad || Device.type() == .simulator {
+			activity.popoverPresentationController?.sourceView = view
+			if let shareButtonItem = sender {
+				activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
+			}
+		}
+		rootViewController.present(activity, animated: true, completion: nil)
+	}
     
 //    MARK: Alert controllers
     
