@@ -47,7 +47,7 @@ extension MutableCollection where Index == Int {
     }
 }
 
-class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
+class HelpViewController: AnimatedPagingScrollViewController {
     
     var helpMode: Bool = true
     
@@ -996,12 +996,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         return .portrait
     }
     
-    //    MARK: UITextViewDelegate
-    
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        return true
-    }
-    
     //    MARK: Helpers
     
     private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
@@ -1042,5 +1036,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _scaleView(view: UIView) {
         view.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    }
+}
+
+extension HelpViewController: UITextViewDelegate {
+	func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        return true
     }
 }
