@@ -31,6 +31,7 @@
 		0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */; };
 		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
 		0AFA29EC1C772DA300070AF2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFA29EB1C772DA300070AF2 /* Notifications.swift */; };
+		2DA5B8272389766D00275B96 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5B8262389766D00275B96 /* Section.swift */; };
 		654CF3E32222BC2300E68D10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 654CF3E52222BC2300E68D10 /* Localizable.strings */; };
 		6B5417EA67FBF1ABDB81F389 /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */; };
 		A3B1F0351FDF47B0002F4CAC /* Bag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1F0341FDF47B0002F4CAC /* Bag.swift */; };
@@ -75,6 +76,7 @@
 		0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorsTableViewController.swift; sourceTree = "<group>"; };
 		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquatableArray.swift; path = RxTests/EquatableArray.swift; sourceTree = "<group>"; };
 		0AFA29EB1C772DA300070AF2 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		2DA5B8262389766D00275B96 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
 		354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		654CF3E42222BC2300E68D10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		654CF3E62222BC2C00E68D10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 		D2F561A91C52B0360041C9A3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2DA5B8262389766D00275B96 /* Section.swift */,
 				D25E7A4F1C41BD4800B08F70 /* Operator.swift */,
 				D2F561AE1C52B0DD0041C9A3 /* OperatorImplementation.swift */,
 				D28A68471C629073008A8C6F /* OperatorCode.swift */,
@@ -291,6 +294,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 				ru,
@@ -402,6 +406,7 @@
 				0AC266111C3E96C2009E28FD /* TestSchedulerVirtualTimeConverter.swift in Sources */,
 				0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */,
 				0A4111CC1C510C2F0067D0E3 /* EventView.swift in Sources */,
+				2DA5B8272389766D00275B96 /* Section.swift in Sources */,
 				0A4111CE1C510FE80067D0E3 /* SequenceView.swift in Sources */,
 				0A4111D41C5110610067D0E3 /* SceneView.swift in Sources */,
 				0A3F63E21C6B43030099C9E8 /* HelpViewController.swift in Sources */,

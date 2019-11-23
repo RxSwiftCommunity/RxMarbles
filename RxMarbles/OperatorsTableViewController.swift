@@ -10,11 +10,6 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-struct Section {
-    var name: String
-    var rows: [Operator]
-}
-
 class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
     private let _disposeBag = DisposeBag()
 
