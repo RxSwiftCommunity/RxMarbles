@@ -11,7 +11,10 @@ import RxSwift
 import RxCocoa
 
 class OperatorsTableViewController: UITableViewController {
-    private let _disposeBag = DisposeBag()
+
+	private let viewModel = OperatorsTableViewModel()
+
+	private let _disposeBag = DisposeBag()
 
     var selectedOperator: Operator = Operator.combineLatest {
         didSet {
@@ -20,42 +23,6 @@ class OperatorsTableViewController: UITableViewController {
     }
     
     private let _searchController = UISearchController(searchResultsController: nil)
-    private var _filteredSections = [Section]()
-    
-    private let _sections = [
-        Section(
-            name: "Combining",
-            rows: [.combineLatest, .concat, .merge, .startWith, .switchLatest, .withLatestFrom, .zip]
-        ),
-        Section(
-            name: "Conditional",
-            rows: [.amb, .skipUntil, .skipWhile, .skipWhileWithIndex, .takeUntil, .takeWhile, .takeWhileWithIndex]
-        ),
-        Section(
-            name: "Creating",
-            rows: [.empty, .interval, .just, .never, .of, .repeatElement, .throw, .timer]
-        ),
-        Section(
-            name: "Error",
-            rows: [.catchError, .catchErrorJustReturn, .retry]
-        ),
-        Section(
-            name: "Filtering",
-            rows: [.debounce, .distinctUntilChanged, .elementAt, .filter, .ignoreElements, .sample, .single, .skip, .skipDuration, .take, .takeDuration, .takeLast, .throttle]
-        ),
-        Section(
-            name: "Mathematical",
-            rows: [.reduce]
-        ),
-        Section(
-            name: "Transforming",
-            rows: [.buffer, .delaySubscription, .flatMap, .flatMapFirst, .flatMapLatest, .map, .mapWithIndex, .scan, .toArray]
-        ),
-        Section(
-            name: "Utility",
-            rows: [.timeout]
-        )
-    ]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -91,7 +58,7 @@ class OperatorsTableViewController: UITableViewController {
         
         tableView.rx
             .itemSelected
-            .map(_rowAtIndexPath)
+			.map(self.viewModel.getOperator)
             .subscribe(onNext: { [unowned self] op in self.openOperator(op) })
             .disposed(by: _disposeBag)
         
@@ -122,52 +89,24 @@ class OperatorsTableViewController: UITableViewController {
 
     // MARK: - Table view data source
     
-    private var _activeSections: [Section] {
-        get { return isSearchActive() ? _filteredSections : _sections }
-    }
-    
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return _activeSections.count
+		return self.viewModel.numberOfSections
     }
     
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let sec = _activeSections[section]
-        return sec.name
+		return self.viewModel.titleForHeader(in: section)
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return _activeSections[section].rows.count
-    }
-    
-    fileprivate func _rowAtIndexPath(_ indexPath: IndexPath) -> Operator {
-        let section = _activeSections[indexPath.section]
-        return section.rows[indexPath.row]
+		return self.viewModel.numberOfRows(in: section)
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let op = _rowAtIndexPath(indexPath)
-        let cell = tableView.dequeueReusableCell(withIdentifier: "OperatorCell", for: indexPath as IndexPath)
-        
+		let op = self.viewModel.getOperator(at: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: "OperatorCell", for: indexPath)
         cell.textLabel?.text = op.description
         cell.accessoryType = op == selectedOperator ? .checkmark : .none
-
         return cell
-    }
-    
-//    MARK: - Filtering Sections
-    
-    private func filterSectionsWithText(text: String) {
-        _filteredSections.removeAll()
-        
-        _sections.forEach({ section in
-            let results = section.rows.filter({ row in
-                row.description.range(of: text, options: String.CompareOptions.caseInsensitive) != nil
-                
-            })
-            if results.count > 0 {
-                _filteredSections.append(Section(name: section.name, rows: results))
-            }
-        })
     }
     
 //    MARK: - UISearchResultsUpdating
@@ -191,9 +130,7 @@ class OperatorsTableViewController: UITableViewController {
 
 extension OperatorsTableViewController: UISearchResultsUpdating {
 	func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text {
-            filterSectionsWithText(text: searchString)
-        }
+		self.viewModel.updateSearchResults(for: searchController)
         tableView.reloadData()
     }
 }
@@ -202,11 +139,9 @@ extension OperatorsTableViewController: UIViewControllerPreviewingDelegate {
     /// Create a previewing view controller to be shown at "Peek".
     func previewingContext(_ previewingContext: UIViewControllerPreviewing, viewControllerForLocation location: CGPoint) -> UIViewController? {
         // Obtain the index path and the cell that was pressed.
-        guard let indexPath = tableView.indexPathForRow(at: location),
-              let cell = tableView.cellForRow(at: indexPath)
-        else { return nil }
+        guard let indexPath = tableView.indexPathForRow(at: location), let cell = tableView.cellForRow(at: indexPath) else { return nil }
         
-        selectedOperator = _rowAtIndexPath(indexPath)
+		selectedOperator = self.viewModel.getOperator(at: indexPath)
         
         // Create a detail view controller and set its properties.
         let detailController = OperatorViewController(rxOperator:selectedOperator)
