@@ -703,31 +703,95 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let containerWidth = container.widthAnchor.constraint(equalToConstant: 300)
         contentView.addConstraints([containerTop, containerBottom, containerWidth])
         
-        let manyLikeLabel = UILabel()
+		let manyLikeLabel: UILabel = {
+			let label = UILabel()
+			label.text = "Many ❤️👍🍻👋 to"
+			label.font = Font.code(.malayalamSangamMN, size: 18)
+			label.translatesAutoresizingMaskIntoConstraints = false
+			return label
+		}()
+		let erikMeijerTwitter: UIImageView = {
+			let imageView = RxMarbles.Image.twitter.imageView()
+			imageView.alpha = 0.3
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+			_scaleView(view: imageView)
+			return imageView
+		}()
+		let erikMeijerTextView: UITextView = {
+			let textView = UITextView()
+			textView.attributedText = _erikMeijerText()
+			textView.delegate = self
+			textView.isEditable = false
+			textView.isScrollEnabled = false
+			textView.dataDetectorTypes = UIDataDetectorTypes.link
+			textView.textAlignment = .center
+			textView.translatesAutoresizingMaskIntoConstraints = false
+			return textView
+		}()
+		let krunoslavZaherTwitter: UIImageView = {
+			let imageView = RxMarbles.Image.twitter.imageView()
+			imageView.alpha = 0.3
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+			_scaleView(view: imageView)
+			return imageView
+		}()
+		let krunoslavZaherTextView: UITextView = {
+			let textView = UITextView()
+			textView.attributedText = _krunoslavZaherText()
+			textView.delegate = self
+			textView.isEditable = false
+			textView.isScrollEnabled = false
+			textView.dataDetectorTypes = UIDataDetectorTypes.link
+			textView.textAlignment = .center
+			textView.translatesAutoresizingMaskIntoConstraints = false
+			return textView
+		}()
+		let rxSwiftLabel: UILabel = {
+			let label = UILabel()
+			label.attributedText = {
+				let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: "⭐ ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
+				attributedString.append(NSAttributedString(string: "RxSwift", attributes: [NSAttributedString.Key.font : Font.boldText(14)]))
+				attributedString.append(NSAttributedString(string: " on", attributes: [NSAttributedString.Key.font : Font.text(14)]))
+				return attributedString
+			}()
+			label.translatesAutoresizingMaskIntoConstraints = false
+			label.isUserInteractionEnabled = true
+			return label
+		}()
+		let githubButton: UIButton = {
+			let button = UIButton(type: .custom)
+			button.setImage(RxMarbles.Image.github, for: .normal)
+			button.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwift) }.disposed(by: _disposeBag)
+			button.translatesAutoresizingMaskIntoConstraints = false
+			return button
+		}()
+		let andTwitterLabel: UILabel = {
+			let label = UILabel()
+			label.text = "and"
+			label.font = Font.text(14)
+			label.translatesAutoresizingMaskIntoConstraints = false
+			return label
+		}()
+		let rxSwiftTwitterButton: UIButton = {
+			let button = UIButton()
+			button.setImage(RxMarbles.Image.twitter, for: .normal)
+			button.alpha = 0.3
+			button.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwiftTwitter) }.disposed(by: _disposeBag)
+			button.translatesAutoresizingMaskIntoConstraints = false
+			return button
+		}()
+		let alasLabel: UILabel = {
+			let label = UILabel()
+			label.text = "¯\\_(ツ)_/¯"
+			label.translatesAutoresizingMaskIntoConstraints = false
+			return label
+		}()
         
-        let erikMeijerTwitter = RxMarbles.Image.twitter.imageView()
-        let erikMeijerTextView = UITextView()
-        
-        let krunoslavZaherTwitter = RxMarbles.Image.twitter.imageView()
-        let krunoslavZaherTextView = UITextView()
-        
-        let rxSwiftLabel = UILabel()
-        let githubButton = UIButton(type: .custom)
-        let andTwitterLabel = UILabel()
-        let rxSwiftTwitterButton = UIButton()
-        let alasLabel = UILabel()
-        
-        manyLikeLabel.text = "Many ❤️👍🍻👋 to"
-        manyLikeLabel.font = Font.code(.malayalamSangamMN, size: 18)
-        manyLikeLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(manyLikeLabel)
         let manyLikeLabelTop = manyLikeLabel.topAnchor.constraint(equalTo: container.topAnchor)
         let manyLikeLabelCenterX = manyLikeLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor)
         container.addConstraints([manyLikeLabelTop, manyLikeLabelCenterX])
         
-        erikMeijerTwitter.alpha = 0.3
-        erikMeijerTwitter.translatesAutoresizingMaskIntoConstraints = false
-        _scaleView(view: erikMeijerTwitter)
         container.addSubview(erikMeijerTwitter)
         let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraint(lessThanOrEqualTo: manyLikeLabel.bottomAnchor, constant: 50)
         let erikMeijerTwitterGreaterTop = erikMeijerTwitter.topAnchor.constraint(greaterThanOrEqualTo: manyLikeLabel.bottomAnchor, constant: 10)
@@ -735,21 +799,11 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let erikMeijerTwitterCenterX = erikMeijerTwitter.centerXAnchor.constraint(equalTo: container.centerXAnchor, constant: -10)
         container.addConstraints([erikMeijerTwitterTop, erikMeijerTwitterGreaterTop, erikMeijerTwitterHeight, erikMeijerTwitterCenterX])
         
-        erikMeijerTextView.attributedText = _erikMeijerText()
-        erikMeijerTextView.delegate = self
-        erikMeijerTextView.isEditable = false
-        erikMeijerTextView.isScrollEnabled = false
-        erikMeijerTextView.dataDetectorTypes = UIDataDetectorTypes.link
-        erikMeijerTextView.textAlignment = .center
-        erikMeijerTextView.translatesAutoresizingMaskIntoConstraints = false
         container.insertSubview(erikMeijerTextView, belowSubview: erikMeijerTwitter)
         let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraint(equalTo: erikMeijerTwitter.bottomAnchor, constant: -10)
         let erikMeijerTextViewCenterX = erikMeijerTextView.centerXAnchor.constraint(equalTo: container.centerXAnchor)
         container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewCenterX])
         
-        krunoslavZaherTwitter.alpha = 0.3
-        krunoslavZaherTwitter.translatesAutoresizingMaskIntoConstraints = false
-        _scaleView(view: krunoslavZaherTwitter)
         container.addSubview(krunoslavZaherTwitter)
         let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraint(lessThanOrEqualTo: erikMeijerTextView.bottomAnchor, constant: 30)
         let krunoslavZaherTwitterGreaterTop = krunoslavZaherTwitter.topAnchor.constraint(greaterThanOrEqualTo: erikMeijerTextView.bottomAnchor)
@@ -757,68 +811,32 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraint(lessThanOrEqualTo: container.centerXAnchor, constant: 15)
         container.addConstraints([krunoslavZaherTwitterTop, krunoslavZaherTwitterGreaterTop, krunoslavZaherTwitterHeight, krunoslavZaherTwitterCenterX])
         
-        krunoslavZaherTextView.attributedText = _krunoslavZaherText()
-        krunoslavZaherTextView.delegate = self
-        krunoslavZaherTextView.isEditable = false
-        krunoslavZaherTextView.isScrollEnabled = false
-        krunoslavZaherTextView.dataDetectorTypes = UIDataDetectorTypes.link
-        krunoslavZaherTextView.textAlignment = .center
-        krunoslavZaherTextView.translatesAutoresizingMaskIntoConstraints = false
         container.insertSubview(krunoslavZaherTextView, belowSubview: krunoslavZaherTwitter)
         let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraint(equalTo: krunoslavZaherTwitter.bottomAnchor, constant: -10)
         let krunoslavZaherTextViewCenterX = krunoslavZaherTextView.centerXAnchor.constraint(lessThanOrEqualTo: container.centerXAnchor)
         container.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewCenterX])
         
-        alasLabel.text = "¯\\_(ツ)_/¯"
-        alasLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(alasLabel)
         let alasLabelBottom = alasLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         let alasLabelCenterX = alasLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor)
         container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
-        let rxSwiftLabelText = NSMutableAttributedString(attributedString:
-            NSAttributedString(string: "⭐ ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        )
-        rxSwiftLabelText.append(
-            NSAttributedString(
-                string: "RxSwift",
-                attributes: [NSAttributedString.Key.font : Font.boldText(14)]
-            )
-        )
-        rxSwiftLabelText.append(
-            NSAttributedString(string: " on", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        )
-        rxSwiftLabel.attributedText = rxSwiftLabelText
-        rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
-        rxSwiftLabel.isUserInteractionEnabled = true
         container.addSubview(rxSwiftLabel)
         let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraint(lessThanOrEqualTo: krunoslavZaherTextView.bottomAnchor, constant: 40)
         let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraint(equalTo: alasLabel.topAnchor, constant: -15)
         let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor, constant: -60)
         container.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX, rxSwiftLabelBottom])
         
-        githubButton.setImage(RxMarbles.Image.github, for: .normal)
-        githubButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwift) }
-            .disposed(by: _disposeBag)
-        githubButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(githubButton)
         let githubButtonLeading = githubButton.leadingAnchor.constraint(equalTo: rxSwiftLabel.trailingAnchor, constant: 10)
         let githubButtonCenterY = githubButton.centerYAnchor.constraint(equalTo: rxSwiftLabel.centerYAnchor)
         container.addConstraints([githubButtonLeading, githubButtonCenterY])
         
-        andTwitterLabel.text = "and"
-        andTwitterLabel.font = Font.text(14)
-        andTwitterLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(andTwitterLabel)
         let andTwitterLabelCenterY = andTwitterLabel.centerYAnchor.constraint(equalTo: rxSwiftLabel.centerYAnchor)
         let andTwitterLabelLeading = andTwitterLabel.leadingAnchor.constraint(equalTo: githubButton.trailingAnchor, constant: 10)
         container.addConstraints([andTwitterLabelCenterY, andTwitterLabelLeading])
         
-        rxSwiftTwitterButton.setImage(RxMarbles.Image.twitter, for: .normal)
-        rxSwiftTwitterButton.alpha = 0.3
-        rxSwiftTwitterButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwiftTwitter) }
-            .disposed(by: _disposeBag)
-        rxSwiftTwitterButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(rxSwiftTwitterButton)
         let rxSwiftTwitterCenterY = rxSwiftTwitterButton.centerYAnchor.constraint(equalTo: andTwitterLabel.centerYAnchor)
         let rxSwiftTwitterLeading = rxSwiftTwitterButton.leadingAnchor.constraint(equalTo: andTwitterLabel.trailingAnchor, constant: 10)
