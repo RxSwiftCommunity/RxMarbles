@@ -402,7 +402,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let attributedStrings = _operatorsCloud()
         
         cloudLabels.forEach {
-            let index = cloudLabels.index(of: $0)
+            let index = cloudLabels.firstIndex(of: $0)
             $0.attributedText = attributedStrings[index!]
         }
     }
@@ -428,13 +428,13 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             alphaString.addAttributes([NSAttributedString.Key.foregroundColor : UIColor.clear], range: NSMakeRange(0, operatorString.length))
             switch rnd {
             case 0:
-                strings.forEach { $0.append(strings.index(of: $0) == 0 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 0 ? operatorString : alphaString) }
             case 1:
-                strings.forEach { $0.append(strings.index(of: $0) == 1 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 1 ? operatorString : alphaString) }
             case 2:
-                strings.forEach { $0.append(strings.index(of: $0) == 2 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 2 ? operatorString : alphaString) }
             case 3:
-                strings.forEach { $0.append(strings.index(of: $0) == 3 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 3 ? operatorString : alphaString) }
             default:
                 break
             }

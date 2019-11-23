@@ -94,7 +94,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         let location = r.location(in: self)
         switch r.state {
         case .began:
-            if let i = sourceEvents.index(where: { $0.frame.contains(location) }) {
+            if let i = sourceEvents.firstIndex(where: { $0.frame.contains(location) }) {
                 _panEventView = sourceEvents[i]
             }
             if let panEventView = _panEventView {
@@ -162,7 +162,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
             
             if onDeleteZone(recognizer: recognizer) == true {
                 Animation.hideWithCompletion(panEventView) { _ in
-                    if let index = self.sourceEvents.index(of: panEventView) {
+                    if let index = self.sourceEvents.firstIndex(of: panEventView) {
                         self.sourceEvents.remove(at: index)
                     }
                 }
@@ -230,7 +230,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         let sortedEventsRecorded = sortedEvents.map { $0.recorded }
         let angs = angles(sortedEventsRecorded)
         sortedEvents.forEach({ eventView in
-            if let index = sortedEvents.index(where: { $0 == eventView }) {
+            if let index = sortedEvents.firstIndex(where: { $0 == eventView }) {
                 Animation.rotate(eventView, toAngle: angs[index])
             }
         })

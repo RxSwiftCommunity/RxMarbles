@@ -210,7 +210,7 @@ class OperatorViewController: UIViewController {
         
         elementSelector.addAction(nextAction)
         let sourceEvents: [EventView] = sequence.sourceEvents
-        if sourceEvents.index(where: { $0.isCompleted }) == nil {
+        if sourceEvents.firstIndex(where: { $0.isCompleted }) == nil {
             elementSelector.addAction(completedAction)
         }
         elementSelector.addAction(errorAction)
@@ -273,13 +273,13 @@ class OperatorViewController: UIViewController {
         
         zip(colorsSegment.subviews, colors).forEach { v, color in v.backgroundColor = color }
         
-        colorsSegment.selectedSegmentIndex = colors.index(of: currentColor!)!
+        colorsSegment.selectedSegmentIndex = colors.firstIndex(of: currentColor!)!
         return colorsSegment
     }
     
     private func _saveAction(_ newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Save", style: .default) { _ in
-            guard let index = oldEventView.sequenceView?.sourceEvents.index(of: oldEventView)
+            guard let index = oldEventView.sequenceView?.sourceEvents.firstIndex(of: oldEventView)
             else { return }
             
             oldEventView.sequenceView?.sourceEvents.remove(at: index)
