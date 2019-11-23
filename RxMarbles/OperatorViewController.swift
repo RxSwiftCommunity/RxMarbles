@@ -12,7 +12,7 @@ import RxCocoa
 import SafariServices
 import Device
 
-class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
+class OperatorViewController: UIViewController {
 
     private var _disposeBag = DisposeBag()
     
