@@ -10,7 +10,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class OperatorsTableViewController: UITableViewController, UISearchResultsUpdating {
+class OperatorsTableViewController: UITableViewController {
     private let _disposeBag = DisposeBag()
 
     var selectedOperator: Operator = Operator.combineLatest {
@@ -175,14 +175,7 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     func isSearchActive() -> Bool {
         return _searchController.isActive && _searchController.searchBar.text != ""
     }
-    
-    func updateSearchResults(for searchController: UISearchController) {
-        if let searchString = searchController.searchBar.text {
-            filterSectionsWithText(text: searchString)
-        }
-        tableView.reloadData()
-    }
-    
+
     func focusSearch() {
         presentingViewController?.dismiss(animated: false, completion: nil)
         _searchController.searchBar.becomeFirstResponder()
@@ -193,6 +186,15 @@ class OperatorsTableViewController: UITableViewController, UISearchResultsUpdati
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         _searchController.isActive = false
+    }
+}
+
+extension OperatorsTableViewController: UISearchResultsUpdating {
+	func updateSearchResults(for searchController: UISearchController) {
+        if let searchString = searchController.searchBar.text {
+            filterSectionsWithText(text: searchString)
+        }
+        tableView.reloadData()
     }
 }
 
