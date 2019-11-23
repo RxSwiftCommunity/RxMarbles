@@ -21,9 +21,15 @@ class OperatorsTableViewController: UITableViewController {
             tableView.reloadData()
         }
     }
-    
-    private let _searchController = UISearchController(searchResultsController: nil)
-    
+
+	private lazy var _searchController: UISearchController = {
+		let searchController = UISearchController(searchResultsController: nil)
+		searchController.searchResultsUpdater = self
+		searchController.obscuresBackgroundDuringPresentation = false
+		searchController.searchBar.searchBarStyle = .minimal
+		return searchController
+	}()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -36,10 +42,6 @@ class OperatorsTableViewController: UITableViewController {
             action: #selector(OperatorsTableViewController.openHelpView)
         )
         
-        _searchController.searchResultsUpdater = self
-        _searchController.obscuresBackgroundDuringPresentation = false
-        _searchController.searchBar.searchBarStyle = .minimal
-        
         definesPresentationContext = true
         
         if #available(iOS 11, *) {
@@ -48,7 +50,7 @@ class OperatorsTableViewController: UITableViewController {
             tableView.tableHeaderView = UIView()
         } else {
             _searchController.hidesNavigationBarDuringPresentation = false
-            _searchController.searchBar.backgroundColor = UIColor.white
+            _searchController.searchBar.backgroundColor = .white
             tableView.tableHeaderView = _searchController.searchBar
         }
         
