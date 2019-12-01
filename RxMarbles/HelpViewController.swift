@@ -332,9 +332,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let operatorsCount = Operator.all.count
         
         let operatorsLabelText = NSMutableAttributedString()
-        operatorsLabelText.append(NSAttributedString(string: "\(operatorsCount)", attributes: [NSAttributedString.Key.font : Font.boldText(14)]))
-        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [NSAttributedString.Key.font : Font.boldText(14)]))
+        operatorsLabelText.append(NSAttributedString(string: "\(operatorsCount)", attributes: [.font : Font.boldText(14)]))
+        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [.font : Font.text(14)]))
+        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [.font : Font.boldText(14)]))
         let operatorsLabel = UILabel()
         operatorsLabel.attributedText = operatorsLabelText
         operatorsLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -419,7 +419,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
             let rnd = arc4random() % 4
             let operatorString = _attributedOperatorString(op: op, p: p, rnd: Int(rnd))
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
-            alphaString.addAttributes([NSAttributedString.Key.foregroundColor : UIColor.clear], range: NSMakeRange(0, operatorString.length))
+            alphaString.addAttributes([.foregroundColor : UIColor.clear], range: NSMakeRange(0, operatorString.length))
             switch rnd {
             case 0:
                 strings.forEach { $0.append(strings.firstIndex(of: $0) == 0 ? operatorString : alphaString) }
@@ -453,11 +453,11 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let shadow = NSShadow()
         shadow.shadowColor = Color.white
         switch rnd {
-        case 0: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoItalic, size: 12), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
-        case 1: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoRegular, size: 13), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
-        case 2: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoBold, size: 13), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
-        case 3: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoBoldItalic, size: 15), NSAttributedString.Key.paragraphStyle: p, NSAttributedString.Key.shadow : shadow])
-        default: return NSMutableAttributedString(string: op.rawValue, attributes: [NSAttributedString.Key.font: Font.code(.monoItalic, size: 12), NSAttributedString.Key.paragraphStyle: p])
+        case 0: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoItalic, size: 12), .paragraphStyle: p, .shadow: shadow])
+        case 1: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoRegular, size: 13), .paragraphStyle: p, .shadow: shadow])
+        case 2: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoBold, size: 13), .paragraphStyle: p, .shadow: shadow])
+        case 3: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoBoldItalic, size: 15), .paragraphStyle: p, .shadow: shadow])
+        default: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoItalic, size: 12), .paragraphStyle: p])
         }
     }
     
@@ -477,11 +477,10 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
         
-        let editLabelText = NSMutableAttributedString(
-            string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
-                                                      attributes: [NSAttributedString.Key.font : Font.text(13)])
-        editLabelText.append(NSAttributedString(string: "edit", attributes: [NSAttributedString.Key.font : Font.boldText(13)]))
-        editLabelText.append(NSAttributedString(string: " mode", attributes: [NSAttributedString.Key.font : Font.text(13)]))
+        let editLabelText = NSMutableAttributedString(string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
+													  attributes: [.font : Font.text(13)])
+        editLabelText.append(NSAttributedString(string: "edit", attributes: [.font: Font.boldText(13)]))
+        editLabelText.append(NSAttributedString(string: " mode", attributes: [.font: Font.text(13)]))
         
         editLabel.attributedText = editLabelText
         editLabel.numberOfLines = 2
@@ -722,9 +721,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
 		let rxSwiftLabel: UILabel = {
 			let label = UILabel()
 			label.attributedText = {
-				let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: "⭐ ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-				attributedString.append(NSAttributedString(string: "RxSwift", attributes: [NSAttributedString.Key.font : Font.boldText(14)]))
-				attributedString.append(NSAttributedString(string: " on", attributes: [NSAttributedString.Key.font : Font.text(14)]))
+				let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: "⭐ ", attributes: [.font: Font.text(14)]))
+				attributedString.append(NSAttributedString(string: "RxSwift", attributes: [.font: Font.boldText(14)]))
+				attributedString.append(NSAttributedString(string: " on", attributes: [.font: Font.text(14)]))
 				return attributedString
 			}()
 			label.translatesAutoresizingMaskIntoConstraints = false
@@ -821,28 +820,28 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _erikMeijerText() -> NSMutableAttributedString {
-        let text = NSMutableAttributedString(string: "Erik ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        let twitter = NSMutableAttributedString(string: "@headinthebox", attributes: [NSAttributedString.Key.link : Link.erikMeijerTwitter, NSAttributedString.Key.font : Font.boldText(14)])
+        let text = NSMutableAttributedString(string: "Erik ", attributes: [.font: Font.text(14)])
+        let twitter = NSMutableAttributedString(string: "@headinthebox", attributes: [.link: Link.erikMeijerTwitter, .font: Font.boldText(14)])
         text.append(twitter)
-        text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes: [NSAttributedString.Key.link : Link.reactiveX, NSAttributedString.Key.font : Font.boldText(14)])
+        text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [.font: Font.text(14)]))
+        let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes: [.link: Link.reactiveX, .font: Font.boldText(14)])
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        text.addAttributes([NSAttributedString.Key.paragraphStyle : paragraph], range: NSMakeRange(0, text.length))
+        text.addAttributes([.paragraphStyle: paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
     private func _krunoslavZaherText() -> NSMutableAttributedString {
-        let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes: [NSAttributedString.Key.link : Link.kZaherTwitter, NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : Font.boldText(14)])
+        let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [.font: Font.text(14)])
+        let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes: [.link: Link.kZaherTwitter, .foregroundColor: UIColor.black, .font: Font.boldText(14)])
         text.append(twitter)
-        text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        let reactivex = NSMutableAttributedString(string: "RxSwift", attributes: [NSAttributedString.Key.link : Link.rxSwift, NSAttributedString.Key.foregroundColor : UIColor.black, NSAttributedString.Key.font : Font.boldText(14)])
+        text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [.font: Font.text(14)]))
+        let reactivex = NSMutableAttributedString(string: "RxSwift", attributes: [.link: Link.rxSwift, .foregroundColor: UIColor.black, .font: Font.boldText(14)])
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        text.addAttributes([NSAttributedString.Key.paragraphStyle : paragraph], range: NSMakeRange(0, text.length))
+        text.addAttributes([.paragraphStyle: paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
