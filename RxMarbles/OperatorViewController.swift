@@ -203,7 +203,7 @@ class OperatorViewController: UIViewController {
         
         elementSelector.addAction(nextAction)
         let sourceEvents: [EventView] = sequence.sourceEvents
-        if sourceEvents.firstIndex(where: { $0.isCompleted }) == nil {
+        if !sourceEvents.contains(where: { $0.isCompleted }) {
             elementSelector.addAction(completedAction)
         }
         elementSelector.addAction(errorAction)
