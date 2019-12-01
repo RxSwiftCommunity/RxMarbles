@@ -144,12 +144,14 @@ extension AppDelegate: UISplitViewControllerDelegate {
         }
         return false
     }
+
     func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
 		guard let detailNav = secondaryViewController as? UINavigationController, let masterNav = primaryViewController as? UINavigationController else { return false }
 		let detailControllers = detailNav.children
 		masterNav.viewControllers = masterNav.children + detailControllers
 		return true
     }
+
     func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
         let navController: UINavigationController
         if let detail = primaryViewController.separateSecondaryViewController(for: splitViewController) {

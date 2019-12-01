@@ -35,6 +35,7 @@ extension OperatorsTableViewModel {
 	func titleForHeader(in section: Int) -> String? {
 		return self.getModelSection(at: section).name
 	}
+
 	func numberOfRows(in section: Int) -> Int {
 		return self.getModelSection(at: section).rows.count
 	}
@@ -52,6 +53,7 @@ extension OperatorsTableViewModel {
 		}
 		self.numberOfSections = self.filteredSections.isEmpty ? sections.count : filteredSections.count
 	}
+
 	func reset() {
 		self.filteredSections.removeAll()
 		self.numberOfSections = sections.count
@@ -62,6 +64,7 @@ extension OperatorsTableViewModel {
 	func getModelSection(at section: Int) -> Section {
 		return (self.filteredSections.isEmpty ? self.sections : self.filteredSections)[section]
 	}
+
 	func getOperator(at indexPath: IndexPath) -> Operator {
 		return getModelSection(at: indexPath.section).rows[indexPath.row]
 	}

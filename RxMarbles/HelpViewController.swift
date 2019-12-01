@@ -678,6 +678,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			label.translatesAutoresizingMaskIntoConstraints = false
 			return label
 		}()
+
 		let erikMeijerTwitter: UIImageView = {
 			let imageView = RxMarbles.Image.twitter.imageView()
 			imageView.alpha = 0.3
@@ -685,6 +686,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			_scaleView(view: imageView)
 			return imageView
 		}()
+
 		let erikMeijerTextView: UITextView = {
 			let textView = UITextView()
 			textView.attributedText = _erikMeijerText()
@@ -696,6 +698,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			textView.translatesAutoresizingMaskIntoConstraints = false
 			return textView
 		}()
+
 		let krunoslavZaherTwitter: UIImageView = {
 			let imageView = RxMarbles.Image.twitter.imageView()
 			imageView.alpha = 0.3
@@ -703,6 +706,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			_scaleView(view: imageView)
 			return imageView
 		}()
+
 		let krunoslavZaherTextView: UITextView = {
 			let textView = UITextView()
 			textView.attributedText = _krunoslavZaherText()
@@ -714,6 +718,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			textView.translatesAutoresizingMaskIntoConstraints = false
 			return textView
 		}()
+
 		let rxSwiftLabel: UILabel = {
 			let label = UILabel()
 			label.attributedText = {
@@ -726,6 +731,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			label.isUserInteractionEnabled = true
 			return label
 		}()
+
 		let githubButton: UIButton = {
 			let button = UIButton(type: .custom)
 			button.setImage(RxMarbles.Image.github, for: .normal)
@@ -733,6 +739,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			button.translatesAutoresizingMaskIntoConstraints = false
 			return button
 		}()
+
 		let andTwitterLabel: UILabel = {
 			let label = UILabel()
 			label.text = "and"
@@ -740,6 +747,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			label.translatesAutoresizingMaskIntoConstraints = false
 			return label
 		}()
+
 		let rxSwiftTwitterButton: UIButton = {
 			let button = UIButton()
 			button.setImage(RxMarbles.Image.twitter, for: .normal)
@@ -748,6 +756,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			button.translatesAutoresizingMaskIntoConstraints = false
 			return button
 		}()
+
 		let alasLabel: UILabel = {
 			let label = UILabel()
 			label.text = "¯\\_(ツ)_/¯"
