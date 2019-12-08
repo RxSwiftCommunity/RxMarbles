@@ -116,7 +116,18 @@ extension Operator {
                     next(400, "2", Color.nextRandom, .circle),
                     next(450, "3", Color.nextRandom, .circle),
                     next(500, "4", Color.nextRandom, .circle),
-                    next(550, "5", Color.nextRandom, .circle),
+                    next(700, "5", Color.nextRandom, .circle),
+                    completed(900)
+                ]
+            )
+        case .throttle:
+            return InitialValues(
+                line1: [
+                    next(100, "1", Color.nextRandom, .circle),
+                    next(310, "2", Color.nextRandom, .circle),
+                    next(340, "3", Color.nextRandom, .circle),
+                    next(370, "4", Color.nextRandom, .circle),
+                    next(400, "5", Color.nextRandom, .circle),
                     next(700, "6", Color.nextRandom, .circle),
                     completed(900)
                 ]
@@ -444,8 +455,10 @@ extension Operator {
             }
         case .concat:
             return aO!.concat(bO!)
-        case .debounce, .throttle:
+        case .debounce:
             return aO!.debounce(100, scheduler: scheduler)
+        case .throttle:
+            return aO!.throttle(100, scheduler: scheduler)
         case .delaySubscription:
             return aO!.delaySubscription(150, scheduler: scheduler)
         case .distinctUntilChanged:
