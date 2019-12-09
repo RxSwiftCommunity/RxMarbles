@@ -19,7 +19,7 @@ DEPENDENCIES:
   - RxSwift (~> 4.0)
 
 SPEC REPOS:
-  https://github.com/cocoapods/specs.git:
+  https://github.com/CocoaPods/Specs.git:
     - Crashlytics
     - Device
     - Fabric
@@ -48,4 +48,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 176a9ad81388cfc1a7ed586168641a851a009841
 
-COCOAPODS: 1.6.0
+COCOAPODS: 1.8.3
