@@ -74,6 +74,10 @@ class SceneView: UIView, UITextViewDelegate {
         _rxOperatorLabel.minimumScaleFactor = 0.5
         _rxOperatorLabel.adjustsFontSizeToFitWidth = true
         _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
+        if #available(iOS 13.0, *) {
+            _rxOperatorLabel.textColor = .label
+        } 
+
         
         addSubview(rxOperatorText)
         rxOperatorText.delegate = self

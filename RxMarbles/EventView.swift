@@ -28,7 +28,9 @@ class EventView: UIView {
         super.init(frame: CGRect(x: 0, y: 0, width: 42, height: 50))
        
         _imageView.contentMode = .center
-        label.textColor = Color.black
+        if #available(iOS 13.0, *) {
+            label.textColor = .systemGray
+        }
         label.font = Font.ultraLightText(11)
         addSubview(_imageView)
         addSubview(label)
