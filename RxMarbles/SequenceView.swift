@@ -51,6 +51,10 @@ class SequenceView: UIView {
         super.layoutSubviews()
         timeArrow.frame = CGRect(x: 0, y: 0, width: bounds.width, height: RxMarbles.Image.timeLine.size.height)
         timeArrow.center.y = bounds.height / 2.0
+        if #available(iOS 13.0, *) {
+            timeArrow.tintColor = .label
+        }
+
     }
     
     func maxEventTime() -> Int {
