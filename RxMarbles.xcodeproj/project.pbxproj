@@ -31,6 +31,8 @@
 		0AC2661E1C40775D009E28FD /* OperatorsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */; };
 		0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */; };
 		0AFA29EC1C772DA300070AF2 /* Notifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AFA29EB1C772DA300070AF2 /* Notifications.swift */; };
+		2DA5B8272389766D00275B96 /* Section.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5B8262389766D00275B96 /* Section.swift */; };
+		2DA5B82A2389784700275B96 /* OperatorsTableViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA5B8292389784700275B96 /* OperatorsTableViewModel.swift */; };
 		654CF3E32222BC2300E68D10 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 654CF3E52222BC2300E68D10 /* Localizable.strings */; };
 		6B5417EA67FBF1ABDB81F389 /* Pods_RxMarbles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */; };
 		A3B1F0351FDF47B0002F4CAC /* Bag.swift in Sources */ = {isa = PBXBuildFile; fileRef = A3B1F0341FDF47B0002F4CAC /* Bag.swift */; };
@@ -75,6 +77,8 @@
 		0AC2661D1C40775D009E28FD /* OperatorsTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OperatorsTableViewController.swift; sourceTree = "<group>"; };
 		0AE8A6AD1C47EAFB00570F15 /* EquatableArray.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EquatableArray.swift; path = RxTests/EquatableArray.swift; sourceTree = "<group>"; };
 		0AFA29EB1C772DA300070AF2 /* Notifications.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Notifications.swift; sourceTree = "<group>"; };
+		2DA5B8262389766D00275B96 /* Section.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Section.swift; sourceTree = "<group>"; };
+		2DA5B8292389784700275B96 /* OperatorsTableViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OperatorsTableViewModel.swift; sourceTree = "<group>"; };
 		354B57C154849AC0C5DFAA67 /* Pods_RxMarbles.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_RxMarbles.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		654CF3E42222BC2300E68D10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		654CF3E62222BC2C00E68D10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -151,6 +155,7 @@
 			isa = PBXGroup;
 			children = (
 				D2F561A91C52B0360041C9A3 /* Model */,
+				2DA5B828238977F700275B96 /* ViewModels */,
 				0AC265FA1C3E96C2009E28FD /* Lib */,
 				D2F561A31C52AAD90041C9A3 /* UIKit */,
 				0A4111D51C51113C0067D0E3 /* ViewControllers */,
@@ -180,6 +185,14 @@
 			);
 			name = Schedulers;
 			path = RxTests/Schedulers;
+			sourceTree = "<group>";
+		};
+		2DA5B828238977F700275B96 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				2DA5B8292389784700275B96 /* OperatorsTableViewModel.swift */,
+			);
+			name = ViewModels;
 			sourceTree = "<group>";
 		};
 		3C070976F34E97EE5EAAE3BE /* Pods */ = {
@@ -233,6 +246,7 @@
 		D2F561A91C52B0360041C9A3 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				2DA5B8262389766D00275B96 /* Section.swift */,
 				D25E7A4F1C41BD4800B08F70 /* Operator.swift */,
 				D2F561AE1C52B0DD0041C9A3 /* OperatorImplementation.swift */,
 				D28A68471C629073008A8C6F /* OperatorCode.swift */,
@@ -281,14 +295,14 @@
 					0AC2658E1C3D2C24009E28FD = {
 						CreatedOnToolsVersion = 7.2;
 						DevelopmentTeam = FD6ZML48V9;
-						LastSwiftMigration = 1010;
+						LastSwiftMigration = 1100;
 						ProvisioningStyle = Automatic;
 					};
 				};
 			};
 			buildConfigurationList = 0AC2658A1C3D2C23009E28FD /* Build configuration list for PBXProject "RxMarbles" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
@@ -391,6 +405,7 @@
 				D2F561AF1C52B0DD0041C9A3 /* OperatorImplementation.swift in Sources */,
 				0AC266101C3E96C2009E28FD /* TestScheduler.swift in Sources */,
 				D2F561A51C52AAEE0041C9A3 /* Color.swift in Sources */,
+				2DA5B82A2389784700275B96 /* OperatorsTableViewModel.swift in Sources */,
 				0AC2660E1C3E96C2009E28FD /* Recorded.swift in Sources */,
 				0AC266141C3E96C2009E28FD /* TestableObserver.swift in Sources */,
 				0AC2660A1C3E96C2009E28FD /* ColdObservable.swift in Sources */,
@@ -402,6 +417,7 @@
 				0AC266111C3E96C2009E28FD /* TestSchedulerVirtualTimeConverter.swift in Sources */,
 				0AE8A6AE1C47EAFB00570F15 /* EquatableArray.swift in Sources */,
 				0A4111CC1C510C2F0067D0E3 /* EventView.swift in Sources */,
+				2DA5B8272389766D00275B96 /* Section.swift in Sources */,
 				0A4111CE1C510FE80067D0E3 /* SequenceView.swift in Sources */,
 				0A4111D41C5110610067D0E3 /* SceneView.swift in Sources */,
 				0A3F63E21C6B43030099C9E8 /* HelpViewController.swift in Sources */,
@@ -550,15 +566,17 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FD6ZML48V9;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -569,15 +587,17 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = FD6ZML48V9;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
-				SWIFT_VERSION = 4.2;
+				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

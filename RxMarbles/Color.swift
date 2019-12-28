@@ -43,6 +43,20 @@ struct Color {
     static let codeMethod  = _hex(0x26474B)
     static let codeKeyword = _hex(0xAA0D91)
     static let codeType    = _hex(0x3F6E74)
+    
+    public static var trash: UIColor = {
+        if #available(iOS 13, *) {
+            return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
+                if UITraitCollection.userInterfaceStyle == .dark {
+                    return UIColor(red: 0.0, green: 1.0, blue: 122.0/255.0, alpha: 1.0)
+                } else {
+                    return UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
+                }
+            }
+        } else {
+            return UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
+        }
+    }()
 }
 
 private func _hex(_ hex: Int) -> UIColor {

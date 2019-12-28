@@ -49,11 +49,19 @@ class EventView: UIView {
             _imageView.frame = CGRect(x: 0, y: 0, width: 16, height: 16)
         case .completed:
             _imageView.image = RxMarbles.Image.complete
-            _imageView.tintColor = Color.black
+            if #available(iOS 13.0, *) {
+                _imageView.tintColor = .label
+            } else {
+               _imageView.tintColor = .black
+            }
             layer.zPosition = -1
         case .error:
             _imageView.image = RxMarbles.Image.error
-            _imageView.tintColor = Color.black
+            if #available(iOS 13.0, *) {
+                _imageView.tintColor = .label
+            } else {
+               _imageView.tintColor = .black
+            }
             layer.zPosition = -1
         }
       

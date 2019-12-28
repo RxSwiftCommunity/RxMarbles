@@ -11,8 +11,8 @@ import UIKit
 
 
 struct Image {
-    static let timeLine = _named("timeLine")
-    static let trash    = _named("Trash")
+    static let timeLine = _named("timeLine").withRenderingMode(.alwaysTemplate)
+    static let trash    = _named("Trash").withRenderingMode(.alwaysTemplate)
     static let rubbish  = _named("Rubbish")
     
     static let nextCircle   = _named("nextCircle")
@@ -20,8 +20,8 @@ struct Image {
     static let nextRect     = _named("nextRect")
     static let nextStar     = _named("nextStar")
     
-    static let complete     = _named("complete")
-    static let error        = _named("error")
+    static let complete     = _named("complete").withRenderingMode(.alwaysTemplate)
+    static let error        = _named("error").withRenderingMode(.alwaysTemplate)
     
     static let helpLogo     = _named("helpLogo")
     static let rxLogo       = _named("reactivex")
