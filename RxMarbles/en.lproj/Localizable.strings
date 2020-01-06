@@ -23,7 +23,7 @@
 //Operators description
 
 //amb
-"amb" = "Given two or more source Observables, emit all of the items from only the first of these Obserbables to emit an item or notification.";
+"amb" = "Given two or more source Observables, emit all of the items from only the first of these Observables to emit an item or notification.";
 
 //buffer
 "buffer" = "Periodically gather items emitted by an Observable into bundles and emit these bundles rather than emitting the items one at a time.";
