@@ -584,59 +584,10 @@ extension Operator {
 extension Operator {
     var multiTimelines: Bool {
         switch self {
-        case
-        .amb,
-        .combineLatest,
-        .concat,
-        .flatMap,
-        .flatMapFirst,
-        .flatMapLatest,
-        .merge,
-        .sample,
-        .skipUntil,
-        .switchLatest,
-        .takeUntil,
-        .withLatestFrom,
-        .zip:
+        case .amb, .combineLatest, .concat, .flatMap, .flatMapFirst, .flatMapLatest,
+             .merge, .sample, .skipUntil, .switchLatest, .takeUntil, .withLatestFrom, .zip:
             return true
-            
-        case
-        .buffer,
-        .catchError,
-        .catchErrorJustReturn,
-        .debounce,
-        .delaySubscription,
-        .distinctUntilChanged,
-        .elementAt,
-        .empty,
-        .filter,
-        .ignoreElements,
-        .interval,
-        .just,
-        .map,
-        .mapWithIndex,
-        .never,
-        .of,
-        .reduce,
-        .repeatElement,
-        .retry,
-        .scan,
-        .single,
-        .skip,
-        .skipDuration,
-        .skipWhile,
-        .skipWhileWithIndex,
-        .startWith,
-        .take,
-        .takeDuration,
-        .takeLast,
-        .takeWhile,
-        .takeWhileWithIndex,
-        .throttle,
-        .throw,
-        .timeout,
-        .timer,
-        .toArray:
+        default:
             return false
         }
     }
