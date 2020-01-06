@@ -330,14 +330,18 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureExplorePage() {
         let operatorsCount = Operator.all.count
-        
-        let operatorsLabelText = NSMutableAttributedString()
-        operatorsLabelText.append(NSAttributedString(string: "\(operatorsCount)", attributes: [.font : Font.boldText(14)]))
-        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [.font : Font.text(14)]))
-        operatorsLabelText.append(NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [.font : Font.boldText(14)]))
-        let operatorsLabel = UILabel()
-        operatorsLabel.attributedText = operatorsLabelText
-        operatorsLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let operatorsLabel: UILabel = {
+            let label = UILabel()
+            let attributedText = NSMutableAttributedString()
+            attributedText.append(NSAttributedString(string: "\(operatorsCount)", attributes: [.font : Font.boldText(14)]))
+            attributedText.append(NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [.font : Font.text(14)]))
+            attributedText.append(NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [.font : Font.boldText(14)]))
+            label.attributedText = attributedText
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
         contentView.addSubview(operatorsLabel)
         let labelBottom = operatorsLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
         let labelHeight = operatorsLabel.heightAnchor.constraint(equalToConstant: 20)
@@ -464,9 +468,37 @@ class HelpViewController: AnimatedPagingScrollViewController {
     private func _configureExperimentPage() {
         let navBar = RxMarbles.Image.navBarExperiment.imageView()
         let timeline = RxMarbles.Image.timelineExperiment.imageView()
-        let editLabel = UILabel()
-        let timelineLabel = UILabel()
-        let experimentLabel = UILabel()
+
+        let editLabel: UILabel = {
+            let label = UILabel()
+            let attributedString = NSMutableAttributedString(
+                string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
+                attributes: [.font : Font.text(13)]
+            )
+            attributedString.append(NSAttributedString(string: "edit", attributes: [.font: Font.boldText(13)]))
+            attributedString.append(NSAttributedString(string: " mode", attributes: [.font: Font.text(13)]))
+            label.attributedText = attributedString
+            label.numberOfLines = 2
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let timelineLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = NSLocalizedString("move_events_around", comment: "")
+            label.font = Font.text(13)
+            return label
+        }()
+
+        let experimentLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = NSLocalizedString("edit_learn_experiment", comment: "")
+            label.font = Font.text(14)
+            return label
+        }()
+
         let up   = RxMarbles.Image.upArrow.imageView()
         let down = RxMarbles.Image.downArrow.imageView()
         
@@ -476,15 +508,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let navBarTop = navBar.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -160)
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
-        
-        let editLabelText = NSMutableAttributedString(string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
-													  attributes: [.font : Font.text(13)])
-        editLabelText.append(NSAttributedString(string: "edit", attributes: [.font: Font.boldText(13)]))
-        editLabelText.append(NSAttributedString(string: " mode", attributes: [.font: Font.text(13)]))
-        
-        editLabel.attributedText = editLabelText
-        editLabel.numberOfLines = 2
-        editLabel.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(editLabel)
         let editLabelTop = editLabel.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 40)
         let editLabelCenterX = editLabel.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: -25)
@@ -514,18 +538,12 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let downBottom = down.bottomAnchor.constraint(equalTo: timeline.topAnchor, constant: -10)
         let downCenterX = down.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: 110)
         contentView.addConstraints([downBottom, downCenterX])
-        
-        timelineLabel.translatesAutoresizingMaskIntoConstraints = false
-        timelineLabel.text = NSLocalizedString("move_events_around", comment: "")
-        timelineLabel.font = Font.text(13)
+
         contentView.addSubview(timelineLabel)
         let timelineLabelTop = timelineLabel.topAnchor.constraint(equalTo: timeline.bottomAnchor, constant: 20)
         contentView.addConstraint(timelineLabelTop)
         keepView(timelineLabel, onPage: 1)
-        
-        experimentLabel.translatesAutoresizingMaskIntoConstraints = false
-        experimentLabel.text = NSLocalizedString("edit_learn_experiment", comment: "")
-        experimentLabel.font = Font.text(14)
+
         contentView.addSubview(experimentLabel)
         let experimentLabelBottom = experimentLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
         contentView.addConstraint(experimentLabelBottom)
@@ -534,9 +552,22 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureSharePage() {
         let navBar = RxMarbles.Image.navBarShare.imageView()
-        let shareLabel = UILabel()
-        let iconContainer = UIView()
-        let spreadTheWordLabel = UILabel()
+
+        let shareLabel: UILabel = {
+            let label = UILabel()
+            label.text = NSLocalizedString("share_your_diagrams", comment: "")
+            label.font = Font.text(13)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let spreadTheWordLabel: UILabel = {
+            let label = UILabel()
+            label.text = NSLocalizedString("spread_the_world", comment: "")
+            label.font = Font.text(14)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
         
         contentView.addSubview(navBar)
         navBar.translatesAutoresizingMaskIntoConstraints = false
@@ -544,24 +575,21 @@ class HelpViewController: AnimatedPagingScrollViewController {
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 2)
         
-        shareLabel.text = NSLocalizedString("share_your_diagrams", comment: "")
-        shareLabel.font = Font.text(13)
-        shareLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(shareLabel)
         let shareLabelTop = shareLabel.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 55)
         let shareLabelCenterX = shareLabel.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: -10)
         contentView.addConstraints([shareLabelTop, shareLabelCenterX])
         
-        spreadTheWordLabel.text = NSLocalizedString("spread_the_world", comment: "")
-        spreadTheWordLabel.font = Font.text(14)
-        spreadTheWordLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         contentView.addSubview(spreadTheWordLabel)
         let spreadTheWordLabelBottom = spreadTheWordLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
         contentView.addConstraint(spreadTheWordLabelBottom)
         keepView(spreadTheWordLabel, onPage: 2)
-        
-        contentView.addSubview(iconContainer)
+
+        let iconContainer = UIView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(iconContainer)
+
         let iconContainerTop = iconContainer.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 20)
         let iconContainerCenterX = iconContainer.centerXAnchor.constraint(equalTo: _logoImageView.centerXAnchor)
         
@@ -846,14 +874,37 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureAboutPage() {
-        let anjLabButton       = UIButton(type: .custom)
-        let rxMarblesLabel     = UILabel()
-        let versionLabel       = UILabel()
-        let developedByLabel   = UILabel()
-        
-        rxMarblesLabel.text = "RxMarbles"
-        rxMarblesLabel.font = Font.text(25)
-        rxMarblesLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let anjLabButton: UIButton = {
+            let button = UIButton(type: .custom)
+            button.setImage(RxMarbles.Image.anjlab, for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            return button
+        }()
+
+        let rxMarblesLabel: UILabel = {
+            let label = UILabel()
+            label.text = "RxMarbles"
+            label.font = Font.text(25)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let versionLabel: UILabel = {
+            let label = UILabel()
+            label.text = _version()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let developedByLabel: UILabel = {
+            let label = UILabel()
+            label.text = "developed by"
+            label.font = Font.text(12)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
         contentView.addSubview(rxMarblesLabel)
         let rxMarblesLabelCenterY = rxMarblesLabel.centerYAnchor.constraint(equalTo: _logoImageView.centerYAnchor, constant: -12)
         let rxMarblesLabelLeading = rxMarblesLabel.leadingAnchor.constraint(equalTo: _resultTimeline.centerXAnchor, constant: pageWidth)
@@ -864,29 +915,21 @@ class HelpViewController: AnimatedPagingScrollViewController {
         rxMarblesLabelLeadingAnimation[4]   = -20
         rxMarblesLabelLeadingAnimation[5]   = pageWidth
         animator.addAnimation(rxMarblesLabelLeadingAnimation)
-        
-        versionLabel.text = _version()
-        versionLabel.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(versionLabel)
         let versionLabelTop = versionLabel.topAnchor.constraint(equalTo: rxMarblesLabel.bottomAnchor)
         let versionLabelLeading = versionLabel.leadingAnchor.constraint(equalTo: rxMarblesLabel.leadingAnchor)
         contentView.addConstraints([versionLabelTop, versionLabelLeading])
-        
-        developedByLabel.text = "developed by"
-        developedByLabel.font = Font.text(12)
-        developedByLabel.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(developedByLabel)
         let developedByLabelTop = developedByLabel.topAnchor.constraint(lessThanOrEqualTo: versionLabel.bottomAnchor, constant: 68)
         contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
-        
-        anjLabButton.setImage(RxMarbles.Image.anjlab, for: .normal)
-        
+
         anjLabButton.rx.tap
             .subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.anjlab) }
             .disposed(by: _disposeBag)
-        
-        anjLabButton.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(anjLabButton)
         let anjLabButtonTop = anjLabButton.topAnchor.constraint(lessThanOrEqualTo: developedByLabel.bottomAnchor, constant: 0)
         let anjLabButtonBottom = anjLabButton.bottomAnchor.constraint(lessThanOrEqualTo: _resultTimeline.topAnchor, constant: -30)
