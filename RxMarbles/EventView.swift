@@ -61,7 +61,7 @@ class EventView: UIView {
         removeBehavior?.action = {
             let sequenceView = self.sequenceView
             if let scene = sequenceView?.sceneView {
-                if let index = sequenceView?.sourceEvents.index(of: self) {
+                if let index = sequenceView?.sourceEvents.firstIndex(of: self) {
                     if scene.bounds.intersects(self.frame) == false {
                         self.removeFromSuperview()
                         sequenceView?.sourceEvents.remove(at: index)

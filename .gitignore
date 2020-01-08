@@ -1,3 +1,9 @@
 .SD_Store
 xcuserdata
 .DS_Store
+
+### Xcode Patch ###
+*.xcodeproj/xcshareddata/
+*.xcworkspace/contents.xcworkspacedata
+/*.gcno
+**/xcshareddata/WorkspaceSettings.xcsettings
