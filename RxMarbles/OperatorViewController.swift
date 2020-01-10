@@ -71,7 +71,9 @@ class OperatorViewController: UIViewController {
             navigationItem.largeTitleDisplayMode = .always;
         }
         
-        view.backgroundColor = Color.white
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        }
         
         view.addSubview(_scrollView)
         _scrollView.addSubview(_sceneView)

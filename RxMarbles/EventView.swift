@@ -28,7 +28,9 @@ class EventView: UIView {
         super.init(frame: CGRect(x: 0, y: 0, width: 42, height: 50))
        
         _imageView.contentMode = .center
-        label.textColor = Color.black
+        if #available(iOS 13.0, *) {
+            label.textColor = .systemGray
+        }
         label.font = Font.ultraLightText(11)
         addSubview(_imageView)
         addSubview(label)
@@ -47,11 +49,19 @@ class EventView: UIView {
             _imageView.frame = CGRect(x: 0, y: 0, width: 16, height: 16)
         case .completed:
             _imageView.image = RxMarbles.Image.complete
-            _imageView.tintColor = Color.black
+            if #available(iOS 13.0, *) {
+                _imageView.tintColor = .label
+            } else {
+               _imageView.tintColor = .black
+            }
             layer.zPosition = -1
         case .error:
             _imageView.image = RxMarbles.Image.error
-            _imageView.tintColor = Color.black
+            if #available(iOS 13.0, *) {
+                _imageView.tintColor = .label
+            } else {
+               _imageView.tintColor = .black
+            }
             layer.zPosition = -1
         }
       

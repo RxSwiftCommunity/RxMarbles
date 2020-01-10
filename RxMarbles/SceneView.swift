@@ -74,6 +74,10 @@ class SceneView: UIView, UITextViewDelegate {
         _rxOperatorLabel.minimumScaleFactor = 0.5
         _rxOperatorLabel.adjustsFontSizeToFitWidth = true
         _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
+        if #available(iOS 13.0, *) {
+            _rxOperatorLabel.textColor = .label
+        } 
+
         
         addSubview(rxOperatorText)
         rxOperatorText.delegate = self
@@ -139,7 +143,7 @@ class SceneView: UIView, UITextViewDelegate {
         trashView.isHidden = false
         trashView.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
         trashView.alpha = 0.05
-        trashView.tintColor = UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
+        trashView.tintColor = Color.trash
         UIView.animate(withDuration: 0.3) { 
             self.rxOperatorText.alpha = 0.04
             self.trashView.alpha = 0.2
