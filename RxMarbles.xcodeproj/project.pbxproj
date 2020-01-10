@@ -590,7 +590,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FD6ZML48V9;
+				DEVELOPMENT_TEAM = 2N24M5H3S7;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";

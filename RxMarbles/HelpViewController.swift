@@ -62,8 +62,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = Color.white
-        
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        }
         _configurePages()
     }
     
