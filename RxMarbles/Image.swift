@@ -44,7 +44,9 @@ struct Image {
     static let ellipse1     = _named("anjlab_ellipse1")
     static let ellipse2     = _named("anjlab_ellipse2")
     
-    static let navBarShare          = _named("navBarShare").withRenderingMode(.alwaysTemplate)
+    static let navBarShare          = _named("navBarShare")
+    static let navBarShareDark          = _named("navBarShareDark")
+
     static let navBarExperiment     = _named("navBarExperiment")
     static let timelineExperiment   = _named("timelineExperiment")
     

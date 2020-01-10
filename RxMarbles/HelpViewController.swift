@@ -468,6 +468,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureExperimentPage() {
         let navBar = RxMarbles.Image.navBarExperiment.imageView()
+
         let timeline = RxMarbles.Image.timelineExperiment.imageView()
 
         let editLabel: UILabel = {
@@ -552,7 +553,17 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureSharePage() {
-        let navBar = RxMarbles.Image.navBarShare.imageView()
+        var navBar = UIImageView()
+        if #available(iOS 13.0, *) {
+            if self.traitCollection.userInterfaceStyle == .dark {
+               navBar = RxMarbles.Image.navBarShareDark.imageView()
+           } else {
+               navBar = RxMarbles.Image.navBarShare.imageView()
+           }
+        }else{
+            navBar = RxMarbles.Image.navBarShare.imageView()
+
+        }
 
         let shareLabel: UILabel = {
             let label = UILabel()
