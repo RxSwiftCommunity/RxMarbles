@@ -80,9 +80,9 @@ class ResultSequenceView: SequenceView {
             sortedEvents.forEach { event in
                 switch event.value {
                 case .next:
-                    let angleIndex = sortedEvents.index(where: { $0 == event })
+                    let angleIndex = sortedEvents.firstIndex(where: { $0 == event })
                     let angle = ang[angleIndex!]
-                    if let index = sourceEvents.index(where: { $0.isNext }) {
+                    if let index = sourceEvents.firstIndex(where: { $0.isNext }) {
                         let eventView = reuseEventView(index: index, recorded: event)
                         eventView.refreshColorAndValue()
                         newSourceEvents.append(eventView)
@@ -93,13 +93,13 @@ class ResultSequenceView: SequenceView {
                         Animation.rotate(eventView, toAngle: angle)
                     }
                 case .completed:
-                    if let index = sourceEvents.index(where: { $0.isCompleted }) {
+                    if let index = sourceEvents.firstIndex(where: { $0.isCompleted }) {
                         newSourceEvents.append(reuseEventView(index: index, recorded: RecordedType(time: event.time, value: .completed)))
                     } else {
                         newSourceEvents.append(newEventView(recorded: RecordedType(time: event.time, value: .completed)))
                     }
                 case .error:
-                    if let index = sourceEvents.index(where: { $0.isError }) {
+                    if let index = sourceEvents.firstIndex(where: { $0.isError }) {
                         newSourceEvents.append(reuseEventView(index: index, recorded: RecordedType(time: event.time, value: .error(RxError.unknown))))
                     } else {
                         newSourceEvents.append(newEventView(recorded: RecordedType(time: event.time, value: .error(RxError.unknown))))

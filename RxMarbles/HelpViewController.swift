@@ -47,7 +47,7 @@ extension MutableCollection where Index == Int {
     }
 }
 
-class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate {
+class HelpViewController: AnimatedPagingScrollViewController {
     
     var helpMode: Bool = true
     
@@ -330,20 +330,18 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _configureExplorePage() {
         let operatorsCount = Operator.all.count
-        
-        let operatorsLabelText = NSMutableAttributedString()
-        operatorsLabelText.append(
-            NSAttributedString(string: "\(operatorsCount)", attributes: [NSAttributedString.Key.font : Font.boldText(14)])
-        )
-        operatorsLabelText.append(
-            NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [NSAttributedString.Key.font : Font.text(14)])
-        )
-        operatorsLabelText.append(
-            NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [NSAttributedString.Key.font : Font.boldText(14)])
-        )
-        let operatorsLabel = UILabel()
-        operatorsLabel.attributedText = operatorsLabelText
-        operatorsLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let operatorsLabel: UILabel = {
+            let label = UILabel()
+            let attributedText = NSMutableAttributedString()
+            attributedText.append(NSAttributedString(string: "\(operatorsCount)", attributes: [.font : Font.boldText(14)]))
+            attributedText.append(NSAttributedString(string: NSLocalizedString("operators_to", comment: ""), attributes: [.font : Font.text(14)]))
+            attributedText.append(NSAttributedString(string: NSLocalizedString("explore", comment: ""), attributes: [.font : Font.boldText(14)]))
+            label.attributedText = attributedText
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
         contentView.addSubview(operatorsLabel)
         let labelBottom = operatorsLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
         let labelHeight = operatorsLabel.heightAnchor.constraint(equalToConstant: 20)
@@ -402,7 +400,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let attributedStrings = _operatorsCloud()
         
         cloudLabels.forEach {
-            let index = cloudLabels.index(of: $0)
+            let index = cloudLabels.firstIndex(of: $0)
             $0.attributedText = attributedStrings[index!]
         }
     }
@@ -425,16 +423,16 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
             let rnd = arc4random() % 4
             let operatorString = _attributedOperatorString(op: op, p: p, rnd: Int(rnd))
             let alphaString = NSMutableAttributedString(attributedString: operatorString)
-            alphaString.addAttributes([NSAttributedString.Key.foregroundColor : UIColor.clear], range: NSMakeRange(0, operatorString.length))
+            alphaString.addAttributes([.foregroundColor : UIColor.clear], range: NSMakeRange(0, operatorString.length))
             switch rnd {
             case 0:
-                strings.forEach { $0.append(strings.index(of: $0) == 0 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 0 ? operatorString : alphaString) }
             case 1:
-                strings.forEach { $0.append(strings.index(of: $0) == 1 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 1 ? operatorString : alphaString) }
             case 2:
-                strings.forEach { $0.append(strings.index(of: $0) == 2 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 2 ? operatorString : alphaString) }
             case 3:
-                strings.forEach { $0.append(strings.index(of: $0) == 3 ? operatorString : alphaString) }
+                strings.forEach { $0.append(strings.firstIndex(of: $0) == 3 ? operatorString : alphaString) }
             default:
                 break
             }
@@ -456,49 +454,51 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _attributedOperatorString(op: Operator, p: NSMutableParagraphStyle, rnd: Int) -> NSMutableAttributedString {
-        
         let shadow = NSShadow()
         shadow.shadowColor = Color.white
-        
         switch rnd {
-        case 0:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoItalic, size: 12),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        case 1:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoRegular, size: 13),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        case 2:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoBold, size: 13),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        case 3:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoBoldItalic, size: 15),
-                NSAttributedString.Key.paragraphStyle: p,
-                NSAttributedString.Key.shadow : shadow
-                ])
-        default:
-            return NSMutableAttributedString(string: op.rawValue, attributes: [
-                NSAttributedString.Key.font: Font.code(.monoItalic, size: 12),
-                NSAttributedString.Key.paragraphStyle: p
-                ])
+        case 0: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoItalic, size: 12), .paragraphStyle: p, .shadow: shadow])
+        case 1: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoRegular, size: 13), .paragraphStyle: p, .shadow: shadow])
+        case 2: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoBold, size: 13), .paragraphStyle: p, .shadow: shadow])
+        case 3: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoBoldItalic, size: 15), .paragraphStyle: p, .shadow: shadow])
+        default: return NSMutableAttributedString(string: op.rawValue, attributes: [.font: Font.code(.monoItalic, size: 12), .paragraphStyle: p])
         }
     }
     
     private func _configureExperimentPage() {
         let navBar = RxMarbles.Image.navBarExperiment.imageView()
         let timeline = RxMarbles.Image.timelineExperiment.imageView()
-        let editLabel = UILabel()
-        let timelineLabel = UILabel()
-        let experimentLabel = UILabel()
+
+        let editLabel: UILabel = {
+            let label = UILabel()
+            let attributedString = NSMutableAttributedString(
+                string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
+                attributes: [.font : Font.text(13)]
+            )
+            attributedString.append(NSAttributedString(string: "edit", attributes: [.font: Font.boldText(13)]))
+            attributedString.append(NSAttributedString(string: " mode", attributes: [.font: Font.text(13)]))
+            label.attributedText = attributedString
+            label.numberOfLines = 2
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let timelineLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = NSLocalizedString("move_events_around", comment: "")
+            label.font = Font.text(13)
+            return label
+        }()
+
+        let experimentLabel: UILabel = {
+            let label = UILabel()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            label.text = NSLocalizedString("edit_learn_experiment", comment: "")
+            label.font = Font.text(14)
+            return label
+        }()
+
         let up   = RxMarbles.Image.upArrow.imageView()
         let down = RxMarbles.Image.downArrow.imageView()
         
@@ -508,16 +508,7 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let navBarTop = navBar.topAnchor.constraint(equalTo: contentView.centerYAnchor, constant: -160)
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 1)
-        
-        let editLabelText = NSMutableAttributedString(
-            string: NSLocalizedString("add_new_change_colors_and_values_in", comment: ""),
-                                                      attributes: [NSAttributedString.Key.font : Font.text(13)])
-        editLabelText.append(NSAttributedString(string: "edit", attributes: [NSAttributedString.Key.font : Font.boldText(13)]))
-        editLabelText.append(NSAttributedString(string: " mode", attributes: [NSAttributedString.Key.font : Font.text(13)]))
-        
-        editLabel.attributedText = editLabelText
-        editLabel.numberOfLines = 2
-        editLabel.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(editLabel)
         let editLabelTop = editLabel.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 40)
         let editLabelCenterX = editLabel.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: -25)
@@ -547,18 +538,12 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let downBottom = down.bottomAnchor.constraint(equalTo: timeline.topAnchor, constant: -10)
         let downCenterX = down.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: 110)
         contentView.addConstraints([downBottom, downCenterX])
-        
-        timelineLabel.translatesAutoresizingMaskIntoConstraints = false
-        timelineLabel.text = NSLocalizedString("move_events_around", comment: "")
-        timelineLabel.font = Font.text(13)
+
         contentView.addSubview(timelineLabel)
         let timelineLabelTop = timelineLabel.topAnchor.constraint(equalTo: timeline.bottomAnchor, constant: 20)
         contentView.addConstraint(timelineLabelTop)
         keepView(timelineLabel, onPage: 1)
-        
-        experimentLabel.translatesAutoresizingMaskIntoConstraints = false
-        experimentLabel.text = NSLocalizedString("edit_learn_experiment", comment: "")
-        experimentLabel.font = Font.text(14)
+
         contentView.addSubview(experimentLabel)
         let experimentLabelBottom = experimentLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
         contentView.addConstraint(experimentLabelBottom)
@@ -567,9 +552,22 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _configureSharePage() {
         let navBar = RxMarbles.Image.navBarShare.imageView()
-        let shareLabel = UILabel()
-        let iconContainer = UIView()
-        let spreadTheWordLabel = UILabel()
+
+        let shareLabel: UILabel = {
+            let label = UILabel()
+            label.text = NSLocalizedString("share_your_diagrams", comment: "")
+            label.font = Font.text(13)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let spreadTheWordLabel: UILabel = {
+            let label = UILabel()
+            label.text = NSLocalizedString("spread_the_world", comment: "")
+            label.font = Font.text(14)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
         
         contentView.addSubview(navBar)
         navBar.translatesAutoresizingMaskIntoConstraints = false
@@ -577,24 +575,21 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         contentView.addConstraint(navBarTop)
         keepView(navBar, onPage: 2)
         
-        shareLabel.text = NSLocalizedString("share_your_diagrams", comment: "")
-        shareLabel.font = Font.text(13)
-        shareLabel.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(shareLabel)
         let shareLabelTop = shareLabel.topAnchor.constraint(equalTo: navBar.bottomAnchor, constant: 55)
         let shareLabelCenterX = shareLabel.centerXAnchor.constraint(equalTo: navBar.centerXAnchor, constant: -10)
         contentView.addConstraints([shareLabelTop, shareLabelCenterX])
         
-        spreadTheWordLabel.text = NSLocalizedString("spread_the_world", comment: "")
-        spreadTheWordLabel.font = Font.text(14)
-        spreadTheWordLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         contentView.addSubview(spreadTheWordLabel)
         let spreadTheWordLabelBottom = spreadTheWordLabel.bottomAnchor.constraint(equalTo: _resultTimeline.topAnchor, constant: -50)
         contentView.addConstraint(spreadTheWordLabelBottom)
         keepView(spreadTheWordLabel, onPage: 2)
-        
-        contentView.addSubview(iconContainer)
+
+        let iconContainer = UIView()
         iconContainer.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(iconContainer)
+
         let iconContainerTop = iconContainer.topAnchor.constraint(equalTo: shareLabel.bottomAnchor, constant: 20)
         let iconContainerCenterX = iconContainer.centerXAnchor.constraint(equalTo: _logoImageView.centerXAnchor)
         
@@ -703,31 +698,104 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let containerWidth = container.widthAnchor.constraint(equalToConstant: 300)
         contentView.addConstraints([containerTop, containerBottom, containerWidth])
         
-        let manyLikeLabel = UILabel()
+		let manyLikeLabel: UILabel = {
+			let label = UILabel()
+			label.text = "Many ❤️👍🍻👋 to"
+			label.font = Font.code(.malayalamSangamMN, size: 18)
+			label.translatesAutoresizingMaskIntoConstraints = false
+			return label
+		}()
+
+		let erikMeijerTwitter: UIImageView = {
+			let imageView = RxMarbles.Image.twitter.imageView()
+			imageView.alpha = 0.3
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+			_scaleView(view: imageView)
+			return imageView
+		}()
+
+		let erikMeijerTextView: UITextView = {
+			let textView = UITextView()
+			textView.attributedText = _erikMeijerText()
+			textView.delegate = self
+			textView.isEditable = false
+			textView.isScrollEnabled = false
+			textView.dataDetectorTypes = UIDataDetectorTypes.link
+			textView.textAlignment = .center
+			textView.translatesAutoresizingMaskIntoConstraints = false
+			return textView
+		}()
+
+		let krunoslavZaherTwitter: UIImageView = {
+			let imageView = RxMarbles.Image.twitter.imageView()
+			imageView.alpha = 0.3
+			imageView.translatesAutoresizingMaskIntoConstraints = false
+			_scaleView(view: imageView)
+			return imageView
+		}()
+
+		let krunoslavZaherTextView: UITextView = {
+			let textView = UITextView()
+			textView.attributedText = _krunoslavZaherText()
+			textView.delegate = self
+			textView.isEditable = false
+			textView.isScrollEnabled = false
+			textView.dataDetectorTypes = UIDataDetectorTypes.link
+			textView.textAlignment = .center
+			textView.translatesAutoresizingMaskIntoConstraints = false
+			return textView
+		}()
+
+		let rxSwiftLabel: UILabel = {
+			let label = UILabel()
+			label.attributedText = {
+				let attributedString = NSMutableAttributedString(attributedString: NSAttributedString(string: "⭐ ", attributes: [.font: Font.text(14)]))
+				attributedString.append(NSAttributedString(string: "RxSwift", attributes: [.font: Font.boldText(14)]))
+				attributedString.append(NSAttributedString(string: " on", attributes: [.font: Font.text(14)]))
+				return attributedString
+			}()
+			label.translatesAutoresizingMaskIntoConstraints = false
+			label.isUserInteractionEnabled = true
+			return label
+		}()
+
+		let githubButton: UIButton = {
+			let button = UIButton(type: .custom)
+			button.setImage(RxMarbles.Image.github, for: .normal)
+			button.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwift) }.disposed(by: _disposeBag)
+			button.translatesAutoresizingMaskIntoConstraints = false
+			return button
+		}()
+
+		let andTwitterLabel: UILabel = {
+			let label = UILabel()
+			label.text = "and"
+			label.font = Font.text(14)
+			label.translatesAutoresizingMaskIntoConstraints = false
+			return label
+		}()
+
+		let rxSwiftTwitterButton: UIButton = {
+			let button = UIButton()
+			button.setImage(RxMarbles.Image.twitter, for: .normal)
+			button.alpha = 0.3
+			button.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwiftTwitter) }.disposed(by: _disposeBag)
+			button.translatesAutoresizingMaskIntoConstraints = false
+			return button
+		}()
+
+		let alasLabel: UILabel = {
+			let label = UILabel()
+			label.text = "¯\\_(ツ)_/¯"
+			label.translatesAutoresizingMaskIntoConstraints = false
+			return label
+		}()
         
-        let erikMeijerTwitter = RxMarbles.Image.twitter.imageView()
-        let erikMeijerTextView = UITextView()
-        
-        let krunoslavZaherTwitter = RxMarbles.Image.twitter.imageView()
-        let krunoslavZaherTextView = UITextView()
-        
-        let rxSwiftLabel = UILabel()
-        let githubButton = UIButton(type: .custom)
-        let andTwitterLabel = UILabel()
-        let rxSwiftTwitterButton = UIButton()
-        let alasLabel = UILabel()
-        
-        manyLikeLabel.text = "Many ❤️👍🍻👋 to"
-        manyLikeLabel.font = Font.code(.malayalamSangamMN, size: 18)
-        manyLikeLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(manyLikeLabel)
         let manyLikeLabelTop = manyLikeLabel.topAnchor.constraint(equalTo: container.topAnchor)
         let manyLikeLabelCenterX = manyLikeLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor)
         container.addConstraints([manyLikeLabelTop, manyLikeLabelCenterX])
         
-        erikMeijerTwitter.alpha = 0.3
-        erikMeijerTwitter.translatesAutoresizingMaskIntoConstraints = false
-        _scaleView(view: erikMeijerTwitter)
         container.addSubview(erikMeijerTwitter)
         let erikMeijerTwitterTop = erikMeijerTwitter.topAnchor.constraint(lessThanOrEqualTo: manyLikeLabel.bottomAnchor, constant: 50)
         let erikMeijerTwitterGreaterTop = erikMeijerTwitter.topAnchor.constraint(greaterThanOrEqualTo: manyLikeLabel.bottomAnchor, constant: 10)
@@ -735,21 +803,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let erikMeijerTwitterCenterX = erikMeijerTwitter.centerXAnchor.constraint(equalTo: container.centerXAnchor, constant: -10)
         container.addConstraints([erikMeijerTwitterTop, erikMeijerTwitterGreaterTop, erikMeijerTwitterHeight, erikMeijerTwitterCenterX])
         
-        erikMeijerTextView.attributedText = _erikMeijerText()
-        erikMeijerTextView.delegate = self
-        erikMeijerTextView.isEditable = false
-        erikMeijerTextView.isScrollEnabled = false
-        erikMeijerTextView.dataDetectorTypes = UIDataDetectorTypes.link
-        erikMeijerTextView.textAlignment = .center
-        erikMeijerTextView.translatesAutoresizingMaskIntoConstraints = false
         container.insertSubview(erikMeijerTextView, belowSubview: erikMeijerTwitter)
         let erikMeijerTextViewTop = erikMeijerTextView.topAnchor.constraint(equalTo: erikMeijerTwitter.bottomAnchor, constant: -10)
         let erikMeijerTextViewCenterX = erikMeijerTextView.centerXAnchor.constraint(equalTo: container.centerXAnchor)
         container.addConstraints([erikMeijerTextViewTop, erikMeijerTextViewCenterX])
         
-        krunoslavZaherTwitter.alpha = 0.3
-        krunoslavZaherTwitter.translatesAutoresizingMaskIntoConstraints = false
-        _scaleView(view: krunoslavZaherTwitter)
         container.addSubview(krunoslavZaherTwitter)
         let krunoslavZaherTwitterTop = krunoslavZaherTwitter.topAnchor.constraint(lessThanOrEqualTo: erikMeijerTextView.bottomAnchor, constant: 30)
         let krunoslavZaherTwitterGreaterTop = krunoslavZaherTwitter.topAnchor.constraint(greaterThanOrEqualTo: erikMeijerTextView.bottomAnchor)
@@ -757,68 +815,32 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         let krunoslavZaherTwitterCenterX = krunoslavZaherTwitter.centerXAnchor.constraint(lessThanOrEqualTo: container.centerXAnchor, constant: 15)
         container.addConstraints([krunoslavZaherTwitterTop, krunoslavZaherTwitterGreaterTop, krunoslavZaherTwitterHeight, krunoslavZaherTwitterCenterX])
         
-        krunoslavZaherTextView.attributedText = _krunoslavZaherText()
-        krunoslavZaherTextView.delegate = self
-        krunoslavZaherTextView.isEditable = false
-        krunoslavZaherTextView.isScrollEnabled = false
-        krunoslavZaherTextView.dataDetectorTypes = UIDataDetectorTypes.link
-        krunoslavZaherTextView.textAlignment = .center
-        krunoslavZaherTextView.translatesAutoresizingMaskIntoConstraints = false
         container.insertSubview(krunoslavZaherTextView, belowSubview: krunoslavZaherTwitter)
         let krunoslavZaherTextViewTop = krunoslavZaherTextView.topAnchor.constraint(equalTo: krunoslavZaherTwitter.bottomAnchor, constant: -10)
         let krunoslavZaherTextViewCenterX = krunoslavZaherTextView.centerXAnchor.constraint(lessThanOrEqualTo: container.centerXAnchor)
         container.addConstraints([krunoslavZaherTextViewTop, krunoslavZaherTextViewCenterX])
         
-        alasLabel.text = "¯\\_(ツ)_/¯"
-        alasLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(alasLabel)
         let alasLabelBottom = alasLabel.bottomAnchor.constraint(equalTo: container.bottomAnchor)
         let alasLabelCenterX = alasLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor)
         container.addConstraints([alasLabelBottom, alasLabelCenterX])
         
-        let rxSwiftLabelText = NSMutableAttributedString(attributedString:
-            NSAttributedString(string: "⭐ ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        )
-        rxSwiftLabelText.append(
-            NSAttributedString(
-                string: "RxSwift",
-                attributes: [NSAttributedString.Key.font : Font.boldText(14)]
-            )
-        )
-        rxSwiftLabelText.append(
-            NSAttributedString(string: " on", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        )
-        rxSwiftLabel.attributedText = rxSwiftLabelText
-        rxSwiftLabel.translatesAutoresizingMaskIntoConstraints = false
-        rxSwiftLabel.isUserInteractionEnabled = true
         container.addSubview(rxSwiftLabel)
         let rxSwiftLabelTop = rxSwiftLabel.topAnchor.constraint(lessThanOrEqualTo: krunoslavZaherTextView.bottomAnchor, constant: 40)
         let rxSwiftLabelBottom = rxSwiftLabel.bottomAnchor.constraint(equalTo: alasLabel.topAnchor, constant: -15)
         let rxSwiftLabelCenterX = rxSwiftLabel.centerXAnchor.constraint(equalTo: container.centerXAnchor, constant: -60)
         container.addConstraints([rxSwiftLabelTop, rxSwiftLabelCenterX, rxSwiftLabelBottom])
         
-        githubButton.setImage(RxMarbles.Image.github, for: .normal)
-        githubButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwift) }
-            .disposed(by: _disposeBag)
-        githubButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(githubButton)
         let githubButtonLeading = githubButton.leadingAnchor.constraint(equalTo: rxSwiftLabel.trailingAnchor, constant: 10)
         let githubButtonCenterY = githubButton.centerYAnchor.constraint(equalTo: rxSwiftLabel.centerYAnchor)
         container.addConstraints([githubButtonLeading, githubButtonCenterY])
         
-        andTwitterLabel.text = "and"
-        andTwitterLabel.font = Font.text(14)
-        andTwitterLabel.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(andTwitterLabel)
         let andTwitterLabelCenterY = andTwitterLabel.centerYAnchor.constraint(equalTo: rxSwiftLabel.centerYAnchor)
         let andTwitterLabelLeading = andTwitterLabel.leadingAnchor.constraint(equalTo: githubButton.trailingAnchor, constant: 10)
         container.addConstraints([andTwitterLabelCenterY, andTwitterLabelLeading])
         
-        rxSwiftTwitterButton.setImage(RxMarbles.Image.twitter, for: .normal)
-        rxSwiftTwitterButton.alpha = 0.3
-        rxSwiftTwitterButton.rx.tap.subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.rxSwiftTwitter) }
-            .disposed(by: _disposeBag)
-        rxSwiftTwitterButton.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(rxSwiftTwitterButton)
         let rxSwiftTwitterCenterY = rxSwiftTwitterButton.centerYAnchor.constraint(equalTo: andTwitterLabel.centerYAnchor)
         let rxSwiftTwitterLeading = rxSwiftTwitterButton.leadingAnchor.constraint(equalTo: andTwitterLabel.trailingAnchor, constant: 10)
@@ -826,62 +848,63 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     }
     
     private func _erikMeijerText() -> NSMutableAttributedString {
-        let text = NSMutableAttributedString(string: "Erik ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        let twitter = NSMutableAttributedString(string: "@headinthebox", attributes:
-            [
-                NSAttributedString.Key.link             : Link.erikMeijerTwitter,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        let text = NSMutableAttributedString(string: "Erik ", attributes: [.font: Font.text(14)])
+        let twitter = NSMutableAttributedString(string: "@headinthebox", attributes: [.link: Link.erikMeijerTwitter, .font: Font.boldText(14)])
         text.append(twitter)
-        text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes:
-            [
-                NSAttributedString.Key.link             : Link.reactiveX,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        text.append(NSAttributedString(string: " Meijer\nfor his work on ", attributes: [.font: Font.text(14)]))
+        let reactivex = NSMutableAttributedString(string: "Reactive Extensions", attributes: [.link: Link.reactiveX, .font: Font.boldText(14)])
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        text.addAttributes([NSAttributedString.Key.paragraphStyle : paragraph], range: NSMakeRange(0, text.length))
+        text.addAttributes([.paragraphStyle: paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
     private func _krunoslavZaherText() -> NSMutableAttributedString {
-        let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [NSAttributedString.Key.font : Font.text(14)])
-        let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes:
-            [
-                NSAttributedString.Key.link             : Link.kZaherTwitter,
-                NSAttributedString.Key.foregroundColor  : UIColor.black,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        let text = NSMutableAttributedString(string: "Krunoslav ", attributes: [.font: Font.text(14)])
+        let twitter = NSMutableAttributedString(string: "@KrunoslavZaher", attributes: [.link: Link.kZaherTwitter, .foregroundColor: UIColor.black, .font: Font.boldText(14)])
         text.append(twitter)
-        text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [NSAttributedString.Key.font : Font.text(14)]))
-        let reactivex = NSMutableAttributedString(string: "RxSwift", attributes:
-            [
-                NSAttributedString.Key.link             : Link.rxSwift,
-                NSAttributedString.Key.foregroundColor  : UIColor.black,
-                NSAttributedString.Key.font             : Font.boldText(14)
-            ]
-        )
+        text.append(NSAttributedString(string: " Zaher\nfor ", attributes: [.font: Font.text(14)]))
+        let reactivex = NSMutableAttributedString(string: "RxSwift", attributes: [.link: Link.rxSwift, .foregroundColor: UIColor.black, .font: Font.boldText(14)])
         text.append(reactivex)
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
-        text.addAttributes([NSAttributedString.Key.paragraphStyle : paragraph], range: NSMakeRange(0, text.length))
+        text.addAttributes([.paragraphStyle: paragraph], range: NSMakeRange(0, text.length))
         return text
     }
     
     private func _configureAboutPage() {
-        let anjLabButton       = UIButton(type: .custom)
-        let rxMarblesLabel     = UILabel()
-        let versionLabel       = UILabel()
-        let developedByLabel   = UILabel()
-        
-        rxMarblesLabel.text = "RxMarbles"
-        rxMarblesLabel.font = Font.text(25)
-        rxMarblesLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let anjLabButton: UIButton = {
+            let button = UIButton(type: .custom)
+            button.setImage(RxMarbles.Image.anjlab, for: .normal)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            return button
+        }()
+
+        let rxMarblesLabel: UILabel = {
+            let label = UILabel()
+            label.text = "RxMarbles"
+            label.font = Font.text(25)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let versionLabel: UILabel = {
+            let label = UILabel()
+            label.text = _version()
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
+        let developedByLabel: UILabel = {
+            let label = UILabel()
+            label.text = "developed by"
+            label.font = Font.text(12)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+
         contentView.addSubview(rxMarblesLabel)
         let rxMarblesLabelCenterY = rxMarblesLabel.centerYAnchor.constraint(equalTo: _logoImageView.centerYAnchor, constant: -12)
         let rxMarblesLabelLeading = rxMarblesLabel.leadingAnchor.constraint(equalTo: _resultTimeline.centerXAnchor, constant: pageWidth)
@@ -892,29 +915,21 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         rxMarblesLabelLeadingAnimation[4]   = -20
         rxMarblesLabelLeadingAnimation[5]   = pageWidth
         animator.addAnimation(rxMarblesLabelLeadingAnimation)
-        
-        versionLabel.text = _version()
-        versionLabel.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(versionLabel)
         let versionLabelTop = versionLabel.topAnchor.constraint(equalTo: rxMarblesLabel.bottomAnchor)
         let versionLabelLeading = versionLabel.leadingAnchor.constraint(equalTo: rxMarblesLabel.leadingAnchor)
         contentView.addConstraints([versionLabelTop, versionLabelLeading])
-        
-        developedByLabel.text = "developed by"
-        developedByLabel.font = Font.text(12)
-        developedByLabel.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(developedByLabel)
         let developedByLabelTop = developedByLabel.topAnchor.constraint(lessThanOrEqualTo: versionLabel.bottomAnchor, constant: 68)
         contentView.addConstraint(developedByLabelTop)
         keepView(developedByLabel, onPage: 4)
-        
-        anjLabButton.setImage(RxMarbles.Image.anjlab, for: .normal)
-        
+
         anjLabButton.rx.tap
             .subscribe { [unowned self] _ in self.openURLinSafariViewController(url: Link.anjlab) }
             .disposed(by: _disposeBag)
-        
-        anjLabButton.translatesAutoresizingMaskIntoConstraints = false
+
         contentView.addSubview(anjLabButton)
         let anjLabButtonTop = anjLabButton.topAnchor.constraint(lessThanOrEqualTo: developedByLabel.bottomAnchor, constant: 0)
         let anjLabButtonBottom = anjLabButton.bottomAnchor.constraint(lessThanOrEqualTo: _resultTimeline.topAnchor, constant: -30)
@@ -996,12 +1011,6 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
         return .portrait
     }
     
-    //    MARK: UITextViewDelegate
-    
-    func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
-        return true
-    }
-    
     //    MARK: Helpers
     
     private func _addMotionEffectToView(view: UIView, relativity: (vertical: (min: Int, max: Int), horizontal: (min: Int, max: Int))) {
@@ -1042,5 +1051,11 @@ class HelpViewController: AnimatedPagingScrollViewController, UITextViewDelegate
     
     private func _scaleView(view: UIView) {
         view.transform = CGAffineTransform(scaleX: 0.7, y: 0.7)
+    }
+}
+
+extension HelpViewController: UITextViewDelegate {
+	func textView(_ textView: UITextView, shouldInteractWith URL: URL, in characterRange: NSRange) -> Bool {
+        return true
     }
 }

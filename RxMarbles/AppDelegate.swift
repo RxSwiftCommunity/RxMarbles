@@ -14,7 +14,7 @@ import Crashlytics
 import RxSwift
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var introWindow: UIWindow?
@@ -84,50 +84,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
         }) { _ in self.window?.makeKeyAndVisible() }
     }
     
-    // MARK: UISplitViewControllerDelegate
-    
-    func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
-        if splitViewController.isCollapsed {
-            if let masterNav = splitViewController.viewControllers.first as? UINavigationController {
-                masterNav.pushViewController(vc, animated: true)
-                return true
-            }
-        }
-        
-        if let detailNav = splitViewController.viewControllers.last as? UINavigationController {
-            detailNav.setViewControllers([vc], animated: false)
-            return true
-        }
-        
-        return false
-    }
-    
-    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
-        if let detailNav = secondaryViewController as? UINavigationController,
-            let masterNav = primaryViewController as? UINavigationController {
-            let detailControllers = detailNav.children
-            masterNav.viewControllers = masterNav.children + detailControllers
-            return true
-        }
-        return false
-    }
-    
-    func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
-        
-        let navController: UINavigationController
-        if let detail = primaryViewController.separateSecondaryViewController(for: splitViewController) {
-            navController = UINavigationController(rootViewController: detail)
-        } else {
-            let op = _operatorsTableViewController.selectedOperator
-            navController = UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
-        }
-        if #available(iOS 11.0, *) {
-            navController.navigationBar.prefersLargeTitles = true
-        }
-
-        return navController
-    }
-    
     // MARK: Shortcuts
     
     func application(_ application: UIApplication, performActionFor shortcutItem: UIApplicationShortcutItem, completionHandler: @escaping (Bool) -> Void) {
@@ -176,3 +132,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UISplitViewControllerDele
     
 }
 
+extension AppDelegate: UISplitViewControllerDelegate {
+	func splitViewController(_ splitViewController: UISplitViewController, showDetail vc: UIViewController, sender: Any?) -> Bool {
+        if let masterNav = splitViewController.viewControllers.first as? UINavigationController, splitViewController.isCollapsed {
+            masterNav.pushViewController(vc, animated: true)
+			return true
+        }
+        if let detailNav = splitViewController.viewControllers.last as? UINavigationController {
+            detailNav.setViewControllers([vc], animated: false)
+            return true
+        }
+        return false
+    }
+
+    func splitViewController(splitViewController: UISplitViewController, collapseSecondaryViewController secondaryViewController: UIViewController, ontoPrimaryViewController primaryViewController: UIViewController) -> Bool {
+		guard let detailNav = secondaryViewController as? UINavigationController, let masterNav = primaryViewController as? UINavigationController else { return false }
+		let detailControllers = detailNav.children
+		masterNav.viewControllers = masterNav.children + detailControllers
+		return true
+    }
+
+    func splitViewController(splitViewController: UISplitViewController, separateSecondaryViewControllerFromPrimaryViewController primaryViewController: UIViewController) -> UIViewController? {
+        let navController: UINavigationController
+        if let detail = primaryViewController.separateSecondaryViewController(for: splitViewController) {
+            navController = UINavigationController(rootViewController: detail)
+        } else {
+            let op = _operatorsTableViewController.selectedOperator
+            navController = UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
+        }
+        if #available(iOS 11.0, *) {
+            navController.navigationBar.prefersLargeTitles = true
+        }
+        return navController
+    }
+}

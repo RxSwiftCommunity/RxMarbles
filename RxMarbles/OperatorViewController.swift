@@ -12,7 +12,7 @@ import RxCocoa
 import SafariServices
 import Device
 
-class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
+class OperatorViewController: UIViewController {
 
     private var _disposeBag = DisposeBag()
     
@@ -159,25 +159,18 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         return snapshot!
     }
     
-    @objc private dynamic func share(_ sender: AnyObject?) {
-       
-        let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
-        
-        activity.excludedActivityTypes = [
-            UIActivity.ActivityType.assignToContact,
-            .print,
-        ]
-        if let delegate = UIApplication.shared.delegate as? AppDelegate,
-            let rootViewController = delegate.window?.rootViewController {
-                if Device.type() == .iPad || Device.type() == .simulator {
-                    activity.popoverPresentationController?.sourceView = view
-                    if let shareButtonItem = sender {
-                        activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
-                    }
-                }
-                rootViewController.present(activity, animated: true, completion: nil)
-            }
-    }
+	@objc private dynamic func share(_ sender: AnyObject?) {
+		let activity = UIActivityViewController(activityItems: [_makeSnapshot()], applicationActivities: nil)
+		activity.excludedActivityTypes = [UIActivity.ActivityType.assignToContact, .print]
+		guard let rootViewController = (UIApplication.shared.delegate as? AppDelegate)?.window?.rootViewController else { return }
+		if Device.type() == .iPad || Device.type() == .simulator {
+			activity.popoverPresentationController?.sourceView = view
+			if let shareButtonItem = sender {
+				activity.popoverPresentationController?.barButtonItem = shareButtonItem as? UIBarButtonItem
+			}
+		}
+		rootViewController.present(activity, animated: true, completion: nil)
+	}
     
 //    MARK: Alert controllers
     
@@ -212,7 +205,7 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         elementSelector.addAction(nextAction)
         let sourceEvents: [EventView] = sequence.sourceEvents
-        if sourceEvents.index(where: { $0.isCompleted }) == nil {
+        if !sourceEvents.contains(where: { $0.isCompleted }) {
             elementSelector.addAction(completedAction)
         }
         elementSelector.addAction(errorAction)
@@ -275,13 +268,13 @@ class OperatorViewController: UIViewController, UISplitViewControllerDelegate {
         
         zip(colorsSegment.subviews, colors).forEach { v, color in v.backgroundColor = color }
         
-        colorsSegment.selectedSegmentIndex = colors.index(of: currentColor!)!
+        colorsSegment.selectedSegmentIndex = colors.firstIndex(of: currentColor!)!
         return colorsSegment
     }
     
     private func _saveAction(_ newEventView: EventView, oldEventView: EventView) -> UIAlertAction {
         return UIAlertAction(title: "Save", style: .default) { _ in
-            guard let index = oldEventView.sequenceView?.sourceEvents.index(of: oldEventView)
+            guard let index = oldEventView.sequenceView?.sourceEvents.firstIndex(of: oldEventView)
             else { return }
             
             oldEventView.sequenceView?.sourceEvents.remove(at: index)
