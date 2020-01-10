@@ -496,9 +496,7 @@ extension Operator {
         //            }
         case .ignoreElements:
             return aO!.ignoreElements().asObservable()
-                .flatMapLatest { _ in
-                    return Observable.never()
-            }
+                .flatMapLatest { _ in Observable.never() }
         case .interval:
             return Observable<Int64>.interval(100, scheduler: scheduler).map { t in ColoredType(value: String(t), color: Color.nextRandom, shape: .circle) }
         case .just:

@@ -9,8 +9,6 @@
 
 import UIKit
 import CoreSpotlight
-import Fabric
-import Crashlytics
 import RxSwift
 
 @UIApplicationMain
@@ -25,8 +23,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        Fabric.with([Crashlytics.self])
-        
         window = UIWindow()
         
         _splitViewController.delegate = self
@@ -125,7 +121,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     // MARK: Commands
     override var keyCommands: [UIKeyCommand]? {
+        #if targetEnvironment(macCatalyst)
+        let cmdF = UIKeyCommand(input: "f", modifierFlags: [.command], action: #selector(AppDelegate.focusSearch))
+        #else
         let cmdF = UIKeyCommand(input: "f", modifierFlags: [.command], action: #selector(AppDelegate.focusSearch), discoverabilityTitle: "Search")
+        #endif
         return [cmdF]
     }
     

@@ -1,15 +1,12 @@
-# Uncomment this line to define a global platform for your project
-# platform :ios, '8.0'
-# Uncomment this line if you're using Swift
+platform :ios, '9.2'
 use_frameworks!
+inhibit_all_warnings!
 
 target 'RxMarbles' do
 
 pod 'RxSwift',    '~> 4.0'
 pod 'RxCocoa',    '~> 4.0'
 pod 'Device'
-pod 'Fabric'
-pod 'Crashlytics'
 pod 'RazzleDazzle', :git => 'https://github.com/carlosypunto/RazzleDazzle.git', :tag => '0.2.0'
 
 end

@@ -83,6 +83,7 @@
 		654CF3E42222BC2300E68D10 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		654CF3E62222BC2C00E68D10 /* ru */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ru; path = ru.lproj/Localizable.strings; sourceTree = "<group>"; };
 		6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.debug.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.debug.xcconfig"; sourceTree = "<group>"; };
+		7895DE5823C8624100983F2C /* RxMarbles.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = RxMarbles.entitlements; sourceTree = "<group>"; };
 		A3B1F0341FDF47B0002F4CAC /* Bag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bag.swift; sourceTree = "<group>"; };
 		CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RxMarbles.release.xcconfig"; path = "Pods/Target Support Files/Pods-RxMarbles/Pods-RxMarbles.release.xcconfig"; sourceTree = "<group>"; };
 		D25E7A4F1C41BD4800B08F70 /* Operator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Operator.swift; sourceTree = "<group>"; };
@@ -154,6 +155,7 @@
 		0AC265911C3D2C24009E28FD /* RxMarbles */ = {
 			isa = PBXGroup;
 			children = (
+				7895DE5823C8624100983F2C /* RxMarbles.entitlements */,
 				D2F561A91C52B0360041C9A3 /* Model */,
 				2DA5B828238977F700275B96 /* ViewModels */,
 				0AC265FA1C3E96C2009E28FD /* Lib */,
@@ -269,7 +271,6 @@
 				0AC2658B1C3D2C24009E28FD /* Sources */,
 				0AC2658C1C3D2C24009E28FD /* Frameworks */,
 				0AC2658D1C3D2C24009E28FD /* Resources */,
-				0A9D41121C5F31A700ECADF1 /* Run Fabric */,
 				9C2518058971B20966D61966 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
@@ -334,20 +335,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		0A9D41121C5F31A700ECADF1 /* Run Fabric */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "Run Fabric";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\" b824a78adf5fc476fa301f0ae83ab49db162c671 88e1da6edaebfbae81b510e11bfef114ee0abf2e1d677c9305dc4027af2ad278";
-		};
 		45FD365BAAC66359A170F6FB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -564,11 +551,13 @@
 			baseConfigurationReference = 6986C35E08407E6F25C12994 /* Pods-RxMarbles.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = RxMarbles/RxMarbles.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FD6ZML48V9;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = 7374UMDQL2;
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -576,6 +565,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -586,10 +576,13 @@
 			baseConfigurationReference = CAE724EF79E7DD1CA47C8ADE /* Pods-RxMarbles.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = RxMarbles/RxMarbles.entitlements;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 30;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = FD6ZML48V9;
+				DERIVE_MACCATALYST_PRODUCT_BUNDLE_IDENTIFIER = YES;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_BITCODE = YES;
 				INFOPLIST_FILE = RxMarbles/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -597,6 +590,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.anjlab.RxMarbles;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
