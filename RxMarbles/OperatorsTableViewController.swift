@@ -43,16 +43,10 @@ class OperatorsTableViewController: UITableViewController {
         )
         
         definesPresentationContext = true
-        
-        if #available(iOS 11, *) {
-            navigationItem.largeTitleDisplayMode = .always
-            navigationItem.searchController = searchController
-            tableView.tableHeaderView = UIView()
-        } else {
-            searchController.hidesNavigationBarDuringPresentation = false
-            searchController.searchBar.backgroundColor = .white
-            tableView.tableHeaderView = searchController.searchBar
-        }
+
+        navigationItem.largeTitleDisplayMode = .always
+        navigationItem.searchController = searchController
+        tableView.tableHeaderView = UIView()
         
         tableView.backgroundColor = Color.bgPrimary
         tableView.tableFooterView = UIView()

@@ -34,11 +34,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let masterNav = UINavigationController(rootViewController: operatorsTableViewController)
         let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: operatorsTableViewController.selectedOperator))
-  
-        if #available(iOS 11, *) {
-            masterNav.navigationBar.prefersLargeTitles = true
-            
-        }
+
+        masterNav.navigationBar.prefersLargeTitles = true
         
         splitViewController.viewControllers = [masterNav, detailNav]
         
@@ -161,9 +158,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
             let op = operatorsTableViewController.selectedOperator
             navController = UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
         }
-        if #available(iOS 11.0, *) {
-            navController.navigationBar.prefersLargeTitles = true
-        }
+        navController.navigationBar.prefersLargeTitles = true
         return navController
     }
 }

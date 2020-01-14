@@ -66,10 +66,8 @@ class OperatorViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if #available(iOS 11, *) {
-            navigationItem.largeTitleDisplayMode = .always;
-        }
+
+        navigationItem.largeTitleDisplayMode = .always
 
         view.backgroundColor = Color.bgPrimary
         
