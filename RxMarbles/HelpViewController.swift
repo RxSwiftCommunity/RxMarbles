@@ -553,17 +553,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureSharePage() {
-        var navBar = UIImageView()
-        if #available(iOS 13.0, *) {
-            if self.traitCollection.userInterfaceStyle == .dark {
-               navBar = RxMarbles.Image.navBarShareDark.imageView()
-           } else {
-               navBar = RxMarbles.Image.navBarShare.imageView()
-           }
-        }else{
-            navBar = RxMarbles.Image.navBarShare.imageView()
-
-        }
+        var navBar = RxMarbles.Image.navBarShare.imageView()
+        
 
         let shareLabel: UILabel = {
             let label = UILabel()
