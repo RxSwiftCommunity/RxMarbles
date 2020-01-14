@@ -61,10 +61,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if #available(iOS 13.0, *) {
-            view.backgroundColor = .systemBackground
-        }
+        view.backgroundColor = Color.bgPrimary
         _configurePages()
     }
     
@@ -725,6 +722,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			textView.isScrollEnabled = false
 			textView.dataDetectorTypes = UIDataDetectorTypes.link
 			textView.textAlignment = .center
+            textView.backgroundColor = Color.bgPrimary
 			textView.translatesAutoresizingMaskIntoConstraints = false
 			return textView
 		}()
@@ -745,6 +743,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
 			textView.isScrollEnabled = false
 			textView.dataDetectorTypes = UIDataDetectorTypes.link
 			textView.textAlignment = .center
+            textView.backgroundColor = Color.bgPrimary
 			textView.translatesAutoresizingMaskIntoConstraints = false
 			return textView
 		}()
@@ -860,6 +859,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
         text.addAttributes([.paragraphStyle: paragraph], range: NSMakeRange(0, text.length))
+        text.addAttribute(.foregroundColor, value: Color.label, range: NSMakeRange(0, text.length))
         return text
     }
     
@@ -873,6 +873,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
         let paragraph = NSMutableParagraphStyle()
         paragraph.lineSpacing = 8
         text.addAttributes([.paragraphStyle: paragraph], range: NSMakeRange(0, text.length))
+        text.addAttribute(.foregroundColor, value: Color.label, range: NSMakeRange(0, text.length))
         return text
     }
     

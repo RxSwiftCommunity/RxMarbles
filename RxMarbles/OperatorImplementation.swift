@@ -676,9 +676,7 @@ extension Operator {
         res.append(NSAttributedString(string: " "))
         res.append(link)
         res.addAttribute(.font, value: Font.code(.monoRegular, size: 16), range: NSMakeRange(0, res.length))
-        if #available(iOS 13.0, *) {
-            res.addAttribute(NSAttributedString.Key.foregroundColor, value: UIColor.label, range: NSMakeRange(0, res.length))
-        }
+        res.addAttribute(.foregroundColor, value: Color.label, range: NSMakeRange(0, res.length))
         return res
     }
 }
