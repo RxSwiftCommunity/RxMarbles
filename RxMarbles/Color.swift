@@ -10,18 +10,33 @@ import Foundation
 import UIKit
 
 struct Color {
-    static let nextLightBlue    = _hex(0x54C7FC)
-    static let nextDarkYellow   = _hex(0xFFCD00)
-    static let nextGreen        = _hex(0x44DB5E)
-    static let nextOrange       = _hex(0xFF9600)
-    static let nextBlue         = _hex(0x0076FF)
-    static let nextViolet       = _hex(0xBD10E0)
-    static let nextLighterBlue  = _hex(0x50E3C2)
-    static let nextLightGreen   = _hex(0xB8E986)
-    static let nextLightGray    = UIColor.lightGray
-    
-    static let black            = _hex(0x000000)
-    static let white            = _hex(0xFFFFFF)
+
+    //Basic colors
+    static let black            = hex(0x000000)
+    static let white            = hex(0xFFFFFF)
+    static let green            = hex(0x007A01)
+    static let darkJungleGreen  = hex(0x1E1E1E)
+
+    //Theme colors
+    static let bgPrimary        = systemColor(lightModeColor: white, darkModeColor: darkJungleGreen)
+    static let label            = systemColor(lightModeColor: black, darkModeColor: white)
+    static let nextLightBlue    = systemColor(lightModeColor: hex(0x54C7FC), darkModeColor: hex(0x54C7FC))
+    static let nextDarkYellow   = systemColor(lightModeColor: hex(0xFFCD00), darkModeColor: hex(0xFFCD00))
+    static let nextGreen        = systemColor(lightModeColor: hex(0x44DB5E), darkModeColor: hex(0x44DB5E))
+    static let nextOrange       = systemColor(lightModeColor: hex(0xFF9600), darkModeColor: hex(0xFF9600))
+    static let nextBlue         = systemColor(lightModeColor: hex(0x0076FF), darkModeColor: hex(0x0076FF))
+    static let nextViolet       = systemColor(lightModeColor: hex(0xBD10E0), darkModeColor: hex(0xBD10E0))
+    static let nextLighterBlue  = systemColor(lightModeColor: hex(0x50E3C2), darkModeColor: hex(0x50E3C2))
+    static let nextLightGreen   = systemColor(lightModeColor: hex(0xB8E986), darkModeColor: hex(0xB8E986))
+    static let nextLightGray    = systemColor(lightModeColor: UIColor.lightGray, darkModeColor: UIColor.lightGray)
+
+    static let codeDefault = systemColor(lightModeColor: black, darkModeColor: black)
+    static let codeNumber  = systemColor(lightModeColor: hex(0x1C00CF), darkModeColor: hex(0x1C00CF))
+    static let codeMethod  = systemColor(lightModeColor: hex(0x26474B), darkModeColor: hex(0x26474B))
+    static let codeKeyword = systemColor(lightModeColor: hex(0xAA0D91), darkModeColor: hex(0xAA0D91))
+    static let codeType    = systemColor(lightModeColor: hex(0x3F6E74), darkModeColor: hex(0x3F6E74))
+
+    static let trash = systemColor(lightModeColor: green, darkModeColor: white)
    
     static var nextAll: [UIColor] {
         return [
@@ -36,38 +51,31 @@ struct Color {
         allColors.removeLast()
         return allColors[Int(arc4random() % UInt32(allColors.count))]
     }
-    
-    
-    static let codeDefault = black
-    static let codeNumber  = _hex(0x1C00CF)
-    static let codeMethod  = _hex(0x26474B)
-    static let codeKeyword = _hex(0xAA0D91)
-    static let codeType    = _hex(0x3F6E74)
-    
-    public static var trash: UIColor = {
-        if #available(iOS 13, *) {
-            return UIColor { (UITraitCollection: UITraitCollection) -> UIColor in
-                if UITraitCollection.userInterfaceStyle == .dark {
-                    return UIColor(red: 0.0, green: 1.0, blue: 122.0/255.0, alpha: 1.0)
-                } else {
-                    return UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
-                }
-            }
-        } else {
-            return UIColor(red: 0.0, green: 122.0/255.0, blue: 1.0, alpha: 1.0)
-        }
-    }()
 }
 
-private func _hex(_ hex: Int) -> UIColor {
-    return _rgba(red:(hex >> 16) & 0xff, green:(hex >> 8) & 0xff, blue:hex & 0xff)
+private func hex(_ hex: Int) -> UIColor {
+    return rgba(red:(hex >> 16) & 0xff, green:(hex >> 8) & 0xff, blue:hex & 0xff)
 }
 
 
-private func _rgba(red: Int, green: Int, blue: Int, alpha: CGFloat = 1.0) -> UIColor {
+private func rgba(red: Int, green: Int, blue: Int, alpha: CGFloat = 1.0) -> UIColor {
     assert(red >= 0 && red <= 255,     "Invalid red component")
     assert(green >= 0 && green <= 255, "Invalid green component")
     assert(blue >= 0 && blue <= 255,   "Invalid blue component")
     
     return UIColor(red: CGFloat(red) / 255.0, green: CGFloat(green) / 255.0, blue: CGFloat(blue) / 255.0, alpha: alpha)
+}
+
+private func systemColor(lightModeColor: UIColor, darkModeColor: UIColor) -> UIColor {
+    if #available(iOS 13, *) {
+        return UIColor { (traitCollection: UITraitCollection) -> UIColor in
+            if traitCollection.userInterfaceStyle == .dark {
+                return darkModeColor
+            } else {
+                return lightModeColor
+            }
+        }
+    } else {
+        return lightModeColor
+    }
 }

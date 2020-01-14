@@ -76,8 +76,7 @@ class SceneView: UIView, UITextViewDelegate {
         _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
         if #available(iOS 13.0, *) {
             _rxOperatorLabel.textColor = .label
-        } 
-
+        }
         
         addSubview(rxOperatorText)
         rxOperatorText.delegate = self
@@ -86,6 +85,7 @@ class SceneView: UIView, UITextViewDelegate {
         rxOperatorText.isUserInteractionEnabled = true
         rxOperatorText.dataDetectorTypes = UIDataDetectorTypes.link
         rxOperatorText.attributedText = rxOperator.linkText
+        rxOperatorText.backgroundColor = Color.bgPrimary
         
         resultSequence = ResultSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {

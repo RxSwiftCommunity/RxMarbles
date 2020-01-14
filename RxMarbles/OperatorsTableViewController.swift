@@ -54,6 +54,7 @@ class OperatorsTableViewController: UITableViewController {
             tableView.tableHeaderView = _searchController.searchBar
         }
         
+        tableView.backgroundColor = Color.bgPrimary
         tableView.tableFooterView = UIView()
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "OperatorCell")
@@ -108,6 +109,7 @@ class OperatorsTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "OperatorCell", for: indexPath)
         cell.textLabel?.text = op.description
         cell.accessoryType = op == selectedOperator ? .checkmark : .none
+        cell.backgroundColor = Color.bgPrimary
         return cell
     }
 
