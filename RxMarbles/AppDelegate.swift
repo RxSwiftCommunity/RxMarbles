@@ -18,10 +18,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     var window: UIWindow?
     var introWindow: UIWindow?
-    private var _disposeBag = DisposeBag()
+
+    private var disposeBag = DisposeBag()
     
-    private let _operatorsTableViewController = OperatorsTableViewController()
-    private let _splitViewController = UISplitViewController()
+    private let operatorsTableViewController = OperatorsTableViewController()
+    private let splitViewController = UISplitViewController()
     
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -29,19 +30,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         window = UIWindow()
         
-        _splitViewController.delegate = self
+        splitViewController.delegate = self
         
-        let masterNav = UINavigationController(rootViewController: _operatorsTableViewController)
-        let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: _operatorsTableViewController.selectedOperator))
+        let masterNav = UINavigationController(rootViewController: operatorsTableViewController)
+        let detailNav = UINavigationController(rootViewController: OperatorViewController(rxOperator: operatorsTableViewController.selectedOperator))
   
         if #available(iOS 11, *) {
             masterNav.navigationBar.prefersLargeTitles = true
             
         }
         
-        _splitViewController.viewControllers = [masterNav, detailNav]
+        splitViewController.viewControllers = [masterNav, detailNav]
         
-        window?.rootViewController = _splitViewController
+        window?.rootViewController = splitViewController
         
         let showIntroKey = "show_intro"
         let defaults = UserDefaults.standard
@@ -53,7 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         self.window?.makeKeyAndVisible()
         
         if (defaults.object(forKey: showIntroKey)! as AnyObject).boolValue == true {
-            _showHelpWindow()
+            showHelpWindow()
         } else {
             showMainWindow()
         }
@@ -65,12 +66,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         Notifications.hideHelpWindow.rx()
             .subscribe { _ in self.showMainWindow() }
-            .disposed(by: _disposeBag)
+            .disposed(by: disposeBag)
         
         return true
     }
     
-    private func _showHelpWindow() {
+    private func showHelpWindow() {
         introWindow = UIWindow()
         let helpViewController = HelpViewController()
         helpViewController.helpMode = false
@@ -91,11 +92,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     @objc func focusSearch() {
-        if let nav = _splitViewController.viewControllers.first as? UINavigationController {
+        if let nav = splitViewController.viewControllers.first as? UINavigationController {
             nav.popToRootViewController(animated: false)
             
             
-            _operatorsTableViewController.focusSearch()
+            operatorsTableViewController.focusSearch()
         }
     }
     
@@ -114,10 +115,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             operatorRawValue = opRawValue
         }
         if  let op = Operator(rawValue: operatorRawValue),
-            let nav = _splitViewController.viewControllers.first as? UINavigationController {
+            let nav = splitViewController.viewControllers.first as? UINavigationController {
             nav.popToRootViewController(animated: false)
-            _operatorsTableViewController.presentingViewController?.dismiss(animated: false, completion: nil)
-            _operatorsTableViewController.openOperator(op)
+            operatorsTableViewController.presentingViewController?.dismiss(animated: false, completion: nil)
+            operatorsTableViewController.openOperator(op)
         }
         
         return false
@@ -157,7 +158,7 @@ extension AppDelegate: UISplitViewControllerDelegate {
         if let detail = primaryViewController.separateSecondaryViewController(for: splitViewController) {
             navController = UINavigationController(rootViewController: detail)
         } else {
-            let op = _operatorsTableViewController.selectedOperator
+            let op = operatorsTableViewController.selectedOperator
             navController = UINavigationController(rootViewController: OperatorViewController(rxOperator: op))
         }
         if #available(iOS 11.0, *) {

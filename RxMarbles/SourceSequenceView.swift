@@ -11,13 +11,15 @@ import RxSwift
 import RxCocoa
 
 class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
+
     var addButton = UIButton(type: .contactAdd)
     let longPressGestureRecorgnizer = UILongPressGestureRecognizer()
     var animator: UIDynamicAnimator?
-    private var _panEventView: EventView?
-    private var _ghostEventView: EventView?
+
+    private var panEventView: EventView?
+    private var ghostEventView: EventView?
     
-    private var _needRefreshEventViews: Bool = true
+    private var needRefreshEventViews: Bool = true
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -40,7 +42,7 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         longPressGestureRecorgnizer
             .rx.event
             .subscribe(onNext: {
-                [unowned self] r in self._handleLongPressGestureRecognizer(r: r)
+                [unowned self] r in self.handleLongPressGestureRecognizer(r: r)
             })
             .disposed(by: disposeBag)
         
@@ -71,11 +73,11 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         if oldTimeArrowFrame != newTimeArrowFrame {
             sourceEvents.forEach({ _ = $0.removeBehavior })
             animator?.removeAllBehaviors()
-            _needRefreshEventViews = true
+            needRefreshEventViews = true
         }
         
-        if _needRefreshEventViews {
-            _needRefreshEventViews = false
+        if needRefreshEventViews {
+            needRefreshEventViews = false
             refreshSourceEventsCenters()
         }
     }
@@ -90,45 +92,45 @@ class SourceSequenceView: SequenceView, UIDynamicAnimatorDelegate {
         }
     }
     
-    private func _handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
+    private func handleLongPressGestureRecognizer(r: UIGestureRecognizer) {
         let location = r.location(in: self)
         switch r.state {
         case .began:
             if let i = sourceEvents.firstIndex(where: { $0.frame.contains(location) }) {
-                _panEventView = sourceEvents[i]
+                panEventView = sourceEvents[i]
             }
-            if let panEventView = _panEventView {
+            if let panEventView = panEventView {
                 panEventView.animator?.removeBehavior(panEventView.snap!)
                 
-                _ghostEventView = EventView(recorded: panEventView.recorded)
-                _ghostEventView!.center = CGPoint(x: xPositionByTime(_ghostEventView!.recorded.time), y: bounds.height / 2)
-                changeGhostColorAndAlpha(ghostEventView: _ghostEventView!, recognizer: r)
-                addSubview(_ghostEventView!)
+                ghostEventView = EventView(recorded: panEventView.recorded)
+                ghostEventView!.center = CGPoint(x: xPositionByTime(ghostEventView!.recorded.time), y: bounds.height / 2)
+                changeGhostColorAndAlpha(ghostEventView: ghostEventView!, recognizer: r)
+                addSubview(ghostEventView!)
                 
                 sceneView.showTrashView()
             }
         case .changed:
-            if let panEventView = _panEventView {
+            if let panEventView = panEventView {
                 let time = timeByXPosition(x: location.x)
                 panEventView.center = CGPoint(x: xPositionByTime(time), y: location.y)
                 panEventView.recorded = RecordedType(time: time, value: panEventView.recorded.value)
                 
-                changeGhostColorAndAlpha(ghostEventView: _ghostEventView!, recognizer: r)
-                _ghostEventView!.recorded = panEventView.recorded
-                _ghostEventView!.center = CGPoint(x: xPositionByTime(time), y: bounds.height / 2)
+                changeGhostColorAndAlpha(ghostEventView: ghostEventView!, recognizer: r)
+                ghostEventView!.recorded = panEventView.recorded
+                ghostEventView!.center = CGPoint(x: xPositionByTime(time), y: bounds.height / 2)
                 sceneView.resultSequence.subject.onNext(())
             }
         case .ended, .cancelled:
-            _ghostEventView?.removeFromSuperview()
-            _ghostEventView = nil
+            ghostEventView?.removeFromSuperview()
+            ghostEventView = nil
             
-            if let panEventView = _panEventView {
+            if let panEventView = panEventView {
                 animatorAddBehaviorsToPanEventView(panEventView: panEventView, recognizer: r, resultSequence: sceneView.resultSequence)
                 panEventView.superview?.bringSubviewToFront(panEventView)
                 let time = timeByXPosition(x: r.location(in: self).x)
                 panEventView.recorded = RecordedType(time: time, value: panEventView.recorded.value)
             }
-            _panEventView = nil
+            panEventView = nil
             sceneView.hideTrashView()
             sceneView.resultSequence.subject.onNext(())
         default: break

@@ -10,6 +10,7 @@ import UIKit
 import RxSwift
 
 class EventView: UIView {
+
     weak var animator: UIDynamicAnimator? = nil
     weak var sequenceView: SourceSequenceView?
     
@@ -19,20 +20,20 @@ class EventView: UIView {
     var gravity: UIGravityBehavior? = nil
     var removeBehavior: UIDynamicItemBehavior? = nil
     
-    private let _tapGestureRecognizer = UITapGestureRecognizer()
-    private let _imageView = UIImageView()
+    private let tapGestureRecognizer = UITapGestureRecognizer()
+    private let imageView = UIImageView()
     
     var label = UILabel()
     
     init(recorded: RecordedType) {
         super.init(frame: CGRect(x: 0, y: 0, width: 42, height: 50))
        
-        _imageView.contentMode = .center
+        imageView.contentMode = .center
         if #available(iOS 13.0, *) {
             label.textColor = .systemGray
         }
         label.font = Font.ultraLightText(11)
-        addSubview(_imageView)
+        addSubview(imageView)
         addSubview(label)
         
         layer.shouldRasterize = true
@@ -45,22 +46,22 @@ class EventView: UIView {
                 label.sizeToFit()
             }
             
-            _imageView.image = v.shape.image(v.color)
-            _imageView.frame = CGRect(x: 0, y: 0, width: 16, height: 16)
+            imageView.image = v.shape.image(v.color)
+            imageView.frame = CGRect(x: 0, y: 0, width: 16, height: 16)
         case .completed:
-            _imageView.image = RxMarbles.Image.complete
+            imageView.image = RxMarbles.Image.complete
             if #available(iOS 13.0, *) {
-                _imageView.tintColor = .label
+                imageView.tintColor = .label
             } else {
-               _imageView.tintColor = .black
+               imageView.tintColor = .black
             }
             layer.zPosition = -1
         case .error:
-            _imageView.image = RxMarbles.Image.error
+            imageView.image = RxMarbles.Image.error
             if #available(iOS 13.0, *) {
-                _imageView.tintColor = .label
+                imageView.tintColor = .label
             } else {
-               _imageView.tintColor = .black
+               imageView.tintColor = .black
             }
             layer.zPosition = -1
         }
@@ -81,14 +82,14 @@ class EventView: UIView {
             }
         }
         self.recorded = recorded
-        _tapGestureRecognizer.addTarget(self, action: #selector(EventView.setEventView))
-        _tapGestureRecognizer.isEnabled = false
-        addGestureRecognizer(_tapGestureRecognizer)
+        tapGestureRecognizer.addTarget(self, action: #selector(EventView.setEventView))
+        tapGestureRecognizer.isEnabled = false
+        addGestureRecognizer(tapGestureRecognizer)
     }
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        _imageView.center = CGPoint(x: bounds.width / 2.0, y: bounds.height / 2.0)
+        imageView.center = CGPoint(x: bounds.width / 2.0, y: bounds.height / 2.0)
         label.center = CGPoint(x: bounds.width / 2.0, y: bounds.height * 0.15)
     }
     
@@ -133,11 +134,11 @@ class EventView: UIView {
     }
     
     func addTapRecognizer() {
-        _tapGestureRecognizer.isEnabled = true
+        tapGestureRecognizer.isEnabled = true
     }
     
     func removeTapRecognizer() {
-        _tapGestureRecognizer.isEnabled = false
+        tapGestureRecognizer.isEnabled = false
     }
     
     @objc func setEventView() {
@@ -149,23 +150,23 @@ class EventView: UIView {
         let alpha: CGFloat = onDeleteZone ? 1.0 : 0.2
         switch recorded.value {
         case .next:
-            _imageView.image = recorded.value.element?.shape.image.withRenderingMode(.alwaysTemplate)
+            imageView.image = recorded.value.element?.shape.image.withRenderingMode(.alwaysTemplate)
         case .completed:
-            _imageView.image = RxMarbles.Image.complete.withRenderingMode(.alwaysTemplate)
+            imageView.image = RxMarbles.Image.complete.withRenderingMode(.alwaysTemplate)
         case .error:
-            _imageView.image = RxMarbles.Image.error.withRenderingMode(.alwaysTemplate)
+            imageView.image = RxMarbles.Image.error.withRenderingMode(.alwaysTemplate)
         }
-        _imageView.tintColor = color
+        imageView.tintColor = color
         self.alpha = alpha
     }
     
     func setColorOnPreview(color: UIColor) {
-        _imageView.image = recorded.value.element?.shape.image(color)
+        imageView.image = recorded.value.element?.shape.image(color)
     }
     
     func refreshColorAndValue() {
         if let color = recorded.value.element?.color {
-            _imageView.image = recorded.value.element?.shape.image(color)
+            imageView.image = recorded.value.element?.shape.image(color)
         }
         if let value = recorded.value.element?.value {
             label.text = value

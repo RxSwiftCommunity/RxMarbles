@@ -77,26 +77,26 @@ extension Operator {
         let activity = NSUserActivity(activityType: UserActivityType.OperatorView.rawValue)
         
         activity.title = description
-        activity.keywords = _keywords()
+        activity.keywords = keywords()
         activity.isEligibleForSearch = true
         activity.isEligibleForPublicIndexing = true
         activity.userInfo = ["operator": rawValue]
         
         
-        activity.contentAttributeSet = _searchableAttributes()
+        activity.contentAttributeSet = searchableAttributes()
         return activity
     }
     
-    private func _keywords() -> Set<String> {
+    private func keywords() -> Set<String> {
         return ["Rx", "Reactive", "Operator", "Marbles", description]
     }
     
-    private func _searchableAttributes() -> CSSearchableItemAttributeSet {
+    private func searchableAttributes() -> CSSearchableItemAttributeSet {
         let attributes = CSSearchableItemAttributeSet(itemContentType: "url")
         
         attributes.title = description
         attributes.contentDescription = text
-        attributes.keywords = Array<String>(_keywords())
+        attributes.keywords = Array<String>(keywords())
         attributes.identifier = rawValue
         attributes.relatedUniqueIdentifier = rawValue
         
@@ -104,11 +104,11 @@ extension Operator {
     }
     
     
-    private func _searchableItem() -> CSSearchableItem {
+    private func searchableItem() -> CSSearchableItem {
         return CSSearchableItem(
             uniqueIdentifier: rawValue,
             domainIdentifier: "operators",
-            attributeSet: _searchableAttributes()
+            attributeSet: searchableAttributes()
         )
     }
     
@@ -125,7 +125,7 @@ extension Operator {
         }
         
         let index = CSSearchableIndex.default()
-        let items = Operator.all.map { $0._searchableItem() }
+        let items = Operator.all.map { $0.searchableItem() }
         index.deleteAllSearchableItems { error in
             if let e = error {
                 return debugPrint(e)

@@ -14,7 +14,7 @@ class OperatorsTableViewController: UITableViewController {
 
 	private let viewModel = OperatorsTableViewModel()
 
-	private let _disposeBag = DisposeBag()
+	private let disposeBag = DisposeBag()
 
     var selectedOperator: Operator = Operator.combineLatest {
         didSet {
@@ -22,7 +22,7 @@ class OperatorsTableViewController: UITableViewController {
         }
     }
 
-	private lazy var _searchController: UISearchController = {
+	private lazy var searchController: UISearchController = {
 		let searchController = UISearchController(searchResultsController: nil)
 		searchController.searchResultsUpdater = self
 		searchController.obscuresBackgroundDuringPresentation = false
@@ -46,12 +46,12 @@ class OperatorsTableViewController: UITableViewController {
         
         if #available(iOS 11, *) {
             navigationItem.largeTitleDisplayMode = .always
-            navigationItem.searchController = _searchController
+            navigationItem.searchController = searchController
             tableView.tableHeaderView = UIView()
         } else {
-            _searchController.hidesNavigationBarDuringPresentation = false
-            _searchController.searchBar.backgroundColor = .white
-            tableView.tableHeaderView = _searchController.searchBar
+            searchController.hidesNavigationBarDuringPresentation = false
+            searchController.searchBar.backgroundColor = .white
+            tableView.tableHeaderView = searchController.searchBar
         }
         
         tableView.backgroundColor = Color.bgPrimary
@@ -63,7 +63,7 @@ class OperatorsTableViewController: UITableViewController {
             .itemSelected
 			.map(self.viewModel.getOperator)
             .subscribe(onNext: { [unowned self] op in self.openOperator(op) })
-            .disposed(by: _disposeBag)
+            .disposed(by: disposeBag)
         
         // Check for force touch feature, and add force touch/previewing capability.
         if traitCollection.forceTouchCapability == .available {
@@ -115,14 +115,14 @@ class OperatorsTableViewController: UITableViewController {
 
     func focusSearch() {
         presentingViewController?.dismiss(animated: false, completion: nil)
-        _searchController.searchBar.becomeFirstResponder()
+        searchController.searchBar.becomeFirstResponder()
     }
     
 //    MARK: UIContentContainer
     
     override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
-        _searchController.isActive = false
+        searchController.isActive = false
     }
 }
 
