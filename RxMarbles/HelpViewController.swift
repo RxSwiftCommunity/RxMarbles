@@ -62,8 +62,9 @@ class HelpViewController: AnimatedPagingScrollViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = Color.white
-        
+        if #available(iOS 13.0, *) {
+            view.backgroundColor = .systemBackground
+        }
         _configurePages()
     }
     
@@ -467,6 +468,7 @@ class HelpViewController: AnimatedPagingScrollViewController {
     
     private func _configureExperimentPage() {
         let navBar = RxMarbles.Image.navBarExperiment.imageView()
+
         let timeline = RxMarbles.Image.timelineExperiment.imageView()
 
         let editLabel: UILabel = {
@@ -551,7 +553,8 @@ class HelpViewController: AnimatedPagingScrollViewController {
     }
     
     private func _configureSharePage() {
-        let navBar = RxMarbles.Image.navBarShare.imageView()
+        var navBar = RxMarbles.Image.navBarShare.imageView()
+        
 
         let shareLabel: UILabel = {
             let label = UILabel()
