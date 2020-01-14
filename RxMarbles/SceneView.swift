@@ -13,13 +13,14 @@ import RxCocoa
 import Device
 
 class SceneView: UIView, UITextViewDelegate {
+
     var trashView = RxMarbles.Image.rubbish.withRenderingMode(.alwaysTemplate).imageView()
     var rxOperator: Operator
     let rxOperatorText = UITextView()
     
-    private let _rxOperatorLabel = UILabel()
-    private var _aLabel: UILabel?
-    private var _bLabel: UILabel?
+    private let rxOperatorLabel = UILabel()
+    private var aLabel: UILabel?
+    private var bLabel: UILabel?
     
     var sourceSequenceA: SourceSequenceView! {
         didSet {
@@ -69,13 +70,13 @@ class SceneView: UIView, UITextViewDelegate {
     }
     
     private func setTimelines() {
-        addSubview(_rxOperatorLabel)
-        _rxOperatorLabel.textAlignment = .center
-        _rxOperatorLabel.minimumScaleFactor = 0.5
-        _rxOperatorLabel.adjustsFontSizeToFitWidth = true
-        _rxOperatorLabel.attributedText = rxOperator.higlightedCode()
+        addSubview(rxOperatorLabel)
+        rxOperatorLabel.textAlignment = .center
+        rxOperatorLabel.minimumScaleFactor = 0.5
+        rxOperatorLabel.adjustsFontSizeToFitWidth = true
+        rxOperatorLabel.attributedText = rxOperator.higlightedCode()
         if #available(iOS 13.0, *) {
-            _rxOperatorLabel.textColor = .label
+            rxOperatorLabel.textColor = .label
         }
         
         addSubview(rxOperatorText)
@@ -90,15 +91,15 @@ class SceneView: UIView, UITextViewDelegate {
         resultSequence = ResultSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), rxOperator: rxOperator, sceneView: self)
         if !rxOperator.withoutTimelines {
             sourceSequenceA = SourceSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), scene: self)
-            _aLabel = UILabel()
-            _aLabel!.text = "a: "
-            _aLabel!.font = Font.monospacedRegularText(14)
-            addSubview(_aLabel!)
+            aLabel = UILabel()
+            aLabel!.text = "a: "
+            aLabel!.font = Font.monospacedRegularText(14)
+            addSubview(aLabel!)
             if rxOperator.multiTimelines {
-                _bLabel = UILabel()
-                _bLabel!.text = "b: "
-                _bLabel!.font = Font.monospacedRegularText(14)
-                addSubview(_bLabel!)
+                bLabel = UILabel()
+                bLabel!.text = "b: "
+                bLabel!.font = Font.monospacedRegularText(14)
+                addSubview(bLabel!)
                 sourceSequenceB = SourceSequenceView(frame: CGRect(x: 0, y: 0, width: bounds.width, height: 60), scene: self)
             }
         }
@@ -110,19 +111,19 @@ class SceneView: UIView, UITextViewDelegate {
         let labelHeight: CGFloat = 40
         let widthSpace: CGFloat = UIApplication.shared.statusBarOrientation.isLandscape ? 40.0 : 20.0
         
-        _rxOperatorLabel.frame = CGRect(x: 0, y: 20, width: bounds.width, height: labelHeight)
+        rxOperatorLabel.frame = CGRect(x: 0, y: 20, width: bounds.width, height: labelHeight)
         if !rxOperator.withoutTimelines {
             sourceSequenceA.frame = CGRect(x: 20, y: 20, width: bounds.width - widthSpace, height: height)
-            _rxOperatorLabel.frame.origin.y = sourceSequenceA.frame.origin.y + height
-            _aLabel?.frame = CGRect(x: 0, y: sourceSequenceA.frame.origin.y, width: 20, height: height)
+            rxOperatorLabel.frame.origin.y = sourceSequenceA.frame.origin.y + height
+            aLabel?.frame = CGRect(x: 0, y: sourceSequenceA.frame.origin.y, width: 20, height: height)
             
             if rxOperator.multiTimelines {
                 sourceSequenceB.frame = CGRect(x: 20, y: sourceSequenceA.frame.origin.y + sourceSequenceA.frame.height, width: bounds.width - widthSpace, height: height)
-                _bLabel?.frame = CGRect(x: 0, y: sourceSequenceB.frame.origin.y, width: 20, height: height)
-                _rxOperatorLabel.frame.origin.y = sourceSequenceB.frame.origin.y + height
+                bLabel?.frame = CGRect(x: 0, y: sourceSequenceB.frame.origin.y, width: 20, height: height)
+                rxOperatorLabel.frame.origin.y = sourceSequenceB.frame.origin.y + height
             }
         }
-        resultSequence.frame = CGRect(x: 20, y: _rxOperatorLabel.frame.origin.y + labelHeight + 10, width: bounds.width - widthSpace, height: height)
+        resultSequence.frame = CGRect(x: 20, y: rxOperatorLabel.frame.origin.y + labelHeight + 10, width: bounds.width - widthSpace, height: height)
         
         let size = rxOperatorText.text.boundingRect(with: CGSize(width: bounds.width, height: 1000 ),
                                                     options: NSStringDrawingOptions.usesLineFragmentOrigin,

@@ -119,7 +119,7 @@ private let __typeRegex = try? NSRegularExpression(pattern: "(Observable)|(Int64
 private let __keywordRegex = try? NSRegularExpression(pattern: "\\bin\\b", options: [])
 private let __numberRegex = try? NSRegularExpression(pattern: "[^\\$](\\d+)", options: [])
 
-private func __colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [NSAttributedString.Key: Any]) {
+private func colorize(_ src: NSMutableAttributedString, regex: NSRegularExpression, rangeIndex: Int, attrs: [NSAttributedString.Key: Any]) {
     
     let str = src.string as NSString
     
@@ -136,24 +136,24 @@ extension Operator {
         let font = Font.code(.monoRegular, size:18)
         let src = NSMutableAttributedString(string: code, attributes: [.font: font, .foregroundColor: Color.codeDefault])
         
-        __colorize(src, regex: __methodRegex!, rangeIndex: 0, attrs: [
+        colorize(src, regex: __methodRegex!, rangeIndex: 0, attrs: [
             NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
             NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeMethod
             ]
         )
-        __colorize(src, regex: __numberRegex!, rangeIndex: 1, attrs: [
+        colorize(src, regex: __numberRegex!, rangeIndex: 1, attrs: [
             NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
             NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeNumber
             ]
         )
         
-        __colorize(src, regex: __typeRegex!, rangeIndex: 0, attrs: [
+        colorize(src, regex: __typeRegex!, rangeIndex: 0, attrs: [
             NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
             NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeType
             ]
         )
         
-        __colorize(src, regex: __keywordRegex!, rangeIndex: 0, attrs: [
+        colorize(src, regex: __keywordRegex!, rangeIndex: 0, attrs: [
             NSAttributedString.Key(rawValue: NSAttributedString.Key.font.rawValue): font,
             NSAttributedString.Key(rawValue: NSAttributedString.Key.foregroundColor.rawValue): Color.codeKeyword
             ]

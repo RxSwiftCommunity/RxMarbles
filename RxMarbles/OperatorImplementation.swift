@@ -434,7 +434,7 @@ extension Operator {
 
 extension Operator {
     
-    func _map(_ scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
+    func map(_ scheduler: TestScheduler, aO: TestableObservable<ColoredType>?, bO: TestableObservable<ColoredType>?) -> Observable<ColoredType> {
         switch self {
         case .amb:
             return aO!.amb(bO!)

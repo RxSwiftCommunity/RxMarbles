@@ -8,7 +8,7 @@
 
 import UIKit
 
-private var __coloredImages = [String: UIImage]()
+private var coloredImages = [String: UIImage]()
 
 enum EventShape: String {
     case circle
@@ -30,7 +30,7 @@ enum EventShape: String {
     func image(_ color: UIColor) -> UIImage {
         let key = "\(color.description)-\(self)"
         
-        if let res = __coloredImages[key] {
+        if let res = coloredImages[key] {
             return res
         }
         
@@ -56,7 +56,7 @@ enum EventShape: String {
         let res = UIGraphicsGetImageFromCurrentImageContext()!
         
         
-        __coloredImages[key] = res
+        coloredImages[key] = res
         return res
     }
 }
