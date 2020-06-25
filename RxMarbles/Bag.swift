@@ -172,11 +172,7 @@ extension Bag {
     }
 }
 
-extension BagKey: Hashable {
-    var hashValue: Int {
-        return rawValue.hashValue
-    }
-}
+extension BagKey: Hashable { }
 
 func ==(lhs: BagKey, rhs: BagKey) -> Bool {
     return lhs.rawValue == rhs.rawValue
